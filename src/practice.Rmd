@@ -1,0 +1,43 @@
+---
+title: "Untitled"
+author: "Tom Wheeler"
+date: "5/6/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(here)
+library(janitor)
+
+practice <- read.csv(here("data", "practice.csv")) %>% 
+  clean_names()
+```
+
+```{r}
+
+#filter by company name and year
+practice_filtered <- practice %>% 
+  filter(company == "Apple" & year == "2019")
+
+#filter by only subset totals
+practice_total <- practice_filtered %>% 
+  filter(data_level == "Subset Total") 
+
+#filter by only subset of subsets
+practice_subset <- practice_filtered %>% 
+  filter(data_level == "Subset of Subset") 
+  
+#sum subset totals
+subset_total <- sum(as.numeric(practice_total$value))
+
+#sum subset of subset totals and grab names
+subset_of_subset_total <- sum(as.numeric(practice_subset$value))
+
+subset_of_subset_names <- unique(practice_subset$fuel)
+
+```
+
+
