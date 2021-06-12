@@ -1,5 +1,5 @@
 ---
-title: "Untitled"
+title: "Data Center Energy Use Dashboard"
 author: "Tom Wheeler"
 date: "5/6/2021"
 output: html_document
@@ -11,9 +11,9 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(here)
 library(janitor)
+library(readxl)
 
-practice <- read.csv(here("data", "practice.csv")) %>% 
-  clean_names()
+practice_sheet <- read_excel(here('data',"DataCenterEnergyUse_vR_Working.xlsx"), sheet = "Apple")
 ```
 
 ```{r}
