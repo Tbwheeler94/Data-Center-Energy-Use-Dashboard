@@ -12,32 +12,88 @@ library(tidyverse)
 library(here)
 library(janitor)
 library(readxl)
-
-practice_sheet <- read_excel(here('data',"DataCenterEnergyUse_vR_Working.xlsx"), sheet = "Apple")
+library(xlsx)
 ```
+
+## Data import and prepping spreadsheet for calculating standardized energy values
 
 ```{r}
 
-#filter by company name and year
-practice_filtered <- practice %>% 
-  filter(company == "Apple" & year == "2019")
+#import data spreadsheet, specify column data types to ensure proper recognition
+data_sheet <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 1,
+                             colClasses=c("character","integer","Date","Date","character", #columns 1-5
+                                          "character","character","numeric","integer", "character", #columns 6-10
+                                          "character","character","character","numeric","integer", #columns 11-15 (Fuel 1)
+                                          "character","character","character","numeric","integer", #columns 15-20 (Fuel 2)
+                                          "character","character","character","numeric","integer", #columns 21-25 (Fuel 3)
+                                          "character","character","character","numeric","integer", #columns 26-30 (Fuel 4)
+                                          "character","character","character","numeric","integer", #columns 31-35 (Fuel 5)
+                                          "character")) #column 36 (Notes)
 
-#filter by only subset totals
-practice_total <- practice_filtered %>% 
-  filter(data_level == "Subset Total") 
+#move second row values to column headers, put header names in tidy format
+data_sheet <- data_sheet %>% 
+  row_to_names(1) %>% 
+  clean_names()
 
-#filter by only subset of subsets
-practice_subset <- practice_filtered %>% 
-  filter(data_level == "Subset of Subset") 
+#change column names that were set to incorrect values when column classes were set
+colnames(data_sheet) [2] <- 'report_year'
+colnames(data_sheet) [3] <- 'period_covered_start_date'
+colnames(data_sheet) [4] <- 'period_covered_end_date'
+colnames(data_sheet) [5] <- 'energy_reporting_scope'
+colnames(data_sheet) [8] <- 'electricity_value'
+colnames(data_sheet) [9] <- 'unit_scale'
+colnames(data_sheet) [14] <- 'fuel_1_value'
+colnames(data_sheet) [15] <- 'fuel_1_unit_scale'
+colnames(data_sheet) [19] <- 'fuel_2_value'
+colnames(data_sheet) [20] <- 'fuel_2_unit_scale'
+colnames(data_sheet) [24] <- 'fuel_3_value'
+colnames(data_sheet) [25] <- 'fuel_3_unit_scale'
+colnames(data_sheet) [29] <- 'fuel_4_value'
+colnames(data_sheet) [30] <- 'fuel_4_unit_scale'
+colnames(data_sheet) [34] <- 'fuel_5_value'
+colnames(data_sheet) [35] <- 'fuel_5_unit_scale'
+
+#multiple values by unit scale to generate values that are ready for unit conversion
+
+data_sheet <- data_sheet %>% 
   
-#sum subset totals
-subset_total <- sum(as.numeric(practice_total$value))
-
-#sum subset of subset totals and grab names
-subset_of_subset_total <- sum(as.numeric(practice_subset$value))
-
-subset_of_subset_names <- unique(practice_subset$fuel)
+  #replace any unit_scale NA values with 1
+  mutate(unit_scale = replace_na(unit_scale, 1)) %>%
+  mutate(fuel_1_unit_scale = replace_na(fuel_1_unit_scale, 1)) %>%
+  mutate(fuel_2_unit_scale = replace_na(fuel_2_unit_scale, 1)) %>%
+  mutate(fuel_3_unit_scale = replace_na(fuel_3_unit_scale, 1)) %>%
+  mutate(fuel_4_unit_scale = replace_na(fuel_4_unit_scale, 1)) %>%
+  mutate(fuel_5_unit_scale = replace_na(fuel_5_unit_scale, 1)) %>%
+  
+  #multiply electricity and fuel values by unit scale
+  mutate(electricity_prepped = electricity_value * unit_scale, .after = unit_scale) %>% 
+  mutate(fuel_1_prepped = fuel_1_value * fuel_1_unit_scale, .after = fuel_1_unit_scale) %>% 
+  mutate(fuel_2_prepped = fuel_2_value * fuel_2_unit_scale, .after = fuel_2_unit_scale) %>% 
+  mutate(fuel_3_prepped = fuel_3_value * fuel_3_unit_scale, .after = fuel_3_unit_scale) %>% 
+  mutate(fuel_4_prepped = fuel_4_value * fuel_4_unit_scale, .after = fuel_4_unit_scale) %>% 
+  mutate(fuel_5_prepped = fuel_5_value * fuel_5_unit_scale, .after = fuel_5_unit_scale)
 
 ```
 
+## Energy unit conversions to base unit (kWh)
+
+```{r}
+#import conversions spreadsheet
+conversions_sheet <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 3,
+                                colClasses=c("character", "character", "character", "numeric")) %>% 
+                                clean_names() %>% 
+                                select('unit', 'k_wh_1_unit')
+
+conversions_sheet <- conversions_sheet %>% rename(fuel_1_unit = unit)
+
+##note: attaching plyr conflicts with loading dplyr functions, but plyr is needed to run the join function below
+library(plyr)
+
+data_sheet <- data_sheet %>% 
+  select("fuel_1_prepped", "fuel_1_unit") %>%
+  drop_na()
+
+joined_sheet <- join(data_sheet, conversions_sheet, by = "fuel_1_unit")
+
+```
 
