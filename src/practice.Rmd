@@ -73,27 +73,113 @@ data_sheet <- data_sheet %>%
   mutate(fuel_4_prepped = fuel_4_value * fuel_4_unit_scale, .after = fuel_4_unit_scale) %>% 
   mutate(fuel_5_prepped = fuel_5_value * fuel_5_unit_scale, .after = fuel_5_unit_scale)
 
+data_sheet <- data_sheet %>% 
+  
+  #merge fuel type and units to prepare for vlookup function
+  unite(fuel_unit_1, c(fuel_1_type, fuel_1_unit), sep = " ", remove = FALSE) %>% 
+  unite(fuel_unit_2, c(fuel_2_type, fuel_2_unit), sep = " ", remove = FALSE) %>% 
+  unite(fuel_unit_3, c(fuel_3_type, fuel_3_unit), sep = " ", remove = FALSE) %>% 
+  unite(fuel_unit_4, c(fuel_4_type, fuel_4_unit), sep = " ", remove = FALSE) %>% 
+  unite(fuel_unit_5, c(fuel_5_type, fuel_5_unit), sep = " ", remove = FALSE)
+
 ```
 
 ## Energy unit conversions to base unit (kWh)
 
 ```{r}
-#import conversions spreadsheet
+#import conversions spreadsheet, select columns data types, clean header names, select columns, unite fuel and unit columns
 conversions_sheet <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 3,
                                 colClasses=c("character", "character", "character", "numeric")) %>% 
                                 clean_names() %>% 
-                                select('unit', 'k_wh_1_unit')
+                                select('fuel', 'unit', 'k_wh_1_unit') %>% 
+                                drop_na() %>% 
+                                unite('fuel_unit', fuel:unit, sep = " ")
 
-conversions_sheet <- conversions_sheet %>% rename(fuel_1_unit = unit)
+#calculate conversions for fuels
 
-##note: attaching plyr conflicts with loading dplyr functions, but plyr is needed to run the join function below
-library(plyr)
+#FUEL 1
 
-data_sheet <- data_sheet %>% 
-  select("fuel_1_prepped", "fuel_1_unit") %>%
-  drop_na()
+#isolate fuel unit and prepped values into dataframe
+fuel_1_data <- data_sheet %>% 
+  select('fuel_unit_1', 'fuel_1_prepped')
 
-joined_sheet <- join(data_sheet, conversions_sheet, by = "fuel_1_unit")
+#change name of left column from conversion sheet to match fuel number
+conversions_sheet_fuel_1 <- conversions_sheet %>% 
+  rename(fuel_unit_1 = fuel_unit)
 
+#join and match, calculate prepped fuel value multiplied by its respective conversion
+fuel_1_conversion <- left_join(fuel_1_data, conversions_sheet_fuel_1, by="fuel_unit_1") %>% 
+  mutate(fuel_1_converted = fuel_1_prepped * k_wh_1_unit)
+
+#FUEL 2
+
+#isolate fuel unit and prepped values into dataframe
+fuel_2_data <- data_sheet %>% 
+  select('fuel_unit_2', 'fuel_2_prepped')
+
+#change name of left column from conversion sheet to match fuel number
+conversions_sheet_fuel_2 <- conversions_sheet %>% 
+  rename(fuel_unit_2 = fuel_unit)
+
+#join and match, calculate prepped fuel value multiplied by its respective conversion
+fuel_2_conversion <- left_join(fuel_2_data, conversions_sheet_fuel_2, by="fuel_unit_2") %>% 
+  mutate(fuel_2_converted = fuel_2_prepped * k_wh_1_unit)
+
+#FUEL 3
+
+#isolate fuel unit and prepped values into dataframe
+fuel_3_data <- data_sheet %>% 
+  select('fuel_unit_3', 'fuel_3_prepped')
+
+#change name of left column from conversion sheet to match fuel number
+conversions_sheet_fuel_3 <- conversions_sheet %>% 
+  rename(fuel_unit_3 = fuel_unit)
+
+#join and match, calculate prepped fuel value multiplied by its respective conversion
+fuel_3_conversion <- left_join(fuel_3_data, conversions_sheet_fuel_3, by="fuel_unit_3") %>% 
+  mutate(fuel_3_converted = fuel_3_prepped * k_wh_1_unit)
+
+#FUEL 4
+
+#isolate fuel unit and prepped values into dataframe
+fuel_4_data <- data_sheet %>% 
+  select('fuel_unit_4', 'fuel_4_prepped')
+
+#change name of left column from conversion sheet to match fuel number
+conversions_sheet_fuel_4 <- conversions_sheet %>% 
+  rename(fuel_unit_4 = fuel_unit)
+
+#join and match, calculate prepped fuel value multiplied by its respective conversion
+fuel_4_conversion <- left_join(fuel_4_data, conversions_sheet_fuel_4, by="fuel_unit_4") %>% 
+  mutate(fuel_4_converted = fuel_4_prepped * k_wh_1_unit)
+
+#FUEL 5
+
+#isolate fuel unit and prepped values into dataframe
+fuel_5_data <- data_sheet %>% 
+  select('fuel_unit_5', 'fuel_5_prepped')
+
+#change name of left column from conversion sheet to match fuel number
+conversions_sheet_fuel_5 <- conversions_sheet %>% 
+  rename(fuel_unit_5 = fuel_unit)
+
+#join and match, calculate prepped fuel value multiplied by its respective conversion
+fuel_5_conversion <- left_join(fuel_5_data, conversions_sheet_fuel_5, by="fuel_unit_5") %>% 
+  mutate(fuel_5_converted = fuel_5_prepped * k_wh_1_unit)
+```
+
+```{r}
+#Bind converted values to data_sheet, move columns next to fuel_1_prepped for easier viewing
+
+data_sheet <- cbind(data_sheet, fuel_1_conversion["fuel_1_converted"], 
+                    fuel_2_conversion["fuel_2_converted"],
+                    fuel_3_conversion["fuel_3_converted"],
+                    fuel_4_conversion["fuel_4_converted"],
+                    fuel_5_conversion["fuel_5_converted"]) %>% 
+              relocate(fuel_1_converted, .after = fuel_1_prepped) %>% 
+              relocate(fuel_2_converted, .after = fuel_2_prepped) %>%
+              relocate(fuel_3_converted, .after = fuel_3_prepped) %>%
+              relocate(fuel_4_converted, .after = fuel_4_prepped) %>%
+              relocate(fuel_5_converted, .after = fuel_5_prepped)
 ```
 
