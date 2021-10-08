@@ -13,6 +13,7 @@ library(here)
 library(janitor)
 library(readxl)
 library(xlsx)
+
 ```
 
 ## Data import and prepping spreadsheet for calculating standardized energy values
@@ -84,7 +85,7 @@ data_sheet <- data_sheet %>%
 
 ```
 
-## Energy unit conversions to base unit (kWh)
+## Calculate energy unit conversions to base unit (kWh) and add to data_sheet
 
 ```{r}
 #import conversions spreadsheet, select columns data types, clean header names, select columns, unite fuel and unit columns
@@ -166,11 +167,8 @@ conversions_sheet_fuel_5 <- conversions_sheet %>%
 #join and match, calculate prepped fuel value multiplied by its respective conversion
 fuel_5_conversion <- left_join(fuel_5_data, conversions_sheet_fuel_5, by="fuel_unit_5") %>% 
   mutate(fuel_5_converted = fuel_5_prepped * k_wh_1_unit)
-```
 
-```{r}
 #Bind converted values to data_sheet, move columns next to fuel_1_prepped for easier viewing
-
 data_sheet <- cbind(data_sheet, fuel_1_conversion["fuel_1_converted"], 
                     fuel_2_conversion["fuel_2_converted"],
                     fuel_3_conversion["fuel_3_converted"],
@@ -181,5 +179,59 @@ data_sheet <- cbind(data_sheet, fuel_1_conversion["fuel_1_converted"],
               relocate(fuel_3_converted, .after = fuel_3_prepped) %>%
               relocate(fuel_4_converted, .after = fuel_4_prepped) %>%
               relocate(fuel_5_converted, .after = fuel_5_prepped)
+```
+
+## Calculate energy unit conversions to base unit (kWh) and add to data_sheet
+
+```{r}
+#isolate electricity values
+data_sheet_electricity <- data_sheet %>% 
+  select("company", "report_year", "electricity_prepped") %>% 
+  add_column(fuel_type = "Electricity") %>% 
+  relocate("fuel_type", .after = report_year) %>% 
+  rename(value = electricity_prepped)
+
+#isolate fuel 1 values
+data_sheet_combined_1 <- data_sheet %>% 
+  select("company", "report_year", "fuel_1_type", "fuel_1_converted") %>% 
+  rename(fuel_type = fuel_1_type) %>% 
+  rename(value = fuel_1_converted)
+
+#isolate fuel 2 values
+data_sheet_combined_2 <- data_sheet %>% 
+  select("company", "report_year", "fuel_2_type", "fuel_2_converted") %>% 
+  rename(fuel_type = fuel_2_type) %>% 
+  rename(value = fuel_2_converted)
+
+#isolate fuel 3 values
+data_sheet_combined_3 <- data_sheet %>% 
+  select("company", "report_year", "fuel_3_type", "fuel_3_converted") %>% 
+  rename(fuel_type = fuel_3_type) %>% 
+  rename(value = fuel_3_converted)
+
+#isolate fuel 4 values
+data_sheet_combined_4 <- data_sheet %>% 
+  select("company", "report_year", "fuel_4_type", "fuel_4_converted") %>% 
+  rename(fuel_type = fuel_4_type) %>% 
+  rename(value = fuel_4_converted)
+
+#isolate fuel 5 values
+data_sheet_combined_5 <- data_sheet %>% 
+  select("company", "report_year", "fuel_5_type", "fuel_5_converted") %>% 
+  rename(fuel_type = fuel_5_type) %>% 
+  rename(value = fuel_5_converted)
+
+#electricity and all fuel values on top of each other, drop columns with NA (filter by Apple for example plotting)
+data_sheet_graph <- rbind(data_sheet_electricity, data_sheet_combined_1, 
+                          data_sheet_combined_2, data_sheet_combined_3,
+                          data_sheet_combined_4, data_sheet_combined_5) %>%  
+                    drop_na() %>% 
+                    filter(company == "Apple")
+```
+
+```{r}
+# Stacked
+ggplot(data_sheet_graph, aes(fill=fuel_type, y=value, x=report_year)) + 
+    geom_bar(position="stack", stat="identity")
 ```
 
