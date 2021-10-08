@@ -9,8 +9,6 @@
 
 library(shiny)
 
-htmlTemplate("template.html",
-             button = actionButton("action", "Action"),
-             slider = sliderInput("x", "Input Value", 1, 100, 50)
-)
+htmlTemplate(
+    filename = "www/index.html")
 
