@@ -94,9 +94,29 @@ conversions_sheet <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.x
                                 clean_names() %>% 
                                 select('fuel', 'unit', 'k_wh_1_unit') %>% 
                                 drop_na() %>% 
-                                unite('fuel_unit', fuel:unit, sep = " ")
+                                unite('fuel_unit', fuel:unit, sep = " ", remove = FALSE)
 
-#calculate conversions for fuels
+######################################
+#calculate conversion for electricity#
+######################################
+
+#isolate electricity values and respective units into dataframe
+electricity_data <- data_sheet %>% 
+  select('electricity_prepped', 'unit') %>% 
+  relocate(electricity_prepped, .after = unit)
+
+#select just unit column and the relevant conversion because electricity values do not have an associated fuel
+conversions_sheet_electricity <- conversions_sheet %>%
+  select('unit', 'k_wh_1_unit') %>% 
+  distinct()
+
+#join and match unit conversion factor for electricity values (i.e. if MWh value should be multiplied by 1000)
+electricity_conversion <- left_join(electricity_data, conversions_sheet_electricity, by="unit") %>% 
+  mutate(electricity_converted = electricity_prepped * k_wh_1_unit)
+
+#################################
+#calculate conversions for fuels#
+#################################
 
 #FUEL 1
 
@@ -105,7 +125,8 @@ fuel_1_data <- data_sheet %>%
   select('fuel_unit_1', 'fuel_1_prepped')
 
 #change name of left column from conversion sheet to match fuel number
-conversions_sheet_fuel_1 <- conversions_sheet %>% 
+conversions_sheet_fuel_1 <- conversions_sheet %>%
+  select('fuel_unit', 'k_wh_1_unit') %>% 
   rename(fuel_unit_1 = fuel_unit)
 
 #join and match, calculate prepped fuel value multiplied by its respective conversion
@@ -119,7 +140,8 @@ fuel_2_data <- data_sheet %>%
   select('fuel_unit_2', 'fuel_2_prepped')
 
 #change name of left column from conversion sheet to match fuel number
-conversions_sheet_fuel_2 <- conversions_sheet %>% 
+conversions_sheet_fuel_2 <- conversions_sheet %>%
+  select('fuel_unit', 'k_wh_1_unit') %>% 
   rename(fuel_unit_2 = fuel_unit)
 
 #join and match, calculate prepped fuel value multiplied by its respective conversion
@@ -134,6 +156,7 @@ fuel_3_data <- data_sheet %>%
 
 #change name of left column from conversion sheet to match fuel number
 conversions_sheet_fuel_3 <- conversions_sheet %>% 
+  select('fuel_unit', 'k_wh_1_unit') %>% 
   rename(fuel_unit_3 = fuel_unit)
 
 #join and match, calculate prepped fuel value multiplied by its respective conversion
@@ -147,7 +170,8 @@ fuel_4_data <- data_sheet %>%
   select('fuel_unit_4', 'fuel_4_prepped')
 
 #change name of left column from conversion sheet to match fuel number
-conversions_sheet_fuel_4 <- conversions_sheet %>% 
+conversions_sheet_fuel_4 <- conversions_sheet %>%
+  select('fuel_unit', 'k_wh_1_unit') %>% 
   rename(fuel_unit_4 = fuel_unit)
 
 #join and match, calculate prepped fuel value multiplied by its respective conversion
@@ -162,6 +186,7 @@ fuel_5_data <- data_sheet %>%
 
 #change name of left column from conversion sheet to match fuel number
 conversions_sheet_fuel_5 <- conversions_sheet %>% 
+  select('fuel_unit', 'k_wh_1_unit') %>% 
   rename(fuel_unit_5 = fuel_unit)
 
 #join and match, calculate prepped fuel value multiplied by its respective conversion
@@ -169,7 +194,8 @@ fuel_5_conversion <- left_join(fuel_5_data, conversions_sheet_fuel_5, by="fuel_u
   mutate(fuel_5_converted = fuel_5_prepped * k_wh_1_unit)
 
 #Bind converted values to data_sheet, move columns next to fuel_1_prepped for easier viewing
-data_sheet <- cbind(data_sheet, fuel_1_conversion["fuel_1_converted"], 
+data_sheet <- cbind(data_sheet, electricity_conversion["electricity_converted"],
+                    fuel_1_conversion["fuel_1_converted"], 
                     fuel_2_conversion["fuel_2_converted"],
                     fuel_3_conversion["fuel_3_converted"],
                     fuel_4_conversion["fuel_4_converted"],
@@ -181,15 +207,15 @@ data_sheet <- cbind(data_sheet, fuel_1_conversion["fuel_1_converted"],
               relocate(fuel_5_converted, .after = fuel_5_prepped)
 ```
 
-## Calculate energy unit conversions to base unit (kWh) and add to data_sheet
+## Merge fuel converted values into a separate spreadsheet to prepare for graphing
 
 ```{r}
 #isolate electricity values
 data_sheet_electricity <- data_sheet %>% 
-  select("company", "report_year", "electricity_prepped") %>% 
+  select("company", "report_year", "electricity_converted") %>% 
   add_column(fuel_type = "Electricity") %>% 
   relocate("fuel_type", .after = report_year) %>% 
-  rename(value = electricity_prepped)
+  rename(value = electricity_converted)
 
 #isolate fuel 1 values
 data_sheet_combined_1 <- data_sheet %>% 
@@ -221,17 +247,40 @@ data_sheet_combined_5 <- data_sheet %>%
   rename(fuel_type = fuel_5_type) %>% 
   rename(value = fuel_5_converted)
 
+```
+
+``` {r}
 #electricity and all fuel values on top of each other, drop columns with NA (filter by Apple for example plotting)
-data_sheet_graph <- rbind(data_sheet_electricity, data_sheet_combined_1, 
+data_sheet_graph_1 <- rbind(data_sheet_electricity, data_sheet_combined_1, 
                           data_sheet_combined_2, data_sheet_combined_3,
                           data_sheet_combined_4, data_sheet_combined_5) %>%  
                     drop_na() %>% 
-                    filter(company == "Apple")
+                    filter(company == "Huawei") %>% 
+                    arrange(desc(report_year))
+
+data_sheet_graph_2 <- data_sheet %>% 
+  mutate_at(vars(electricity_converted, fuel_1_converted, 
+           fuel_2_converted, fuel_3_converted, fuel_4_converted, 
+           fuel_5_converted), ~replace_na(., 0)) %>%
+  rowwise() %>% 
+  mutate(total_energy_use = sum(electricity_converted, fuel_1_converted, 
+           fuel_2_converted, fuel_3_converted, fuel_4_converted, 
+           fuel_5_converted)) %>% 
+  relocate(total_energy_use, .after = notes) %>%
+  unite('scope_display_label', energy_reporting_scope:display_label, sep = " | ") %>% 
+  select("company", "report_year", "scope_display_label", "total_energy_use") %>% 
+  mutate_at(vars(total_energy_use), as.numeric) %>% 
+                    filter(company == "Facebook")
 ```
 
 ```{r}
 # Stacked
-ggplot(data_sheet_graph, aes(fill=fuel_type, y=value, x=report_year)) + 
+ggplot(data_sheet_graph_1, aes(fill=fuel_type, y=value, x=report_year)) + 
+    geom_bar(position="stack", stat="identity")
+```
+
+```{r}
+ggplot(data_sheet_graph_2, aes(fill=scope_display_label, y=total_energy_use, x=report_year)) + 
     geom_bar(position="stack", stat="identity")
 ```
 
