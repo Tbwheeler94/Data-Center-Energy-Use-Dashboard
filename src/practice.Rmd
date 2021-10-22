@@ -13,13 +13,13 @@ library(here)
 library(janitor)
 library(readxl)
 library(xlsx)
+library(lubridate)
 
 ```
 
 ## Data import and prepping spreadsheet for calculating standardized energy values
 
 ```{r}
-
 #import data spreadsheet, specify column data types to ensure proper recognition
 data_sheet <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 1,
                              colClasses=c("character","integer","Date","Date","character", #columns 1-5
@@ -54,8 +54,176 @@ colnames(data_sheet) [30] <- 'fuel_4_unit_scale'
 colnames(data_sheet) [34] <- 'fuel_5_value'
 colnames(data_sheet) [35] <- 'fuel_5_unit_scale'
 
-#multiple values by unit scale to generate values that are ready for unit conversion
+```
 
+## Collect and transform reported energy values that are split across years
+
+```{r}
+
+###############################################################
+########## Prepare values for transformation ##################
+###############################################################
+
+data_sheet_scaled <- data_sheet %>% 
+  #calculate total number of reported days by subtracting the period covered start date from the end date
+  mutate(year_total_reported_days = period_covered_end_date - period_covered_start_date, .after = period_covered_end_date) %>% 
+  
+  #extract the year from period_covered_end_date to create conditional for leap year
+  mutate(period_covered_end_year = year(period_covered_end_date), .after = period_covered_end_date) %>%
+  mutate(period_covered_start_year = year(period_covered_start_date), .after = period_covered_start_date) %>% 
+  
+  #convert year values into the number of in the start or end year data is reported
+  mutate(period_covered_start_date_number = (365 - yday(period_covered_start_date)), .after = period_covered_start_date) %>% 
+  mutate(period_covered_end_date_number = yday(period_covered_end_date), .after = period_covered_end_date) %>% 
+  
+  #convert dates to proportions
+  mutate(period_covered_start_date_number = (period_covered_start_date_number/as.integer(year_total_reported_days))) %>% 
+  mutate(period_covered_end_date_number = (period_covered_end_date_number/as.integer(year_total_reported_days))) %>% 
+  
+  #rename columns
+  rename(period_start_proportion = period_covered_start_date_number) %>% 
+  rename(period_end_proportion = period_covered_end_date_number)
+
+#make 2 copies of dataframe, 1 for period 1 values, one for period 2 values
+data_sheet_scaled_period_1 <- data_sheet_scaled
+data_sheet_scaled_period_2 <- data_sheet_scaled
+
+###############################################################
+####### Transform values for period 1 in first sheet ##########
+###############################################################
+
+#created scaled values for period 2
+data_sheet_scaled_period_1$electricity_value_scaled_period <-
+  
+  #if start and end year are the same, multiply electricity value by 1, else, multiply by the proportion of days in the first year
+  ifelse(data_sheet_scaled_period_1$period_covered_start_year == 
+         data_sheet_scaled_period_1$period_covered_end_year, data_sheet_scaled_period_1$electricity_value*1,
+         data_sheet_scaled_period_1$electricity_value*data_sheet_scaled_period_1$period_start_proportion) 
+
+data_sheet_scaled_period_1$fuel_1_value_scaled_period <-
+  
+  #if start and end year are the same, multiply fuel 1 value by 1, else, multiply by the proportion of days in the first year
+  ifelse(data_sheet_scaled_period_1$period_covered_start_year == 
+         data_sheet_scaled_period_1$period_covered_end_year, data_sheet_scaled_period_1$fuel_1_value*1,
+         data_sheet_scaled_period_1$fuel_1_value*data_sheet_scaled_period_1$period_start_proportion)
+
+data_sheet_scaled_period_1$fuel_2_value_scaled_period <-
+  
+  #if start and end year are the same, multiply fuel 1 value by 1, else, multiply by the proportion of days in the first year
+  ifelse(data_sheet_scaled_period_1$period_covered_start_year == 
+         data_sheet_scaled_period_1$period_covered_end_year, data_sheet_scaled_period_1$fuel_2_value*1,
+         data_sheet_scaled_period_1$fuel_2_value*data_sheet_scaled_period_1$period_start_proportion)
+
+data_sheet_scaled_period_1$fuel_3_value_scaled_period <-
+  
+  #if start and end year are the same, multiply fuel 1 value by 1, else, multiply by the proportion of days in the first year
+  ifelse(data_sheet_scaled_period_1$period_covered_start_year == 
+         data_sheet_scaled_period_1$period_covered_end_year, data_sheet_scaled_period_1$fuel_3_value*1,
+         data_sheet_scaled_period_1$fuel_3_value*data_sheet_scaled_period_1$period_start_proportion)
+
+data_sheet_scaled_period_1$fuel_4_value_scaled_period <-
+  
+  #if start and end year are the same, multiply fuel 1 value by 1, else, multiply by the proportion of days in the first year
+  ifelse(data_sheet_scaled_period_1$period_covered_start_year == 
+         data_sheet_scaled_period_1$period_covered_end_year, data_sheet_scaled_period_1$fuel_4_value*1,
+         data_sheet_scaled_period_1$fuel_4_value*data_sheet_scaled_period_1$period_start_proportion)
+
+data_sheet_scaled_period_1$fuel_5_value_scaled_period <-
+  
+  #if start and end year are the same, multiply fuel 1 value by 1, else, multiply by the proportion of days in the first year
+  ifelse(data_sheet_scaled_period_1$period_covered_start_year == 
+         data_sheet_scaled_period_1$period_covered_end_year, data_sheet_scaled_period_1$fuel_5_value*1,
+         data_sheet_scaled_period_1$fuel_5_value*data_sheet_scaled_period_1$period_start_proportion)
+
+data_sheet_scaled_period_1 <- data_sheet_scaled_period_1 %>% 
+  relocate(electricity_value_scaled_period, .after = electricity_value) %>% 
+  relocate(fuel_1_value_scaled_period, .after = fuel_1_value) %>% 
+  relocate(fuel_2_value_scaled_period, .after = fuel_2_value) %>%
+  relocate(fuel_3_value_scaled_period, .after = fuel_3_value) %>%
+  relocate(fuel_4_value_scaled_period, .after = fuel_4_value) %>%
+  relocate(fuel_5_value_scaled_period, .after = fuel_5_value) %>% 
+  
+  #save only start date, end date, and data year (year data applies to)
+  select(!c(period_start_proportion, period_covered_end_year, period_end_proportion, year_total_reported_days)) %>% 
+  rename(data_year = period_covered_start_year)
+
+###############################################################
+####### Transform values for period 2 in second sheet #########
+###############################################################
+
+#created scaled values for period 2
+data_sheet_scaled_period_2$electricity_value_scaled_period <-
+  
+  #if start and end year are the same, multiply electricity value by 1, else, multiply by the proportion of days in the first year
+  ifelse(data_sheet_scaled_period_2$period_covered_start_year == 
+         data_sheet_scaled_period_2$period_covered_end_year, data_sheet_scaled_period_2$electricity_value*1,
+         data_sheet_scaled_period_2$electricity_value*data_sheet_scaled_period_2$period_end_proportion) 
+
+data_sheet_scaled_period_2$fuel_1_value_scaled_period <-
+  
+  #if start and end year are the same, multiply fuel 1 value by 1, else, multiply by the proportion of days in the first year
+  ifelse(data_sheet_scaled_period_2$period_covered_start_year == 
+         data_sheet_scaled_period_2$period_covered_end_year, data_sheet_scaled_period_2$fuel_1_value*1,
+         data_sheet_scaled_period_2$fuel_1_value*data_sheet_scaled_period_2$period_end_proportion)
+
+data_sheet_scaled_period_2$fuel_2_value_scaled_period <-
+  
+  #if start and end year are the same, multiply fuel 1 value by 1, else, multiply by the proportion of days in the first year
+  ifelse(data_sheet_scaled_period_2$period_covered_start_year == 
+         data_sheet_scaled_period_2$period_covered_end_year, data_sheet_scaled_period_2$fuel_1_value*1,
+         data_sheet_scaled_period_2$fuel_2_value*data_sheet_scaled_period_2$period_end_proportion)
+
+data_sheet_scaled_period_2$fuel_3_value_scaled_period <-
+  
+  #if start and end year are the same, multiply fuel 1 value by 1, else, multiply by the proportion of days in the first year
+  ifelse(data_sheet_scaled_period_2$period_covered_start_year == 
+         data_sheet_scaled_period_2$period_covered_end_year, data_sheet_scaled_period_2$fuel_1_value*1,
+         data_sheet_scaled_period_2$fuel_3_value*data_sheet_scaled_period_2$period_end_proportion)
+
+data_sheet_scaled_period_2$fuel_4_value_scaled_period <-
+  
+  #if start and end year are the same, multiply fuel 1 value by 1, else, multiply by the proportion of days in the first year
+  ifelse(data_sheet_scaled_period_2$period_covered_start_year == 
+         data_sheet_scaled_period_2$period_covered_end_year, data_sheet_scaled_period_2$fuel_1_value*1,
+         data_sheet_scaled_period_2$fuel_4_value*data_sheet_scaled_period_2$period_end_proportion)
+
+data_sheet_scaled_period_2$fuel_5_value_scaled_period <-
+  
+  #if start and end year are the same, multiply fuel 1 value by 1, else, multiply by the proportion of days in the first year
+  ifelse(data_sheet_scaled_period_2$period_covered_start_year == 
+         data_sheet_scaled_period_2$period_covered_end_year, data_sheet_scaled_period_2$fuel_1_value*1,
+         data_sheet_scaled_period_2$fuel_5_value*data_sheet_scaled_period_2$period_end_proportion)
+
+#drop all values where period covered start and end are equal prior to cbinding to the period 1 dataframe
+data_sheet_scaled_period_2 <- subset(data_sheet_scaled_period_2, period_covered_start_year != period_covered_end_year) 
+
+#relocate scaled column values to align with period 1 values
+data_sheet_scaled_period_2 <- data_sheet_scaled_period_2 %>% 
+  relocate(electricity_value_scaled_period, .after = electricity_value) %>% 
+  relocate(fuel_1_value_scaled_period, .after = fuel_1_value) %>% 
+  relocate(fuel_2_value_scaled_period, .after = fuel_2_value) %>%
+  relocate(fuel_3_value_scaled_period, .after = fuel_3_value) %>%
+  relocate(fuel_4_value_scaled_period, .after = fuel_4_value) %>%
+  relocate(fuel_5_value_scaled_period, .after = fuel_5_value) %>% 
+  
+  #save only start date, end date, and data year (year data applies to)
+  select(!c(period_start_proportion, period_covered_start_year, period_end_proportion, year_total_reported_days)) %>% 
+  rename(data_year = period_covered_end_year)
+
+###############################################################
+####### Combine spreadsheets together and combine years #######
+###############################################################
+
+data_sheet_scaled_combined <- rbind(data_sheet_scaled_period_1, data_sheet_scaled_period_2) %>% 
+  group_by(company, data_year, energy_reporting_scope, display_label) %>% 
+  summarise(electricity_value_scaled_period = sum(electricity_value_scaled_period))
+
+```
+
+## Multiply values by unit scale to generate values that are ready for unit conversion
+
+
+```{r}
 data_sheet <- data_sheet %>% 
   
   #replace any unit_scale NA values with 1
@@ -277,6 +445,7 @@ data_sheet_graph_2 <- data_sheet %>%
 # Stacked
 ggplot(data_sheet_graph_1, aes(fill=fuel_type, y=value, x=report_year)) + 
     geom_bar(position="stack", stat="identity")
+
 ```
 
 ```{r}
