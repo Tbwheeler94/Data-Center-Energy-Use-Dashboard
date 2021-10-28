@@ -17,7 +17,7 @@ library(lubridate)
 
 ```
 
-## Data import and prepping spreadsheet for calculating standardized energy values
+## Data import and prepping spreadsheet for calculating standardized energy values (server.R)
 
 ```{r}
 #import data spreadsheet, specify column data types to ensure proper recognition
@@ -109,28 +109,28 @@ data_sheet_scaled_period_1$fuel_1_value_scaled_period <-
 
 data_sheet_scaled_period_1$fuel_2_value_scaled_period <-
   
-  #if start and end year are the same, multiply fuel 1 value by 1, else, multiply by the proportion of days in the first year
+  #if start and end year are the same, multiply fuel 2 value by 2, else, multiply by the proportion of days in the first year
   ifelse(data_sheet_scaled_period_1$period_covered_start_year == 
          data_sheet_scaled_period_1$period_covered_end_year, data_sheet_scaled_period_1$fuel_2_value*1,
          data_sheet_scaled_period_1$fuel_2_value*data_sheet_scaled_period_1$period_start_proportion)
 
 data_sheet_scaled_period_1$fuel_3_value_scaled_period <-
   
-  #if start and end year are the same, multiply fuel 1 value by 1, else, multiply by the proportion of days in the first year
+  #if start and end year are the same, multiply fuel 3 value by 3, else, multiply by the proportion of days in the first year
   ifelse(data_sheet_scaled_period_1$period_covered_start_year == 
          data_sheet_scaled_period_1$period_covered_end_year, data_sheet_scaled_period_1$fuel_3_value*1,
          data_sheet_scaled_period_1$fuel_3_value*data_sheet_scaled_period_1$period_start_proportion)
 
 data_sheet_scaled_period_1$fuel_4_value_scaled_period <-
   
-  #if start and end year are the same, multiply fuel 1 value by 1, else, multiply by the proportion of days in the first year
+  #if start and end year are the same, multiply fuel 4 value by 4, else, multiply by the proportion of days in the first year
   ifelse(data_sheet_scaled_period_1$period_covered_start_year == 
          data_sheet_scaled_period_1$period_covered_end_year, data_sheet_scaled_period_1$fuel_4_value*1,
          data_sheet_scaled_period_1$fuel_4_value*data_sheet_scaled_period_1$period_start_proportion)
 
 data_sheet_scaled_period_1$fuel_5_value_scaled_period <-
   
-  #if start and end year are the same, multiply fuel 1 value by 1, else, multiply by the proportion of days in the first year
+  #if start and end year are the same, multiply fuel 5 value by 5, else, multiply by the proportion of days in the first year
   ifelse(data_sheet_scaled_period_1$period_covered_start_year == 
          data_sheet_scaled_period_1$period_covered_end_year, data_sheet_scaled_period_1$fuel_5_value*1,
          data_sheet_scaled_period_1$fuel_5_value*data_sheet_scaled_period_1$period_start_proportion)
@@ -170,28 +170,28 @@ data_sheet_scaled_period_2$fuel_2_value_scaled_period <-
   
   #if start and end year are the same, multiply fuel 1 value by 1, else, multiply by the proportion of days in the first year
   ifelse(data_sheet_scaled_period_2$period_covered_start_year == 
-         data_sheet_scaled_period_2$period_covered_end_year, data_sheet_scaled_period_2$fuel_1_value*1,
+         data_sheet_scaled_period_2$period_covered_end_year, data_sheet_scaled_period_2$fuel_2_value*1,
          data_sheet_scaled_period_2$fuel_2_value*data_sheet_scaled_period_2$period_end_proportion)
 
 data_sheet_scaled_period_2$fuel_3_value_scaled_period <-
   
   #if start and end year are the same, multiply fuel 1 value by 1, else, multiply by the proportion of days in the first year
   ifelse(data_sheet_scaled_period_2$period_covered_start_year == 
-         data_sheet_scaled_period_2$period_covered_end_year, data_sheet_scaled_period_2$fuel_1_value*1,
+         data_sheet_scaled_period_2$period_covered_end_year, data_sheet_scaled_period_2$fuel_3_value*1,
          data_sheet_scaled_period_2$fuel_3_value*data_sheet_scaled_period_2$period_end_proportion)
 
 data_sheet_scaled_period_2$fuel_4_value_scaled_period <-
   
   #if start and end year are the same, multiply fuel 1 value by 1, else, multiply by the proportion of days in the first year
   ifelse(data_sheet_scaled_period_2$period_covered_start_year == 
-         data_sheet_scaled_period_2$period_covered_end_year, data_sheet_scaled_period_2$fuel_1_value*1,
+         data_sheet_scaled_period_2$period_covered_end_year, data_sheet_scaled_period_2$fuel_4_value*1,
          data_sheet_scaled_period_2$fuel_4_value*data_sheet_scaled_period_2$period_end_proportion)
 
 data_sheet_scaled_period_2$fuel_5_value_scaled_period <-
   
   #if start and end year are the same, multiply fuel 1 value by 1, else, multiply by the proportion of days in the first year
   ifelse(data_sheet_scaled_period_2$period_covered_start_year == 
-         data_sheet_scaled_period_2$period_covered_end_year, data_sheet_scaled_period_2$fuel_1_value*1,
+         data_sheet_scaled_period_2$period_covered_end_year, data_sheet_scaled_period_2$fuel_5_value*1,
          data_sheet_scaled_period_2$fuel_5_value*data_sheet_scaled_period_2$period_end_proportion)
 
 #drop all values where period covered start and end are equal prior to cbinding to the period 1 dataframe
@@ -214,9 +214,26 @@ data_sheet_scaled_period_2 <- data_sheet_scaled_period_2 %>%
 ####### Combine spreadsheets together and combine years #######
 ###############################################################
 
-data_sheet_scaled_combined <- rbind(data_sheet_scaled_period_1, data_sheet_scaled_period_2) %>% 
-  group_by(company, data_year, energy_reporting_scope, display_label) %>% 
-  summarise(electricity_value_scaled_period = sum(electricity_value_scaled_period))
+data_sheet_scaled_combined <- rbind(data_sheet_scaled_period_1, data_sheet_scaled_period_2) %>%
+  
+  #drop original raw values from spreadsheet
+  select(!c(electricity_value, fuel_1_value, fuel_2_value, fuel_3_value, fuel_4_value, fuel_5_value)) %>% 
+  
+  #rename scaled columns to be original raw value names
+  rename(electricity_value = electricity_value_scaled_period) %>% 
+  rename(fuel_1_value = fuel_1_value_scaled_period) %>% 
+  rename(fuel_2_value = fuel_2_value_scaled_period) %>% 
+  rename(fuel_3_value = fuel_3_value_scaled_period) %>% 
+  rename(fuel_4_value = fuel_4_value_scaled_period) %>% 
+  rename(fuel_5_value = fuel_5_value_scaled_period) %>% 
+  
+  #rename columns
+  relocate(electricity_value, .after = notes) %>% 
+  relocate(fuel_1_value, .after = fuel_1_type) %>% 
+  relocate(fuel_2_value, .after = fuel_2_type) %>%
+  relocate(fuel_3_value, .after = fuel_3_type) %>%
+  relocate(fuel_4_value, .after = fuel_4_type) %>%
+  relocate(fuel_5_value, .after = fuel_5_type)
 
 ```
 
@@ -224,7 +241,7 @@ data_sheet_scaled_combined <- rbind(data_sheet_scaled_period_1, data_sheet_scale
 
 
 ```{r}
-data_sheet <- data_sheet %>% 
+data_sheet <- data_sheet_scaled_combined %>% 
   
   #replace any unit_scale NA values with 1
   mutate(unit_scale = replace_na(unit_scale, 1)) %>%
@@ -380,38 +397,38 @@ data_sheet <- cbind(data_sheet, electricity_conversion["electricity_converted"],
 ```{r}
 #isolate electricity values
 data_sheet_electricity <- data_sheet %>% 
-  select("company", "report_year", "electricity_converted") %>% 
+  select("company", "data_year", "electricity_converted") %>% 
   add_column(fuel_type = "Electricity") %>% 
-  relocate("fuel_type", .after = report_year) %>% 
+  relocate("fuel_type", .after = data_year) %>% 
   rename(value = electricity_converted)
 
 #isolate fuel 1 values
 data_sheet_combined_1 <- data_sheet %>% 
-  select("company", "report_year", "fuel_1_type", "fuel_1_converted") %>% 
+  select("company", "data_year", "fuel_1_type", "fuel_1_converted") %>% 
   rename(fuel_type = fuel_1_type) %>% 
   rename(value = fuel_1_converted)
 
 #isolate fuel 2 values
 data_sheet_combined_2 <- data_sheet %>% 
-  select("company", "report_year", "fuel_2_type", "fuel_2_converted") %>% 
+  select("company", "data_year", "fuel_2_type", "fuel_2_converted") %>% 
   rename(fuel_type = fuel_2_type) %>% 
   rename(value = fuel_2_converted)
 
 #isolate fuel 3 values
 data_sheet_combined_3 <- data_sheet %>% 
-  select("company", "report_year", "fuel_3_type", "fuel_3_converted") %>% 
+  select("company", "data_year", "fuel_3_type", "fuel_3_converted") %>% 
   rename(fuel_type = fuel_3_type) %>% 
   rename(value = fuel_3_converted)
 
 #isolate fuel 4 values
 data_sheet_combined_4 <- data_sheet %>% 
-  select("company", "report_year", "fuel_4_type", "fuel_4_converted") %>% 
+  select("company", "data_year", "fuel_4_type", "fuel_4_converted") %>% 
   rename(fuel_type = fuel_4_type) %>% 
   rename(value = fuel_4_converted)
 
 #isolate fuel 5 values
 data_sheet_combined_5 <- data_sheet %>% 
-  select("company", "report_year", "fuel_5_type", "fuel_5_converted") %>% 
+  select("company", "data_year", "fuel_5_type", "fuel_5_converted") %>% 
   rename(fuel_type = fuel_5_type) %>% 
   rename(value = fuel_5_converted)
 
@@ -423,8 +440,8 @@ data_sheet_graph_1 <- rbind(data_sheet_electricity, data_sheet_combined_1,
                           data_sheet_combined_2, data_sheet_combined_3,
                           data_sheet_combined_4, data_sheet_combined_5) %>%  
                     drop_na() %>% 
-                    filter(company == "Huawei") %>% 
-                    arrange(desc(report_year))
+                    filter(company == "Spark") %>% 
+                    arrange(desc(data_year))
 
 data_sheet_graph_2 <- data_sheet %>% 
   mutate_at(vars(electricity_converted, fuel_1_converted, 
@@ -436,20 +453,20 @@ data_sheet_graph_2 <- data_sheet %>%
            fuel_5_converted)) %>% 
   relocate(total_energy_use, .after = notes) %>%
   unite('scope_display_label', energy_reporting_scope:display_label, sep = " | ") %>% 
-  select("company", "report_year", "scope_display_label", "total_energy_use") %>% 
+  select("company", "data_year", "scope_display_label", "total_energy_use") %>% 
   mutate_at(vars(total_energy_use), as.numeric) %>% 
-                    filter(company == "Facebook")
+                    filter(company == "Apple")
 ```
 
 ```{r}
 # Stacked
-ggplot(data_sheet_graph_1, aes(fill=fuel_type, y=value, x=report_year)) + 
+ggplot(data_sheet_graph_1, aes(fill=fuel_type, y=value, x=data_year)) + 
     geom_bar(position="stack", stat="identity")
 
 ```
 
 ```{r}
-ggplot(data_sheet_graph_2, aes(fill=scope_display_label, y=total_energy_use, x=report_year)) + 
+ggplot(data_sheet_graph_2, aes(fill=scope_display_label, y=total_energy_use, x=data_year)) + 
     geom_bar(position="stack", stat="identity")
 ```
 

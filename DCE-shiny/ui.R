@@ -9,6 +9,6 @@
 
 library(shiny)
 
-htmlTemplate(
-    filename = "www/index.html")
+ui <- htmlTemplate(filename = "www/index.html",
+                   company_graph = companyPlot)
 
