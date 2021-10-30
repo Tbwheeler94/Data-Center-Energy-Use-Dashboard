@@ -442,9 +442,9 @@ graph_by_fuel_type <-
   rbind(data_sheet_electricity, data_sheet_combined_1, #stack converted electricity, fuel values sheets on top of each other
         data_sheet_combined_2, data_sheet_combined_3,
         data_sheet_combined_4, data_sheet_combined_5) %>%
-  drop_na() %>% #drop na values from spreadsheet
-  filter(company == "Spark") %>% #filter by specific company
-  arrange(desc(data_year)) #sort data_year by year for easier viewing
+  drop_na() #%>% drop na values from spreadsheet
+  #filter(company == "Spark") %>% #filter by specific company
+  #arrange(desc(data_year)) #sort data_year by year for easier viewing
 
 graph_by_data_center <- data_sheet %>% 
   mutate_at(vars(electricity_converted, fuel_1_converted, #replace na values with 0
@@ -478,11 +478,17 @@ graph_by_industry_total <- data_sheet %>%
   filter(company != 'Fujitsu | Total Company Energy Use', company != 'American Express | Total Company Energy Use') %>%  #need to review these numbers, were they recorded wrong? are they just really large? or are the sums being calculated wrong? %>% 
   drop_na()
 
-write.csv(graph_by_industry_total, "practice_data.csv")
+write.csv(graph_by_industry_total, "aggregate_data.csv")
+write.csv(graph_by_fuel_type, "by_fuel_type_data.csv")
+
 ```
 
 ```{r}
 # Stacked
+
+graph_by_fuel_type <- by_fuel_type_data %>% 
+    filter(company == "Spark")
+           
 ggplot(graph_by_fuel_type, aes(fill=fuel_type, y=value, x=data_year)) + 
     geom_bar(position="stack", stat="identity")
 

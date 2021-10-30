@@ -1,0 +1,721 @@
+"","company","data_year","fuel_type","value"
+"2","21Vianet",2020,"Electricity",491853539
+"3","Accenture",2019,"Electricity",60334246.5753425
+"4","Accenture",2018,"Electricity",79780219.7802198
+"5","Adobe",2019,"Electricity",3851515151.51515
+"6","Adobe",2018,"Electricity",2713305785.12397
+"7","Adobe",2018,"Electricity",3203884297.52066
+"8","Amazon",2020,"Electricity",2.4e+10
+"9","American Express",2019,"Electricity",2.57569e+11
+"10","American Express",2018,"Electricity",2.46955e+11
+"11","American Express",2017,"Electricity",2.59323e+11
+"12","Apple",2019,"Electricity",92516853.9325843
+"13","Apple",2019,"Electricity",58662921.3483146
+"14","Apple",2019,"Electricity",25584269.6629214
+"15","Apple",2019,"Electricity",72101123.5955056
+"16","Apple",2019,"Electricity",89157303.3707865
+"17","Apple",2019,"Electricity",3359550.56179775
+"18","Apple",2019,"Electricity",75719101.1235955
+"19","Apple",2019,"Electricity",20674157.3033708
+"20","Apple",2019,"Electricity",1808988.76404494
+"21","Apple",2018,"Electricity",83188732.3943662
+"22","Apple",2018,"Electricity",42242253.5211268
+"23","Apple",2018,"Electricity",27988732.3943662
+"24","Apple",2018,"Electricity",65825352.1126761
+"25","Apple",2018,"Electricity",96923943.6619718
+"26","Apple",2018,"Electricity",1554929.57746479
+"27","Apple",2018,"Electricity",71267605.6338028
+"28","Apple",2018,"Electricity",16585915.4929577
+"29","Apple",2017,"Electricity",76450704.2253521
+"30","Apple",2017,"Electricity",29543661.971831
+"31","Apple",2017,"Electricity",65307042.2535211
+"32","Apple",2017,"Electricity",65566197.1830986
+"33","Apple",2017,"Electricity",26952112.6760563
+"34","Apple",2017,"Electricity",1036619.71830986
+"35","Apple",2017,"Electricity",63233802.8169014
+"36","Apple",2017,"Electricity",21509859.1549296
+"37","Apple",2016,"Electricity",69980281.6901408
+"38","Apple",2016,"Electricity",30247887.3239437
+"39","Apple",2016,"Electricity",49985915.4929577
+"40","Apple",2016,"Electricity",47678873.2394366
+"41","Apple",2016,"Electricity",11535211.2676056
+"42","Apple",2016,"Electricity",9484.50704225352
+"43","Apple",2016,"Electricity",58445070.4225352
+"44","Apple",2016,"Electricity",15636619.7183099
+"45","Apple",2015,"Electricity",63056179.7752809
+"46","Apple",2015,"Electricity",33595505.6179775
+"47","Apple",2015,"Electricity",29719101.1235955
+"48","Apple",2015,"Electricity",23258426.9662921
+"49","Apple",2015,"Electricity",4910112.35955056
+"50","Apple",2015,"Electricity",46516853.9325843
+"51","Apple",2014,"Electricity",56495774.6478873
+"52","Apple",2014,"Electricity",35504225.3521127
+"53","Apple",2014,"Electricity",13994366.1971831
+"54","Apple",2014,"Electricity",11921126.7605634
+"55","Apple",2013,"Electricity",48721126.7605634
+"56","Apple",2013,"Electricity",35763380.2816901
+"57","Apple",2013,"Electricity",6997183.09859155
+"58","Apple",2013,"Electricity",4923943.66197183
+"59","Apple",2012,"Electricity",41014084.5070423
+"60","Apple",2012,"Electricity",31529577.4647887
+"61","Apple",2012,"Electricity",4614084.50704225
+"62","Apple",2012,"Electricity",769014.084507042
+"63","Apple",2011,"Electricity",26876404.494382
+"64","Apple",2011,"Electricity",28685393.258427
+"65","Apple",2011,"Electricity",516853.93258427
+"66","Apple",2010,"Electricity",11402816.9014084
+"67","Apple",2010,"Electricity",24101408.4507042
+"68","Baidu",2020,"Electricity",529137384.1
+"69","Baidu",2019,"Electricity",490628065.2
+"70","Capital One",2020,"Electricity",333792000
+"71","Capital One",2019,"Electricity",375125000
+"72","Capital One",2018,"Electricity",398886000
+"73","Capital One",2017,"Electricity",414164000
+"74","Capital One",2016,"Electricity",404274000
+"75","Capital One",2015,"Electricity",426593000
+"76","Capital One",2014,"Electricity",452037000
+"77","Capital One",2013,"Electricity",454245000
+"78","China Telecom",2020,"Electricity",2.2833e+10
+"79","China Telecom",2019,"Electricity",1.9501e+10
+"80","China Telecom",2018,"Electricity",1.7096e+10
+"81","China Telecom",2017,"Electricity",1.6276e+10
+"82","Dell",2019,"Electricity",941123966.942149
+"83","Dell",2018,"Electricity",947407713.498623
+"84","Dell",2017,"Electricity",998181818.181818
+"85","eBay",2020,"Electricity",392369000
+"86","eBay",2019,"Electricity",405681000
+"87","eBay",2018,"Electricity",402430000
+"88","Facebook",2020,"Electricity",9.8e+08
+"89","Facebook",2019,"Electricity",8.53e+08
+"90","Facebook",2018,"Electricity",6.12e+08
+"91","Facebook",2017,"Electricity",5e+08
+"92","Facebook",2016,"Electricity",3.42e+08
+"93","Facebook",2020,"Electricity",4.87e+08
+"94","Facebook",2019,"Electricity",3.82e+08
+"95","Facebook",2018,"Electricity",2e+08
+"96","Facebook",2017,"Electricity",1e+06
+"97","Facebook",2016,"Electricity",1e+06
+"98","Facebook",2020,"Electricity",5.95e+08
+"99","Facebook",2019,"Electricity",6.14e+08
+"100","Facebook",2018,"Electricity",5.47e+08
+"101","Facebook",2017,"Electricity",4.33e+08
+"102","Facebook",2016,"Electricity",3.39e+08
+"103","Facebook",2020,"Electricity",9.41e+08
+"104","Facebook",2019,"Electricity",6.95e+08
+"105","Facebook",2018,"Electricity",4.61e+08
+"106","Facebook",2017,"Electricity",1.89e+08
+"107","Facebook",2016,"Electricity",1.6e+07
+"108","Facebook",2020,"Electricity",3.69e+08
+"109","Facebook",2019,"Electricity",3.73e+08
+"110","Facebook",2018,"Electricity",3.37e+08
+"111","Facebook",2017,"Electricity",3.01e+08
+"112","Facebook",2016,"Electricity",2.95e+08
+"113","Facebook",2020,"Electricity",2.7e+08
+"114","Facebook",2019,"Electricity",3.8e+07
+"115","Facebook",2020,"Electricity",3.43e+08
+"116","Facebook",2019,"Electricity",1.28e+08
+"117","Facebook",2018,"Electricity",4e+06
+"118","Facebook",2020,"Electricity",5.19e+08
+"119","Facebook",2019,"Electricity",1.78e+08
+"120","Facebook",2018,"Electricity",5e+06
+"121","Facebook",2020,"Electricity",6.86e+08
+"122","Facebook",2019,"Electricity",5.73e+08
+"123","Facebook",2018,"Electricity",4.88e+08
+"124","Facebook",2017,"Electricity",4.26e+08
+"125","Facebook",2016,"Electricity",3.27e+08
+"126","Facebook",2020,"Electricity",2.04e+08
+"127","Facebook",2019,"Electricity",1e+07
+"128","Facebook",2020,"Electricity",5.71e+08
+"129","Facebook",2019,"Electricity",2.89e+08
+"130","Facebook",2018,"Electricity",2.6e+07
+"131","Facebook",2020,"Electricity",7.95e+08
+"132","Facebook",2019,"Electricity",6.74e+08
+"133","Facebook",2018,"Electricity",4.32e+08
+"134","Facebook",2017,"Electricity",3.59e+08
+"135","Facebook",2016,"Electricity",3.17e+08
+"136","Facebook",2020,"Electricity",2.06e+08
+"137","Facebook",2019,"Electricity",1.13e+08
+"138","Facebook",2018,"Electricity",1.33e+08
+"139","Facebook",2017,"Electricity",1.35e+08
+"140","Facebook",2016,"Electricity",1.18e+08
+"141","FIS",2020,"Electricity",124110715.742458
+"142","FIS",2019,"Electricity",139052850.650056
+"143","Google",2019,"Electricity",8489242000
+"144","Google",2019,"Electricity",3747956000
+"145","Google",2018,"Electricity",7085620000
+"146","Google",2018,"Electricity",3018675000
+"147","Google",2017,"Electricity",5533783000
+"148","Google",2017,"Electricity",2075306000
+"149","Google",2016,"Electricity",4522314000
+"150","Google",2016,"Electricity",1686877000
+"151","Google",2015,"Electricity",3779280000
+"152","Google",2015,"Electricity",1422196000
+"153","HPE",2019,"Electricity",759000
+"154","HPE",2018,"Electricity",504000
+"155","HPE",2017,"Electricity",1001000
+"156","HPE",2016,"Electricity",1438000
+"157","HPE",2015,"Electricity",1271000
+"158","IBM",2020,"Electricity",3.513e+09
+"159","IBM",2019,"Electricity",3.806e+09
+"160","IBM",2018,"Electricity",4.009e+09
+"161","IBM",2018,"Electricity",3.405e+09
+"162","IBM",2018,"Electricity",5.81e+08
+"163","IBM",2018,"Electricity",3637715000
+"164","IBM",2018,"Electricity",4359724196
+"165","IBM",2018,"Electricity",5267658154
+"166","IBM",2018,"Electricity",6108185782
+"167","IBM",2018,"Electricity",6210174490
+"168","IBM",2018,"Electricity",6334143523
+"169","IBM",2018,"Electricity",6376638818
+"170","IBM",2018,"Electricity",6336781162
+"171","IBM",2018,"Electricity",6303077997
+"172","IBM",2018,"Electricity",6577392453
+"173","IBM",2018,"Electricity",6927612298
+"174","IBM",2018,"Electricity",6591459861
+"175","IBM",2018,"Electricity",6632196730
+"176","IBM",2018,"Electricity",6259996560
+"177","IBM",2018,"Electricity",6358175345
+"178","IBM",2018,"Electricity",7339670124
+"179","Huawei",2018,"Electricity",2355040000
+"180","Huawei",2017,"Electricity",2070950000
+"181","Huawei",2016,"Electricity",1686530000
+"182","Huawei",2015,"Electricity",1.347e+09
+"183","Huawei",2014,"Electricity",1133250000
+"184","Huawei",2013,"Electricity",940820000
+"185","Huawei",2012,"Electricity",86885000
+"199","Salesforce",2019,"Electricity",542588736.263736
+"200","Salesforce",2018,"Electricity",505574505.494505
+"201","Salesforce",2017,"Electricity",409095989.010989
+"202","Salesforce",2016,"Electricity",284318136.986301
+"203","Salesforce",2015,"Electricity",198793681.318681
+"204","Salesforce",2014,"Electricity",88373076.9230769
+"205","SAP",2020,"Electricity",3.61e+08
+"206","SAP",2019,"Electricity",3.38e+08
+"207","SAP",2018,"Electricity",3.18e+08
+"208","SAP",2017,"Electricity",2.65e+08
+"209","SAP",2016,"Electricity",2.43e+08
+"210","ServiceStream",2019,"Electricity",724197.893049764
+"211","Spark",2019,"Electricity",29079452.0547945
+"212","Spark",2018,"Electricity",28656593.4065934
+"213","Spark",2017,"Electricity",27651098.9010989
+"214","Spark",2016,"Electricity",25500000
+"215","Spark",2015,"Electricity",23564383.5616438
+"216","SUNeVision",2019,"Electricity",128218416.041096
+"217","SUNeVision",2018,"Electricity",93781637.4642857
+"218","SUNeVision",2017,"Electricity",74400245.217033
+"219","Tencent",2020,"Electricity",1513913880
+"220","Tencent",2019,"Electricity",1299958500
+"221","Tencent",2018,"Electricity",938848880
+"222","VISA",2018,"Electricity",25859961.5981551
+"223","Verizon",2020,"Electricity",9838981220.32647
+"224","Verizon ",2019,"Electricity",9987683766.84458
+"227","Equinix",2017,"Electricity",4.518e+09
+"228","Equinix",2016,"Electricity",3.692e+09
+"229","Equinix",2015,"Electricity",2.574e+09
+"230","Equinix",2014,"Electricity",2.239e+09
+"231","Telstra ",2015,"Electricity",1448601736.53439
+"232","Telstra ",2014,"Electricity",1433187634.15064
+"233","Telstra ",2013,"Electricity",1436352065.39815
+"234","Telstra ",2012,"Electricity",1464187504.86889
+"235","Telstra ",2011,"Electricity",1418544084.10894
+"236","Telstra ",2010,"Electricity",1450080063.70251
+"237","Fujitsu",2018,"Electricity",6190593406.59341
+"238","Fujitsu",2017,"Electricity",5537208791.20879
+"239","Fujitsu",2016,"Electricity",5.01e+09
+"240","Fujitsu",2015,"Electricity",6088805479.45205
+"241","Fujitsu",2014,"Electricity",5945197802.1978
+"242","Fujitsu",2013,"Electricity",7034423076.92308
+"243","Fujitsu",2012,"Electricity",8787233250
+"244","Fujitsu",2011,"Electricity",7966797726.0274
+"245","Fujitsu",2010,"Electricity",6190463934.06593
+"246","Fujitsu",2009,"Electricity",6140998653.84615
+"247","KDDI Group",2019,"Electricity",1695435430.13699
+"248","KDDI Group",2018,"Electricity",1631931956.04396
+"249","KDDI Group",2017,"Electricity",1467654653.84615
+"250","KDDI Group",2016,"Electricity",1435310250
+"251","KDDI Group",2015,"Electricity",1455664410.9589
+"252","KDDI Group",2014,"Electricity",1410116159.34066
+"253","KDDI Group",2013,"Electricity",1269493186.81319
+"254","KDDI Group",2012,"Electricity",1414277250
+"255","KDDI Group",2011,"Electricity",1644593041.09589
+"256","KDDI Group",2010,"Electricity",1501760879.12088
+"257","KDDI Group",2009,"Electricity",1600671868.13187
+"258","China Unicom",2019,"Electricity",1.581e+10
+"259","China Unicom",2018,"Electricity",1.419e+10
+"260","China Unicom",2017,"Electricity",1.3986e+10
+"261","China Unicom",2016,"Electricity",1.3893e+10
+"262","China Unicom",2015,"Electricity",1.4575e+10
+"263","China Unicom",2014,"Electricity",1.3434e+10
+"264","China Unicom",2013,"Electricity",1.3033e+10
+"265","China Unicom",2012,"Electricity",1.172e+10
+"266","NTT",2019,"Electricity",350787561.643836
+"267","NTT",2019,"Electricity",268712926.027397
+"268","NTT",2018,"Electricity",358894835.164835
+"269","NTT",2017,"Electricity",361792912.087912
+"270","NTT",2016,"Electricity",370777500
+"271","NTT",2015,"Electricity",357783945.205479
+"276","CyrusOne",2019,"Electricity",2.506e+09
+"277","CyrusOne",2018,"Electricity",1.932e+09
+"278","Digital Realty",2020,"Electricity",8318712000
+"279","Digital Realty",2019,"Electricity",6631840000
+"280","Digital Realty",2018,"Electricity",6180300000
+"281","Iron Mountain",2019,"Electricity",574406000
+"282","Iron Mountain",2018,"Electricity",541357000
+"283","Iron Mountain",2017,"Electricity",356100000
+"284","Iron Mountain",2016,"Electricity",337490000
+"285","Iron Mountain",2015,"Electricity",319417000
+"286","Iron Mountain",2014,"Electricity",2.65e+08
+"287","Iron Mountain",2013,"Electricity",2.9e+08
+"288","Lumen",2018,"Electricity",195368000
+"3100","Accenture",2020,"Electricity",121665753.424658
+"4100","Accenture",2019,"Electricity",160219780.21978
+"5100","Adobe",2020,"Electricity",41248484848.4848
+"6100","Adobe",2019,"Electricity",30117694214.876
+"7100","Adobe",2019,"Electricity",35563115702.4793
+"1210","Apple",2020,"Electricity",265483146.067416
+"1310","Apple",2020,"Electricity",168337078.651685
+"1410","Apple",2020,"Electricity",73415730.3370787
+"1510","Apple",2020,"Electricity",206898876.404494
+"1610","Apple",2020,"Electricity",255842696.629213
+"1710","Apple",2020,"Electricity",9640449.43820225
+"1810","Apple",2020,"Electricity",217280898.876404
+"1910","Apple",2020,"Electricity",59325842.6966292
+"2010","Apple",2020,"Electricity",5191011.23595506
+"2110","Apple",2019,"Electricity",237811267.605634
+"2210","Apple",2019,"Electricity",120757746.478873
+"2310","Apple",2019,"Electricity",80011267.6056338
+"2410","Apple",2019,"Electricity",188174647.887324
+"2510","Apple",2019,"Electricity",277076056.338028
+"2610","Apple",2019,"Electricity",4445070.42253521
+"2710","Apple",2019,"Electricity",203732394.366197
+"2810","Apple",2019,"Electricity",47414084.5070423
+"2910","Apple",2018,"Electricity",218549295.774648
+"3010","Apple",2018,"Electricity",84456338.028169
+"3110","Apple",2018,"Electricity",186692957.746479
+"3210","Apple",2018,"Electricity",187433802.816901
+"3310","Apple",2018,"Electricity",77047887.3239437
+"3410","Apple",2018,"Electricity",2963380.28169014
+"3510","Apple",2018,"Electricity",180766197.183099
+"3610","Apple",2018,"Electricity",61490140.8450704
+"3710","Apple",2017,"Electricity",202250704.225352
+"3810","Apple",2017,"Electricity",87419718.3098592
+"3910","Apple",2017,"Electricity",144464788.732394
+"4010","Apple",2017,"Electricity",137797183.098592
+"4110","Apple",2017,"Electricity",33338028.1690141
+"4210","Apple",2017,"Electricity",27411.2676056338
+"4310","Apple",2017,"Electricity",168912676.056338
+"4410","Apple",2017,"Electricity",45191549.2957746
+"4510","Apple",2016,"Electricity",180943820.224719
+"4610","Apple",2016,"Electricity",96404494.3820225
+"4710","Apple",2016,"Electricity",85280898.8764045
+"4810","Apple",2016,"Electricity",66741573.0337079
+"4910","Apple",2016,"Electricity",14089887.6404494
+"5010","Apple",2016,"Electricity",133483146.067416
+"5110","Apple",2015,"Electricity",161504225.352113
+"5210","Apple",2015,"Electricity",101495774.647887
+"5310","Apple",2015,"Electricity",40005633.8028169
+"5410","Apple",2015,"Electricity",34078873.2394366
+"5510","Apple",2014,"Electricity",139278873.239437
+"5610","Apple",2014,"Electricity",102236619.71831
+"5710","Apple",2014,"Electricity",20002816.9014085
+"5810","Apple",2014,"Electricity",14076056.3380282
+"5910","Apple",2013,"Electricity",118535211.267606
+"6010","Apple",2013,"Electricity",91123943.6619718
+"6110","Apple",2013,"Electricity",13335211.2676056
+"6210","Apple",2013,"Electricity",2222535.21126761
+"6310","Apple",2012,"Electricity",77123595.505618
+"6410","Apple",2012,"Electricity",82314606.7415731
+"6510","Apple",2012,"Electricity",1483146.06741573
+"6610","Apple",2011,"Electricity",32597183.0985916
+"6710","Apple",2011,"Electricity",68898591.5492958
+"8210","Dell",2020,"Electricity",87876033.0578512
+"8310","Dell",2019,"Electricity",91592286.5013774
+"8410","Dell",2018,"Electricity",99818181.8181818
+"1991","Salesforce",2020,"Electricity",50511263.7362637
+"2001","Salesforce",2019,"Electricity",47065494.5054945
+"2011","Salesforce",2018,"Electricity",38084010.989011
+"2021","Salesforce",2017,"Electricity",26468054.7945205
+"2031","Salesforce",2016,"Electricity",18506318.6813187
+"2041","Salesforce",2015,"Electricity",8226923.07692308
+"2101","ServiceStream",2020,"Electricity",720240.527513972
+"2111","Spark",2020,"Electricity",28920547.9452055
+"2121","Spark",2019,"Electricity",28343406.5934066
+"2131","Spark",2018,"Electricity",27348901.0989011
+"2141","Spark",2017,"Electricity",25359890.1098901
+"2151","Spark",2016,"Electricity",23435616.4383562
+"2161","SUNeVision",2020,"Electricity",127517768.958904
+"2171","SUNeVision",2019,"Electricity",92756701.5357143
+"2181","SUNeVision",2018,"Electricity",73587127.782967
+"2221","VISA",2019,"Electricity",77579884.7944654
+"2371","Fujitsu",2019,"Electricity",2033406593.40659
+"2381","Fujitsu",2018,"Electricity",1818791208.79121
+"2391","Fujitsu",2017,"Electricity",1651648351.64835
+"2401","Fujitsu",2016,"Electricity",2022194520.54795
+"2411","Fujitsu",2015,"Electricity",1952802197.8022
+"2421","Fujitsu",2014,"Electricity",2310576923.07692
+"2431","Fujitsu",2013,"Electricity",2896890082.41758
+"2441","Fujitsu",2012,"Electricity",2645907273.9726
+"2451","Fujitsu",2011,"Electricity",2033364065.93407
+"2461","Fujitsu",2010,"Electricity",2017116346.15385
+"2471","KDDI Group",2020,"Electricity",563082569.863014
+"2481","KDDI Group",2019,"Electricity",536036043.956044
+"2491","KDDI Group",2018,"Electricity",482076346.153846
+"2501","KDDI Group",2017,"Electricity",473179203.296703
+"2511","KDDI Group",2016,"Electricity",483450589.041096
+"2521","KDDI Group",2015,"Electricity",463176840.659341
+"2531","KDDI Group",2014,"Electricity",416986813.186813
+"2541","KDDI Group",2013,"Electricity",466245247.252747
+"2551","KDDI Group",2012,"Electricity",546196958.90411
+"2561","KDDI Group",2011,"Electricity",493279120.879121
+"2571","KDDI Group",2010,"Electricity",525768131.868132
+"2661","NTT",2020,"Electricity",116502438.356164
+"2671","NTT",2020,"Electricity",89244073.9726027
+"2681","NTT",2019,"Electricity",117885164.835165
+"2691","NTT",2018,"Electricity",118837087.912088
+"2701","NTT",2017,"Electricity",122234340.659341
+"2711","NTT",2016,"Electricity",118826054.794521
+"9100","American Express",2019,"Natural Gas",1688100000
+"10100","American Express",2018,"Natural Gas",1.6711e+13
+"1162","American Express",2017,"Natural Gas",1.7615e+13
+"1211","Apple",2019,"Biogas",37917348.1616405
+"1311","Apple",2019,"Natural Gas",23630.0842247191
+"1511","Apple",2019,"Natural Gas",38247.4119662921
+"2112","Apple",2018,"Biogas",37667492.662738
+"2211","Apple",2018,"Natural Gas",33874.0542873239
+"2412","Apple",2018,"Natural Gas",41545.0845183099
+"2911","Apple",2017,"Biogas",41087101.2282817
+"3111","Apple",2017,"Natural Gas",34937.3654084507
+"3311","Apple",2017,"Natural Gas",19747.2065352113
+"3711","Apple",2016,"Biogas",43200019.3054648
+"3911","Apple",2016,"Natural Gas",39065.125971831
+"4111","Apple",2016,"Natural Gas",3005.00969014085
+"4511","Apple",2015,"Biogas",37199129.928618
+"4711","Apple",2015,"Natural Gas",14011.4281460674
+"4911","Apple",2015,"Natural Gas",2499.33583146067
+"5111","Apple",2014,"Biogas",35024329.068
+"5311","Apple",2014,"Natural Gas",18456.0430309859
+"5511","Apple",2013,"Natural Gas",519513.860057899
+"5711","Apple",2013,"Natural Gas",348.472125248451
+"5911","Apple",2012,"Natural Gas",370727.204938231
+"6311","Apple",2011,"Natural Gas",2818.55653115281
+"6810","Baidu",2020,"Natural Gas",27081123.9039177
+"6910","Baidu",2019,"Natural Gas",25439440.2732552
+"7810","China Telecom",2020,"Natural Gas",81181055.4867157
+"7910","China Telecom",2019,"Natural Gas",97438379.9925079
+"8010","China Telecom",2018,"Natural Gas",97227245.9080171
+"8110","China Telecom",2017,"Natural Gas",89731985.9085934
+"8211","Dell",2019,"Other",182920110.192837
+"8311","Dell",2018,"Other",186928374.655647
+"8411","Dell",2017,"Other",190909090.909091
+"8510","eBay",2020,"Natural Gas",40125000
+"8610","eBay",2019,"Natural Gas",43012000
+"8710","eBay",2018,"Natural Gas",42890000
+"1541","HPE",2018,"Other",11000
+"1551","HPE",2017,"Other",63000
+"1561","HPE",2016,"Other",395000
+"1591","IBM",2019,"Other",6.5e+08
+"1601","IBM",2018,"Other",6.57e+08
+"1612","IBM",2018,"Other",674063300
+"1791","Huawei",2018,"Natural Gas",117601685.06138
+"1801","Huawei",2017,"Natural Gas",75058167.0364822
+"1812","Huawei",2016,"Natural Gas",104828072.949686
+"1821","Huawei",2015,"Natural Gas",55105996.0521009
+"1831","Huawei",2014,"Natural Gas",51833417.7424934
+"1841","Huawei",2013,"Natural Gas",446548588.698059
+"1851","Huawei",2012,"Natural Gas",47505169.0104318
+"1861","JD",2020,"Natural Gas",2950197.67599851
+"1871","JPMorgan",2020,"Natural Gas",216862000
+"1881","JPMorgan",2019,"Natural Gas",254794000
+"1891","JPMorgan",2018,"Natural Gas",256623000
+"1901","JPMorgan",2017,"Natural Gas",224119000
+"1951","Microsoft",2019,"Natural Gas",218557000
+"1961","Microsoft",2018,"Natural Gas",196644000
+"1971","Microsoft",2017,"Natural Gas",110863000
+"1981","Microsoft",2016,"Natural Gas",107687000
+"2162","SUNeVision",2019,"Diesel",401091.378082192
+"2172","SUNeVision",2018,"Diesel",166750.203296703
+"2182","SUNeVision",2017,"Diesel",700580.307692308
+"2191","Tencent",2020,"Diesel",1267680
+"2201","Tencent",2019,"Diesel",1203160
+"2212","Tencent",2018,"Diesel",139820
+"2251","Equinix",2019,"Other",5.74e+09
+"2261","Equinix",2018,"Other",5.18e+09
+"2271","Equinix",2017,"Other",4.54e+09
+"2281","Equinix",2016,"Other",3.72e+09
+"2291","Equinix",2015,"Other",2.6e+09
+"2312","Telstra ",2015,"Natural Gas",8883851.83970566
+"2321","Telstra ",2014,"Natural Gas",9339683.27204125
+"2331","Telstra ",2013,"Natural Gas",6387195.58508511
+"2341","Telstra ",2012,"Natural Gas",6321918.0795404
+"2351","Telstra ",2011,"Natural Gas",4757757.93604148
+"2361","Telstra ",2010,"Natural Gas",5345811.03918252
+"2372","Fujitsu",2018,"Natural Gas",2.29893115882339e+20
+"2382","Fujitsu",2017,"Natural Gas",2.22582308187498e+20
+"2392","Fujitsu",2016,"Natural Gas",2.35625638291742e+20
+"2402","Fujitsu",2015,"Natural Gas",2.37663516044238e+20
+"2413","Fujitsu",2014,"Natural Gas",2.37760180684396e+20
+"2422","Fujitsu",2013,"Natural Gas",2.43640612960681e+20
+"2432","Fujitsu",2012,"Natural Gas",253075870.374907
+"2442","Fujitsu",2011,"Natural Gas",250422377.692495
+"2452","Fujitsu",2010,"Natural Gas",249727655.019647
+"2462","Fujitsu",2009,"Natural Gas",266518673.127472
+"2472","KDDI Group",2019,"Other",176.41095890411
+"2482","KDDI Group",2018,"Other",106.89010989011
+"2492","KDDI Group",2017,"Other",130.225274725275
+"2502","KDDI Group",2016,"Other",103.5
+"2513","KDDI Group",2015,"Other",91.5835616438356
+"2522","KDDI Group",2014,"Other",90.3296703296703
+"2532","KDDI Group",2013,"Other",101.620879120879
+"2542","KDDI Group",2012,"Other",91.5
+"2552","KDDI Group",2011,"Other",90.0821917808219
+"2562","KDDI Group",2010,"Other",82.3505494505495
+"2572","KDDI Group",2009,"Other",119.235164835165
+"2581","China Unicom",2019,"Natural Gas",54219232.8972395
+"2591","China Unicom",2018,"Natural Gas",107099875.698807
+"2601","China Unicom",2017,"Natural Gas",747520226.139706
+"2612","China Unicom",2016,"Natural Gas",116123746.469944
+"2621","China Unicom",2015,"Natural Gas",108839620.555012
+"2631","China Unicom",2014,"Natural Gas",113695704.4983
+"2641","China Unicom",2013,"Natural Gas",122690016.497609
+"2651","China Unicom",2012,"Natural Gas",123291748.638407
+"2662","NTT",2019,"Gasoline",300608.476557077
+"2682","NTT",2018,"Gasoline",210303.016758242
+"2692","NTT",2017,"Gasoline",280404.022344322
+"2702","NTT",2016,"Gasoline",474947.105
+"2713","NTT",2015,"Gasoline",174772.370091324
+"2781","Digital Realty",2020,"Heat",117705000
+"2791","Digital Realty",2019,"Heat",125026000
+"2801","Digital Realty",2018,"Heat",118500000
+"2812","Iron Mountain",2019,"Heat",286450000
+"2821","Iron Mountain",2018,"Heat",276646000
+"2831","Iron Mountain",2017,"Heat",258698000
+"2841","Iron Mountain",2016,"Heat",253964000
+"2851","Iron Mountain",2015,"Heat",259348000
+"12101","Apple",2020,"Biogas",108806303.42036
+"13101","Apple",2020,"Natural Gas",67808.0677752809
+"15101","Apple",2020,"Natural Gas",109753.443033708
+"21101","Apple",2019,"Biogas",107679897.503262
+"22101","Apple",2019,"Natural Gas",96835.6117126761
+"24101","Apple",2019,"Natural Gas",118764.75248169
+"29101","Apple",2018,"Biogas",117455517.641718
+"31101","Apple",2018,"Natural Gas",99875.2945915493
+"33101","Apple",2018,"Natural Gas",56451.2534647887
+"37101","Apple",2017,"Biogas",124852803.047662
+"39101","Apple",2017,"Natural Gas",112902.506929577
+"41101","Apple",2017,"Natural Gas",8684.80822535211
+"45101","Apple",2016,"Biogas",106745329.360382
+"47101","Apple",2016,"Natural Gas",40206.7068539326
+"49101","Apple",2016,"Natural Gas",7172.00716853933
+"51101","Apple",2015,"Biogas",100123897.227
+"53101","Apple",2015,"Natural Gas",52760.2099690141
+"55101","Apple",2014,"Natural Gas",1485132.0129916
+"57101","Apple",2014,"Natural Gas",996.175749351549
+"59101","Apple",2013,"Natural Gas",1071442.36152478
+"63101","Apple",2012,"Natural Gas",8088.03178504719
+"82101","Dell",2020,"Other",17079889.8071625
+"83101","Dell",2019,"Other",18071625.3443526
+"84101","Dell",2018,"Other",19090909.0909091
+"21611","SUNeVision",2020,"Diesel",398899.621917808
+"21711","SUNeVision",2019,"Diesel",164927.796703297
+"21811","SUNeVision",2018,"Diesel",692923.692307692
+"23711","Fujitsu",2019,"Natural Gas",75512337333614936064
+"23811","Fujitsu",2018,"Natural Gas",73110977141878833152
+"23911","Fujitsu",2017,"Natural Gas",77678781854420353024
+"24011","Fujitsu",2016,"Natural Gas",78932043649728659456
+"24111","Fujitsu",2015,"Natural Gas",78096409713852710912
+"24211","Fujitsu",2014,"Natural Gas",80027938563727425536
+"24311","Fujitsu",2013,"Natural Gas",83431605.6181012
+"24411","Fujitsu",2012,"Natural Gas",83169475.8029819
+"24511","Fujitsu",2011,"Natural Gas",82027331.9407599
+"24611","Fujitsu",2010,"Natural Gas",87542629.8593886
+"24711","KDDI Group",2020,"Other",58.5890410958904
+"24811","KDDI Group",2019,"Other",35.1098901098901
+"24911","KDDI Group",2018,"Other",42.7747252747253
+"25011","KDDI Group",2017,"Other",34.1208791208791
+"25111","KDDI Group",2016,"Other",30.4164383561644
+"25211","KDDI Group",2015,"Other",29.6703296703297
+"25311","KDDI Group",2014,"Other",33.3791208791209
+"25411","KDDI Group",2013,"Other",30.1648351648352
+"25511","KDDI Group",2012,"Other",29.9178082191781
+"25611","KDDI Group",2011,"Other",27.0494505494506
+"25711","KDDI Group",2010,"Other",39.1648351648352
+"26611","NTT",2020,"Gasoline",99837.1217762557
+"26811","NTT",2019,"Gasoline",69077.6332417582
+"26911","NTT",2018,"Gasoline",92103.510989011
+"27011","NTT",2017,"Gasoline",156575.968681319
+"27111","NTT",2016,"Gasoline",58044.8382420091
+"9102","American Express",2019,"Other",2.021e+12
+"10102","American Express",2018,"Other",3.241e+12
+"1164","American Express",2017,"Other",2.333e+12
+"6812","Baidu",2020,"Gasoline",101630.343888889
+"6912","Baidu",2019,"Diesel",3587216.325
+"7812","China Telecom",2020,"Gasoline",44240697.6
+"7912","China Telecom",2019,"Gasoline",46574739.2
+"8012","China Telecom",2018,"Gasoline",66626278.4
+"8112","China Telecom",2017,"Gasoline",65247072
+"8512","eBay",2020,"Other",2516000
+"8612","eBay",2019,"Other",9476000
+"8712","eBay",2018,"Other",9718000
+"1792","Huawei",2018,"Gasoline",266292.928
+"1802","Huawei",2017,"Gasoline",636556.8
+"1814","Huawei",2016,"Gasoline",379812.224
+"1822","Huawei",2015,"Gasoline",385116.864
+"1832","Huawei",2014,"Gasoline",413761.92
+"1842","Huawei",2013,"Gasoline",1769627.904
+"1852","Huawei",2012,"Gasoline",1637011.904
+"1862","JD",2020,"Gasoline",5639196.40805
+"1872","JPMorgan",2020,"Gasoline",692000
+"1882","JPMorgan",2019,"Gasoline",1314000
+"1892","JPMorgan",2018,"Gasoline",1281000
+"1902","JPMorgan",2017,"Gasoline",1081000
+"1952","Microsoft",2019,"Diesel",147297000
+"1962","Microsoft",2018,"Diesel",152034000
+"1972","Microsoft",2017,"Diesel",152915000
+"1982","Microsoft",2016,"Diesel",164324000
+"2252","Equinix",2019,"Other",3.8e+07
+"2272","Equinix",2017,"Other",3.7e+07
+"2314","Telstra ",2015,"Diesel",20772413.3708032
+"2322","Telstra ",2014,"Diesel",15897711.4780199
+"2332","Telstra ",2013,"Diesel",16429098.1508158
+"2342","Telstra ",2012,"Diesel",8901073.99010468
+"2352","Telstra ",2011,"Diesel",12472725.7615679
+"2362","Telstra ",2010,"Diesel",10073013.5470967
+"2373","Fujitsu",2018,"Gasoline",198640807.730738
+"2383","Fujitsu",2017,"Gasoline",213277498.826687
+"2393","Fujitsu",2016,"Gasoline",245832308.115174
+"2403","Fujitsu",2015,"Gasoline",304443174.795741
+"2415","Fujitsu",2014,"Gasoline",313643380.627481
+"2423","Fujitsu",2013,"Gasoline",365917277.398727
+"2433","Fujitsu",2012,"Gasoline",435414850.814165
+"2443","Fujitsu",2011,"Gasoline",75485225.5315468
+"2453","Fujitsu",2010,"Gasoline",84892808.3565048
+"2463","Fujitsu",2009,"Gasoline",91374771.5561394
+"2473","KDDI Group",2019,"Diesel",445771.91369863
+"2483","KDDI Group",2018,"Diesel",37881.0645604396
+"2493","KDDI Group",2017,"Diesel",37881.0645604396
+"2503","KDDI Group",2016,"Diesel",45291.375
+"2515","KDDI Group",2015,"Diesel",166220.035616438
+"2523","KDDI Group",2014,"Diesel",113643.193681319
+"2533","KDDI Group",2013,"Diesel",45457.2774725275
+"2543","KDDI Group",2012,"Diesel",430268.0625
+"2553","KDDI Group",2011,"Diesel",90665.4739726027
+"2563","KDDI Group",2010,"Diesel",137129.453708791
+"2573","KDDI Group",2009,"Diesel",592459.849725275
+"2582","China Unicom",2019,"Diesel",162693746.16
+"2592","China Unicom",2018,"Diesel",95911160.4
+"2602","China Unicom",2017,"Diesel",2901016580
+"2614","China Unicom",2016,"Diesel",151563315.2
+"2622","China Unicom",2015,"Diesel",240369945.2
+"2632","China Unicom",2014,"Diesel",213135912
+"2642","China Unicom",2013,"Diesel",288917569.6
+"2652","China Unicom",2012,"Diesel",281813039.2
+"2782","Digital Realty",2020,"Heat",152981000
+"2792","Digital Realty",2019,"Other",147396000
+"2802","Digital Realty",2018,"Heat",149500000
+"23712","Fujitsu",2019,"Gasoline",65246980.6414832
+"23812","Fujitsu",2018,"Gasoline",70054652.8992767
+"23912","Fujitsu",2017,"Gasoline",81043618.0599476
+"24012","Fujitsu",2016,"Gasoline",101110689.439462
+"24112","Fujitsu",2015,"Gasoline",103021548.381289
+"24212","Fujitsu",2014,"Gasoline",120191806.444837
+"24312","Fujitsu",2013,"Gasoline",143543357.411263
+"24412","Fujitsu",2012,"Gasoline",25069910.6692364
+"24512","Fujitsu",2011,"Gasoline",27884499.0952023
+"24612","Fujitsu",2010,"Gasoline",30013611.0950823
+"24712","KDDI Group",2020,"Diesel",148048.33630137
+"24812","KDDI Group",2019,"Diesel",12442.6854395604
+"24912","KDDI Group",2018,"Diesel",12442.6854395604
+"25012","KDDI Group",2017,"Diesel",14931.2225274725
+"25112","KDDI Group",2016,"Diesel",55204.4643835616
+"25212","KDDI Group",2015,"Diesel",37328.0563186813
+"25312","KDDI Group",2014,"Diesel",14931.2225274725
+"25412","KDDI Group",2013,"Diesel",141846.614010989
+"25512","KDDI Group",2012,"Diesel",30111.5260273973
+"25612","KDDI Group",2011,"Diesel",45042.5212912088
+"25712","KDDI Group",2010,"Diesel",194603.600274725
+"6814","Baidu",2020,"Diesel",7443155.0655
+"7814","China Telecom",2020,"Diesel",203663204.8
+"7914","China Telecom",2019,"Diesel",163404199.2
+"8014","China Telecom",2018,"Diesel",204847293.2
+"8114","China Telecom",2017,"Diesel",241554033.6
+"1793","Huawei",2018,"Diesel",911748.068
+"1803","Huawei",2017,"Diesel",3031266.304
+"1816","Huawei",2016,"Diesel",1373542.544
+"1823","Huawei",2015,"Diesel",485476.244
+"1833","Huawei",2014,"Diesel",544680.664
+"1843","Huawei",2013,"Diesel",710453.04
+"1853","Huawei",2012,"Diesel",568362.432
+"1863","JD",2020,"Diesel",542073700.04205
+"1873","JPMorgan",2020,"Other",15052000
+"1883","JPMorgan",2019,"Other",25317000
+"1893","JPMorgan",2018,"Other",37143000
+"1903","JPMorgan",2017,"Other",30645000
+"1953","Microsoft",2019,"Gasoline",4.3e+07
+"1963","Microsoft",2018,"Gasoline",43474000
+"1973","Microsoft",2017,"Gasoline",44604000
+"1983","Microsoft",2016,"Gasoline",46996000
+"2374","Fujitsu",2018,"Other",7736536.72214452
+"2384","Fujitsu",2017,"Other",8572919.07048447
+"2394","Fujitsu",2016,"Other",8958295.97368856
+"2404","Fujitsu",2015,"Other",8966477.06590197
+"2417","Fujitsu",2014,"Other",8782014.65756946
+"2424","Fujitsu",2013,"Other",8991110.24465445
+"2434","Fujitsu",2012,"Other",9479752.13234303
+"2444","Fujitsu",2011,"Other",9596007.16501727
+"2454","Fujitsu",2010,"Other",8256975.63839906
+"2464","Fujitsu",2009,"Other",10183373.282213
+"2474","KDDI Group",2019,"Kerosene",1858863.41551233
+"2484","KDDI Group",2018,"Kerosene",511215.451071429
+"2494","KDDI Group",2017,"Kerosene",1108944.28617033
+"2504","KDDI Group",2016,"Kerosene",1528049.10375
+"2517","KDDI Group",2015,"Kerosene",901980.138328767
+"2524","KDDI Group",2014,"Kerosene",928052.665021978
+"2534","KDDI Group",2013,"Kerosene",943782.371208791
+"2544","KDDI Group",2012,"Kerosene",1245947.73075
+"2554","KDDI Group",2011,"Kerosene",1451011.52687671
+"2564","KDDI Group",2010,"Kerosene",2181710.24811099
+"2574","KDDI Group",2009,"Kerosene",1889137.71303626
+"2583","China Unicom",2019,"Gasoline",44293744
+"2593","China Unicom",2018,"Gasoline",30342540.8
+"2603","China Unicom",2017,"Gasoline",308730048
+"2616","China Unicom",2016,"Gasoline",48378316.8
+"2623","China Unicom",2015,"Gasoline",61109452.8
+"2633","China Unicom",2014,"Gasoline",66520185.6
+"2643","China Unicom",2013,"Gasoline",71188268.8
+"2653","China Unicom",2012,"Gasoline",77872115.2
+"23713","Fujitsu",2019,"Other",2541198.19340514
+"23813","Fujitsu",2018,"Other",2815922.32242191
+"23913","Fujitsu",2017,"Other",2953284.38693029
+"24013","Fujitsu",2016,"Other",2977917.56568277
+"24113","Fujitsu",2015,"Other",2884603.3546761
+"24213","Fujitsu",2014,"Other",2953284.38693029
+"24313","Fujitsu",2013,"Other",3125193.01066254
+"24413","Fujitsu",2012,"Other",3186995.08035245
+"24513","Fujitsu",2011,"Other",2712145.28268582
+"24613","Fujitsu",2010,"Other",3344903.6328437
+"24713","KDDI Group",2020,"Kerosene",617359.747487671
+"24813","KDDI Group",2019,"Kerosene",167917.483928571
+"24913","KDDI Group",2018,"Kerosene",364251.77282967
+"25013","KDDI Group",2017,"Kerosene",503752.451785714
+"25113","KDDI Group",2016,"Kerosene",299562.746671233
+"25213","KDDI Group",2015,"Kerosene",304834.816978022
+"25313","KDDI Group",2014,"Kerosene",310001.508791209
+"25413","KDDI Group",2013,"Kerosene",410751.999148352
+"25513","KDDI Group",2012,"Kerosene",481905.288123288
+"25613","KDDI Group",2011,"Kerosene",716620.154489011
+"25713","KDDI Group",2010,"Kerosene",620519.686763736
+"1794","Huawei",2018,"Heat",14107695.084
+"1804","Huawei",2017,"Heat",13289627.988
+"1818","Huawei",2016,"Heat",12406334.976
+"1824","Huawei",2015,"Heat",12533738.868
+"1834","Huawei",2014,"Heat",12119219.028
+"1844","Huawei",2013,"Heat",12712348.152
+"1854","Huawei",2012,"Heat",15512185.836
+"1954","Microsoft",2019,"Heat",12458000
+"1964","Microsoft",2018,"Heat",12002000
+"1974","Microsoft",2017,"Heat",12213000
+"1984","Microsoft",2016,"Heat",19549000
+"1955","Microsoft",2019,"Other",51026000
+"1965","Microsoft",2018,"Other",52937000
+"1975","Microsoft",2017,"Other",52775000
+"1985","Microsoft",2016,"Other",30121000
