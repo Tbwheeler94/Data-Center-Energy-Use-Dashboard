@@ -9,7 +9,7 @@ server <- function(input, output) {
     buildAggregateOutput(aggregate_data)
   })
   
-  output$companyfuelPlot <- renderPlot({
+  output$companyfuelPlot <- renderPlot({ 
     buildcompanyfuelOutput(by_fuel_type_data, input$company_selection)
   })
 }
