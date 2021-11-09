@@ -4,10 +4,12 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
     <!--  
     Document Title
     =============================================
     -->
+    
     <title>Data Center Energy Use Dashboard</title>
     
     <!-- Shiny added header -->
@@ -36,20 +38,21 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="assets/images/favicons/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
+    
     <!--  
     Stylesheets
     =============================================
-    
     -->
+    
     <!-- Default stylesheets-->
     <link href="assets/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  
     <!-- Template specific stylesheets-->
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Volkhov:400i" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
     <link href="assets/lib/animate.css/animate.css" rel="stylesheet">
     <link href="assets/lib/components-font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <link href="assets/lib/et-line-font/et-line-font.css" rel="stylesheet">
     <link href="assets/lib/flexslider/flexslider.css" rel="stylesheet">
     <link href="assets/lib/owl.carousel/dist/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="assets/lib/owl.carousel/dist/assets/owl.theme.default.min.css" rel="stylesheet">
@@ -60,10 +63,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     
+    <!-- Downloaded fonts from iconmoon (first reference is for font created by Titan template site) -->
+    <link href="assets/lib/et-line-font/et-line-font.css" rel="stylesheet">
+    <link href="assets/lib/data-center-icons-font/data-center-icons-font.css" rel="stylesheet">
+    
     <!-- Main stylesheet and color file-->
     <link href="assets/css/style.css" rel="stylesheet">
     <link id="color-scheme" href="assets/css/colors/default.css" rel="stylesheet">
     <link href="assets/css/style-custom.css" rel="stylesheet">
+    
   </head>
   <body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">
     <main>
@@ -93,7 +101,10 @@
         <div class="titan-caption">
           <div class="caption-content">
             <div class="font-alt mb-30 titan-title-size-1">Welcome</div>
-            <div class="font-alt mb-40 titan-title-size-4">The Future of Data Center Energy Use</div><a class="section-scroll btn btn-border-w btn-round" href="#">Explore the data</a>
+            <div class="font-alt mb-40 titan-title-size-4">The Future of
+            <br>
+            Data Center Energy Use</div>
+            <a class="section-scroll btn btn-border-w btn-round" href="#">Explore the data</a>
           </div>
         </div>
       </section>
@@ -109,37 +120,39 @@
             <div class="row multi-columns-row">
               <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="features-item">
-                  <div class="features-icon"><span class="material-icons-outlined">business</span></div>
+                  <div class="features-icon"><span class="icon-calendar"></span></div>
                   <h3 class="features-title font-alt">Years Reported</h3>
                 </div>
               </div>
               <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="features-item">
-                  <div class="features-icon"><span class="icon-bike"></span></div>
+                  <div class="features-icon"><span class="icon-office"></span></div>
                   <h3 class="features-title font-alt">Companies Reporting</h3>
                 </div>
               </div>
               <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="features-item">
-                  <div class="features-icon"><span class="icon-tools"></span></div>
+                  <div class="features-icon"><span class="icon-power"></span></div>
                   <h3 class="features-title font-alt">Total Data Center Energy Use Reported</h3>
                 </div>
               </div>
               <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="features-item">
-                  <div class="features-icon"><span class="icon-gears"></span></div>
+                  <div class="features-icon"><span class="icon-earth"></span></div>
                   <h3 class="features-title font-alt">Countries Represented in Total</h3>
                 </div>
               </div>
             </div>
           </div>
         </section>
-        <section>
+        <section class="module">
+          <h2 class="module-title font-alt">Aggregated Energy Use</h2>
           <div class="container">
               {{ company_graph }}
           </div>
         </section>
-        <section>
+        <section class="module">
+          <h2 class="module-title font-alt">Company Profile</h2>
           <div class="container">
               {{ select_company }}
               {{ fuel_output }}
@@ -149,7 +162,7 @@
           <div class="container">
             <div class="row">
               <div class="col-sm-6 col-sm-offset-3">
-                <h2 class="module-title font-alt">Our Works</h2>
+                <h2 class="module-title font-alt">Methodology</h2>
                 <div class="module-subtitle font-serif"></div>
               </div>
             </div>
@@ -385,84 +398,6 @@
             </div>
           </div>
         </section>
-        <section class="module" id="pricing">
-          <div class="container">
-            <div class="row">
-              <div class="col-sm-6 col-sm-offset-3">
-                <h2 class="module-title font-alt">Our Prices</h2>
-                <div class="module-subtitle font-serif">A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart.</div>
-              </div>
-            </div>
-            <div class="row multi-columns-row">
-              <div class="col-sm-6 col-md-3 col-lg-3">
-                <div class="price-table font-alt">
-                  <h4>Light</h4>
-                  <div class="borderline"></div>
-                  <p class="price"><span>$</span>9
-                  </p>
-                  <ul class="price-details">
-                    <li>Free Support</li>
-                    <li>15 Demos Included</li>
-                    <li><span>Newsletter</span></li>
-                    <li><span>Working Contact Form</span></li>
-                    <li><span>Unlimited Domains</span></li>
-                  </ul><a class="btn btn-d btn-round" href="#">Sign Up</a>
-                </div>
-              </div>
-              <div class="col-sm-6 col-md-3 col-lg-3">
-                <div class="price-table font-alt">
-                  <h4>Basic</h4>
-                  <div class="borderline"></div>
-                  <p class="price"><span>$</span>29
-                  </p>
-                  <ul class="price-details">
-                    <li>Free Support</li>
-                    <li>15 Demos Included</li>
-                    <li>Newsletter</li>
-                    <li><span>Working Contact Form</span></li>
-                    <li><span>Unlimited Domains</span></li>
-                  </ul><a class="btn btn-d btn-round" href="#">Sign Up</a>
-                </div>
-              </div>
-              <div class="col-sm-6 col-md-3 col-lg-3">
-                <div class="price-table font-alt best">
-                  <h4>Advanced</h4>
-                  <p class="small">Best Choice</p>
-                  <div class="borderline"></div>
-                  <p class="price"><span>$</span>64
-                  </p>
-                  <ul class="price-details">
-                    <li>Free Support</li>
-                    <li>15 Demos Included</li>
-                    <li>Newsletter</li>
-                    <li>Working Contact Form</li>
-                    <li><span>Unlimited Domains</span></li>
-                  </ul><a class="btn btn-d btn-round" href="#">Sign Up</a>
-                </div>
-              </div>
-              <div class="col-sm-6 col-md-3 col-lg-3">
-                <div class="price-table font-alt">
-                  <h4>Ultimate</h4>
-                  <div class="borderline"></div>
-                  <p class="price"><span>$</span>119
-                  </p>
-                  <ul class="price-details">
-                    <li>Free Support</li>
-                    <li>15 Demos Included</li>
-                    <li>Newsletter</li>
-                    <li>Working Contact Form</li>
-                    <li>Unlimited Domains</li>
-                  </ul><a class="btn btn-d btn-round" href="#">Sign Up</a>
-                </div>
-              </div>
-            </div>
-            <div class="row mt-40">
-              <div class="col-sm-6 col-sm-offset-3 align-center">
-                <p>Everyone realizes why a new common language would be desirable: one could refuse to pay expensive translators. To achieve this, it would be necessary to have uniform grammar, pronunciation and more common words.</p>
-              </div>
-            </div>
-          </div>
-        </section>
         <section class="module bg-dark-60 pt-0 pb-0 parallax-bg testimonial" data-background="assets/images/testimonial_bg.jpg">
           <div class="testimonials-slider pt-140 pb-140">
             <ul class="slides">
@@ -539,60 +474,6 @@
                 </div>
               </li>
             </ul>
-          </div>
-        </section>
-        <section class="module" id="news">
-          <div class="container">
-            <div class="row">
-              <div class="col-sm-6 col-sm-offset-3">
-                <h2 class="module-title font-alt">Latest blog posts</h2>
-                <div class="module-subtitle font-serif">A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart.</div>
-              </div>
-            </div>
-            <div class="row multi-columns-row post-columns">
-              <div class="col-sm-6 col-md-4 col-lg-4">
-                <div class="post mb-20">
-                  <div class="post-thumbnail"><a href="#"><img src="assets/images/post-1.jpg" alt="Blog-post Thumbnail"/></a></div>
-                  <div class="post-header font-alt">
-                    <h2 class="post-title"><a href="#">Our trip to the Alps</a></h2>
-                    <div class="post-meta">By&nbsp;<a href="#">Mark Stone</a>&nbsp;| 23 November | 3 Comments
-                    </div>
-                  </div>
-                  <div class="post-entry">
-                    <p>A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart.</p>
-                  </div>
-                  <div class="post-more"><a class="more-link" href="#">Read more</a></div>
-                </div>
-              </div>
-              <div class="col-sm-6 col-md-4 col-lg-4">
-                <div class="post mb-20">
-                  <div class="post-thumbnail"><a href="#"><img src="assets/images/post-2.jpg" alt="Blog-post Thumbnail"/></a></div>
-                  <div class="post-header font-alt">
-                    <h2 class="post-title"><a href="#">Shore after the tide</a></h2>
-                    <div class="post-meta">By&nbsp;<a href="#">Andy River</a>&nbsp;| 11 November | 4 Comments
-                    </div>
-                  </div>
-                  <div class="post-entry">
-                    <p>A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart.</p>
-                  </div>
-                  <div class="post-more"><a class="more-link" href="#">Read more</a></div>
-                </div>
-              </div>
-              <div class="col-sm-6 col-md-4 col-lg-4">
-                <div class="post mb-20">
-                  <div class="post-thumbnail"><a href="#"><img src="assets/images/post-3.jpg" alt="Blog-post Thumbnail"/></a></div>
-                  <div class="post-header font-alt">
-                    <h2 class="post-title"><a href="#">We in New Zealand</a></h2>
-                    <div class="post-meta">By&nbsp;<a href="#">Dylan Woods</a>&nbsp;| 5 November | 15 Comments
-                    </div>
-                  </div>
-                  <div class="post-entry">
-                    <p>A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart.</p>
-                  </div>
-                  <div class="post-more"><a class="more-link" href="#">Read more</a></div>
-                </div>
-              </div>
-            </div>
           </div>
         </section>
         <div class="module-small bg-dark">
