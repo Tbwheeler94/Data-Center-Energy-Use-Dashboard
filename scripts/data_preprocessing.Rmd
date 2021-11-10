@@ -481,6 +481,10 @@ graph_by_industry_total <- data_sheet %>%
 write.csv(graph_by_industry_total, "aggregate_data.csv")
 write.csv(graph_by_fuel_type, "by_fuel_type_data.csv")
 
+graph_by_industry_total <- graph_by_industry_total %>% 
+  filter(grepl("Data Centers", company))
+
+paste(round(sum(graph_by_industry_total$value)/1000000000, 1), "TWh")
 ```
 
 ```{r}
