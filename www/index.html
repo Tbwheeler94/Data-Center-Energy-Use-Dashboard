@@ -15,7 +15,6 @@
     <!-- Shiny added header -->
 
     {{ headContent() }}
-    {{ bootstrapLib() }}
     
     <!--  
     Favicons
@@ -43,9 +42,6 @@
     Stylesheets
     =============================================
     -->
-    
-    <!-- Default stylesheets-->
-    <link href="assets/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   
     <!-- Template specific stylesheets-->
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700" rel="stylesheet">
@@ -58,6 +54,9 @@
     <link href="assets/lib/owl.carousel/dist/assets/owl.theme.default.min.css" rel="stylesheet">
     <link href="assets/lib/magnific-popup/dist/magnific-popup.css" rel="stylesheet">
     <link href="assets/lib/simple-text-rotator/simpletextrotator.css" rel="stylesheet">
+    
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
     
     <!-- Icons reference -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -86,13 +85,11 @@
           <div class="collapse navbar-collapse" id="custom-collapse">
             <ul class="nav navbar-nav navbar-right">
               <li><a href="#totop">Home</a></li>
-              <li><a class="section-scroll" href="#services">Data</a></li>
-              <li><a class="section-scroll" href="#works">Learn</a></li>
-              <li><a class="section-scroll" href="#alt-features">Explore</a></li>
-              <li><a class="section-scroll" href="#team">About</a></li>
-              <li><a class="section-scroll" href="#pricing">Prices</a></li>
-              <li><a class="section-scroll" href="#news">News</a></li>
-              <li><a class="section-scroll" href="#contact">Contact</a></li>
+              <li><a class="section-scroll" href="#data">Data</a></li>
+              <li><a class="section-scroll" href="#aggregate">Aggregated Data</a></li>
+              <li><a class="section-scroll" href="#company">Company Profiles</a></li>
+              <li><a class="section-scroll" href="#methodology">Methodology</a></li>
+              <li><a class="section-scroll" href="#project">Project</a></li>
             </ul>
           </div>
         </div>
@@ -109,7 +106,7 @@
         </div>
       </section>
       <div class="main">
-        <section class="module" id="services">
+        <section class="module" id="data">
           <div class="container">
             <div class="row">
               <div class="col-sm-10 col-sm-offset-1">
@@ -149,79 +146,74 @@
             </div>
           </div>
         </section>
-        <section class="module">
+        <section class="module" id="aggregate">
           <h2 class="module-title font-alt">Aggregated Energy Use</h2>
           <div class="container">
               {{ company_graph }}
           </div>
         </section>
-        <section class="module">
+        <section class="module" id="company">
           <h2 class="module-title font-alt">Company Profile</h2>
           <div class="container">
               {{ select_company }}
               {{ fuel_output }}
           </div>
         </section>
-        <section class="module pb-0" id="works">
+        <section class="module" id="methodology">
           <div class="container">
             <div class="row">
               <div class="col-sm-6 col-sm-offset-3">
                 <h2 class="module-title font-alt">Methodology</h2>
-                <div class="module-subtitle font-serif"></div>
+                <div class="module-subtitle font-serif"> Our Approach to Developing the Datset</div>
               </div>
             </div>
           </div>
-          <div class="container">
             <div class="row">
-              <div class="col-sm-12">
-                <ul class="filter font-alt" id="filters">
-                  <li><a class="current wow fadeInUp" href="#" data-filter="*">All</a></li>
-                  <li><a class="wow fadeInUp" href="#" data-filter=".illustration" data-wow-delay="0.2s">Illustration</a></li>
-                  <li><a class="wow fadeInUp" href="#" data-filter=".marketing" data-wow-delay="0.4s">Marketing</a></li>
-                  <li><a class="wow fadeInUp" href="#" data-filter=".photography" data-wow-delay="0.6s">Photography</a></li>
-                  <li><a class="wow fadeInUp" href="#" data-filter=".webdesign" data-wow-delay="0.6s">Web Design</a></li>
-                </ul>
+              <div class="col-sm-6 col-sm-offset-3">
+                <div id="accordion">
+                  <div class="card">
+                    <div class="card-header" id="headingOne">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                          Where do we get the data?
+                        </button>
+                    </div>
+                    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                      <div class="card-body">
+                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-header" id="headingTwo">
+                      <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                          What data do we look for?
+                        </button>
+                      </h5>
+                    </div>
+                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                      <div class="card-body">
+                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-header" id="headingThree">
+                      <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                         How are the data structured?
+                        </button>
+                      </h5>
+                    </div>
+                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                      <div class="card-body">
+                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-          <ul class="works-grid works-grid-gut works-grid-3 works-hover-w" id="works-grid">
-            <li class="work-item illustration webdesign"><a href="portfolio-single-1.html">
-                <div class="work-image"><img src="assets/images/work-1.jpg" alt="Portfolio Item"/></div>
-                <div class="work-caption font-alt">
-                  <h3 class="work-title">Corporate Identity</h3>
-                  <div class="work-descr">Illustration</div>
-                </div></a></li>
-            <li class="work-item marketing photography"><a href="portfolio-single-1.html">
-                <div class="work-image"><img src="assets/images/work-2.jpg" alt="Portfolio Item"/></div>
-                <div class="work-caption font-alt">
-                  <h3 class="work-title">Bag MockUp</h3>
-                  <div class="work-descr">Marketing</div>
-                </div></a></li>
-            <li class="work-item illustration photography"><a href="portfolio-single-1.html">
-                <div class="work-image"><img src="assets/images/work-3.jpg" alt="Portfolio Item"/></div>
-                <div class="work-caption font-alt">
-                  <h3 class="work-title">Disk Cover</h3>
-                  <div class="work-descr">Illustration</div>
-                </div></a></li>
-            <li class="work-item marketing photography"><a href="portfolio-single-1.html">
-                <div class="work-image"><img src="assets/images/work-4.jpg" alt="Portfolio Item"/></div>
-                <div class="work-caption font-alt">
-                  <h3 class="work-title">Business Card</h3>
-                  <div class="work-descr">Photography</div>
-                </div></a></li>
-            <li class="work-item illustration webdesign"><a href="portfolio-single-1.html">
-                <div class="work-image"><img src="assets/images/work-5.jpg" alt="Portfolio Item"/></div>
-                <div class="work-caption font-alt">
-                  <h3 class="work-title">Business Card</h3>
-                  <div class="work-descr">Webdesign</div>
-                </div></a></li>
-            <li class="work-item marketing webdesign"><a href="portfolio-single-1.html">
-                <div class="work-image"><img src="assets/images/work-6.jpg" alt="Portfolio Item"/></div>
-                <div class="work-caption font-alt">
-                  <h3 class="work-title">Business Cards in paper clip</h3>
-                  <div class="work-descr">Marketing</div>
-                </div></a></li>
-          </ul>
         </section>
         <section class="module-small bg-dark">
           <div class="container">
@@ -238,11 +230,11 @@
             </div>
           </div>
         </section>
-        <section class="module" id="alt-features">
+        <section class="module" id="About">
           <div class="container">
             <div class="row">
               <div class="col-sm-6 col-sm-offset-3">
-                <h2 class="module-title font-alt">Our features</h2>
+                <h2 class="module-title font-alt">About the Project</h2>
                 <div class="module-subtitle font-serif">A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart.</div>
               </div>
             </div>
@@ -621,8 +613,8 @@
     JavaScripts
     =============================================
     -->
-    <script src="assets/lib/jquery/dist/jquery.js"></script>
     <script src="assets/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="assets/lib/jquery/dist/jquery.js"></script>
     <script src="assets/lib/wow/dist/wow.js"></script>
     <script src="assets/lib/jquery.mb.ytplayer/dist/jquery.mb.YTPlayer.js"></script>
     <script src="assets/lib/isotope/dist/isotope.pkgd.js"></script>
@@ -635,5 +627,6 @@
     <script async="" defer="" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDK2Axt8xiFYMBMDwwG1XzBQvEbYpzCvFU"></script>
     <script src="assets/js/plugins.js"></script>
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/collapsible.js"></script>
   </body>
 </html>
