@@ -4,6 +4,7 @@ library(janitor)
 library(tidyverse)
 library(lubridate)
 library(shiny)
+library(shiny.router)
 
 #change to API call to AWS hosting in future
 aggregate_data <- read.csv(here('data', 'aggregate_data.csv'))

@@ -1,7 +1,5 @@
 buildcompanyfuelOutput <- function(by_fuel_type_data, company_selection) {
   
-  #company_selection <<- company_selection
-  
   graph_fuel_data <- reactive({ by_fuel_type_data %>%
       filter(company == company_selection) })
   

@@ -15,6 +15,7 @@
     <!-- Shiny added header -->
 
     {{ headContent() }}
+    {{ bootstrapLib() }}
     
     <!--  
     Favicons
@@ -154,8 +155,8 @@
         </section>
         <section class="module" id="company">
           <h2 class="module-title font-alt">Company Profile</h2>
+          <div class = "row"> {{ company_selection }} </div>
           <div class="container">
-              {{ select_company }}
               {{ fuel_output }}
           </div>
         </section>

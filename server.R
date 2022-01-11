@@ -3,7 +3,6 @@ source(here("R", "companyfuelOutput.R"))
 source(here("R", "yearsreportingOutput.R"))
 source(here("R", "companiesreportingOutput.R"))
 
-
 #Server code
 server <- function(input, output) {
   
@@ -14,7 +13,9 @@ server <- function(input, output) {
   
   # Company profile output
   output$companyfuelPlot <- renderPlot({ 
-    buildcompanyfuelOutput(by_fuel_type_data, input$company_selection)
+
+      buildcompanyfuelOutput(by_fuel_type_data, input$company_selection)
+    
   })
   
   # Years reported output
