@@ -21,8 +21,10 @@ library(ggiraph)
 ## Data import and prepping spreadsheet for calculating standardized energy values (server.R)
 
 ```{r}
-#import data spreadsheet, specify column data types to ensure proper recognition
-data_sheet <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 1,
+#import "Input - Energy Use" sheet of DataCenterEnergyUse-RawCollection.xlsx spreadsheet
+data_sheet_energy <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 1, #the "1" specifies you want sheet 1
+                         
+                             #specify column data types to ensure proper recognition
                              colClasses=c("character","integer","Date","Date","character", #columns 1-5
                                           "character", "character","character","numeric","integer", #columns 6-10
                                           "character", "character","character","character","numeric", #columns 11-15 (Fuel 1)
@@ -33,30 +35,72 @@ data_sheet <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 
                                           "integer", "character")) #column 36, 37 (Notes)
 
 #move second row values to column headers, put header names in tidy format
-data_sheet <- data_sheet %>% 
+data_sheet_energy <- data_sheet_energy %>% 
   row_to_names(1) %>% 
   clean_names()
 
 #change column names that were set to incorrect values when column classes were set
-colnames(data_sheet) [2] <- 'report_year'
-colnames(data_sheet) [3] <- 'period_covered_start_date'
-colnames(data_sheet) [4] <- 'period_covered_end_date'
-colnames(data_sheet) [5] <- 'energy_reporting_scope'
-colnames(data_sheet) [6] <- 'level_of_ownership'
-colnames(data_sheet) [9] <- 'electricity_value'
-colnames(data_sheet) [10] <- 'unit_scale'
-colnames(data_sheet) [15] <- 'fuel_1_value'
-colnames(data_sheet) [16] <- 'fuel_1_unit_scale'
-colnames(data_sheet) [20] <- 'fuel_2_value'
-colnames(data_sheet) [21] <- 'fuel_2_unit_scale'
-colnames(data_sheet) [25] <- 'fuel_3_value'
-colnames(data_sheet) [26] <- 'fuel_3_unit_scale'
-colnames(data_sheet) [30] <- 'fuel_4_value'
-colnames(data_sheet) [31] <- 'fuel_4_unit_scale'
-colnames(data_sheet) [35] <- 'fuel_5_value'
-colnames(data_sheet) [36] <- 'fuel_5_unit_scale'
+colnames(data_sheet_energy) [2] <- 'report_year'
+colnames(data_sheet_energy) [3] <- 'period_covered_start_date'
+colnames(data_sheet_energy) [4] <- 'period_covered_end_date'
+colnames(data_sheet_energy) [5] <- 'energy_reporting_scope'
+colnames(data_sheet_energy) [6] <- 'level_of_ownership'
+colnames(data_sheet_energy) [9] <- 'electricity_value'
+colnames(data_sheet_energy) [10] <- 'unit_scale'
+colnames(data_sheet_energy) [15] <- 'fuel_1_value'
+colnames(data_sheet_energy) [16] <- 'fuel_1_unit_scale'
+colnames(data_sheet_energy) [20] <- 'fuel_2_value'
+colnames(data_sheet_energy) [21] <- 'fuel_2_unit_scale'
+colnames(data_sheet_energy) [25] <- 'fuel_3_value'
+colnames(data_sheet_energy) [26] <- 'fuel_3_unit_scale'
+colnames(data_sheet_energy) [30] <- 'fuel_4_value'
+colnames(data_sheet_energy) [31] <- 'fuel_4_unit_scale'
+colnames(data_sheet_energy) [35] <- 'fuel_5_value'
+colnames(data_sheet_energy) [36] <- 'fuel_5_unit_scale'
 
 ```
+
+```{r}
+
+#import "Input - Company Profiles" sheet of DataCenterEnergyUse-RawCollection.xlsx spreadsheet
+data_sheet_energy <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 1, #the "1" specifies you want sheet 1
+                         
+                             #specify column data types to ensure proper recognition
+                             colClasses=c("character","integer","Date","Date","character", #columns 1-5
+                                          "character", "character","character","numeric","integer", #columns 6-10
+                                          "character", "character","character","character","numeric", #columns 11-15 (Fuel 1)
+                                          "integer", "character","character","character","numeric", #columns 15-20 (Fuel 2)
+                                          "integer", "character","character","character","numeric", #columns 21-25 (Fuel 3)
+                                          "integer", "character","character","character","numeric", #columns 26-30 (Fuel 4)
+                                          "integer", "character","character","character","numeric", #columns 31-35 (Fuel 5)
+                                          "integer", "character")) #column 36, 37 (Notes)
+
+#move second row values to column headers, put header names in tidy format
+data_sheet_energy <- data_sheet_energy %>% 
+  row_to_names(1) %>% 
+  clean_names()
+
+#change column names that were set to incorrect values when column classes were set
+colnames(data_sheet_energy) [2] <- 'report_year'
+colnames(data_sheet_energy) [3] <- 'period_covered_start_date'
+colnames(data_sheet_energy) [4] <- 'period_covered_end_date'
+colnames(data_sheet_energy) [5] <- 'energy_reporting_scope'
+colnames(data_sheet_energy) [6] <- 'level_of_ownership'
+colnames(data_sheet_energy) [9] <- 'electricity_value'
+colnames(data_sheet_energy) [10] <- 'unit_scale'
+colnames(data_sheet_energy) [15] <- 'fuel_1_value'
+colnames(data_sheet_energy) [16] <- 'fuel_1_unit_scale'
+colnames(data_sheet_energy) [20] <- 'fuel_2_value'
+colnames(data_sheet_energy) [21] <- 'fuel_2_unit_scale'
+colnames(data_sheet_energy) [25] <- 'fuel_3_value'
+colnames(data_sheet_energy) [26] <- 'fuel_3_unit_scale'
+colnames(data_sheet_energy) [30] <- 'fuel_4_value'
+colnames(data_sheet_energy) [31] <- 'fuel_4_unit_scale'
+colnames(data_sheet_energy) [35] <- 'fuel_5_value'
+colnames(data_sheet_energy) [36] <- 'fuel_5_unit_scale'
+
+```
+
 
 ## Collect and transform reported energy values that are split across years
 
@@ -66,7 +110,7 @@ colnames(data_sheet) [36] <- 'fuel_5_unit_scale'
 ########## Prepare values for transformation ##################
 ###############################################################
 
-data_sheet_scaled <- data_sheet %>% 
+data_sheet_energy_scaled <- data_sheet_energy %>% 
   #calculate total number of reported days by subtracting the period covered start date from the end date
   mutate(year_total_reported_days = period_covered_end_date - period_covered_start_date, .after = period_covered_end_date) %>% 
   
@@ -87,57 +131,57 @@ data_sheet_scaled <- data_sheet %>%
   rename(period_end_proportion = period_covered_end_date_number)
 
 #make 2 copies of dataframe, 1 for period 1 values, one for period 2 values
-data_sheet_scaled_period_1 <- data_sheet_scaled
-data_sheet_scaled_period_2 <- data_sheet_scaled
+data_sheet_energy_scaled_period_1 <- data_sheet_energy_scaled
+data_sheet_energy_scaled_period_2 <- data_sheet_energy_scaled
 
 ###############################################################
 ####### Transform values for period 1 in first sheet ##########
 ###############################################################
 
 #created scaled values for period 2
-data_sheet_scaled_period_1$electricity_value_scaled_period <-
+data_sheet_energy_scaled_period_1$electricity_value_scaled_period <-
   
   #if start and end year are the same, multiply electricity value by 1, else, multiply by the proportion of days in the first year
-  ifelse(data_sheet_scaled_period_1$period_covered_start_year == 
-         data_sheet_scaled_period_1$period_covered_end_year, data_sheet_scaled_period_1$electricity_value*1,
-         data_sheet_scaled_period_1$electricity_value*data_sheet_scaled_period_1$period_start_proportion) 
+  ifelse(data_sheet_energy_scaled_period_1$period_covered_start_year == 
+         data_sheet_energy_scaled_period_1$period_covered_end_year, data_sheet_energy_scaled_period_1$electricity_value*1,
+         data_sheet_energy_scaled_period_1$electricity_value*data_sheet_energy_scaled_period_1$period_start_proportion) 
 
-data_sheet_scaled_period_1$fuel_1_value_scaled_period <-
+data_sheet_energy_scaled_period_1$fuel_1_value_scaled_period <-
   
   #if start and end year are the same, multiply fuel 1 value by 1, else, multiply by the proportion of days in the first year
-  ifelse(data_sheet_scaled_period_1$period_covered_start_year == 
-         data_sheet_scaled_period_1$period_covered_end_year, data_sheet_scaled_period_1$fuel_1_value*1,
-         data_sheet_scaled_period_1$fuel_1_value*data_sheet_scaled_period_1$period_start_proportion)
+  ifelse(data_sheet_energy_scaled_period_1$period_covered_start_year == 
+         data_sheet_energy_scaled_period_1$period_covered_end_year, data_sheet_energy_scaled_period_1$fuel_1_value*1,
+         data_sheet_energy_scaled_period_1$fuel_1_value*data_sheet_energy_scaled_period_1$period_start_proportion)
 
-data_sheet_scaled_period_1$fuel_2_value_scaled_period <-
+data_sheet_energy_scaled_period_1$fuel_2_value_scaled_period <-
   
   #if start and end year are the same, multiply fuel 2 value by 2, else, multiply by the proportion of days in the first year
-  ifelse(data_sheet_scaled_period_1$period_covered_start_year == 
-         data_sheet_scaled_period_1$period_covered_end_year, data_sheet_scaled_period_1$fuel_2_value*1,
-         data_sheet_scaled_period_1$fuel_2_value*data_sheet_scaled_period_1$period_start_proportion)
+  ifelse(data_sheet_energy_scaled_period_1$period_covered_start_year == 
+         data_sheet_energy_scaled_period_1$period_covered_end_year, data_sheet_energy_scaled_period_1$fuel_2_value*1,
+         data_sheet_energy_scaled_period_1$fuel_2_value*data_sheet_energy_scaled_period_1$period_start_proportion)
 
-data_sheet_scaled_period_1$fuel_3_value_scaled_period <-
+data_sheet_energy_scaled_period_1$fuel_3_value_scaled_period <-
   
   #if start and end year are the same, multiply fuel 3 value by 3, else, multiply by the proportion of days in the first year
-  ifelse(data_sheet_scaled_period_1$period_covered_start_year == 
-         data_sheet_scaled_period_1$period_covered_end_year, data_sheet_scaled_period_1$fuel_3_value*1,
-         data_sheet_scaled_period_1$fuel_3_value*data_sheet_scaled_period_1$period_start_proportion)
+  ifelse(data_sheet_energy_scaled_period_1$period_covered_start_year == 
+         data_sheet_energy_scaled_period_1$period_covered_end_year, data_sheet_energy_scaled_period_1$fuel_3_value*1,
+         data_sheet_energy_scaled_period_1$fuel_3_value*data_sheet_energy_scaled_period_1$period_start_proportion)
 
-data_sheet_scaled_period_1$fuel_4_value_scaled_period <-
+data_sheet_energy_scaled_period_1$fuel_4_value_scaled_period <-
   
   #if start and end year are the same, multiply fuel 4 value by 4, else, multiply by the proportion of days in the first year
-  ifelse(data_sheet_scaled_period_1$period_covered_start_year == 
-         data_sheet_scaled_period_1$period_covered_end_year, data_sheet_scaled_period_1$fuel_4_value*1,
-         data_sheet_scaled_period_1$fuel_4_value*data_sheet_scaled_period_1$period_start_proportion)
+  ifelse(data_sheet_energy_scaled_period_1$period_covered_start_year == 
+         data_sheet_energy_scaled_period_1$period_covered_end_year, data_sheet_energy_scaled_period_1$fuel_4_value*1,
+         data_sheet_energy_scaled_period_1$fuel_4_value*data_sheet_energy_scaled_period_1$period_start_proportion)
 
-data_sheet_scaled_period_1$fuel_5_value_scaled_period <-
+data_sheet_energy_scaled_period_1$fuel_5_value_scaled_period <-
   
   #if start and end year are the same, multiply fuel 5 value by 5, else, multiply by the proportion of days in the first year
-  ifelse(data_sheet_scaled_period_1$period_covered_start_year == 
-         data_sheet_scaled_period_1$period_covered_end_year, data_sheet_scaled_period_1$fuel_5_value*1,
-         data_sheet_scaled_period_1$fuel_5_value*data_sheet_scaled_period_1$period_start_proportion)
+  ifelse(data_sheet_energy_scaled_period_1$period_covered_start_year == 
+         data_sheet_energy_scaled_period_1$period_covered_end_year, data_sheet_energy_scaled_period_1$fuel_5_value*1,
+         data_sheet_energy_scaled_period_1$fuel_5_value*data_sheet_energy_scaled_period_1$period_start_proportion)
 
-data_sheet_scaled_period_1 <- data_sheet_scaled_period_1 %>% 
+data_sheet_energy_scaled_period_1 <- data_sheet_energy_scaled_period_1 %>% 
   relocate(electricity_value_scaled_period, .after = electricity_value) %>% 
   relocate(fuel_1_value_scaled_period, .after = fuel_1_value) %>% 
   relocate(fuel_2_value_scaled_period, .after = fuel_2_value) %>%
@@ -154,53 +198,53 @@ data_sheet_scaled_period_1 <- data_sheet_scaled_period_1 %>%
 ###############################################################
 
 #created scaled values for period 2
-data_sheet_scaled_period_2$electricity_value_scaled_period <-
+data_sheet_energy_scaled_period_2$electricity_value_scaled_period <-
   
   #if start and end year are the same, multiply electricity value by 1, else, multiply by the proportion of days in the first year
-  ifelse(data_sheet_scaled_period_2$period_covered_start_year == 
-         data_sheet_scaled_period_2$period_covered_end_year, data_sheet_scaled_period_2$electricity_value*1,
-         data_sheet_scaled_period_2$electricity_value*data_sheet_scaled_period_2$period_end_proportion) 
+  ifelse(data_sheet_energy_scaled_period_2$period_covered_start_year == 
+         data_sheet_energy_scaled_period_2$period_covered_end_year, data_sheet_energy_scaled_period_2$electricity_value*1,
+         data_sheet_energy_scaled_period_2$electricity_value*data_sheet_energy_scaled_period_2$period_end_proportion) 
 
-data_sheet_scaled_period_2$fuel_1_value_scaled_period <-
+data_sheet_energy_scaled_period_2$fuel_1_value_scaled_period <-
   
   #if start and end year are the same, multiply fuel 1 value by 1, else, multiply by the proportion of days in the first year
-  ifelse(data_sheet_scaled_period_2$period_covered_start_year == 
-         data_sheet_scaled_period_2$period_covered_end_year, data_sheet_scaled_period_2$fuel_1_value*1,
-         data_sheet_scaled_period_2$fuel_1_value*data_sheet_scaled_period_2$period_end_proportion)
+  ifelse(data_sheet_energy_scaled_period_2$period_covered_start_year == 
+         data_sheet_energy_scaled_period_2$period_covered_end_year, data_sheet_energy_scaled_period_2$fuel_1_value*1,
+         data_sheet_energy_scaled_period_2$fuel_1_value*data_sheet_energy_scaled_period_2$period_end_proportion)
 
-data_sheet_scaled_period_2$fuel_2_value_scaled_period <-
+data_sheet_energy_scaled_period_2$fuel_2_value_scaled_period <-
   
   #if start and end year are the same, multiply fuel 1 value by 1, else, multiply by the proportion of days in the first year
-  ifelse(data_sheet_scaled_period_2$period_covered_start_year == 
-         data_sheet_scaled_period_2$period_covered_end_year, data_sheet_scaled_period_2$fuel_2_value*1,
-         data_sheet_scaled_period_2$fuel_2_value*data_sheet_scaled_period_2$period_end_proportion)
+  ifelse(data_sheet_energy_scaled_period_2$period_covered_start_year == 
+         data_sheet_energy_scaled_period_2$period_covered_end_year, data_sheet_energy_scaled_period_2$fuel_2_value*1,
+         data_sheet_energy_scaled_period_2$fuel_2_value*data_sheet_energy_scaled_period_2$period_end_proportion)
 
-data_sheet_scaled_period_2$fuel_3_value_scaled_period <-
+data_sheet_energy_scaled_period_2$fuel_3_value_scaled_period <-
   
   #if start and end year are the same, multiply fuel 1 value by 1, else, multiply by the proportion of days in the first year
-  ifelse(data_sheet_scaled_period_2$period_covered_start_year == 
-         data_sheet_scaled_period_2$period_covered_end_year, data_sheet_scaled_period_2$fuel_3_value*1,
-         data_sheet_scaled_period_2$fuel_3_value*data_sheet_scaled_period_2$period_end_proportion)
+  ifelse(data_sheet_energy_scaled_period_2$period_covered_start_year == 
+         data_sheet_energy_scaled_period_2$period_covered_end_year, data_sheet_energy_scaled_period_2$fuel_3_value*1,
+         data_sheet_energy_scaled_period_2$fuel_3_value*data_sheet_energy_scaled_period_2$period_end_proportion)
 
-data_sheet_scaled_period_2$fuel_4_value_scaled_period <-
+data_sheet_energy_scaled_period_2$fuel_4_value_scaled_period <-
   
   #if start and end year are the same, multiply fuel 1 value by 1, else, multiply by the proportion of days in the first year
-  ifelse(data_sheet_scaled_period_2$period_covered_start_year == 
-         data_sheet_scaled_period_2$period_covered_end_year, data_sheet_scaled_period_2$fuel_4_value*1,
-         data_sheet_scaled_period_2$fuel_4_value*data_sheet_scaled_period_2$period_end_proportion)
+  ifelse(data_sheet_energy_scaled_period_2$period_covered_start_year == 
+         data_sheet_energy_scaled_period_2$period_covered_end_year, data_sheet_energy_scaled_period_2$fuel_4_value*1,
+         data_sheet_energy_scaled_period_2$fuel_4_value*data_sheet_energy_scaled_period_2$period_end_proportion)
 
-data_sheet_scaled_period_2$fuel_5_value_scaled_period <-
+data_sheet_energy_scaled_period_2$fuel_5_value_scaled_period <-
   
   #if start and end year are the same, multiply fuel 1 value by 1, else, multiply by the proportion of days in the first year
-  ifelse(data_sheet_scaled_period_2$period_covered_start_year == 
-         data_sheet_scaled_period_2$period_covered_end_year, data_sheet_scaled_period_2$fuel_5_value*1,
-         data_sheet_scaled_period_2$fuel_5_value*data_sheet_scaled_period_2$period_end_proportion)
+  ifelse(data_sheet_energy_scaled_period_2$period_covered_start_year == 
+         data_sheet_energy_scaled_period_2$period_covered_end_year, data_sheet_energy_scaled_period_2$fuel_5_value*1,
+         data_sheet_energy_scaled_period_2$fuel_5_value*data_sheet_energy_scaled_period_2$period_end_proportion)
 
 #drop all values where period covered start and end are equal prior to cbinding to the period 1 dataframe
-data_sheet_scaled_period_2 <- subset(data_sheet_scaled_period_2, period_covered_start_year != period_covered_end_year) 
+data_sheet_energy_scaled_period_2 <- subset(data_sheet_energy_scaled_period_2, period_covered_start_year != period_covered_end_year) 
 
 #relocate scaled column values to align with period 1 values
-data_sheet_scaled_period_2 <- data_sheet_scaled_period_2 %>% 
+data_sheet_energy_scaled_period_2 <- data_sheet_energy_scaled_period_2 %>% 
   relocate(electricity_value_scaled_period, .after = electricity_value) %>% 
   relocate(fuel_1_value_scaled_period, .after = fuel_1_value) %>% 
   relocate(fuel_2_value_scaled_period, .after = fuel_2_value) %>%
@@ -216,7 +260,7 @@ data_sheet_scaled_period_2 <- data_sheet_scaled_period_2 %>%
 ####### Combine spreadsheets together and combine years #######
 ###############################################################
 
-data_sheet_scaled_combined <- rbind(data_sheet_scaled_period_1, data_sheet_scaled_period_2) %>%
+data_sheet_energy_scaled_combined <- rbind(data_sheet_energy_scaled_period_1, data_sheet_energy_scaled_period_2) %>%
   
   #drop original raw values from spreadsheet
   select(!c(electricity_value, fuel_1_value, fuel_2_value, fuel_3_value, fuel_4_value, fuel_5_value)) %>% 
@@ -243,7 +287,7 @@ data_sheet_scaled_combined <- rbind(data_sheet_scaled_period_1, data_sheet_scale
 
 
 ```{r}
-data_sheet <- data_sheet_scaled_combined %>% 
+data_sheet_energy <- data_sheet_energy_scaled_combined %>% 
   
   #replace any unit_scale NA values with 1
   mutate(unit_scale = replace_na(unit_scale, 1)) %>%
@@ -261,7 +305,7 @@ data_sheet <- data_sheet_scaled_combined %>%
   mutate(fuel_4_prepped = fuel_4_value * fuel_4_unit_scale, .after = fuel_4_unit_scale) %>% 
   mutate(fuel_5_prepped = fuel_5_value * fuel_5_unit_scale, .after = fuel_5_unit_scale)
 
-data_sheet <- data_sheet %>% 
+data_sheet_energy <- data_sheet_energy %>% 
   
   #merge fuel type and units to prepare for vlookup function
   unite(fuel_unit_1, c(fuel_1_type, fuel_1_unit), sep = " ", remove = FALSE) %>% 
@@ -272,7 +316,7 @@ data_sheet <- data_sheet %>%
 
 ```
 
-## Calculate energy unit conversions to base unit (kWh) and add to data_sheet
+## Calculate energy unit conversions to base unit (kWh) and add to data_sheet_energy
 
 ```{r}
 #import conversions spreadsheet, select columns data types, clean header names, select columns, unite fuel and unit columns
@@ -288,7 +332,7 @@ conversions_sheet <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.x
 ######################################
 
 #isolate electricity values and respective units into dataframe
-electricity_data <- data_sheet %>% 
+electricity_data <- data_sheet_energy %>% 
   select('electricity_prepped', 'unit') %>% 
   relocate(electricity_prepped, .after = unit)
 
@@ -308,7 +352,7 @@ electricity_conversion <- left_join(electricity_data, conversions_sheet_electric
 #FUEL 1
 
 #isolate fuel unit and prepped values into dataframe
-fuel_1_data <- data_sheet %>% 
+fuel_1_data <- data_sheet_energy %>% 
   select('fuel_unit_1', 'fuel_1_prepped')
 
 #change name of left column from conversion sheet to match fuel number
@@ -323,7 +367,7 @@ fuel_1_conversion <- left_join(fuel_1_data, conversions_sheet_fuel_1, by="fuel_u
 #FUEL 2
 
 #isolate fuel unit and prepped values into dataframe
-fuel_2_data <- data_sheet %>% 
+fuel_2_data <- data_sheet_energy %>% 
   select('fuel_unit_2', 'fuel_2_prepped')
 
 #change name of left column from conversion sheet to match fuel number
@@ -338,7 +382,7 @@ fuel_2_conversion <- left_join(fuel_2_data, conversions_sheet_fuel_2, by="fuel_u
 #FUEL 3
 
 #isolate fuel unit and prepped values into dataframe
-fuel_3_data <- data_sheet %>% 
+fuel_3_data <- data_sheet_energy %>% 
   select('fuel_unit_3', 'fuel_3_prepped')
 
 #change name of left column from conversion sheet to match fuel number
@@ -353,7 +397,7 @@ fuel_3_conversion <- left_join(fuel_3_data, conversions_sheet_fuel_3, by="fuel_u
 #FUEL 4
 
 #isolate fuel unit and prepped values into dataframe
-fuel_4_data <- data_sheet %>% 
+fuel_4_data <- data_sheet_energy %>% 
   select('fuel_unit_4', 'fuel_4_prepped')
 
 #change name of left column from conversion sheet to match fuel number
@@ -368,7 +412,7 @@ fuel_4_conversion <- left_join(fuel_4_data, conversions_sheet_fuel_4, by="fuel_u
 #FUEL 5
 
 #isolate fuel unit and prepped values into dataframe
-fuel_5_data <- data_sheet %>% 
+fuel_5_data <- data_sheet_energy %>% 
   select('fuel_unit_5', 'fuel_5_prepped')
 
 #change name of left column from conversion sheet to match fuel number
@@ -380,8 +424,8 @@ conversions_sheet_fuel_5 <- conversions_sheet %>%
 fuel_5_conversion <- left_join(fuel_5_data, conversions_sheet_fuel_5, by="fuel_unit_5") %>% 
   mutate(fuel_5_converted = fuel_5_prepped * k_wh_1_unit)
 
-#Bind converted values to data_sheet, move columns next to fuel_1_prepped for easier viewing
-data_sheet <- cbind(data_sheet, electricity_conversion["electricity_converted"],
+#Bind converted values to data_sheet_energy, move columns next to fuel_1_prepped for easier viewing
+data_sheet_energy <- cbind(data_sheet_energy, electricity_conversion["electricity_converted"],
                     fuel_1_conversion["fuel_1_converted"], 
                     fuel_2_conversion["fuel_2_converted"],
                     fuel_3_conversion["fuel_3_converted"],
@@ -398,38 +442,38 @@ data_sheet <- cbind(data_sheet, electricity_conversion["electricity_converted"],
 
 ```{r}
 #isolate electricity values
-data_sheet_electricity <- data_sheet %>% 
+data_sheet_energy_electricity <- data_sheet_energy %>% 
   select("company", "data_year", "electricity_converted") %>% 
   add_column(fuel_type = "Electricity") %>% 
   relocate("fuel_type", .after = data_year) %>% 
   rename(value = electricity_converted)
 
 #isolate fuel 1 values
-data_sheet_combined_1 <- data_sheet %>% 
+data_sheet_energy_combined_1 <- data_sheet_energy %>% 
   select("company", "data_year", "fuel_1_type", "fuel_1_converted") %>% 
   rename(fuel_type = fuel_1_type) %>% 
   rename(value = fuel_1_converted)
 
 #isolate fuel 2 values
-data_sheet_combined_2 <- data_sheet %>% 
+data_sheet_energy_combined_2 <- data_sheet_energy %>% 
   select("company", "data_year", "fuel_2_type", "fuel_2_converted") %>% 
   rename(fuel_type = fuel_2_type) %>% 
   rename(value = fuel_2_converted)
 
 #isolate fuel 3 values
-data_sheet_combined_3 <- data_sheet %>% 
+data_sheet_energy_combined_3 <- data_sheet_energy %>% 
   select("company", "data_year", "fuel_3_type", "fuel_3_converted") %>% 
   rename(fuel_type = fuel_3_type) %>% 
   rename(value = fuel_3_converted)
 
 #isolate fuel 4 values
-data_sheet_combined_4 <- data_sheet %>% 
+data_sheet_energy_combined_4 <- data_sheet_energy %>% 
   select("company", "data_year", "fuel_4_type", "fuel_4_converted") %>% 
   rename(fuel_type = fuel_4_type) %>% 
   rename(value = fuel_4_converted)
 
 #isolate fuel 5 values
-data_sheet_combined_5 <- data_sheet %>% 
+data_sheet_energy_combined_5 <- data_sheet_energy %>% 
   select("company", "data_year", "fuel_5_type", "fuel_5_converted") %>% 
   rename(fuel_type = fuel_5_type) %>% 
   rename(value = fuel_5_converted)
@@ -440,14 +484,14 @@ data_sheet_combined_5 <- data_sheet %>%
 #electricity and all fuel values on top of each other, drop columns with NA (filter by Apple for example plotting)
 
 graph_by_fuel_type <- 
-  rbind(data_sheet_electricity, data_sheet_combined_1, #stack converted electricity, fuel values sheets on top of each other
-        data_sheet_combined_2, data_sheet_combined_3,
-        data_sheet_combined_4, data_sheet_combined_5) %>%
+  rbind(data_sheet_energy_electricity, data_sheet_energy_combined_1, #stack converted electricity, fuel values sheets on top of each other
+        data_sheet_energy_combined_2, data_sheet_energy_combined_3,
+        data_sheet_energy_combined_4, data_sheet_energy_combined_5) %>%
   drop_na() #%>% drop na values from spreadsheet
   #filter(company == "Spark") %>% #filter by specific company
   #arrange(desc(data_year)) #sort data_year by year for easier viewing
 
-graph_by_data_center <- data_sheet %>% 
+graph_by_data_center <- data_sheet_energy %>% 
   mutate_at(vars(electricity_converted, fuel_1_converted, #replace na values with 0
            fuel_2_converted, fuel_3_converted, fuel_4_converted, 
            fuel_5_converted), ~replace_na(., 0)) %>%
@@ -461,7 +505,7 @@ graph_by_data_center <- data_sheet %>%
   mutate_at(vars(total_energy_use), as.numeric) %>% #set total energy use column as numeric to display
                     filter(company == "Apple") #filter by only Apple
 
-graph_by_industry_total <- data_sheet %>% 
+graph_by_industry_total <- data_sheet_energy %>% 
   mutate_at(vars(electricity_converted, fuel_1_converted, #replace na values with 0
            fuel_2_converted, fuel_3_converted, fuel_4_converted, 
            fuel_5_converted), ~replace_na(., 0)) %>%
