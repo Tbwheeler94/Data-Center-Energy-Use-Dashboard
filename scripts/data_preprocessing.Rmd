@@ -101,8 +101,7 @@ colnames(data_sheet_energy) [36] <- 'fuel_5_unit_scale'
 
 ```
 
-
-## Collect and transform reported energy values that are split across years
+## Collect and transform reported energy values that are split across 2 years
 
 ```{r}
 
@@ -111,7 +110,7 @@ colnames(data_sheet_energy) [36] <- 'fuel_5_unit_scale'
 ###############################################################
 
 data_sheet_energy_scaled <- data_sheet_energy %>% 
-  #calculate total number of reported days by subtracting the period covered start date from the end date
+  #calculate total number of reported days data is applicable to by subtracting the period covered start date from the end date (R recognizes date values as integers)
   mutate(year_total_reported_days = period_covered_end_date - period_covered_start_date, .after = period_covered_end_date) %>% 
   
   #extract the year from period_covered_end_date to create conditional for leap year
@@ -181,6 +180,7 @@ data_sheet_energy_scaled_period_1$fuel_5_value_scaled_period <-
          data_sheet_energy_scaled_period_1$period_covered_end_year, data_sheet_energy_scaled_period_1$fuel_5_value*1,
          data_sheet_energy_scaled_period_1$fuel_5_value*data_sheet_energy_scaled_period_1$period_start_proportion)
 
+#shift all scaled columns to earlier columns in the spreadsheet for easier viewing
 data_sheet_energy_scaled_period_1 <- data_sheet_energy_scaled_period_1 %>% 
   relocate(electricity_value_scaled_period, .after = electricity_value) %>% 
   relocate(fuel_1_value_scaled_period, .after = fuel_1_value) %>% 
@@ -189,7 +189,7 @@ data_sheet_energy_scaled_period_1 <- data_sheet_energy_scaled_period_1 %>%
   relocate(fuel_4_value_scaled_period, .after = fuel_4_value) %>%
   relocate(fuel_5_value_scaled_period, .after = fuel_5_value) %>% 
   
-  #save only start date, end date, and data year (year data applies to)
+  #save only start date, end date, and data year (year data applies to) by removing the following columns
   select(!c(period_start_proportion, period_covered_end_year, period_end_proportion, year_total_reported_days)) %>% 
   rename(data_year = period_covered_start_year)
 
@@ -240,7 +240,7 @@ data_sheet_energy_scaled_period_2$fuel_5_value_scaled_period <-
          data_sheet_energy_scaled_period_2$period_covered_end_year, data_sheet_energy_scaled_period_2$fuel_5_value*1,
          data_sheet_energy_scaled_period_2$fuel_5_value*data_sheet_energy_scaled_period_2$period_end_proportion)
 
-#drop all values where period covered start and end are equal prior to cbinding to the period 1 dataframe
+#drop all values where period covered start and end are equal prior to rbinding to the period 1 dataframe
 data_sheet_energy_scaled_period_2 <- subset(data_sheet_energy_scaled_period_2, period_covered_start_year != period_covered_end_year) 
 
 #relocate scaled column values to align with period 1 values
@@ -252,7 +252,7 @@ data_sheet_energy_scaled_period_2 <- data_sheet_energy_scaled_period_2 %>%
   relocate(fuel_4_value_scaled_period, .after = fuel_4_value) %>%
   relocate(fuel_5_value_scaled_period, .after = fuel_5_value) %>% 
   
-  #save only start date, end date, and data year (year data applies to)
+  #save only start date, end date, and data year (year data applies to) by removing the following columns
   select(!c(period_start_proportion, period_covered_start_year, period_end_proportion, year_total_reported_days)) %>% 
   rename(data_year = period_covered_end_year)
 
@@ -320,7 +320,7 @@ data_sheet_energy <- data_sheet_energy %>%
 
 ```{r}
 #import conversions spreadsheet, select columns data types, clean header names, select columns, unite fuel and unit columns
-conversions_sheet <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 3,
+conversions_sheet <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 6,
                                 colClasses=c("character", "character", "character", "numeric")) %>% 
                                 clean_names() %>% 
                                 select('fuel', 'unit', 'k_wh_1_unit') %>% 
@@ -483,6 +483,10 @@ data_sheet_energy_combined_5 <- data_sheet_energy %>%
 ``` {r}
 #electricity and all fuel values on top of each other, drop columns with NA (filter by Apple for example plotting)
 
+#############################
+###Pre-processed dataset 1###
+#############################
+
 graph_by_fuel_type <- 
   rbind(data_sheet_energy_electricity, data_sheet_energy_combined_1, #stack converted electricity, fuel values sheets on top of each other
         data_sheet_energy_combined_2, data_sheet_energy_combined_3,
@@ -490,6 +494,10 @@ graph_by_fuel_type <-
   drop_na() #%>% drop na values from spreadsheet
   #filter(company == "Spark") %>% #filter by specific company
   #arrange(desc(data_year)) #sort data_year by year for easier viewing
+
+#############################
+###Pre-processed dataset 2###
+#############################
 
 graph_by_data_center <- data_sheet_energy %>% 
   mutate_at(vars(electricity_converted, fuel_1_converted, #replace na values with 0
