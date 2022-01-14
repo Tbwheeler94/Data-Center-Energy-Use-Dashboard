@@ -63,41 +63,26 @@ colnames(data_sheet_energy) [36] <- 'fuel_5_unit_scale'
 ```{r}
 
 #import "Input - Company Profiles" sheet of DataCenterEnergyUse-RawCollection.xlsx spreadsheet
-data_sheet_energy <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 1, #the "1" specifies you want sheet 1
+data_sheet_company <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 2, #the "2" specifies you want sheet 2
                          
                              #specify column data types to ensure proper recognition
-                             colClasses=c("character","integer","Date","Date","character", #columns 1-5
-                                          "character", "character","character","numeric","integer", #columns 6-10
-                                          "character", "character","character","character","numeric", #columns 11-15 (Fuel 1)
-                                          "integer", "character","character","character","numeric", #columns 15-20 (Fuel 2)
-                                          "integer", "character","character","character","numeric", #columns 21-25 (Fuel 3)
-                                          "integer", "character","character","character","numeric", #columns 26-30 (Fuel 4)
-                                          "integer", "character","character","character","numeric", #columns 31-35 (Fuel 5)
-                                          "integer", "character")) #column 36, 37 (Notes)
+                             colClasses=c("character","character","character","Date","character", #columns 1-5
+                                          "character","character","character","character","character", #columns 6-10
+                                          "character","character","character","character","character", #columns 11-15
+                                          "character","character","character","character","character", #columns 16-20
+                                          "character","character","character","character","character", #columns 21-25
+                                          "character","character","character","character","character", #columns 26-30
+                                          "character","character","character","character","character", #columns 31-35
+                                          "character","character","character","character")) #column 36-39
 
 #move second row values to column headers, put header names in tidy format
-data_sheet_energy <- data_sheet_energy %>% 
-  row_to_names(1) %>% 
-  clean_names()
+data_sheet_company <- data_sheet_company %>% 
+  row_to_names(2) %>% 
+  clean_names() %>%
+  select(!c(who_added_the_company, x, qts, x2019, x_2, x_3, x_4))
 
 #change column names that were set to incorrect values when column classes were set
-colnames(data_sheet_energy) [2] <- 'report_year'
-colnames(data_sheet_energy) [3] <- 'period_covered_start_date'
-colnames(data_sheet_energy) [4] <- 'period_covered_end_date'
-colnames(data_sheet_energy) [5] <- 'energy_reporting_scope'
-colnames(data_sheet_energy) [6] <- 'level_of_ownership'
-colnames(data_sheet_energy) [9] <- 'electricity_value'
-colnames(data_sheet_energy) [10] <- 'unit_scale'
-colnames(data_sheet_energy) [15] <- 'fuel_1_value'
-colnames(data_sheet_energy) [16] <- 'fuel_1_unit_scale'
-colnames(data_sheet_energy) [20] <- 'fuel_2_value'
-colnames(data_sheet_energy) [21] <- 'fuel_2_unit_scale'
-colnames(data_sheet_energy) [25] <- 'fuel_3_value'
-colnames(data_sheet_energy) [26] <- 'fuel_3_unit_scale'
-colnames(data_sheet_energy) [30] <- 'fuel_4_value'
-colnames(data_sheet_energy) [31] <- 'fuel_4_unit_scale'
-colnames(data_sheet_energy) [35] <- 'fuel_5_value'
-colnames(data_sheet_energy) [36] <- 'fuel_5_unit_scale'
+colnames(data_sheet_company) [3] <- 'date_last_updated'
 
 ```
 
