@@ -84,6 +84,69 @@ home_page <- makePage(
   )
 )
 
+###########################################
+######### DC ENERGY 101 PAGE ##############
+###########################################
+
+dc_energy_101_page <- makePage(
+  div(
+    Grid(
+      GridItem(class = "ms-sm12 ms-xl12",
+               MainCard(title = "About the Data",
+                        Text("We are a team of University of California, Santa Barbara based researchers aiming to increase transparency and understanding of trends in global data center energy use. This website is a dashboard for modelers, policy-makers, and the general public to gain insight into data currently being reported by many of the world largest technology companies. Our visualization uses aggregated energy data primarily collected from publicly disclosed corporate sustainability reports.", variant = "large"))
+      )
+    )
+  )
+)
+
+###########################################
+######### INDUSTRY TRENDS PAGE ##############
+###########################################
+
+industry_trends_page <- makePage(
+  div(
+    Grid(
+      GridItem(class = "ms-sm12 ms-xl12",
+               MainCard(title = "About the Data",
+                        Text("We are a team of University of California, Santa Barbara based researchers aiming to increase transparency and understanding of trends in global data center energy use. This website is a dashboard for modelers, policy-makers, and the general public to gain insight into data currently being reported by many of the world largest technology companies. Our visualization uses aggregated energy data primarily collected from publicly disclosed corporate sustainability reports.", variant = "large"))
+      )
+    )
+  )
+)
+
+###########################################
+######### COMPANY ANALYSIS PAGE ##############
+###########################################
+
+company_analysis_page <- makePage(
+  div(
+    Grid(
+      GridItem(class = "ms-sm12 ms-xl12", style = "text-align: center",
+               MainCard(title = "Page Under Construction",
+                        FontIcon(iconName = "ConstructionCone", style = list(fontSize = 80))
+               )
+      )
+    )
+  )
+)
+
+###########################################
+######### METHODS PAGE ##############
+###########################################
+
+methods_page <- makePage(
+  div(
+    Grid(
+      GridItem(class = "ms-sm12 ms-xl12", style = "text-align: center",
+               MainCard(title = "Page Under Construction",
+               FontIcon(iconName = "ConstructionCone", style = list(fontSize = 80))
+               )
+      )
+    )
+  )
+)
+
+
 ##########################################
 ############## DASHBOARD UI ##############
 ##########################################
@@ -124,9 +187,11 @@ navigation <- Nav(
   groups = list(
     list(links = list(
       list(name = 'Home', url = '#!/', key = 'home', icon = 'Home'),
-      list(name = 'Industry Trends', url = '#!/other', key = 'analysis', icon = 'AnalyticsReport'),
-      list(name = 'Company Analysis', url = 'http://github.com/Appsilon/shiny.fluent', key = 'repo', icon = 'AnalyticsReport'),
-      list(name = 'Methods', url = 'http://appsilon.com', key = 'appsilon', icon = 'WebAppBuilderFragment')
+      list(name = 'Data Center Energy 101', url = '#!/data-center-energy', key = 'dce', icon = 'D365TalentLearn'),
+      list(name = 'Industry Trends', url = '#!/industry-trends', key = 'trends', icon = 'AnalyticsReport'),
+      list(name = 'Company Analysis', url = '#!/company-analysis', key = 'analysis', icon = 'AnalyticsView'),
+      list(name = 'Methods', url = '#!/methods', key = 'methods', icon = 'WebAppBuilderFragment'),
+      list(name = 'ISAL', url = 'http://www.ucsb.edu/', key = 'isal', icon = 'MiniLink')
     ))
   ),
   initialSelectedKey = 'home',
@@ -158,9 +223,26 @@ layout <- function(mainUI){
   )
 }
 
-ui <- fluentPage(
-  layout(home_page),
-  tags$head(
-    tags$link(href = "main.css", rel = "stylesheet", type = "text/css")
+##########################################
+############## SHINY ROUTER ##############
+##########################################
+
+router <- make_router(
+  route("/", home_page),
+  route("data-center-energy", dc_energy_101_page),
+  route("industry-trends", industry_trends_page),
+  route("company-analysis", company_analysis_page),
+  route("methods", methods_page)
   )
-)
+
+# Add shiny.router dependencies manually: they are not picked up because they're added in a non-standard way.
+shiny::addResourcePath("shiny.router", system.file("www", package = "shiny.router"))
+shiny_router_js_src <- file.path("shiny.router", "shiny.router.js")
+shiny_router_script_tag <- shiny::tags$script(type = "text/javascript", src = shiny_router_js_src)
+
+ui <- fluentPage(
+  layout(router$ui),
+  tags$head(
+    tags$link(href = "main.css", rel = "stylesheet", type = "text/css"),
+    shiny_router_script_tag
+  ))

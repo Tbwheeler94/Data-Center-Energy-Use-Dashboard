@@ -2,6 +2,7 @@ source(here("R", "aggregateOutput.R"))
 source(here("R", "companyfuelOutput.R"))
 source(here("R", "yearsreportingOutput.R"))
 source(here("R", "companiesreportingOutput.R"))
+source(here("ui.R"))
 
 #Server code
 server <- function(input, output, session) {
@@ -18,6 +19,8 @@ server <- function(input, output, session) {
   output$energy_reported <- renderText({
     energyusereportedOutput(aggregate_data)}
   )
+  
+  router$server(input, output, session)
 }
 
 ##################

@@ -5,6 +5,7 @@ library(lubridate)
 library(shiny)
 library(shiny.router)
 library(shiny.fluent)
+library(shiny.router)
 
 #############################
 #######TEMPORARY SETUP#######
