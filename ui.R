@@ -23,6 +23,15 @@ HighlightsCard <- function(...) {
   )
 }
 
+CompanyCard <- function(..., title = NULL) {
+  
+  Stack(
+    class = "ms-depth-8",
+    tokens = list(padding = 20, childrenGap = 5),
+    ...  
+  )
+}
+
 ################################
 ##########Grid Layout###########
 ################################
@@ -99,9 +108,9 @@ dc_energy_101_page <- makePage(
   )
 )
 
-###########################################
+#############################################
 ######### INDUSTRY TRENDS PAGE ##############
-###########################################
+#############################################
 
 industry_trends_page <- makePage(
   div(
@@ -114,24 +123,30 @@ industry_trends_page <- makePage(
   )
 )
 
-###########################################
+##############################################
 ######### COMPANY ANALYSIS PAGE ##############
-###########################################
+##############################################
 
 company_analysis_page <- makePage(
   div(
     Grid(
-      GridItem(class = "ms-sm12 ms-xl12", style = "text-align: center",
-               MainCard(title = "Page Under Construction",
-                        FontIcon(iconName = "ConstructionCone", style = list(fontSize = 80))
+      GridItem(class = "ms-sm12 ms-xl4",
+               CompanyCard(
+                 Text("Selected Company", variant = "xxLarge"), 
+                 Dropdown("selected_company", 
+                          options = company_name,
+                          value = 1
+                         )
+                 )
                )
       )
     )
-  )
 )
 
+#list(unique(data_sheet_company$company_name))
+
 ###########################################
-######### METHODS PAGE ##############
+######### METHODS PAGE ###################
 ###########################################
 
 methods_page <- makePage(

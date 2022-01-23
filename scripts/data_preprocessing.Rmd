@@ -1,9 +1,11 @@
 ---
-title: "Data Center Energy Use Dashboard"
-author: "Tom Wheeler"
+title: "Data Center Energy Use Dashboard - Raw Collection Spreadsheet Preprocessing Steps"
+author: "Tom Wheeler & Isaiah Garcia"
 date: "5/6/2021"
 output: html_document
 ---
+
+################################## Read In Libraries ###########################################
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -18,11 +20,13 @@ library(ggiraph)
 
 ```
 
-## Data import and prepping spreadsheet for calculating standardized energy values (server.R)
+#################################### SECTION 1 #################################################
+########## Import 3 sheets of data from DataCenterEnergyUse-RawCollection.xlsx #################
+################################################################################################
 
 ```{r}
 #import "Input - Energy Use" sheet of DataCenterEnergyUse-RawCollection.xlsx spreadsheet
-data_sheet_energy <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 1, #the "1" specifies you want sheet 1
+data_sheet_energy <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 1, #the "1" specifies to import sheet 1
                          
                              #specify column data types to ensure proper recognition
                              colClasses=c("character","integer","Date","Date","character", #columns 1-5
@@ -63,10 +67,10 @@ colnames(data_sheet_energy) [36] <- 'fuel_5_unit_scale'
 ```{r}
 
 #import "Input - Company Profiles" sheet of DataCenterEnergyUse-RawCollection.xlsx spreadsheet
-data_sheet_company <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 2, #the "2" specifies you want sheet 2
+data_sheet_company <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 2, #the "2" specifies to import sheet 2
                          
                              #specify column data types to ensure proper recognition
-                             colClasses=c("character","character","character","Date","character", #columns 1-5
+                             colClasses=c("character","character","character","integer","Date", #columns 1-5
                                           "character","character","character","character","character", #columns 6-10
                                           "character","character","character","character","character", #columns 11-15
                                           "character","character","character","character","character", #columns 16-20
@@ -82,11 +86,34 @@ data_sheet_company <- data_sheet_company %>%
   select(!c(who_added_the_company, x, qts, x2019, x_2, x_3, x_4))
 
 #change column names that were set to incorrect values when column classes were set
-colnames(data_sheet_company) [3] <- 'date_last_updated'
+colnames(data_sheet_company) [3] <- 'company_founding_year'
+colnames(data_sheet_company) [4] <- 'date_last_updated'
 
 ```
 
-## Collect and transform reported energy values that are split across 2 years
+```{r}
+
+#import "Input - PUE" sheet of DataCenterEnergyUse-RawCollection.xlsx spreadsheet
+data_sheet_pue <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 3, #the "3" specifies to import sheet 3
+                         
+                             #specify column data types to ensure proper recognition
+                             colClasses=c("character","integer","character","character","character", #columns 1-5
+                                          "numeric","character","character","character","character", #columns 6-10
+                                          "character","character","character","character"))          #columns 11-14
+
+#move second row values to column headers, put header names in tidy format
+data_sheet_pue <- data_sheet_pue %>% 
+  row_to_names(1) %>% 
+  clean_names()
+
+colnames(data_sheet_pue) [2] <- 'applicable_year'
+colnames(data_sheet_pue) [6] <- 'pue_value'
+
+```
+
+########################################## SECTION 2 #######################################################
+########## Transform data across multiple years in proportion to its Period Covered Start and End ##########
+############################################################################################################
 
 ```{r}
 
@@ -268,10 +295,16 @@ data_sheet_energy_scaled_combined <- rbind(data_sheet_energy_scaled_period_1, da
 
 ```
 
-## Multiply values by unit scale to generate values that are ready for unit conversion
-
+########################################## SECTION 3 #######################################################
+####### Multiply all data by respective unit scale and conversion unit to transform all values to kWh ######
+############################################################################################################
 
 ```{r}
+
+###########################################################################################
+## Multiply values by unit scale to generate values that are ready for unit conversion ####
+###########################################################################################
+
 data_sheet_energy <- data_sheet_energy_scaled_combined %>% 
   
   #replace any unit_scale NA values with 1
@@ -301,9 +334,12 @@ data_sheet_energy <- data_sheet_energy %>%
 
 ```
 
-## Calculate energy unit conversions to base unit (kWh) and add to data_sheet_energy
-
 ```{r}
+
+#################################################################################################
+####### Calculate energy unit conversions to base unit (kWh) and add to data_sheet_energy #######
+#################################################################################################
+
 #import conversions spreadsheet, select columns data types, clean header names, select columns, unite fuel and unit columns
 conversions_sheet <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 6,
                                 colClasses=c("character", "character", "character", "numeric")) %>% 
@@ -423,9 +459,11 @@ data_sheet_energy <- cbind(data_sheet_energy, electricity_conversion["electricit
               relocate(fuel_5_converted, .after = fuel_5_prepped)
 ```
 
-## Merge fuel converted values into a separate spreadsheet to prepare for graphing
-
 ```{r}
+#####################################################################################################
+####### Merge fuel converted values into a separate spreadsheet to prepare for graphing #############
+#####################################################################################################
+
 #isolate electricity values
 data_sheet_energy_electricity <- data_sheet_energy %>% 
   select("company", "data_year", "electricity_converted") %>% 
@@ -465,79 +503,9 @@ data_sheet_energy_combined_5 <- data_sheet_energy %>%
 
 ```
 
-``` {r}
-#electricity and all fuel values on top of each other, drop columns with NA (filter by Apple for example plotting)
-
-#############################
-###Pre-processed dataset 1###
-#############################
-
-graph_by_fuel_type <- 
-  rbind(data_sheet_energy_electricity, data_sheet_energy_combined_1, #stack converted electricity, fuel values sheets on top of each other
-        data_sheet_energy_combined_2, data_sheet_energy_combined_3,
-        data_sheet_energy_combined_4, data_sheet_energy_combined_5) %>%
-  drop_na() #%>% drop na values from spreadsheet
-  #filter(company == "Spark") %>% #filter by specific company
-  #arrange(desc(data_year)) #sort data_year by year for easier viewing
-
-#############################
-###Pre-processed dataset 2###
-#############################
-
-graph_by_data_center <- data_sheet_energy %>% 
-  mutate_at(vars(electricity_converted, fuel_1_converted, #replace na values with 0
-           fuel_2_converted, fuel_3_converted, fuel_4_converted, 
-           fuel_5_converted), ~replace_na(., 0)) %>%
-  rowwise() %>% 
-  mutate(total_energy_use = sum(electricity_converted, fuel_1_converted, #create new column, total energy use, sum electricity and fuel values across to calculate total energy
-           fuel_2_converted, fuel_3_converted, fuel_4_converted, 
-           fuel_5_converted)) %>% 
-  relocate(total_energy_use, .after = notes) %>% #move total_energy_use column after notes column for easier viewing
-  unite('scope_display_label', energy_reporting_scope:display_label, sep = " | ") %>% #merge reporting scope and display label to create label for each data center
-  select("company", "data_year", "scope_display_label", "total_energy_use") %>% #select only company, data_year, scope_display_label, total_energy_use
-  mutate_at(vars(total_energy_use), as.numeric) %>% #set total energy use column as numeric to display
-                    filter(company == "Apple") #filter by only Apple
-
-graph_by_industry_total <- data_sheet_energy %>% 
-  mutate_at(vars(electricity_converted, fuel_1_converted, #replace na values with 0
-           fuel_2_converted, fuel_3_converted, fuel_4_converted, 
-           fuel_5_converted), ~replace_na(., 0)) %>%
-  rowwise() %>% 
-  mutate(total_energy_use = sum(electricity_converted, fuel_1_converted, #create new column, total energy use, sum electricity and fuel values across to calculate total energy
-           fuel_2_converted, fuel_3_converted, fuel_4_converted, 
-           fuel_5_converted)) %>% 
-  select("company", "data_year", "energy_reporting_scope", "total_energy_use") %>%
-  mutate(energy_reporting_scope = case_when(
-    energy_reporting_scope %in% c("Multiple Data Centers", "Single Data Center") ~ "Data Centers",
-    energy_reporting_scope %in% "Total Operations"                               ~ "Total Company Energy Use")) %>% 
-  unite('company', c(company,energy_reporting_scope), sep = " | ") %>% 
-  group_by(company, data_year) %>% 
-  summarize(value = sum(total_energy_use)) %>% 
-  filter(company != 'Fujitsu | Total Company Energy Use', company != 'American Express | Total Company Energy Use') %>%  #need to review these numbers, were they recorded wrong? are they just really large? or are the sums being calculated wrong? %>% 
-  drop_na()
-
-write.csv(graph_by_industry_total, "aggregate_data.csv")
-write.csv(graph_by_fuel_type, "by_fuel_type_data.csv")
-
-graph_by_industry_total_company <- graph_by_industry_total %>% 
-  filter(grepl("Data Centers", company))
-
-graph_by_industry_datacenters <- graph_by_industry_total %>% 
-  filter(grepl("Total Company Energy Use", company))
-
-paste(round(sum(graph_by_industry_total$value)/1000000000, 1), "TWh")
-```
-
-```{r}
-# Stacked
-
-graph_by_fuel_type <- by_fuel_type_data %>% 
-    filter(company == "Spark")
-           
-ggplot(graph_by_fuel_type, aes(fill=fuel_type, y=value, x=data_year)) + 
-    geom_bar(position="stack", stat="identity")
-
-```
+########################################## SECTION 4 #######################################################
+###################### Generate data subsets for TAB 2: Industry Trends ####################################
+############################################################################################################
 
 ```{r}
 data_of_transparency_SDC <- data_sheet_energy %>%
@@ -684,5 +652,80 @@ ggplot(graph_by_industry_total, aes(fill=company, y=value, x=data_year)) +
     geom_bar(stat="identity") +
     theme(legend.position="none")
 
+```
+
+########################################## SECTION 5 #######################################################
+###################### Generate data subsets for TAB 3: Company Analysis ###################################
+############################################################################################################
+
+``` {r}
+
+###############################
+### Company Analysis Header ###
+###############################
+
+company_key <- as.list(setNames(seq(1, length(unique(data_sheet_company$company_name)), 1), rep("key", length(unique(data_sheet_company$company_name)))))
+company_name <- as.list(setNames(unique(data_sheet_company$company_name), rep("text", length(unique(data_sheet_company$company_name)))))
+
+  options <- list(
+    list(key = "A", text = "Option A"),
+    list(key = "B", text = "Option B"),
+    list(key = "C", text = "Option C")
+  )
+
+write.csv(data_sheet_company, "data_sheet_company.csv")
+
+##################################################################################
+### Energy usage by fuel type (including electricity) for each company per year###
+##################################################################################
+
+#electricity and all fuel values on top of each other, drop columns with NA (filter by Apple for example plotting)
+graph_by_fuel_type <- 
+  rbind(data_sheet_energy_electricity, data_sheet_energy_combined_1, #stack converted electricity, fuel values sheets on top of each other
+        data_sheet_energy_combined_2, data_sheet_energy_combined_3,
+        data_sheet_energy_combined_4, data_sheet_energy_combined_5) %>%
+  drop_na() #%>% drop na values from spreadsheet
+  #filter(company == "Spark") %>% #filter by specific company
+  #arrange(desc(data_year)) #sort data_year by year for easier viewing
+
+#write.csv(graph_by_industry_total, "aggregate_data.csv")
+
+#############################
+### Pre-processed dataset 2 ###
+#############################
+
+graph_by_data_center <- data_sheet_energy %>% 
+  mutate_at(vars(electricity_converted, fuel_1_converted, #replace na values with 0
+           fuel_2_converted, fuel_3_converted, fuel_4_converted, 
+           fuel_5_converted), ~replace_na(., 0)) %>%
+  rowwise() %>% 
+  mutate(total_energy_use = sum(electricity_converted, fuel_1_converted, #create new column, total energy use, sum electricity and fuel values across to calculate total energy
+           fuel_2_converted, fuel_3_converted, fuel_4_converted, 
+           fuel_5_converted)) %>% 
+  relocate(total_energy_use, .after = notes) %>% #move total_energy_use column after notes column for easier viewing
+  unite('scope_display_label', energy_reporting_scope:display_label, sep = " | ") %>% #merge reporting scope and display label to create label for each data center
+  select("company", "data_year", "scope_display_label", "total_energy_use") %>% #select only company, data_year, scope_display_label, total_energy_use
+  mutate_at(vars(total_energy_use), as.numeric) %>% #set total energy use column as numeric to display
+                    filter(company == "Apple") #filter by only Apple
+
+graph_by_industry_total <- data_sheet_energy %>% 
+  mutate_at(vars(electricity_converted, fuel_1_converted, #replace na values with 0
+           fuel_2_converted, fuel_3_converted, fuel_4_converted, 
+           fuel_5_converted), ~replace_na(., 0)) %>%
+  rowwise() %>% 
+  mutate(total_energy_use = sum(electricity_converted, fuel_1_converted, #create new column, total energy use, sum electricity and fuel values across to calculate total energy
+           fuel_2_converted, fuel_3_converted, fuel_4_converted, 
+           fuel_5_converted)) %>% 
+  select("company", "data_year", "energy_reporting_scope", "total_energy_use") %>%
+  mutate(energy_reporting_scope = case_when(
+    energy_reporting_scope %in% c("Multiple Data Centers", "Single Data Center") ~ "Data Centers",
+    energy_reporting_scope %in% "Total Operations"                               ~ "Total Company Energy Use")) %>% 
+  unite('company', c(company,energy_reporting_scope), sep = " | ") %>% 
+  group_by(company, data_year) %>% 
+  summarize(value = sum(total_energy_use)) %>% 
+  filter(company != 'Fujitsu | Total Company Energy Use', company != 'American Express | Total Company Energy Use') %>%  #need to review these numbers, were they recorded wrong? are they just really large? or are the sums being calculated wrong? %>% 
+  drop_na()
+
+#write.csv(graph_by_fuel_type, "by_fuel_type_data.csv")
 ```
 

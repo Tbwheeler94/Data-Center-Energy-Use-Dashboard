@@ -20,6 +20,15 @@ server <- function(input, output, session) {
     energyusereportedOutput(aggregate_data)}
   )
   
+  #Tab 2: Industry Trends
+  
+  #Tab 3: Company Analysis
+  
+  # Company profile output
+  #output$companyfuelPlot <- renderPlot({
+  #  buildcompanyfuelOutput(by_fuel_type_data, input$company_selection)
+  #})
+  
   router$server(input, output, session)
 }
 
@@ -47,5 +56,3 @@ server <- function(input, output, session) {
 # 
 # #Energy use reported
 # output$energy_reported <- renderText({energyusereportedOutput(aggregate_data)})
-# 
-# router$server(input, output, session)

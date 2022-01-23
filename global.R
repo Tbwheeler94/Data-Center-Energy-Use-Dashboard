@@ -6,6 +6,7 @@ library(shiny)
 library(shiny.router)
 library(shiny.fluent)
 library(shiny.router)
+library(tsibble)
 
 #############################
 #######TEMPORARY SETUP#######
@@ -22,6 +23,7 @@ aggregate_data <- read.csv(here('data', 'aggregate_data.csv'))
 
 #Tab 3 - Company Profiles
 by_fuel_type_data <- read.csv(here('data', 'by_fuel_type_data.csv'))
+data_sheet_company <- read.csv(here('data', 'data_sheet_company.csv'))
 
 #Tab 4 -
 
