@@ -134,8 +134,9 @@ company_analysis_page <- makePage(
                CompanyCard(
                  Text("Selected Company", variant = "xxLarge"), 
                  Dropdown("selected_company", 
-                          options = company_name,
-                          value = 1
+                          options = company_list_newest,
+                          value = "Apple",
+                          placeHolder = "Apple"
                          )
                  )
                )

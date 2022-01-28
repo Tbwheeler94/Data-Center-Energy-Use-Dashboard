@@ -24,6 +24,15 @@ server <- function(input, output, session) {
   
   #Tab 3: Company Analysis
   
+  company_list_newest <- list()
+  companies <- order(unique(data_sheet_company$company_name)) #order function doesn't work
+  
+  for (i in 1:length(unique(data_sheet_company$company_name))) {
+    
+    company_list_newest[[i]]<- list(key = {companies[i]}, 
+                                    text = {companies[i]})
+  }
+  
   # Company profile output
   #output$companyfuelPlot <- renderPlot({
   #  buildcompanyfuelOutput(by_fuel_type_data, input$company_selection)
