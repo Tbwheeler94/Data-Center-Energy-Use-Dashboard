@@ -688,24 +688,17 @@ ggplot(graph_by_industry_total, aes(fill=company, y=value, x=data_year)) +
 ############################################################################################################
 
 ``` {r}
+  
+###############################################################
+################# Export data sheet ###########################
+## Contents: Raw values form Input-Company Profiles############
+###############################################################
 
-###############################
-### Company Analysis Header ###
-###############################
-
-company_key <- as.list(setNames(seq(1, length(unique(data_sheet_company$company_name)), 1), rep("key", length(unique(data_sheet_company$company_name)))))
-company_name <- as.list(setNames(unique(data_sheet_company$company_name), rep("text", length(unique(data_sheet_company$company_name)))))
-
-  options <- list(
-    list(key = "A", text = "Option A"),
-    list(key = "B", text = "Option B"),
-    list(key = "C", text = "Option C")
-  )
-
-write.csv(data_sheet_company, "data_sheet_company.csv")
+write.csv(data_sheet_company, here("data", "data_sheet_company.csv"))
 
 ##################################################################################
-### Energy usage by fuel type (including electricity) for each company per year###
+########################### Export data sheet ####################################
+#### Contents: Fuel use (electricity, fuel 1, fuel 2...) by company, by year #####
 ##################################################################################
 
 #electricity and all fuel values on top of each other, drop columns with NA (filter by Apple for example plotting)
@@ -717,25 +710,12 @@ graph_by_fuel_type <-
   #filter(company == "Spark") %>% #filter by specific company
   #arrange(desc(data_year)) #sort data_year by year for easier viewing
 
-#write.csv(graph_by_industry_total, "aggregate_data.csv")
+write.csv(graph_by_fuel_type, here("data", "by_fuel_type_data.csv"))
 
-#############################
-### Pre-processed dataset 2 ###
-#############################
-
-graph_by_data_center <- data_sheet_energy %>% 
-  mutate_at(vars(electricity_converted, fuel_1_converted, #replace na values with 0
-           fuel_2_converted, fuel_3_converted, fuel_4_converted, 
-           fuel_5_converted), ~replace_na(., 0)) %>%
-  rowwise() %>% 
-  mutate(total_energy_use = sum(electricity_converted, fuel_1_converted, #create new column, total energy use, sum electricity and fuel values across to calculate total energy
-           fuel_2_converted, fuel_3_converted, fuel_4_converted, 
-           fuel_5_converted)) %>% 
-  relocate(total_energy_use, .after = notes) %>% #move total_energy_use column after notes column for easier viewing
-  unite('scope_display_label', energy_reporting_scope:display_label, sep = " | ") %>% #merge reporting scope and display label to create label for each data center
-  select("company", "data_year", "scope_display_label", "total_energy_use") %>% #select only company, data_year, scope_display_label, total_energy_use
-  mutate_at(vars(total_energy_use), as.numeric) %>% #set total energy use column as numeric to display
-                    filter(company == "Apple") #filter by only Apple
+##############################################################################
+########################## Export pre-processed dataset ######################
+## Contents: Fuel use (electricity, fuel 1, fuel 2...) by company, by year ###
+##############################################################################
 
 graph_by_industry_total <- data_sheet_energy %>% 
   mutate_at(vars(electricity_converted, fuel_1_converted, #replace na values with 0
@@ -755,6 +735,25 @@ graph_by_industry_total <- data_sheet_energy %>%
   filter(company != 'Fujitsu | Total Company Energy Use', company != 'American Express | Total Company Energy Use') %>%  #need to review these numbers, were they recorded wrong? are they just really large? or are the sums being calculated wrong? %>% 
   drop_na()
 
-#write.csv(graph_by_fuel_type, "by_fuel_type_data.csv")
+write.csv(graph_by_industry_total, here("data", "aggregate_data.csv"))
+
+##############################################################################
+########################## Export pre-processed dataset ######################
+## Contents: Fuel use (electricity, fuel 1, fuel 2...) by company, by year ###
+##############################################################################
+
+graph_by_data_center <- data_sheet_energy %>% 
+  mutate_at(vars(electricity_converted, fuel_1_converted, #replace na values with 0
+           fuel_2_converted, fuel_3_converted, fuel_4_converted, 
+           fuel_5_converted), ~replace_na(., 0)) %>%
+  rowwise() %>% 
+  mutate(total_energy_use = sum(electricity_converted, fuel_1_converted, #create new column, total energy use, sum electricity and fuel values across to calculate total energy
+           fuel_2_converted, fuel_3_converted, fuel_4_converted, 
+           fuel_5_converted)) %>% 
+  relocate(total_energy_use, .after = notes) %>% #move total_energy_use column after notes column for easier viewing
+  unite('scope_display_label', energy_reporting_scope:display_label, sep = " | ") %>% #merge reporting scope and display label to create label for each data center
+  select("company", "data_year", "scope_display_label", "total_energy_use") %>% #select only company, data_year, scope_display_label, total_energy_use
+  mutate_at(vars(total_energy_use), as.numeric) %>% #set total energy use column as numeric to display
+                    filter(company == "Apple") #filter by only Apple
 ```
 
