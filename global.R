@@ -21,9 +21,22 @@ library(tsibble)
 #Tab 2 - Aggregate Statistics
 aggregate_data <- read.csv(here('data', 'aggregate_data.csv'))
 
-#Tab 3 - Company Profiles
+##################################################
+########### Tab 3 - Company Profiles #############
+##################################################
+
 by_fuel_type_data <- read.csv(here('data', 'by_fuel_type_data.csv'))
 data_sheet_company <- read.csv(here('data', 'data_sheet_company.csv'))
+
+#generate unique list of companies in alphabetical order and drop blank
+unique_companies <- list()
+companies <- str_subset(sort(unique(data_sheet_company$company_name)),"")
+
+for (i in 1:length(companies)) {
+  
+  unique_companies[[i]]<- list(key = {companies[i]}, 
+                               text = {companies[i]})
+}
 
 #Tab 4 -
 

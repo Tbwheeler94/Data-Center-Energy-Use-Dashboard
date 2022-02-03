@@ -24,14 +24,32 @@ server <- function(input, output, session) {
   
   #Tab 3: Company Analysis
   
-  company_list_newest <- list()
-  companies <- order(unique(data_sheet_company$company_name)) #order function doesn't work
+  #External Service Providers
+  output$external_service_providers <- renderText({
+    external_service_providers <- reactive({
+      external_service_providers <- data_sheet_company %>% filter(company_name == input$selected_company)
+      external_service_providers[1, "provider_1"]
+    })
+    external_service_providers()
+  })
   
-  for (i in 1:length(unique(data_sheet_company$company_name))) {
-    
-    company_list_newest[[i]]<- list(key = {companies[i]}, 
-                                    text = {companies[i]})
-  }
+  #Data Center Overview Tab
+  output$company_data_center_overview <- renderText({
+    company_data_center_overview <- reactive({
+      company_data_center_overview <- data_sheet_company %>% filter(company_name == input$selected_company)
+      company_data_center_overview[1, "company_data_center_overview"]
+    })
+    company_data_center_overview()
+  })
+  
+  #Energy Reporting Assessment Tab
+  output$energy_reporting_assessment <- renderText({
+    energy_reporting_assessment <- reactive({
+      energy_reporting_assessment <- data_sheet_company %>% filter(company_name == input$selected_company)
+      energy_reporting_assessment[1, "energy_reporting_assessment"]
+    })
+    energy_reporting_assessment()
+  })
   
   # Company profile output
   #output$companyfuelPlot <- renderPlot({

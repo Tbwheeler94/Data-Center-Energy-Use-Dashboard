@@ -132,18 +132,41 @@ company_analysis_page <- makePage(
     Grid(
       GridItem(class = "ms-sm12 ms-xl4",
                CompanyCard(
-                 Text("Selected Company", variant = "xxLarge"), 
-                 Dropdown("selected_company", 
-                          options = company_list_newest,
-                          value = "Apple",
-                          placeHolder = "Apple"
-                         )
+                          Text("Choose A Company", variant = "xxLarge"), 
+                          Dropdown.shinyInput("selected_company", 
+                            options = unique_companies,
+                            value = "Google",
+                            placeHolder = "Google",
+                            dropdownWidth = 0
+                          )
                  )
+               ),
+      GridItem(class = "ms-sm12 ms-xl4",
+               CompanyCard(style = "height: 115px;",
+                           Text("External Service Providers", variant = "xxLarge", style = "align: center;"),
+                            DefaultButton(uiOutput("external_service_providers"))
+                           )
+              ),
+      GridItem(class = "ms-sm12 ms-xl4",
+               CompanyCard(style = "height: 115px;")
+              )
+        ),
+    Grid(
+      GridItem(class = "ms-sm12 ms-xl6",                                               #NOTE TO SELF: NEED TO LOCK HEIGHTS TO BOXES,
+               CompanyCard(                                                            #TEST BOX POSITIONING WHEN SCREEN CHANGES
+                 Text("Company Data Center Overview", variant = "xxLarge"), 
+                 Text(uiOutput("company_data_center_overview"), variant = "mediumPlus")
                )
-      )
+      ),
+      GridItem(class = "ms-sm12 ms-xl6",
+               CompanyCard(
+                 Text("Energy Report Assessment", variant = "xxLarge"), 
+                 Text(uiOutput("energy_reporting_assessment"), variant = "mediumPlus")
+                          )
+              )
+        )
     )
 )
-
 #list(unique(data_sheet_company$company_name))
 
 ###########################################
