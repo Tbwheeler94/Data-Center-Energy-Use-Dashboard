@@ -24,31 +24,42 @@ server <- function(input, output, session) {
   
   #Tab 3: Company Analysis
   
-  #External Service Providers
-  output$external_service_providers <- renderText({
-    external_service_providers <- reactive({
-      external_service_providers <- data_sheet_company %>% filter(company_name == input$selected_company)
-      external_service_providers[1, "provider_1"]
-    })
-    external_service_providers()
+  #Filter company profiles page by selected company name
+  
+  data_sheet_selected_company <- reactive({
+    data_sheet_company %>% filter(company_name == input$selected_company)
   })
+  
+  #External Service Providers
+  
+  output$external_service_provider_1 <- renderText({
+    data_sheet_selected_company()[1, "provider_1"]
+  })
+  
+  output$external_service_provider_2 <- renderText({
+    data_sheet_selected_company()[1, "provider_2"]
+  })
+  
+  output$external_service_provider_3 <- renderText({
+    data_sheet_selected_company()[1, "provider_3"]
+  })
+  
+  output$external_service_provider_4 <- renderText({
+    data_sheet_selected_company()[1, "provider_4"]
+  })
+  #
+  #output$external_service_provider_5 <- renderText({
+  #  data_sheet_selected_company()[1, "provider_5"]
+  #})
   
   #Data Center Overview Tab
   output$company_data_center_overview <- renderText({
-    company_data_center_overview <- reactive({
-      company_data_center_overview <- data_sheet_company %>% filter(company_name == input$selected_company)
-      company_data_center_overview[1, "company_data_center_overview"]
-    })
-    company_data_center_overview()
+    data_sheet_selected_company()[1, "company_data_center_overview"]
   })
   
   #Energy Reporting Assessment Tab
   output$energy_reporting_assessment <- renderText({
-    energy_reporting_assessment <- reactive({
-      energy_reporting_assessment <- data_sheet_company %>% filter(company_name == input$selected_company)
-      energy_reporting_assessment[1, "energy_reporting_assessment"]
-    })
-    energy_reporting_assessment()
+    data_sheet_selected_company()[1, "energy_reporting_assessment"]
   })
   
   # Company profile output

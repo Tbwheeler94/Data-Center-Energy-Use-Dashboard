@@ -130,41 +130,59 @@ industry_trends_page <- makePage(
 company_analysis_page <- makePage(
   div(
     Grid(
-      GridItem(class = "ms-sm12 ms-xl4",
-               CompanyCard(
-                          Text("Choose A Company", variant = "xxLarge"), 
-                          Dropdown.shinyInput("selected_company", 
-                            options = unique_companies,
-                            value = "Google",
-                            placeHolder = "Google",
-                            dropdownWidth = 0
-                          )
-                 )
+      GridItem(class = "ms-sm12 ms-xl3",
+               Stack(
+                 horizontal = TRUE,
+                 class = "ms-depth-8",
+                 tokens = list(padding = 20, childrenGap = 20),
+                 Text("Select company", variant = "large"),
+                 Dropdown.shinyInput("selected_company", 
+                                     options = unique_companies,
+                                     value = "Google",
+                                     placeHolder = "Google",
+                                     dropdownWidth = 150)  
                ),
-      GridItem(class = "ms-sm12 ms-xl4",
-               CompanyCard(style = "height: 115px;",
-                           Text("External Service Providers", variant = "xxLarge", style = "align: center;"),
-                            DefaultButton(uiOutput("external_service_providers"))
-                           )
-              ),
-      GridItem(class = "ms-sm12 ms-xl4",
-               CompanyCard(style = "height: 115px;")
-              )
-        ),
-    Grid(
-      GridItem(class = "ms-sm12 ms-xl6",                                               #NOTE TO SELF: NEED TO LOCK HEIGHTS TO BOXES,
-               CompanyCard(                                                            #TEST BOX POSITIONING WHEN SCREEN CHANGES
-                 Text("Company Data Center Overview", variant = "xxLarge"), 
-                 Text(uiOutput("company_data_center_overview"), variant = "mediumPlus")
+               Stack(
+                 DefaultButton(uiOutput("external_service_provider_1")),
+                 DefaultButton(uiOutput("external_service_provider_2")),
+                 DefaultButton(uiOutput("external_service_provider_3")),
+                 DefaultButton(uiOutput("external_service_provider_4"))
                )
       ),
-      GridItem(class = "ms-sm12 ms-xl6",
-               CompanyCard(
-                 Text("Energy Report Assessment", variant = "xxLarge"), 
-                 Text(uiOutput("energy_reporting_assessment"), variant = "mediumPlus")
-                          )
+      GridItem(class = "ms-sm12 ms-xl5",
+               CompanyCard(style = "height: 190px",
+                           Text("Company Data Center Overview", variant = "xLarge"),
+                           ScrollablePane(style = "height: 120px; position: relative;", Text(uiOutput("company_data_center_overview"), variant = "mediumPlus")))
+              ),
+      GridItem(class = "ms-sm12 ms-xl4",
+               CompanyCard(style = "height: 190px",
+                           Text("Energy Report Assessment", variant = "xLarge"), 
+                           ScrollablePane(style = "height: 120px; position: relative;", Text(uiOutput("energy_reporting_assessment"), variant = "mediumPlus")))
               )
-        )
+    ),
+    Grid(
+      Stack(style = "text-align: center;", Text("Energy Use Snapshot", variant = "xLarge", style = "color: red;")),
+      GridItem(class = "ms-sm12 ms-xl4",                                               
+               CompanyCard(
+                 Text("Reported energy use levels", variant = "large", style = "text-align: center;")
+               )
+      ),
+      GridItem(class = "ms-sm12 ms-xl4",                                               
+               CompanyCard(
+                 Text("Data standards", variant = "large", style = "text-align: center;")
+               )
+      ),
+      GridItem(class = "ms-sm12 ms-xl4",
+               CompanyCard(
+                 Text("Other metrics reported", variant = "large", style = "text-align: center;")
+               )
+      )
+    ),
+    Grid(
+      GridItem(
+        
+      )
+    )
     )
 )
 #list(unique(data_sheet_company$company_name))
