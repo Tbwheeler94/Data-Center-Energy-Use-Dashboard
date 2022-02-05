@@ -17,6 +17,9 @@ library(readxl)
 library(xlsx)
 library(lubridate)
 library(ggiraph)
+library(ggplot2)
+library(fastDummies)
+library(plotly)
 
 ```
 
@@ -760,8 +763,8 @@ energy_use_L2 <- energy_use_L2[!(energy_use_L2$electricity_value == 0),]
 energy_use_L2 <- energy_use_L2[!(energy_use_L2$company == "China Telecom"),]
 energy_use_L2 <- energy_use_L2[!(energy_use_L2$company == "Apple"),]
 
-ggplot(energy_use_L2, aes(area = electricity_value, fill = company, label = company)) +
-  geom_treemap() + geom_treemap_text()
+#ggplot(energy_use_L2, aes(area = electricity_value, fill = company, label = company)) +
+  #geom_treemap() + geom_treemap_text()
 
 # create plot for company wide electricity usage
 cw <- ggplot(energy_use_L2, aes(x=electricity_value)) + 
