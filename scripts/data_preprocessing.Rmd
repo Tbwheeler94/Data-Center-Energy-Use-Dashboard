@@ -527,7 +527,7 @@ for (year_count in 2007:2020) {
   # we only need 1 row of a company given a data year/reporting scope so erase repeating values
   data_of_transparency_MDC <- distinct(data_of_transparency_MDC, .keep_all = TRUE)
   
-  # create a sub data frame that is filtered by data year and company wide scope
+  # create a sub data frame that is filtered by data year and company wide electricity scope
   data_of_transparency_TO <- data_sheet_energy %>%
   filter(data_year == year_count, energy_reporting_scope == "Total Operations") %>%
   select(company, data_year, energy_reporting_scope) 
@@ -535,7 +535,7 @@ for (year_count in 2007:2020) {
   # we only need 1 row of a company given a data year/reporting scope so erase repeating values
   data_of_transparency_TO <- distinct(data_of_transparency_TO, .keep_all = TRUE)
   
-  # create a sub data frame that is filtered by data year and report exists/no data
+  # create a sub data frame that is filtered by data year (***LOOK BACK AT THIS***)
   # IMPORTANT: leave energy reporting scope column blank for this transparency level!
   data_of_transparency_ND <- data_sheet_energy %>%
     filter(data_year == year_count, energy_reporting_scope == "") %>%
@@ -576,8 +576,8 @@ data_of_transparency <- data_of_transparency[order(data_of_transparency[,"data_y
 
 # create another data frame that is filtered by company founding year
 data_founding_year <- data_sheet_company %>% select(company_name, company_founding_year)
-# drop all the excess rows that have blank data
-data_founding_year <- data_founding_year[!apply(data_founding_year == "", 1, all),]
+# drop all the excess rows that have NA data
+data_founding_year <- na.omit(data_founding_year)
 
 # NOW we have data for some companies that didn't even exist yet!
 # take each company in data_founding year, compare with ALL rows in data_of_transparency,
@@ -610,13 +610,13 @@ report_dummy = "Hi"
 j = 0
 for (i in 1:nrow(data_of_transparency)) {
   if (data_of_transparency[i,2] == "Single Data Center" || data_of_transparency[i,2] == "Multiple Data Centers") {
-    data_of_transparency[i,2] = "Reported Data Center Energy Use"
+    data_of_transparency[i,2] = "Reported Data Center Energy Data"
   } else if (data_of_transparency[i,2] == "Total Operations") {
-    data_of_transparency[i,2] = "Reported Company Wide Energy Use"
-  } else if (data_of_transparency[i,2] == "") {
-    data_of_transparency[i,2] = "Issue Report With No Data"
+    data_of_transparency[i,2] = "Reported Company Wide Electricity Data"
+  } else if (data_of_transparency[i,2] == "" || data_of_transparency[i,2] == "0") {
+    data_of_transparency[i,2] = "No Reporting of Data"
   } else {
-    data_of_transparency[i,2] = "Issue No Report"
+    data_of_transparency[i,2] = "Reported Company Wide Total Energy Data"
   }
   
   # sum the number rows based on company name and energy reporting scope
@@ -663,15 +663,117 @@ for (i in 1:nrow(data_of_transparency)) {
 # create plot
 p <- ggplot(data_of_transparency, aes(x=data_year)) + 
     geom_bar(aes(y=value, fill=energy_reporting_scope), 
-             position=position_fill(reverse = TRUE), stat="identity") +
-    #geom_line(aes(y=unit), size=1.2, color="black") +
+             position=position_stack(reverse = TRUE), stat="identity") +
+    geom_line(aes(y=unit), size=1.2, color="black") +
     ggtitle("Data Center Transparency") +
     theme_classic() +
     xlab("Year") +
-    ylab("Percentage of Reporting Scope")
+    ylab("Percentage of Reporting Scope") +
     labs(fill = "Energy Reporting Scope")
 
 ggplotly(p)
+```
+
+```{r}
+# SPECIFIC ELECTRICITY USAGE BY YEAR GRAPH
+
+# create a sub data frame that is filtered by data year and single data center scope
+energy_use_SDC <- data_sheet_energy %>%
+filter(data_year == 2020, energy_reporting_scope == "Single Data Center") %>%
+select(company, data_year, energy_reporting_scope, level_of_ownership, electricity_prepped) 
+
+# create a sub data frame that is filtered by data year and multiple data centers scope
+energy_use_MDC <- data_sheet_energy %>%
+filter(data_year == 2020, energy_reporting_scope == "Multiple Data Centers") %>%
+select(company, data_year, energy_reporting_scope, level_of_ownership, electricity_prepped)
+
+# create a sub data frame that is filtered by data year and company wide electricity scope
+energy_use_L2 <- data_sheet_energy %>%
+filter(data_year == 2020, energy_reporting_scope == "Total Operations") %>%
+select(company, data_year, energy_reporting_scope, electricity_prepped) 
+
+# stack single data center/multiple data center data frames on top of each other
+energy_use_L1 <- rbind(energy_use_SDC, energy_use_MDC)
+energy_use_L1 <- energy_use_L1[!(energy_use_L1$level_of_ownership == ""),]
+energy_use_L1$electricity_value <- 0
+energy_use_L1 <- energy_use_L1[order(energy_use_L1[,"level_of_ownership"]), ]
+
+# combine single / multiple data center values
+energy_use_L1$energy_reporting_scope <- "Data Centers"
+
+company_temp <- "Fake Company"
+ownership_temp <- "Fake Ownership"
+j = 0
+for (i in 1:nrow(energy_use_L1)) {
+  # sum the number rows based on company name and ownership level
+  # keeping track of the summation at the first instance of a distinct row
+  if (energy_use_L1[i,1] == company_temp && energy_use_L1[i,4] == ownership_temp) {
+    energy_use_L1[i-j,6] = energy_use_L1[i-j,6] + energy_use_L1[i,5]
+    j = j + 1
+  } else {
+    company_temp = energy_use_L1[i,1]
+    ownership_temp = energy_use_L1[i,4]
+    energy_use_L1[i,6] = energy_use_L1[i,5]
+    j = 1
+  }
+}
+
+# drop all other rows now that sums are calculated
+energy_use_L1 <- energy_use_L1[!(energy_use_L1$electricity_value == 0),]
+
+# create plot for data center electricity usage
+dc <- ggplot(energy_use_L1, aes(x=electricity_value)) + 
+    geom_bar(aes(y=company, fill=level_of_ownership), 
+             position=position_stack(reverse = TRUE), stat="identity") +
+    ggtitle("Data Center Electricity Use by Year") +
+    theme_classic() +
+    scale_y_discrete(position = "right") +
+    scale_x_continuous() +
+    theme(legend.position = "left") +
+    xlab("Electricity Value (KWh)") +
+    ylab("Companies") +
+    labs(fill = "Level Of Ownership") 
+ggplotly(dc)
+
+
+# L2 CALCULATIONS
+energy_use_L2 <- na.omit(energy_use_L2)
+energy_use_L2 <- energy_use_L2[order(energy_use_L2[,"company"]), ]
+energy_use_L2$electricity_value <- 0
+
+company_temp <- "Fake Company"
+j = 0
+for (i in 1:nrow(energy_use_L2)) {
+  # sum the number rows based on company name and ownership level
+  # keeping track of the summation at the first instance of a distinct row
+  if (energy_use_L2[i,1] == company_temp) {
+    energy_use_L2[i-j,5] = energy_use_L2[i-j,5] + energy_use_L2[i,4]
+    j = j + 1
+  } else {
+    company_temp = energy_use_L2[i,1]
+    energy_use_L2[i,5] = energy_use_L2[i,4]
+    j = 1
+  }
+}
+
+energy_use_L2 <- energy_use_L2[!(energy_use_L2$electricity_value == 0),]
+energy_use_L2 <- energy_use_L2[!(energy_use_L2$company == "China Telecom"),]
+energy_use_L2 <- energy_use_L2[!(energy_use_L2$company == "Apple"),]
+
+ggplot(energy_use_L2, aes(area = electricity_value, fill = company, label = company)) +
+  geom_treemap() + geom_treemap_text()
+
+# create plot for company wide electricity usage
+cw <- ggplot(energy_use_L2, aes(x=electricity_value)) + 
+    geom_bar(aes(y=company, fill=electricity_value), 
+             position="stack", stat="identity") +
+    ggtitle("Company Wide Electricity Use by Year") +
+    theme_classic() +
+    xlab("Electricity Value (KWh)") +
+    ylab("Companies") 
+
+ggplotly(cw)
+
 ```
 
 ```{r}
