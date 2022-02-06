@@ -136,40 +136,40 @@ company_analysis_page <- makePage(
                  class = "ms-depth-8",
                  tokens = list(padding = 20, childrenGap = 20),
                  Text("Select company", variant = "large"),
-                 Dropdown.shinyInput("selected_company", 
+                 ComboBox.shinyInput("selected_company", 
                                      options = unique_companies,
                                      value = "Google",
                                      placeHolder = "Google",
                                      dropdownWidth = 150)  
                ),
                Stack(
-                 DefaultButton(uiOutput("external_service_provider_1")),
-                 DefaultButton(uiOutput("external_service_provider_2")),
-                 DefaultButton(uiOutput("external_service_provider_3")),
-                 DefaultButton(uiOutput("external_service_provider_4"))
+                 class = "ms-depth-8",
+                 dataTableOutput("selected_company_stats")
                )
       ),
       GridItem(class = "ms-sm12 ms-xl5",
-               CompanyCard(style = "height: 190px",
+               CompanyCard(style = "height: 250px",
                            Text("Company Data Center Overview", variant = "xLarge"),
-                           ScrollablePane(style = "height: 120px; position: relative;", Text(uiOutput("company_data_center_overview"), variant = "mediumPlus")))
+                           ScrollablePane(style = "height: 180px; position: relative;", Text(uiOutput("company_data_center_overview"), variant = "mediumPlus")))
               ),
       GridItem(class = "ms-sm12 ms-xl4",
-               CompanyCard(style = "height: 190px",
+               CompanyCard(style = "height: 250px",
                            Text("Energy Report Assessment", variant = "xLarge"), 
-                           ScrollablePane(style = "height: 120px; position: relative;", Text(uiOutput("energy_reporting_assessment"), variant = "mediumPlus")))
+                           ScrollablePane(style = "height: 180px; position: relative;", Text(uiOutput("energy_reporting_assessment"), variant = "mediumPlus")))
               )
     ),
     Grid(
-      Stack(style = "text-align: center;", Text("Energy Use Snapshot", variant = "xLarge", style = "color: red;")),
+      Stack(style = "text-align: center;", Text("Current Energy Reporting Snapshot", variant = "xLarge", style = "color: red;")),
       GridItem(class = "ms-sm12 ms-xl4",                                               
                CompanyCard(
-                 Text("Reported energy use levels", variant = "large", style = "text-align: center;")
+                 Text("Reported energy use levels", variant = "large", style = "text-align: center;"),
+                 dataTableOutput("reported_energy_levels")
                )
       ),
       GridItem(class = "ms-sm12 ms-xl4",                                               
                CompanyCard(
-                 Text("Data standards", variant = "large", style = "text-align: center;")
+                 Text("Data standards", variant = "large", style = "text-align: center;"),
+                 dataTableOutput("data_standards")
                )
       ),
       GridItem(class = "ms-sm12 ms-xl4",
