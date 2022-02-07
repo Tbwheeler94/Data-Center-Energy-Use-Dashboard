@@ -100,9 +100,12 @@ home_page <- makePage(
 dc_energy_101_page <- makePage(
   div(
     Grid(
-      GridItem(class = "ms-sm12 ms-xl12",
-               MainCard(title = "About the Data",
-                        Text("We are a team of University of California, Santa Barbara based researchers aiming to increase transparency and understanding of trends in global data center energy use. This website is a dashboard for modelers, policy-makers, and the general public to gain insight into data currently being reported by many of the world largest technology companies. Our visualization uses aggregated energy data primarily collected from publicly disclosed corporate sustainability reports.", variant = "large"))
+      GridItem(class = "ms-sm12 ms-xl12", style = "text-align: center",
+               MainCard(title = "Page Under Construction",
+                        FontIcon(iconName = "ConstructionCone", style = list(fontSize = 80)
+                        )
+               )
+                        
       )
     )
   )
@@ -115,9 +118,12 @@ dc_energy_101_page <- makePage(
 industry_trends_page <- makePage(
   div(
     Grid(
-      GridItem(class = "ms-sm12 ms-xl12",
-               MainCard(title = "About the Data",
-                        Text("We are a team of University of California, Santa Barbara based researchers aiming to increase transparency and understanding of trends in global data center energy use. This website is a dashboard for modelers, policy-makers, and the general public to gain insight into data currently being reported by many of the world largest technology companies. Our visualization uses aggregated energy data primarily collected from publicly disclosed corporate sustainability reports.", variant = "large"))
+      GridItem(class = "ms-sm12 ms-xl12", style = "text-align: center",
+               MainCard(title = "Page Under Construction",
+                        FontIcon(iconName = "ConstructionCone", style = list(fontSize = 80)
+                        )
+               )
+               
       )
     )
   )
@@ -174,14 +180,51 @@ company_analysis_page <- makePage(
       ),
       GridItem(class = "ms-sm12 ms-xl4",
                CompanyCard(
-                 Text("Other metrics reported", variant = "large", style = "text-align: center;")
+                 Text("Other metrics reported", variant = "large", style = "text-align: center;"),
+                 dataTableOutput("other_metrics")
                )
       )
     ),
     Grid(
-      GridItem(
+      Stack(style = "text-align: center;", Text("Energy Use Trend & Data", variant = "xLarge", style = "color: red;")),
+      GridItem(class = "ms-sm12 ms-xl12",
+               CompanyCard(
+                 plotlyOutput("companyfuelPlot")
+               )
         
       )
+    ),
+    Grid(
+      GridItem(class = "ms-sm12 ms-xl6",
+               CompanyCard(
+                 Text("Electricity Use (TWh/yr)", variant = "large", style = "text-align: center;"),
+                 dataTableOutput("electricity_use_table")
+               )
+               
+      ),
+      GridItem(class = "ms-sm12 ms-xl6",
+               CompanyCard(
+                 Text("Other fuel use (TWh/yr)", variant = "large", style = "text-align: center;")
+               )
+               
+      )
+    ),
+    Grid(
+      GridItem(class = "ms-sm12 ms-xl6",
+               CompanyCard(
+                 Text("Non-specified energy use (TWh/yr)", variant = "large", style = "text-align: center;")
+               )
+               
+      ),
+      GridItem(class = "ms-sm12 ms-xl6",
+               CompanyCard(
+                 Text("PUE", variant = "large", style = "text-align: center;")
+               )
+               
+      )
+    ),
+    Grid(
+      Stack(style = "text-align: center;", Text("Methodology", variant = "xLarge", style = "color: red;"))
     )
     )
 )

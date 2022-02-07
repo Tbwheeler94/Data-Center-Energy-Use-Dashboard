@@ -9,6 +9,8 @@ library(shiny.router)
 library(xlsx)
 library(readxl)
 library(DT)
+library(plotly)
+library(gt)
 
 
 #############################
@@ -28,8 +30,8 @@ aggregate_data <- read.csv(here('data', 'aggregate_data.csv'))
 ########### Tab 3 - Company Profiles #############
 ##################################################
 
-#Import energy spreadsheet
-data_sheet_energy <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 1, #the "1" specifies to import sheet 1
+#Import raw energy spreadsheet
+data_sheet_energy_raw <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 1, #the "1" specifies to import sheet 1
                                 
                                 #specify column data types to ensure proper recognition
                                 colClasses=c("character","integer","Date","Date","character", #columns 1-5
@@ -42,30 +44,79 @@ data_sheet_energy <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.x
                                              "integer", "character")) #column 36, 37 (Notes)
 
 #move second row values to column headers, put header names in tidy format
-data_sheet_energy <- data_sheet_energy %>% 
+data_sheet_energy_raw <- data_sheet_energy_raw %>% 
   row_to_names(1) %>% 
   clean_names()
 
 #change column names that were set to incorrect values when column classes were set
-colnames(data_sheet_energy) [2] <- 'report_year'
-colnames(data_sheet_energy) [3] <- 'period_covered_start_date'
-colnames(data_sheet_energy) [4] <- 'period_covered_end_date'
-colnames(data_sheet_energy) [5] <- 'energy_reporting_scope'
-colnames(data_sheet_energy) [6] <- 'level_of_ownership'
-colnames(data_sheet_energy) [9] <- 'electricity_value'
-colnames(data_sheet_energy) [10] <- 'unit_scale'
-colnames(data_sheet_energy) [15] <- 'fuel_1_value'
-colnames(data_sheet_energy) [16] <- 'fuel_1_unit_scale'
-colnames(data_sheet_energy) [20] <- 'fuel_2_value'
-colnames(data_sheet_energy) [21] <- 'fuel_2_unit_scale'
-colnames(data_sheet_energy) [25] <- 'fuel_3_value'
-colnames(data_sheet_energy) [26] <- 'fuel_3_unit_scale'
-colnames(data_sheet_energy) [30] <- 'fuel_4_value'
-colnames(data_sheet_energy) [31] <- 'fuel_4_unit_scale'
-colnames(data_sheet_energy) [35] <- 'fuel_5_value'
-colnames(data_sheet_energy) [36] <- 'fuel_5_unit_scale'
+colnames(data_sheet_energy_raw) [2] <- 'report_year'
+colnames(data_sheet_energy_raw) [3] <- 'period_covered_start_date'
+colnames(data_sheet_energy_raw) [4] <- 'period_covered_end_date'
+colnames(data_sheet_energy_raw) [5] <- 'energy_reporting_scope'
+colnames(data_sheet_energy_raw) [6] <- 'level_of_ownership'
+colnames(data_sheet_energy_raw) [9] <- 'electricity_value'
+colnames(data_sheet_energy_raw) [10] <- 'unit_scale'
+colnames(data_sheet_energy_raw) [15] <- 'fuel_1_value'
+colnames(data_sheet_energy_raw) [16] <- 'fuel_1_unit_scale'
+colnames(data_sheet_energy_raw) [20] <- 'fuel_2_value'
+colnames(data_sheet_energy_raw) [21] <- 'fuel_2_unit_scale'
+colnames(data_sheet_energy_raw) [25] <- 'fuel_3_value'
+colnames(data_sheet_energy_raw) [26] <- 'fuel_3_unit_scale'
+colnames(data_sheet_energy_raw) [30] <- 'fuel_4_value'
+colnames(data_sheet_energy_raw) [31] <- 'fuel_4_unit_scale'
+colnames(data_sheet_energy_raw) [35] <- 'fuel_5_value'
+colnames(data_sheet_energy_raw) [36] <- 'fuel_5_unit_scale'
 
-by_fuel_type_data <- read.csv(here('data', 'by_fuel_type_data.csv'))
+#Import filtered energy spreadsheet
+
+data_sheet_energy_transformed <- read.csv(here('data', 'data_sheet_energy_transformed.csv'))
+
+#Isolate fuel values from transformed dataset and then stack
+
+#isolate electricity values
+data_sheet_energy_electricity <- data_sheet_energy_transformed %>% 
+  select("company", "data_year", "electricity_converted") %>% 
+  add_column(fuel_type = "Electricity") %>% 
+  relocate("fuel_type", .after = data_year) %>% 
+  rename(value = electricity_converted)
+
+#isolate fuel 1 values
+data_sheet_energy_combined_1 <- data_sheet_energy_transformed %>% 
+  select("company", "data_year", "fuel_1_type", "fuel_1_converted") %>% 
+  rename(fuel_type = fuel_1_type) %>% 
+  rename(value = fuel_1_converted)
+
+#isolate fuel 2 values
+data_sheet_energy_combined_2 <- data_sheet_energy_transformed %>% 
+  select("company", "data_year", "fuel_2_type", "fuel_2_converted") %>% 
+  rename(fuel_type = fuel_2_type) %>% 
+  rename(value = fuel_2_converted)
+
+#isolate fuel 3 values
+data_sheet_energy_combined_3 <- data_sheet_energy_transformed %>% 
+  select("company", "data_year", "fuel_3_type", "fuel_3_converted") %>% 
+  rename(fuel_type = fuel_3_type) %>% 
+  rename(value = fuel_3_converted)
+
+#isolate fuel 4 values
+data_sheet_energy_combined_4 <- data_sheet_energy_transformed %>% 
+  select("company", "data_year", "fuel_4_type", "fuel_4_converted") %>% 
+  rename(fuel_type = fuel_4_type) %>% 
+  rename(value = fuel_4_converted)
+
+#isolate fuel 5 values
+data_sheet_energy_combined_5 <- data_sheet_energy_transformed %>% 
+  select("company", "data_year", "fuel_5_type", "fuel_5_converted") %>% 
+  rename(fuel_type = fuel_5_type) %>% 
+  rename(value = fuel_5_converted)
+
+by_fuel_type_data <- rbind(data_sheet_energy_electricity, data_sheet_energy_combined_1, #stack converted electricity, fuel values sheets on top of each other
+        data_sheet_energy_combined_2, data_sheet_energy_combined_3,
+        data_sheet_energy_combined_4, data_sheet_energy_combined_5) %>%
+  drop_na()
+
+#Generate dataset for company profile graph
+
 data_sheet_company <- read.csv(here('data', 'data_sheet_company.csv'))
 
 #generate unique list of companies in alphabetical order and drop blank
