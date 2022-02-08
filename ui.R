@@ -175,7 +175,8 @@ company_analysis_page <- makePage(
       GridItem(class = "ms-sm12 ms-xl4",                                               
                CompanyCard(
                  Text("Data standards", variant = "large", style = "text-align: center;"),
-                 dataTableOutput("data_standards")
+                 dataTableOutput("data_standards"),
+                 downloadButton('download_standards',"Download the data")
                )
       ),
       GridItem(class = "ms-sm12 ms-xl4",
@@ -204,7 +205,8 @@ company_analysis_page <- makePage(
       ),
       GridItem(class = "ms-sm12 ms-xl6",
                CompanyCard(
-                 Text("Other fuel use (TWh/yr)", variant = "large", style = "text-align: center;")
+                 Text("Other fuel use (TWh/yr)", variant = "large", style = "text-align: center;"),
+                 dataTableOutput("other_fuel_use_table")
                )
                
       )
