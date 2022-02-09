@@ -29,7 +29,7 @@ server <- function(input, output, session) {
   
   #This dataset filters the raw company profiles sheet by the selected company's current year
   company_sheet_selected_company <- reactive({
-    data_sheet_company %>% filter(company_name == input$selected_company)
+    data_sheet_company_raw %>% filter(company_name == input$selected_company)
   })
   
   #This dataset filters the raw energy sheet by the selected company's current year
@@ -248,7 +248,7 @@ server <- function(input, output, session) {
   })
   
   output$electricity_use_table <- renderDataTable({
-    datatable(selected_company_electricity_use(), rownames = FALSE)
+    datatable(selected_company_electricity_use(), rownames = FALSE, options = list(pageLength = 5, lengthMenu = c(5, 10, 15, 20)))
   })
   
   #######################################
@@ -258,7 +258,7 @@ server <- function(input, output, session) {
   
   selected_company_fuel_use <- reactive({
     data_sheet_energy_transformed %>% 
-      filter(company == "Apple") %>% 
+      filter(company == input$selected_company) %>% 
       mutate_at(vars(electricity_converted, fuel_1_converted, #replace na values with 0
                      fuel_2_converted, fuel_3_converted, fuel_4_converted, 
                      fuel_5_converted), ~replace_na(., 0)) %>%
@@ -269,7 +269,7 @@ server <- function(input, output, session) {
       select("data_year", "energy_reporting_scope", "level_of_ownership", "total_other_energy_use", "notes_3") %>% 
       filter(energy_reporting_scope == "Multiple Data Centers" | energy_reporting_scope == "Single Data Center") %>% 
       mutate(energy_reporting_scope = case_when(
-        energy_reporting_scope %in% c("Multiple Data Centers", "Single Data Center") ~ "Data center electricity use")) %>% 
+        energy_reporting_scope %in% c("Multiple Data Centers", "Single Data Center") ~ "Data center other fuel use")) %>% 
       group_by(data_year, energy_reporting_scope, level_of_ownership) %>% 
       summarize(value = sum(total_other_energy_use)) %>% 
       mutate(value = value/1000000000) %>% 
@@ -279,7 +279,34 @@ server <- function(input, output, session) {
   })
   
   output$other_fuel_use_table <- renderDataTable({
-    datatable(selected_company_fuel_use(), rownames = FALSE)
+    datatable(selected_company_fuel_use(), rownames = FALSE, options = list(pageLength = 5, lengthMenu = c(5, 10, 15, 20)))
+  })
+  
+  #######################################
+  #Table 10##############################
+  #Non-specified energy use (TWh/yr)#####
+  #######################################
+  
+  #selected_company_ns_energy_use <-
+  #  data_sheet_energy_transformed %>%
+  #    filter(company == input$selected_company, fuel_1_type == "Total Energy Use") %>% 
+  #    select("data_year", "energy_reporting_scope", "fuel_1_type", "fuel_1_converted") %>% 
+  #    rename(c("Year" = data_year, "Reporting Scope" = energy_reporting_scope, "Geographic Scope" = fuel_1_converted))
+  
+  #######################################
+  #Table 11##############################
+  #PUE###################################
+  #######################################
+  
+  selected_company_pue <- reactive({
+    data_sheet_pue_raw %>% 
+      filter(company == input$selected_company) %>% 
+      select("applicable_year", "facility_scope", "geographical_scope", "pue_value") %>% 
+      rename(c("Year" = applicable_year, "Facility Scope" = facility_scope, "PUE Value" = pue_value, "Geographic Scope" = geographical_scope))
+  })
+  
+  output$pue_table <- renderDataTable({
+    datatable(selected_company_pue(), rownames = FALSE, options = list(pageLength = 5, lengthMenu = c(5, 10, 15, 20)))
   })
   
   

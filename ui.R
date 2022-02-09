@@ -142,7 +142,7 @@ company_analysis_page <- makePage(
                  class = "ms-depth-8",
                  tokens = list(padding = 20, childrenGap = 20),
                  Text("Select company", variant = "large"),
-                 ComboBox.shinyInput("selected_company", 
+                 Dropdown.shinyInput("selected_company", 
                                      options = unique_companies,
                                      value = "Google",
                                      placeHolder = "Google",
@@ -165,7 +165,7 @@ company_analysis_page <- makePage(
               )
     ),
     Grid(
-      Stack(style = "text-align: center;", Text("Current Energy Reporting Snapshot", variant = "xLarge", style = "color: red;")),
+      Stack(style = "text-align: center; padding: 25px", Text("Current Energy Reporting Snapshot", variant = "xxLarge", style = "color: #50bcfa;")),
       GridItem(class = "ms-sm12 ms-xl4",                                               
                CompanyCard(
                  Text("Reported energy use levels", variant = "large", style = "text-align: center;"),
@@ -187,7 +187,7 @@ company_analysis_page <- makePage(
       )
     ),
     Grid(
-      Stack(style = "text-align: center;", Text("Energy Use Trend & Data", variant = "xLarge", style = "color: red;")),
+      Stack(style = "text-align: center; padding: 25px", Text("Energy Use Trend & Data", variant = "xxLarge", style = "color: #50bcfa;")),
       GridItem(class = "ms-sm12 ms-xl12",
                CompanyCard(
                  plotlyOutput("companyfuelPlot")
@@ -213,20 +213,30 @@ company_analysis_page <- makePage(
     ),
     Grid(
       GridItem(class = "ms-sm12 ms-xl6",
-               CompanyCard(
-                 Text("Non-specified energy use (TWh/yr)", variant = "large", style = "text-align: center;")
+               CompanyCard(style = "text-align: center;",
+                 Text("Non-specified energy use (TWh/yr)", variant = "large"),
+                 Text("Under Construction", variant = "medium", style = "text-align: center;"),
+                 FontIcon(iconName = "ConstructionCone", style = list(fontSize = 80))
                )
                
       ),
       GridItem(class = "ms-sm12 ms-xl6",
                CompanyCard(
-                 Text("PUE", variant = "large", style = "text-align: center;")
+                 Text("PUE", variant = "large", style = "text-align: center;"),
+                 dataTableOutput("pue_table")
                )
                
       )
     ),
     Grid(
-      Stack(style = "text-align: center;", Text("Methodology", variant = "xLarge", style = "color: red;"))
+      Stack(style = "text-align: center; padding: 25px", Text("Methodology", variant = "xxLarge", style = "color: #50bcfa;")),
+      GridItem(class = "ms-sm12 ms-xl12",
+               Stack(class = "ms-depth-8", tokens = list(padding = 20, childrenGap = 10), 
+                     Text("All company data are based on a rigorous review of publicly-available resources.", variant = "large"),
+                     PrimaryButton(text = "Learn More", style = "width: 120px; font-style: bold;"),
+                     Text("If you spot errors or have more recent data, please let us know!", variant = "large"),
+                     PrimaryButton(text = "Report Issue", style = "width: 120px; font-style: bold;"))
+      )
     )
     )
 )

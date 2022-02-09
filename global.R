@@ -30,6 +30,16 @@ aggregate_data <- read.csv(here('data', 'aggregate_data.csv'))
 ########### Tab 3 - Company Profiles #############
 ##################################################
 
+#generate unique list of companies in alphabetical order and drop blank
+unique_companies <- list()
+companies <- str_subset(sort(unique(data_sheet_company$company_name)),"")
+
+for (i in 1:length(companies)) {
+  
+  unique_companies[[i]]<- list(key = {companies[i]}, 
+                               text = {companies[i]})
+}
+
 #Import raw energy spreadsheet
 data_sheet_energy_raw <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 1, #the "1" specifies to import sheet 1
                                 
@@ -67,11 +77,10 @@ colnames(data_sheet_energy_raw) [31] <- 'fuel_4_unit_scale'
 colnames(data_sheet_energy_raw) [35] <- 'fuel_5_value'
 colnames(data_sheet_energy_raw) [36] <- 'fuel_5_unit_scale'
 
-#Import filtered energy spreadsheet
-
+#Import pre-tranformed energy spreadsheet
 data_sheet_energy_transformed <- read.csv(here('data', 'data_sheet_energy_transformed.csv'))
 
-#Isolate fuel values from transformed dataset and then stack
+#Isolate fuel values from transformed dataset and then stack - for fuel data graph
 
 #isolate electricity values
 data_sheet_energy_electricity <- data_sheet_energy_transformed %>% 
@@ -115,21 +124,48 @@ by_fuel_type_data <- rbind(data_sheet_energy_electricity, data_sheet_energy_comb
         data_sheet_energy_combined_4, data_sheet_energy_combined_5) %>%
   drop_na()
 
-#Generate dataset for company profile graph
+#Import raw company profile sheet
+data_sheet_company_raw <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 2, #the "2" specifies to import sheet 2
+                                 
+                                 #specify column data types to ensure proper recognition
+                                 colClasses=c("character","character","character","integer","Date", #columns 1-5
+                                              "character","character","character","character","character", #columns 6-10
+                                              "character","character","character","character","character", #columns 11-15
+                                              "character","character","character","character","character", #columns 16-20
+                                              "character","character","character","character","character", #columns 21-25
+                                              "character","character","character","character","character", #columns 26-30
+                                              "character","character","character","character","character", #columns 31-35
+                                              "character","character","character","character")) #column 36-39
 
-data_sheet_company <- read.csv(here('data', 'data_sheet_company.csv'))
+#move second row values to column headers, put header names in tidy format
+data_sheet_company_raw <- data_sheet_company_raw %>% 
+  row_to_names(2) %>% 
+  clean_names() %>%
+  select(!c(who_added_the_company, x, qts, x2019, x_2, x_3, x_4))
 
-#generate unique list of companies in alphabetical order and drop blank
-unique_companies <- list()
-companies <- str_subset(sort(unique(data_sheet_company$company_name)),"")
+#change column names that were set to incorrect values when column classes were set
+colnames(data_sheet_company) [3] <- 'company_founding_year'
+colnames(data_sheet_company) [4] <- 'date_last_updated'
 
-for (i in 1:length(companies)) {
-  
-  unique_companies[[i]]<- list(key = {companies[i]}, 
-                               text = {companies[i]})
-}
+#Import raw PUE sheet
+data_sheet_pue_raw <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 3, #the "3" specifies to import sheet 3
+                             
+                             #specify column data types to ensure proper recognition
+                             colClasses=c("character","integer","character","character","character", #columns 1-5
+                                          "numeric","character","character","character","character", #columns 6-10
+                                          "character","character","character","character"))          #columns 11-14
 
-#Tab 4 -
+#move second row values to column headers, put header names in tidy format
+data_sheet_pue_raw <- data_sheet_pue_raw %>% 
+  row_to_names(1) %>% 
+  clean_names()
+
+colnames(data_sheet_pue_raw) [2] <- 'applicable_year'
+colnames(data_sheet_pue_raw) [6] <- 'pue_value'
+
+##################################################
+########### Tab 4 - Methods #############
+##################################################
 
 #Tab 5 -
 
