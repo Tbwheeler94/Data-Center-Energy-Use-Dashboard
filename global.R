@@ -30,16 +30,6 @@ aggregate_data <- read.csv(here('data', 'aggregate_data.csv'))
 ########### Tab 3 - Company Profiles #############
 ##################################################
 
-#generate unique list of companies in alphabetical order and drop blank
-unique_companies <- list()
-companies <- str_subset(sort(unique(data_sheet_company$company_name)),"")
-
-for (i in 1:length(companies)) {
-  
-  unique_companies[[i]]<- list(key = {companies[i]}, 
-                               text = {companies[i]})
-}
-
 #Import raw energy spreadsheet
 data_sheet_energy_raw <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 1, #the "1" specifies to import sheet 1
                                 
@@ -144,8 +134,8 @@ data_sheet_company_raw <- data_sheet_company_raw %>%
   select(!c(who_added_the_company, x, qts, x2019, x_2, x_3, x_4))
 
 #change column names that were set to incorrect values when column classes were set
-colnames(data_sheet_company) [3] <- 'company_founding_year'
-colnames(data_sheet_company) [4] <- 'date_last_updated'
+colnames(data_sheet_company_raw) [3] <- 'company_founding_year'
+colnames(data_sheet_company_raw) [4] <- 'date_last_updated'
 
 #Import raw PUE sheet
 data_sheet_pue_raw <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 3, #the "3" specifies to import sheet 3
@@ -162,6 +152,16 @@ data_sheet_pue_raw <- data_sheet_pue_raw %>%
 
 colnames(data_sheet_pue_raw) [2] <- 'applicable_year'
 colnames(data_sheet_pue_raw) [6] <- 'pue_value'
+
+#generate unique list of companies in alphabetical order and drop blank
+unique_companies <- list()
+companies <- str_subset(sort(unique(data_sheet_company_raw$company_name)),"")
+
+for (i in 1:length(companies)) {
+  
+  unique_companies[[i]]<- list(key = {companies[i]}, 
+                               text = {companies[i]})
+}
 
 ##################################################
 ########### Tab 4 - Methods #############
