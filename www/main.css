@@ -15,7 +15,7 @@
 
 .main {
   grid-area: main;
-  background-color: #faf9f8;
+  background-color: #fffff;
   padding-left: 40px;
   padding-right: 32px;
   max-width: calc(100vw - 400px);

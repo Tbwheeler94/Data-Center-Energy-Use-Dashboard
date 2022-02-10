@@ -1,4 +1,3 @@
-source(here("R", "aggregateOutput.R"))
 source(here("R", "yearsreportingOutput.R"))
 source(here("R", "companiesreportingOutput.R"))
 source(here("ui.R"))
@@ -309,6 +308,66 @@ server <- function(input, output, session) {
     datatable(selected_company_pue(), rownames = FALSE, options = list(pageLength = 5, lengthMenu = c(5, 10, 15, 20)))
   })
   
+  #######################################
+  #Table 12##############################
+  #Sources Assessed######################
+  #######################################
+  
+  #stack sources columns on top of each other
+  source_assessed_1 <- data_sheet_energy_transformed %>% 
+    filter(company == "Google") %>% 
+    select(c("data_year", "report_1_type", "did_report_1_provide_electricity_or_fuel_use_data", "link_to_report_1_on_company_website")) %>% 
+    rename(report_type = report_1_type, yes_no = did_report_1_provide_electricity_or_fuel_use_data, link = link_to_report_1_on_company_website)
+  
+  source_assessed_2 <- data_sheet_energy_transformed %>% 
+    filter(company == "Google") %>% 
+    select(c("data_year", "report_2_type", "did_report_2_provide_electricity_or_fuel_use_data", "link_to_report_2_on_company_website")) %>% 
+    rename(report_type = report_2_type, yes_no = did_report_2_provide_electricity_or_fuel_use_data, link = link_to_report_2_on_company_website)
+  
+  source_assessed_3 <- data_sheet_energy_transformed %>% 
+    filter(company == "Google") %>% 
+    select(c("data_year", "report_3_type", "did_report_3_provide_electricity_or_fuel_use_data", "link_to_report_3_on_company_website")) %>% 
+    rename(report_type = report_3_type, yes_no = did_report_3_provide_electricity_or_fuel_use_data, link = link_to_report_3_on_company_website)
+  
+  source_assessed_4 <- data_sheet_energy_transformed %>% 
+    filter(company == "Google") %>% 
+    select(c("data_year", "report_4_type", "did_report_4_provide_electricity_or_fuel_use_data", "link_to_report_4_on_company_website")) %>% 
+    rename(report_type = report_4_type, yes_no = did_report_4_provide_electricity_or_fuel_use_data, link = link_to_report_4_on_company_website)
+  
+  source_assessed_5 <- data_sheet_energy_transformed %>% 
+    filter(company == "Google") %>% 
+    select(c("data_year", "report_5_type", "did_report_5_provide_electricity_or_fuel_use_data", "link_to_report_5_on_company_website")) %>% 
+    rename(report_type = report_5_type, yes_no = did_report_5_provide_electricity_or_fuel_use_data, link = link_to_report_5_on_company_website)
+  
+  sources_assessed <- 
+    rbind(source_assessed_1, source_assessed_2, source_assessed_3, source_assessed_4, source_assessed_5) %>% 
+    drop_na(report_type) %>% distinct() %>% 
+    mutate(row = row_number()) %>%
+    pivot_wider(names_from = report_type, values_from = link) %>% 
+    select(-row)
+  
+  jscode <- "function(settings) {
+            var table = settings.oInstance.api();
+            var nrows = table.rows().count();
+            for(var i=0; i<nrows; i++){
+            var cell3 = table.cell(i,3);
+            var cell2 = table.cell(i,2);
+            var cell1 = table.cell(i,1);
+            var yes_no = cell1.data();
+            var bgcolor;
+            if(yes_no == 'Yes'){
+            bgcolor = 'green';
+            }else{
+            bgcolor = 'red'
+            }
+            cell2.node().style.backgroundColor = bgcolor;
+            cell3.node().style.backgroundColor = bgcolor;
+            }
+            }"
+  
+  output$sources_table <- renderDataTable({
+    datatable(sources_assessed, rownames = FALSE, options = list(dom = 't', initComplete = JS(jscode), columnDefs = list(list(visible=FALSE, targets=1))))
+  })
   
   router$server(input, output, session)
 }
@@ -317,18 +376,7 @@ server <- function(input, output, session) {
 ##Return to Code##
 ##################
 
-# # Aggregate plot output
-# output$aggregatePlot <- renderPlot({
-#   buildAggregateOutput(aggregate_data)
-# })
-# 
-# # Company profile output
-# output$companyfuelPlot <- renderPlot({
-# 
-#   buildcompanyfuelOutput(by_fuel_type_data, input$company_selection)
-# 
-# })
-# 
+
 # # Years reported output
 # output$years_reported <- renderText({buildyearsreportedOutput(by_fuel_type_data)})
 # 

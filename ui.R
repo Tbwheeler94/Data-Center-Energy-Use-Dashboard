@@ -18,7 +18,7 @@ HighlightsCard <- function(...) {
   Stack(
     class = "ms-depth-8",
     tokens = list(padding = 20, childrenGap = 5),
-    style = "text-align: center",
+    style = 'border-radius: 5px; background-color: white; border-top: 8px solid #137AD1; text-align: center;',
     ...  
   )
 }
@@ -39,7 +39,7 @@ CompanyCard <- function(..., title = NULL) {
 Grid <- function (...) {
   div(
     class = "ms-Grid", dir = "ltr",
-    style = "padding: 0px",
+    style = "padding: 0px;",
     ...
   )
 }
@@ -66,26 +66,27 @@ home_page <- makePage(
     Grid(
       GridItem(class = "ms-sm12 ms-xl12",
         MainCard(title = "About the Data",
-           Text("We are a team of University of California, Santa Barbara based researchers aiming to increase transparency and understanding of trends in global data center energy use. This website is a dashboard for modelers, policy-makers, and the general public to gain insight into data currently being reported by many of the world largest technology companies. Our visualization uses aggregated energy data primarily collected from publicly disclosed corporate sustainability reports.", variant = "large"))
+                 style = "border-radius: 5px; background-color: white; border-top: 8px solid #137AD1;",
+                 Text("We are a team of University of California, Santa Barbara based researchers aiming to increase transparency and understanding of trends in global data center energy use. This website is a dashboard for modelers, policy-makers, and the general public to gain insight into data currently being reported by many of the world largest technology companies. Our visualization uses aggregated energy data primarily collected from publicly disclosed corporate sustainability reports.", variant = "large"))
         ),
         GridItem(class = "ms-sm12 ms-xl4",
           HighlightsCard(
             FontIcon(iconName = "Calendar", style = list(fontSize = 60)),
-            Text(uiOutput("years_reported"), variant = "mega"),
+            Text(uiOutput("years_reported"), variant = "mega", style = "color: #137AD1;"),
             Text("Years Reporting", variant = "xxLarge")
           )
         ),
         GridItem(class = "ms-sm12 ms-xl4",
           HighlightsCard(
             FontIcon(iconName = "ClipboardList", style = list(fontSize = 60)),
-            Text(uiOutput("companies_reporting"), variant = "mega"),
+            Text(uiOutput("companies_reporting"), variant = "mega", style = "color: #137AD1;"),
             Text("Companies Reporting", variant = "xxLarge")
           )
         ),
         GridItem(class = "ms-sm12 ms-xl4",
           HighlightsCard(
             FontIcon(iconName = "TableComputed", style = list(fontSize = 60)),
-            Text(uiOutput("energy_reported"), variant = "mega"),
+            Text(uiOutput("energy_reported"), variant = "mega", style = "color: #137AD1;"),
             Text("Energy Reported", variant = "xxLarge")
           )
         )
@@ -118,7 +119,8 @@ dc_energy_101_page <- makePage(
 industry_trends_page <- makePage(
   div(
     Grid(
-      GridItem(class = "ms-sm12 ms-xl12", style = "text-align: center",
+      GridItem(class = "ms-sm12 ms-xl12", 
+               style = "text-align: center",
                MainCard(title = "Page Under Construction",
                         FontIcon(iconName = "ConstructionCone", style = list(fontSize = 80)
                         )
@@ -135,37 +137,35 @@ industry_trends_page <- makePage(
 
 company_analysis_page <- makePage(
   div(
-    Grid(
+    Grid(style = "display: flex;",
       GridItem(class = "ms-sm12 ms-xl3",
                Stack(
-                 horizontal = TRUE,
                  class = "ms-depth-8",
+                 style = 'border-radius: 5px; background-color: white; border-top: 8px solid #137AD1;',
                  tokens = list(padding = 20, childrenGap = 20),
-                 Text("Select company", variant = "large"),
+                 Text("Select company", variant = "xLarge"),
                  Dropdown.shinyInput("selected_company", 
                                      options = unique_companies,
                                      value = "Google",
                                      placeHolder = "Google",
-                                     dropdownWidth = 150)  
-               ),
-               Stack(
-                 class = "ms-depth-8",
+                                     dropdownWidth = 150),
+                 downloadButton('download_standards'," Download full profile (.csv)"),
                  dataTableOutput("selected_company_stats")
                )
       ),
       GridItem(class = "ms-sm12 ms-xl5",
-               CompanyCard(style = "height: 250px",
+               CompanyCard(style = 'border-radius: 5px; background-color: white; border-top: 8px solid #137AD1;',
                            Text("Company Data Center Overview", variant = "xLarge"),
-                           ScrollablePane(style = "height: 180px; position: relative;", Text(uiOutput("company_data_center_overview"), variant = "mediumPlus")))
+                           Text(uiOutput("company_data_center_overview"), variant = "mediumPlus"))
               ),
       GridItem(class = "ms-sm12 ms-xl4",
-               CompanyCard(style = "height: 250px",
+               CompanyCard(style = 'border-radius: 5px; background-color: white; border-top: 8px solid #137AD1;',
                            Text("Energy Report Assessment", variant = "xLarge"), 
-                           ScrollablePane(style = "height: 180px; position: relative;", Text(uiOutput("energy_reporting_assessment"), variant = "mediumPlus")))
+                           Text(uiOutput("energy_reporting_assessment"), variant = "mediumPlus"))
               )
     ),
     Grid(
-      Stack(style = "text-align: center; padding: 25px", Text("Current Energy Reporting Snapshot", variant = "xxLarge", style = "color: #50bcfa;")),
+      Stack(style = "text-align: center; padding: 25px", Text("Current Energy Reporting Snapshot", variant = "xxLarge", style = "color: #137AD1;")),
       GridItem(class = "ms-sm12 ms-xl4",                                               
                CompanyCard(
                  Text("Reported energy use levels", variant = "large", style = "text-align: center;"),
@@ -175,8 +175,7 @@ company_analysis_page <- makePage(
       GridItem(class = "ms-sm12 ms-xl4",                                               
                CompanyCard(
                  Text("Data standards", variant = "large", style = "text-align: center;"),
-                 dataTableOutput("data_standards"),
-                 downloadButton('download_standards',"Download the data")
+                 dataTableOutput("data_standards")
                )
       ),
       GridItem(class = "ms-sm12 ms-xl4",
@@ -187,7 +186,7 @@ company_analysis_page <- makePage(
       )
     ),
     Grid(
-      Stack(style = "text-align: center; padding: 25px", Text("Energy Use Trend & Data", variant = "xxLarge", style = "color: #50bcfa;")),
+      Stack(style = "text-align: center; padding: 25px", Text("Energy Use Trend & Data", variant = "xxLarge", style = "color: #137AD1;")),
       GridItem(class = "ms-sm12 ms-xl12",
                CompanyCard(
                  plotlyOutput("companyfuelPlot")
@@ -229,16 +228,25 @@ company_analysis_page <- makePage(
       )
     ),
     Grid(
-      Stack(style = "text-align: center; padding: 25px", Text("Methodology", variant = "xxLarge", style = "color: #50bcfa;")),
+      Stack(style = "text-align: center; padding: 25px", Text("Methodology", variant = "xxLarge", style = "color: #137AD1;")),
       GridItem(class = "ms-sm12 ms-xl12",
                Stack(class = "ms-depth-8", tokens = list(padding = 20, childrenGap = 10), 
                      Text("All company data are based on a rigorous review of publicly-available resources.", variant = "large"),
                      PrimaryButton(text = "Learn More", style = "width: 120px; font-style: bold;"),
                      Text("If you spot errors or have more recent data, please let us know!", variant = "large"),
-                     PrimaryButton(text = "Report Issue", style = "width: 120px; font-style: bold;"))
+                     PrimaryButton(text = "Report Issue", style = "width: 130px; font-style: bold;"))
+      )
+    ),
+    Grid(
+      Stack(style = "text-align: center; padding: 25px", Text("Sources Assessed", variant = "xxLarge", style = "color: #137AD1;")),
+      GridItem(class = "ms-sm12 ms-xl12",
+               CompanyCard(
+                 Text("Energy Data", variant = "large", style = "text-align: center;"),
+                 dataTableOutput("sources_table")
+               )
       )
     )
-    )
+  )
 )
 #list(unique(data_sheet_company$company_name))
 
