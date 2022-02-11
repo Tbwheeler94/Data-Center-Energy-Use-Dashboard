@@ -674,6 +674,16 @@ p <- ggplot(data_of_transparency, aes(x=data_year)) +
     ylab("Percentage of Reporting Scope") +
     labs(fill = "Energy Reporting Scope")
 
+p <- ggplot(data_of_transparency, aes(x=data_year)) + 
+    geom_bar(aes(y=value, fill=energy_reporting_scope), 
+             position=position_stack(reverse = TRUE), stat="identity") +
+    geom_line(aes(y=unit), size=1.2, color="black") +
+    ggtitle("Data Center Transparency") +
+    scale_fill_manual(values = c("#3db5ff", "#0099f9", "#3d74ff", "#743dff")) +
+    xlab("Year") +
+    ylab("Percentage of Reporting Scope") +
+    labs(fill = "Energy Reporting Scope")
+
 ggplotly(p)
 ```
 
@@ -682,18 +692,18 @@ ggplotly(p)
 
 # create a sub data frame that is filtered by data year and single data center scope
 energy_use_SDC <- data_sheet_energy %>%
-filter(data_year == 2020, energy_reporting_scope == "Single Data Center") %>%
+filter(data_year == 2019, energy_reporting_scope == "Single Data Center") %>%
 select(company, data_year, energy_reporting_scope, level_of_ownership, electricity_prepped) 
 
 # create a sub data frame that is filtered by data year and multiple data centers scope
 energy_use_MDC <- data_sheet_energy %>%
-filter(data_year == 2020, energy_reporting_scope == "Multiple Data Centers") %>%
+filter(data_year == 2019, energy_reporting_scope == "Multiple Data Centers") %>%
 select(company, data_year, energy_reporting_scope, level_of_ownership, electricity_prepped)
 
 # create a sub data frame that is filtered by data year and company wide electricity scope
 energy_use_L2 <- data_sheet_energy %>%
-filter(data_year == 2020, energy_reporting_scope == "Total Operations") %>%
-select(company, data_year, energy_reporting_scope, electricity_prepped) 
+filter(data_year == 2019, energy_reporting_scope == "Total Operations") %>%
+select(company, data_year, energy_reporting_scope, level_of_ownership, electricity_prepped) 
 
 # stack single data center/multiple data center data frames on top of each other
 energy_use_L1 <- rbind(energy_use_SDC, energy_use_MDC)
@@ -740,9 +750,28 @@ ggplotly(dc)
 
 
 # L2 CALCULATIONS
+# erase companies from total operations if they report data center
+energy_use_L1_subset <- distinct(energy_use_L1, company, .keep_all = TRUE)
+duplicate_rows <- vector()
+z = 1
+for (i in 1:nrow(energy_use_L1_subset)) {
+  for (j in 1:nrow(energy_use_L2)) {
+    if (energy_use_L1_subset[i,1] == energy_use_L2[j,1]) {
+      duplicate_rows[z] <- j
+      z = z + 1
+    }
+  }
+}
+
+energy_use_L2 <- energy_use_L2[-c(duplicate_rows), ]
+
+# subset L2 data
+energy_use_L2 <- energy_use_L2 %>% 
+  select(company, data_year, energy_reporting_scope, electricity_prepped)
 energy_use_L2 <- na.omit(energy_use_L2)
 energy_use_L2 <- energy_use_L2[order(energy_use_L2[,"company"]), ]
 energy_use_L2$electricity_value <- 0
+energy_use_L2$unit <- 1
 
 company_temp <- "Fake Company"
 j = 0
@@ -760,22 +789,98 @@ for (i in 1:nrow(energy_use_L2)) {
 }
 
 energy_use_L2 <- energy_use_L2[!(energy_use_L2$electricity_value == 0),]
-energy_use_L2 <- energy_use_L2[!(energy_use_L2$company == "China Telecom"),]
-energy_use_L2 <- energy_use_L2[!(energy_use_L2$company == "Apple"),]
+#energy_use_L2 <- energy_use_L2[!(energy_use_L2$company == "China Telecom"),]
 
 #ggplot(energy_use_L2, aes(area = electricity_value, fill = company, label = company)) +
   #geom_treemap() + geom_treemap_text()
 
 # create plot for company wide electricity usage
-cw <- ggplot(energy_use_L2, aes(x=electricity_value)) + 
-    geom_bar(aes(y=company, fill=electricity_value), 
-             position="stack", stat="identity") +
+cw <- ggplot(energy_use_L2, aes(x=company, y=unit, fill=electricity_value)) + 
+    coord_flip() +
+    scale_color_gradient2(low = "blue", mid = "snow", high = "red") +
+    geom_bar(stat="identity") +
     ggtitle("Company Wide Electricity Use by Year") +
     theme_classic() +
     xlab("Electricity Value (KWh)") +
-    ylab("Companies") 
+    ylab("Companies") +
+    labs(fill = "Electricity Usage")
 
 ggplotly(cw)
+
+p1 <- plot_ly(data = energy_use_L2,
+              x = ~electricity_value,
+              y = ~company,
+              color = ~company,
+              colors = "Dark2",
+              type = "scatter",
+              text = ~company,
+              textposition = "auto",
+              hoverinfo = "text",
+              hovertext = paste("Electricity Value (KWh):", energy_use_L2$electricity_value))
+p1
+
+p2 <- plot_ly(data = energy_use_L2,
+              x = ~unit,
+              y = ~company,
+              color = ~electricity_value,
+              colors = "Dark2",
+              type = "bar",
+              text = ~company,
+              textposition = "auto",
+              hoverinfo = "text",
+              hovertext = paste("Electricity Value (KWh):", energy_use_L2$electricity_value))
+p2
+
+# 2nd Option
+energy_use_L2 <- energy_use_L2[order(energy_use_L2[,"electricity_value"]), ]
+max_company <- nrow(energy_use_L2)
+loop_index <- nrow(energy_use_L2)-1
+deleted_rows_1 <- vector()
+deleted_rows_2 <- vector()
+deleted_rows_3 <- vector()
+a = 1
+b = 1
+c = 1
+for (i in 1:loop_index) {
+  if (energy_use_L2[i,5] > energy_use_L2[max_company,5]/1000) {
+    deleted_rows_1[a] <- i
+    a <- a + 1
+  } else if (energy_use_L2[i,5] > energy_use_L2[max_company,5]/1000000) {
+    deleted_rows_2[b] <- i
+    b <- b + 1
+  } else {
+    deleted_rows_3[c] <- i
+    c <- c + 1
+  }
+}
+
+energy_use_L2_1 <- energy_use_L2[c(max_company), ]
+energy_use_L2_2 <- energy_use_L2[c(deleted_rows_1), ]
+energy_use_L2_3 <- energy_use_L2[c(deleted_rows_2), ]
+energy_use_L2_4 <- energy_use_L2[c(deleted_rows_3), ]
+
+p3a <- plot_ly() %>% 
+  add_trace(x=energy_use_L2_1$electricity_value, 
+            y=reorder(energy_use_L2_1$company, energy_use_L2_1$electricity_value), 
+            type="bar", marker = list(color = "rgb(232, 218, 239)"))
+
+p3b <- plot_ly() %>% 
+  add_trace(x=energy_use_L2_2$electricity_value, 
+            y=reorder(energy_use_L2_2$company, energy_use_L2_2$electricity_value),
+            type="bar", marker = list(color = "rgb(210, 180, 222)"))
+
+p3c <- plot_ly() %>% 
+  add_trace(x=energy_use_L2_3$electricity_value, 
+            y=reorder(energy_use_L2_3$company, energy_use_L2_3$electricity_value),
+            type="bar", marker = list(color = "rgb(187, 143, 206)"))
+
+p3d <- plot_ly() %>% 
+  add_trace(x=energy_use_L2_4$electricity_value, 
+            y=reorder(energy_use_L2_4$company, energy_use_L2_4$electricity_value),
+            type="bar", marker = list(color = "rgb(165, 105, 189)"))
+
+p3 <- subplot(p3a,p3b,p3c,p3d,nrows = 4, margin = 0.05)
+p3
 
 ```
 
