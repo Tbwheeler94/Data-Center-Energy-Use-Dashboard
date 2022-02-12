@@ -11,6 +11,7 @@ library(readxl)
 library(DT)
 library(plotly)
 library(gt)
+library(scales)
 
 
 #############################
