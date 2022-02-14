@@ -187,14 +187,6 @@ company_analysis_page <- makePage(
     ),
     Grid(
       Stack(style = "text-align: center; padding: 25px", Text("Energy Use Trend & Data", variant = "xxLarge", style = "color: #137AD1;")),
-      GridItem(class = "ms-sm12 ms-xl12",
-               CompanyCard(
-                 plotlyOutput("companyfuelPlot")
-               )
-        
-      )
-    ),
-    Grid(
       GridItem(class = "ms-sm12 ms-xl6",
                CompanyCard(
                  Text("Electricity Use (TWh/yr)", variant = "large", style = "text-align: center;"),

@@ -209,27 +209,67 @@ server <- function(input, output, session) {
   })
   
   #######################################
-  #Table 8###############################
+  #Table 7###############################
   #Electricity Use (TWh/yr)##############
   #######################################
   
-  selected_company_electricity_use <- reactive({
+  selected_company_electricity_use <- 
     data_sheet_energy_transformed %>% 
-      filter(company == input$selected_company) %>% 
-      mutate_at(vars(electricity_converted, fuel_1_converted, #replace na values with 0
-                     fuel_2_converted, fuel_3_converted, fuel_4_converted, 
-                     fuel_5_converted), ~replace_na(., 0)) %>%
-      select("data_year", "energy_reporting_scope", "level_of_ownership", "electricity_prepped", "unit", "notes_2") %>% 
+      filter(company == "Google") %>% 
+      mutate_at(vars(electricity_converted), ~replace_na(., 0)) %>%
+      select("data_year", "energy_reporting_scope", "level_of_ownership", "electricity_converted") %>% 
       mutate(energy_reporting_scope = case_when(
         energy_reporting_scope %in% c("Multiple Data Centers", "Single Data Center") ~ "Data center electricity use",
         energy_reporting_scope %in% "Total Operations"                               ~ "Company-wide electricity use")) %>% 
       group_by(data_year, energy_reporting_scope, level_of_ownership) %>% 
-      summarize(value = sum(electricity_prepped)) %>% 
-      mutate(value = value/1000000000) %>% 
-      rename(c("Reporting Scope" = energy_reporting_scope, "Level of Ownership" = level_of_ownership, "Electricity Use" = value, "Year" = data_year)) #%>% 
-      #create pivot table
-      #pivot_wider(names_from = data_year, values_from = value) %>% as.data.frame()
-  })
+      summarize(value = sum(electricity_converted)) %>% 
+      mutate(value = value/1000000000) %>%
+      unite(energy_reporting_scope, energy_reporting_scope:level_of_ownership, sep = " | ") %>% 
+      mutate(energy_reporting_scope = case_when(
+        energy_reporting_scope %in% "Data center electricity use | Leased" ~ "Leased",
+        energy_reporting_scope %in% "Data center electricity use | Self-managed" ~ "Self_managed",
+        energy_reporting_scope %in% "Data center electricity use | Cloud" ~ "Cloud",
+        energy_reporting_scope %in% "Company-wide electricity use | Self-managed" ~ "Total_company",
+        energy_reporting_scope %in% "Company-wide electricity use | " ~ "Total_company")) %>%
+      pivot_wider(names_from = energy_reporting_scope, values_from = value) %>% 
+      replace(is.na(.), 0) %>% 
+      mutate(Leased = ifelse("Leased" %in% names(.), Leased, 0),
+           Self_managed = ifelse("Self_managed" %in% names(.), Self_managed, 0)) %>%
+      mutate(data_centers = Self_managed + Leased) %>% 
+      mutate(data_center_percentage = (data_centers/(data_centers + Total_company))) %>% 
+      pivot_longer(!data_year, names_to = "category", values_to = "value") %>% 
+      pivot_wider(names_from = data_year, values_from = value) %>% 
+      mutate(category = case_when(
+        category %in% "Total_company" ~ "Total Company",
+        category %in% "Self_managed" ~ "Self-managed",
+        category %in% "Leased" ~ "Leased",
+        category %in% "data_centers" ~ "Data centers",
+        category %in% "data_center_percentage" ~ "Data center % of total electricity")) %>% 
+    mutate_if(is.numeric, ~round(., 3))
+  
+  selected_company_electricity_use_total_dc <- 
+    data_sheet_energy_transformed %>% 
+    filter(company == "Apple") %>% 
+    mutate_at(vars(electricity_converted, fuel_1_converted, #replace na values with 0
+                   fuel_2_converted, fuel_3_converted, fuel_4_converted, 
+                   fuel_5_converted), ~replace_na(., 0)) %>%
+    select("data_year", "energy_reporting_scope", "level_of_ownership", "electricity_prepped", "unit", "notes_2") %>% 
+    mutate(energy_reporting_scope = case_when(
+      energy_reporting_scope %in% c("Multiple Data Centers", "Single Data Center") ~ "Data centers",
+      energy_reporting_scope %in% "Total Operations"                               ~ "Company-wide electricity use")) %>% 
+    group_by(data_year, energy_reporting_scope) %>% 
+    summarize(value = sum(electricity_prepped)) %>% 
+    mutate(value = value/1000000000) %>%
+    pivot_wider(names_from = data_year, values_from = value) %>%
+    filter(energy_reporting_scope == "Data centers") %>%
+      as.data.frame()
+  
+  selected_company_electricity_use_combined <- rbind(selected_company_electricity_use_total_self_leased, selected_company_electricity_use_total_dc) %>% 
+    replace(is.na(.), 0) %>%
+    pivot_longer() %>% 
+    mutate_if(is.numeric, ~round(., 2))
+  
+  #rename(c("Reporting Scope" = energy_reporting_scope, "Level of Ownership" = level_of_ownership, "Electricity Use" = value, "Year" = data_year))
   
   output$electricity_use_table <- renderDataTable({
     datatable(selected_company_electricity_use(), rownames = FALSE, options = list(pageLength = 5, lengthMenu = c(5, 10, 15, 20)))
@@ -266,105 +306,6 @@ server <- function(input, output, session) {
     datatable(selected_company_fuel_use(), rownames = FALSE, options = list(pageLength = 5, lengthMenu = c(5, 10, 15, 20)))
   })
   
-  #######################################
-  #Graph 7###############################
-  # Change in energy use ################
-  #######################################
-  
-  #Calculate  electricity use at each level of Data Center management (cloud, leased, self-managed) and Total Company
-  selected_company_electricity_use_graph <- reactive({
-    data_sheet_energy_transformed %>% 
-      filter(company == input$selected_company) %>% 
-      mutate_at(vars(electricity_converted, fuel_1_converted, #replace na values with 0
-                     fuel_2_converted, fuel_3_converted, fuel_4_converted, 
-                     fuel_5_converted), ~replace_na(., 0)) %>%
-      select("data_year", "energy_reporting_scope", "level_of_ownership", "electricity_prepped", "unit", "notes_2") %>% 
-      mutate(energy_reporting_scope = case_when(
-        energy_reporting_scope %in% c("Multiple Data Centers", "Single Data Center") ~ "Data center electricity use",
-        energy_reporting_scope %in% "Total Operations"                               ~ "Company-wide electricity use")) %>% 
-      group_by(data_year, energy_reporting_scope, level_of_ownership) %>% 
-      summarize(value = sum(electricity_prepped)) %>% 
-      mutate(value = value/1000000000) %>% 
-      unite(energy_reporting_scope_level_of_ownership, energy_reporting_scope:level_of_ownership, sep = " | ")
-  })
-  
-  #Calculate only data center fuel use at each level of management (cloud, leased, self-managed)
-  selected_company_fuel_use_graph <- reactive({
-    data_sheet_energy_transformed %>% 
-      filter(company == input$selected_company) %>% 
-      mutate_at(vars(electricity_converted, fuel_1_converted, #replace na values with 0
-                     fuel_2_converted, fuel_3_converted, fuel_4_converted, 
-                     fuel_5_converted), ~replace_na(., 0)) %>%
-      rowwise() %>% 
-      mutate(total_other_energy_use = sum(c(fuel_1_converted,
-                                            fuel_2_converted, fuel_3_converted, fuel_4_converted, 
-                                            fuel_5_converted))) %>% 
-      select("data_year", "energy_reporting_scope", "level_of_ownership", "total_other_energy_use", "notes_3") %>% 
-      filter(energy_reporting_scope == "Multiple Data Centers" | energy_reporting_scope == "Single Data Center") %>% 
-      mutate(energy_reporting_scope = case_when(
-        energy_reporting_scope %in% c("Multiple Data Centers", "Single Data Center") ~ "Data center other fuel use")) %>% 
-      group_by(data_year, energy_reporting_scope, level_of_ownership) %>% 
-      summarize(value = sum(total_other_energy_use)) %>% 
-      mutate(value = value/1000000000) %>% 
-      unite(energy_reporting_scope_level_of_ownership, energy_reporting_scope:level_of_ownership, sep = " | ")
-  })
-  
-  #Combine total company electricity use and data center electricity and fuel use at each level of management 
-  #7 possible categories (Total Company Electricity Use, Data Center Electricity Use - cloud, self-managed, leased, Data Center Other Fuel Use - cloud, self-managed, leased )
-  selected_company_total_energy_graph <- reactive({ rbind(selected_company_electricity_use_graph(), selected_company_fuel_use_graph()) })
-    
-  #Calculate the total energy used by all data centers across electricity and fuel use at all scopes for each year
-  dc_total_energy_use_by_year <- reactive({
-    data_sheet_energy_transformed %>% 
-    filter(company == input$selected_company) %>% 
-    mutate_at(vars(electricity_converted, fuel_1_converted, #replace na values with 0
-                   fuel_2_converted, fuel_3_converted, fuel_4_converted, 
-                   fuel_5_converted), ~replace_na(., 0)) %>%
-    rowwise() %>% 
-    mutate(total_other_energy_use = sum(c(electricity_converted, fuel_1_converted,
-                                          fuel_2_converted, fuel_3_converted, fuel_4_converted, 
-                                          fuel_5_converted))) %>% 
-    select("data_year", "energy_reporting_scope", "level_of_ownership", "total_other_energy_use", "notes_3") %>% 
-    filter(energy_reporting_scope == "Multiple Data Centers" | energy_reporting_scope == "Single Data Center") %>% 
-    mutate(energy_reporting_scope = case_when(energy_reporting_scope %in% c("Multiple Data Centers", "Single Data Center") ~ "Data center total energy use")) %>% 
-    group_by(data_year, energy_reporting_scope) %>% 
-    summarise(total_dc_energy_use = sum(total_other_energy_use))
-  })
-  
-  #Calculate the total electricity used by company operations for each year
-  total_electricity_use_by_year <- reactive({
-    data_sheet_energy_transformed %>% 
-    filter(company == input$selected_company) %>% 
-    mutate_at(vars(electricity_converted), ~replace_na(., 0)) %>%
-    select("data_year", "energy_reporting_scope", "level_of_ownership", "electricity_converted", "notes_3") %>% 
-    filter(energy_reporting_scope == "Total Operations") %>%  
-    group_by(data_year, energy_reporting_scope) %>% 
-    summarise(total_electricity_use = sum(electricity_converted))
-  })
-  
-  #Calculate the percentage of total data center energy use relative to total company electricity and format as a percent
-  dc_divided_by_total_electricity <- reactive({ full_join(dc_total_energy_use_by_year(), total_electricity_use_by_year(), by = 'data_year') %>%
-    mutate_at(vars(total_dc_energy_use, total_electricity_use), ~replace_na(., 0)) %>% 
-    mutate(dc_total_percentage = percent(total_dc_energy_use/(total_dc_energy_use+total_electricity_use), accuracy=0.1)) })
-    
-  #Calculate the total stacked bar height of the possible 7 categories by year (used to determine where to place the percentage values)
-  total_stacked_bar_height_by_year <- reactive({ selected_company_total_energy_graph() %>%
-    group_by(data_year) %>%
-    summarise(max_pos = sum(value))
-  })
-  
-  #Join the 2 previous tables which contain the percent of data center energy use relative to total electricity and the height of the total energy use across all uses
-  selected_company_total_energy_plot <- reactive({ selected_company_total_energy_graph() %>% 
-    full_join(dc_divided_by_total_electricity(), by = 'data_year') %>% 
-    full_join(total_stacked_bar_height_by_year(), by = 'data_year')
-  })
-  
-  output$companyfuelPlot <- renderPlotly({
-    ggplot(data = selected_company_total_energy_plot(), aes(fill=energy_reporting_scope_level_of_ownership, y=value, x=data_year)) + 
-      geom_bar(position="stack", stat="identity") +
-      geom_text(aes(y = max_pos +.1, label = dc_total_percentage), size = 4) +
-      scale_fill_brewer()
-  })
   #######################################
   #Table 10##############################
   #Non-specified energy use (TWh/yr)#####
@@ -460,6 +401,111 @@ server <- function(input, output, session) {
 ##Return to Code##
 ##################
 
+#######################################
+#Graph 7###############################
+# Change in energy use ################
+#######################################
+
+##Calculate  electricity use at each level of Data Center management (cloud, leased, self-managed) and Total Company
+#selected_company_electricity_use_graph <- reactive({
+#  data_sheet_energy_transformed %>% 
+#    filter(company == input$selected_company) %>% 
+#    mutate_at(vars(electricity_converted, fuel_1_converted, #replace na values with 0
+#                   fuel_2_converted, fuel_3_converted, fuel_4_converted, 
+#                   fuel_5_converted), ~replace_na(., 0)) %>%
+#    select("data_year", "energy_reporting_scope", "level_of_ownership", "electricity_prepped", "unit", "notes_2") %>% 
+#    mutate(energy_reporting_scope = case_when(
+#      energy_reporting_scope %in% c("Multiple Data Centers", "Single Data Center") ~ "Data center electricity use",
+#      energy_reporting_scope %in% "Total Operations"                               ~ "Company-wide electricity use")) %>% 
+#    group_by(data_year, energy_reporting_scope, level_of_ownership) %>% 
+#    summarize(value = sum(electricity_prepped)) %>% 
+#    mutate(value = value/1000000000) %>% 
+#    unite(energy_reporting_scope_level_of_ownership, energy_reporting_scope:level_of_ownership, sep = " | ")
+#})
+#
+##Calculate only data center fuel use at each level of management (cloud, leased, self-managed)
+#selected_company_fuel_use_graph <- reactive({
+#  data_sheet_energy_transformed %>% 
+#    filter(company == input$selected_company) %>% 
+#    mutate_at(vars(electricity_converted, fuel_1_converted, #replace na values with 0
+#                   fuel_2_converted, fuel_3_converted, fuel_4_converted, 
+#                   fuel_5_converted), ~replace_na(., 0)) %>%
+#    rowwise() %>% 
+#    mutate(total_other_energy_use = sum(c(fuel_1_converted,
+#                                          fuel_2_converted, fuel_3_converted, fuel_4_converted, 
+#                                          fuel_5_converted))) %>% 
+#    select("data_year", "energy_reporting_scope", "level_of_ownership", "total_other_energy_use", "notes_3") %>% 
+#    filter(energy_reporting_scope == "Multiple Data Centers" | energy_reporting_scope == "Single Data Center") %>% 
+#    mutate(energy_reporting_scope = case_when(
+#      energy_reporting_scope %in% c("Multiple Data Centers", "Single Data Center") ~ "Data center other fuel use")) %>% 
+#    group_by(data_year, energy_reporting_scope, level_of_ownership) %>% 
+#    summarize(value = sum(total_other_energy_use)) %>% 
+#    mutate(value = value/1000000000) %>% 
+#    unite(energy_reporting_scope_level_of_ownership, energy_reporting_scope:level_of_ownership, sep = " | ")
+#})
+#
+##Combine total company electricity use and data center electricity and fuel use at each level of management 
+##7 possible categories (Total Company Electricity Use, Data Center Electricity Use - cloud, self-managed, leased, Data Center Other Fuel Use - cloud#, self-managed, leased )
+#selected_company_total_energy_graph <- reactive({ rbind(selected_company_electricity_use_graph(), selected_company_fuel_use_graph()) })
+#
+##Calculate the total energy used by all data centers across electricity and fuel use at all scopes for each year
+#dc_total_energy_use_by_year <- reactive({
+#  data_sheet_energy_transformed %>% 
+#    filter(company == input$selected_company) %>% 
+#    mutate_at(vars(electricity_converted, fuel_1_converted, #replace na values with 0
+#                   fuel_2_converted, fuel_3_converted, fuel_4_converted, 
+#                   fuel_5_converted), ~replace_na(., 0)) %>%
+#    rowwise() %>% 
+#    mutate(total_other_energy_use = sum(c(electricity_converted, fuel_1_converted,
+#                                          fuel_2_converted, fuel_3_converted, fuel_4_converted, 
+#                                          fuel_5_converted))) %>% 
+#    select("data_year", "energy_reporting_scope", "level_of_ownership", "total_other_energy_use", "notes_3") %>% 
+#    filter(energy_reporting_scope == "Multiple Data Centers" | energy_reporting_scope == "Single Data Center") %>% 
+#    mutate(energy_reporting_scope = case_when(energy_reporting_scope %in% c("Multiple Data Centers", "Single Data Center") ~ "Data center total #energy use")) %>% 
+#    group_by(data_year, energy_reporting_scope) %>% 
+#    summarise(total_dc_energy_use = sum(total_other_energy_use))
+#})
+#
+##Calculate the total electricity used by company operations for each year
+#total_electricity_use_by_year <- reactive({
+#  data_sheet_energy_transformed %>% 
+#    filter(company == input$selected_company) %>% 
+#    mutate_at(vars(electricity_converted), ~replace_na(., 0)) %>%
+#    select("data_year", "energy_reporting_scope", "level_of_ownership", "electricity_converted", "notes_3") %>% 
+#    filter(energy_reporting_scope == "Total Operations") %>%  
+#    group_by(data_year, energy_reporting_scope) %>% 
+#    summarise(total_electricity_use = sum(electricity_converted))
+#})
+#
+##Calculate the percentage of total data center energy use relative to total company electricity and format as a percent
+#dc_divided_by_total_electricity <- reactive({ full_join(dc_total_energy_use_by_year(), total_electricity_use_by_year(), by = 'data_year') %>%
+#    mutate_at(vars(total_dc_energy_use, total_electricity_use), ~replace_na(., 0)) %>% 
+#    mutate(dc_total_percentage = percent(total_dc_energy_use/(total_dc_energy_use+total_electricity_use), accuracy=0.1)) })
+#
+##Calculate the total stacked bar height of the possible 7 categories by year (used to determine where to place the percentage values)
+#total_stacked_bar_height_by_year <- reactive({ selected_company_total_energy_graph() %>%
+#    group_by(data_year) %>%
+#    summarise(max_pos = sum(value))
+#})
+#
+##Join the 2 previous tables which contain the percent of data center energy use relative to total electricity and the height of the total energy use #across all uses
+#selected_company_total_energy_plot <- reactive({ selected_company_total_energy_graph() %>% 
+#    full_join(dc_divided_by_total_electricity(), by = 'data_year') %>% 
+#    full_join(total_stacked_bar_height_by_year(), by = 'data_year')
+#})
+#
+#output$companyfuelPlot <- renderPlotly({
+#  ggplot(data = selected_company_total_energy_plot(), aes(fill=energy_reporting_scope_level_of_ownership, y=value, x=data_year)) + 
+#    geom_bar(position="stack", stat="identity") +
+#    geom_text(aes(y = max_pos +.1, label = dc_total_percentage), size = 4) +
+#    scale_fill_brewer()
+#})
+
+
+#######################################
+#######################################
+# OLD #################################
+#######################################
 
 # # Years reported output
 # output$years_reported <- renderText({buildyearsreportedOutput(by_fuel_type_data)})
