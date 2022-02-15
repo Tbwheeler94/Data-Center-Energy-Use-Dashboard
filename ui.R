@@ -197,24 +197,23 @@ company_analysis_page <- makePage(
       GridItem(class = "ms-sm12 ms-xl6",
                CompanyCard(
                  Text("Other fuel use (TWh/yr)", variant = "large", style = "text-align: center;"),
-                 dataTableOutput("other_fuel_use_table")
+                 div(dataTableOutput("other_fuel_use_table"), style = "width: 100%")
                )
                
       )
     ),
     Grid(
       GridItem(class = "ms-sm12 ms-xl6",
-               CompanyCard(style = "text-align: center;",
-                 Text("Non-specified energy use (TWh/yr)", variant = "large"),
-                 Text("Under Construction", variant = "medium", style = "text-align: center;"),
-                 FontIcon(iconName = "ConstructionCone", style = list(fontSize = 80))
+               CompanyCard(
+                 Text("Non-specified energy use (TWh/yr)", variant = "large", style = "text-align: center;"),
+                 div(dataTableOutput("ns_energy_use_table"), style = "width: 100%")
                )
                
       ),
       GridItem(class = "ms-sm12 ms-xl6",
                CompanyCard(
                  Text("PUE", variant = "large", style = "text-align: center;"),
-                 dataTableOutput("pue_table")
+                 div(dataTableOutput("pue_table"), style = "width: 100%; overflow-x:auto;")
                )
                
       )
