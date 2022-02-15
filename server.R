@@ -213,10 +213,14 @@ server <- function(input, output, session) {
   #Electricity Use (TWh/yr)##############
   #######################################
   
-  selected_company_electricity_use <- 
+  #NOTE: Need to figure out scenarios where the code breaks (i.e. Mastercard displaying 0 for energy)
+  #Format values in last row as a percent, move "Total Company" row to the correct location, determine how many decimals to show
+  
+  selected_company_electricity_use <- reactive({
     data_sheet_energy_transformed %>% 
-      filter(company == "Google") %>% 
+      filter(company == input$selected_company) %>% 
       mutate_at(vars(electricity_converted), ~replace_na(., 0)) %>%
+      filter(electricity_converted != 0) %>% 
       select("data_year", "energy_reporting_scope", "level_of_ownership", "electricity_converted") %>% 
       mutate(energy_reporting_scope = case_when(
         energy_reporting_scope %in% c("Multiple Data Centers", "Single Data Center") ~ "Data center electricity use",
@@ -227,16 +231,20 @@ server <- function(input, output, session) {
       unite(energy_reporting_scope, energy_reporting_scope:level_of_ownership, sep = " | ") %>% 
       mutate(energy_reporting_scope = case_when(
         energy_reporting_scope %in% "Data center electricity use | Leased" ~ "Leased",
-        energy_reporting_scope %in% "Data center electricity use | Self-managed" ~ "Self_managed",
         energy_reporting_scope %in% "Data center electricity use | Cloud" ~ "Cloud",
+        energy_reporting_scope %in% "Data center electricity use | Self-managed" ~ "Self_managed",
+        energy_reporting_scope %in% "Data center electricity use | " ~ "Self_managed", #If no level of ownership is given, assume self managed
+        energy_reporting_scope %in% "Data center electricity use | NA" ~ "Self_managed", #If no level of ownership is given, assume self managed
         energy_reporting_scope %in% "Company-wide electricity use | Self-managed" ~ "Total_company",
-        energy_reporting_scope %in% "Company-wide electricity use | " ~ "Total_company")) %>%
+        energy_reporting_scope %in% "Company-wide electricity use | " ~ "Total_company",
+        energy_reporting_scope %in% "Company-wide electricity use | NA" ~ "Total_company")) %>%
       pivot_wider(names_from = energy_reporting_scope, values_from = value) %>% 
       replace(is.na(.), 0) %>% 
       mutate(Leased = ifelse("Leased" %in% names(.), Leased, 0),
-           Self_managed = ifelse("Self_managed" %in% names(.), Self_managed, 0)) %>%
+           Self_managed = ifelse("Self_managed" %in% names(.), Self_managed, 0),
+           Total_company = ifelse("Total_company" %in% names(.), Total_company, 0)) %>%
       mutate(data_centers = Self_managed + Leased) %>% 
-      mutate(data_center_percentage = (data_centers/(data_centers + Total_company))) %>% 
+      mutate(data_center_percentage = (data_centers/(data_centers + Total_company))) %>%
       pivot_longer(!data_year, names_to = "category", values_to = "value") %>% 
       pivot_wider(names_from = data_year, values_from = value) %>% 
       mutate(category = case_when(
@@ -246,33 +254,10 @@ server <- function(input, output, session) {
         category %in% "data_centers" ~ "Data centers",
         category %in% "data_center_percentage" ~ "Data center % of total electricity")) %>% 
     mutate_if(is.numeric, ~round(., 3))
-  
-  selected_company_electricity_use_total_dc <- 
-    data_sheet_energy_transformed %>% 
-    filter(company == "Apple") %>% 
-    mutate_at(vars(electricity_converted, fuel_1_converted, #replace na values with 0
-                   fuel_2_converted, fuel_3_converted, fuel_4_converted, 
-                   fuel_5_converted), ~replace_na(., 0)) %>%
-    select("data_year", "energy_reporting_scope", "level_of_ownership", "electricity_prepped", "unit", "notes_2") %>% 
-    mutate(energy_reporting_scope = case_when(
-      energy_reporting_scope %in% c("Multiple Data Centers", "Single Data Center") ~ "Data centers",
-      energy_reporting_scope %in% "Total Operations"                               ~ "Company-wide electricity use")) %>% 
-    group_by(data_year, energy_reporting_scope) %>% 
-    summarize(value = sum(electricity_prepped)) %>% 
-    mutate(value = value/1000000000) %>%
-    pivot_wider(names_from = data_year, values_from = value) %>%
-    filter(energy_reporting_scope == "Data centers") %>%
-      as.data.frame()
-  
-  selected_company_electricity_use_combined <- rbind(selected_company_electricity_use_total_self_leased, selected_company_electricity_use_total_dc) %>% 
-    replace(is.na(.), 0) %>%
-    pivot_longer() %>% 
-    mutate_if(is.numeric, ~round(., 2))
-  
-  #rename(c("Reporting Scope" = energy_reporting_scope, "Level of Ownership" = level_of_ownership, "Electricity Use" = value, "Year" = data_year))
+  })
   
   output$electricity_use_table <- renderDataTable({
-    datatable(selected_company_electricity_use(), rownames = FALSE, options = list(pageLength = 5, lengthMenu = c(5, 10, 15, 20)))
+    datatable(selected_company_electricity_use(), rownames = FALSE, options = list(scrollX = TRUE))
   })
   
   #######################################

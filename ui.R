@@ -190,7 +190,7 @@ company_analysis_page <- makePage(
       GridItem(class = "ms-sm12 ms-xl6",
                CompanyCard(
                  Text("Electricity Use (TWh/yr)", variant = "large", style = "text-align: center;"),
-                 dataTableOutput("electricity_use_table")
+                 div(DT::dataTableOutput("electricity_use_table"), style = "width: 100%") 
                )
                
       ),
