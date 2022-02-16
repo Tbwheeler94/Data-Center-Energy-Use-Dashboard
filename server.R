@@ -215,12 +215,13 @@ server <- function(input, output, session) {
   
   #NOTE: Need to figure out scenarios where the code breaks (i.e. Mastercard displaying 0 for energy)
   #Format values in last row as a percent, move "Total Company" row to the correct location, determine how many decimals to show
-  
+
   selected_company_electricity_use <- reactive({
     data_sheet_energy_transformed %>% 
       filter(company == input$selected_company) %>% 
       mutate_at(vars(electricity_converted), ~replace_na(., 0)) %>%
       filter(electricity_converted != 0) %>% 
+      filter(level_of_ownership != "Cloud") %>% 
       select("data_year", "energy_reporting_scope", "level_of_ownership", "electricity_converted") %>% 
       mutate(energy_reporting_scope = case_when(
         energy_reporting_scope %in% c("Multiple Data Centers", "Single Data Center") ~ "Data center electricity use",
@@ -253,11 +254,19 @@ server <- function(input, output, session) {
         category %in% "Leased" ~ "Leased",
         category %in% "data_centers" ~ "Data centers",
         category %in% "data_center_percentage" ~ "Data center % of total electricity")) %>% 
-    mutate_if(is.numeric, ~round(., 3))
-  })
-  
+      mutate_if(is.numeric, ~round(., 3)) %>% 
+      add_column(format = c(1,0,0,1,1)) %>% #need to figure out how to conditionally add this column only if dataframe is 5 units long
+      relocate(format)
+  }) 
+    
+    
   output$electricity_use_table <- renderDataTable({
-    datatable(selected_company_electricity_use(), rownames = FALSE, options = list(scrollX = TRUE))
+    datatable(selected_company_electricity_use(), rownames = FALSE, options = list(columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
+      formatStyle(
+        'category', 'format',
+        textAlign = styleEqual(c(0, 1), c('right', 'left')),
+        fontStyle = styleEqual(c(0, 1), c('italic', 'normal'))
+      )
   })
   
   #######################################
@@ -274,7 +283,8 @@ server <- function(input, output, session) {
       rowwise() %>% 
       mutate(total_other_energy_use = sum(c(fuel_1_converted,
                                             fuel_2_converted, fuel_3_converted, fuel_4_converted, 
-                                            fuel_5_converted))) %>% 
+                                            fuel_5_converted))) %>%
+      filter(level_of_ownership != "Cloud") %>% 
       select("data_year", "energy_reporting_scope", "level_of_ownership", "total_other_energy_use") %>% 
       filter(energy_reporting_scope == "Multiple Data Centers" | energy_reporting_scope == "Single Data Center") %>% 
       mutate(energy_reporting_scope = case_when(
@@ -300,11 +310,18 @@ server <- function(input, output, session) {
         category %in% "Self_managed" ~ "Self-managed",
         category %in% "Leased" ~ "Leased",
         category %in% "data_centers" ~ "Data centers")) %>% 
-      mutate_if(is.numeric, ~round(., 3))
+      mutate_if(is.numeric, ~round(., 3)) %>% 
+      add_column(format = c(1,0,0)) %>% #need to figure out how to conditionally add this column only if dataframe is 3 units long
+      relocate(format)
   })
   
   output$other_fuel_use_table <- renderDataTable({
-    datatable(selected_company_fuel_use(), rownames = FALSE, options = list(scrollX = TRUE))
+    datatable(selected_company_fuel_use(), rownames = FALSE, options = list(columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
+      formatStyle(
+        'category', 'format',
+        textAlign = styleEqual(c(0, 1), c('right', 'left')),
+        fontStyle = styleEqual(c(0, 1), c('italic', 'normal'))
+      )
   })
   
   #######################################
@@ -353,7 +370,7 @@ server <- function(input, output, session) {
   })
     
   output$ns_energy_use_table <- renderDataTable({
-    datatable(selected_company_ns_energy_use(), rownames = FALSE, options = list(scrollX = TRUE))
+    datatable(selected_company_ns_energy_use()[c(4,2,3,1,5:nrow(selected_company_ns_energy_use())), ], rownames = FALSE, options = list(scrollX = TRUE))
   })
   
   #######################################

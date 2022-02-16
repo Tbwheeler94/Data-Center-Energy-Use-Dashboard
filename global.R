@@ -156,7 +156,7 @@ colnames(data_sheet_pue_raw) [6] <- 'pue_value'
 
 #generate unique list of companies in alphabetical order and drop blank
 unique_companies <- list()
-companies <- str_subset(sort(unique(data_sheet_company_raw$company_name)),"")
+companies <- str_subset(sort(unique(data_sheet_energy_raw$company)),"")
 
 for (i in 1:length(companies)) {
   
