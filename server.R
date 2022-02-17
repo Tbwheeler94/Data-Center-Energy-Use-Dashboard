@@ -131,7 +131,8 @@ server <- function(input, output, session) {
     company_sheet_selected_company()[1, "provider_5"], company_sheet_selected_company()[1, "provider_6"],
     company_sheet_selected_company()[1, "provider_7"], company_sheet_selected_company()[1, "provider_8"],
     company_sheet_selected_company()[1, "provider_9"], company_sheet_selected_company()[1, "provider_10"],sep = ", ") %>% 
-    str_remove_all(", NA") %>% str_remove_all(", ,") %>% str_remove_all(" , ") %>% str_remove_all("[:punct:]*\\s*$")
+    str_remove_all(", NA") %>% str_remove_all(", ,") %>% str_remove_all(" , ") %>% str_remove_all("[:punct:]*\\s*$") %>% 
+    str_remove_all("NA")
   
   selected_company_stats <- data.frame(A = c("Does company report energy use?", "Year of most recent data", "Lease/Cloud Providers"),
              B = c(energy_reporting_status, year_of_most_recent_data, ifelse(external_service_provider_list == "", "No External Providers Reported", external_service_provider_list)), check.names = FALSE)
@@ -215,13 +216,18 @@ server <- function(input, output, session) {
   
   #NOTE: Need to figure out scenarios where the code breaks (i.e. Mastercard displaying 0 for energy)
   #Format values in last row as a percent, move "Total Company" row to the correct location, determine how many decimals to show
+  
+  no_data <- data.frame(no_data_reported = "No data reported")
 
   selected_company_electricity_use <- reactive({
-    data_sheet_energy_transformed %>% 
-      filter(company == input$selected_company) %>% 
-      mutate_at(vars(electricity_converted), ~replace_na(., 0)) %>%
-      filter(electricity_converted != 0) %>% 
-      filter(level_of_ownership != "Cloud") %>% 
+    
+    selected_company_electricity_use_filter <- 
+      data_sheet_energy_transformed %>% 
+      filter(company == input$selected_company) %>% #filter by selected company
+      mutate_at(vars(electricity_converted), ~replace_na(., 0)) %>% #replace any NA electricity values with 0
+      mutate_at(vars(level_of_ownership), ~replace_na(., "")) %>% #replace any NA level of ownership values with 0
+      filter(electricity_converted != 0) %>% #filter out any rows where reported electricity is equal to 0
+      filter(level_of_ownership != "Cloud") %>% #filter out any rows where reported electricity is from Cloud providers
       select("data_year", "energy_reporting_scope", "level_of_ownership", "electricity_converted") %>% 
       mutate(energy_reporting_scope = case_when(
         energy_reporting_scope %in% c("Multiple Data Centers", "Single Data Center") ~ "Data center electricity use",
@@ -232,13 +238,10 @@ server <- function(input, output, session) {
       unite(energy_reporting_scope, energy_reporting_scope:level_of_ownership, sep = " | ") %>% 
       mutate(energy_reporting_scope = case_when(
         energy_reporting_scope %in% "Data center electricity use | Leased" ~ "Leased",
-        energy_reporting_scope %in% "Data center electricity use | Cloud" ~ "Cloud",
         energy_reporting_scope %in% "Data center electricity use | Self-managed" ~ "Self_managed",
         energy_reporting_scope %in% "Data center electricity use | " ~ "Self_managed", #If no level of ownership is given, assume self managed
-        energy_reporting_scope %in% "Data center electricity use | NA" ~ "Self_managed", #If no level of ownership is given, assume self managed
         energy_reporting_scope %in% "Company-wide electricity use | Self-managed" ~ "Total_company",
-        energy_reporting_scope %in% "Company-wide electricity use | " ~ "Total_company",
-        energy_reporting_scope %in% "Company-wide electricity use | NA" ~ "Total_company")) %>%
+        energy_reporting_scope %in% "Company-wide electricity use | " ~ "Total_company")) %>% #If no level of ownership is given, assume self managed
       pivot_wider(names_from = energy_reporting_scope, values_from = value) %>% 
       replace(is.na(.), 0) %>% 
       mutate(Leased = ifelse("Leased" %in% names(.), Leased, 0),
@@ -254,19 +257,33 @@ server <- function(input, output, session) {
         category %in% "Leased" ~ "Leased",
         category %in% "data_centers" ~ "Data centers",
         category %in% "data_center_percentage" ~ "Data center % of total electricity")) %>% 
-      mutate_if(is.numeric, ~round(., 3)) %>% 
-      add_column(format = c(1,0,0,1,1)) %>% #need to figure out how to conditionally add this column only if dataframe is 5 units long
-      relocate(format)
-  }) 
+      mutate_if(is.numeric, ~round(., 3))
     
-    
+      if (dim(selected_company_electricity_use_filter)[1] > 0) {
+        selected_company_electricity_use_filter <- 
+          selected_company_electricity_use_filter %>% 
+          add_column(format = c(1,0,0,1,1), .before = 'category')
+      }
+      selected_company_electricity_use_filter
+  
+  })
+  
   output$electricity_use_table <- renderDataTable({
+    
+    if(nrow(selected_company_electricity_use()) > 0) {
+    
     datatable(selected_company_electricity_use(), rownames = FALSE, options = list(columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
       formatStyle(
         'category', 'format',
         textAlign = styleEqual(c(0, 1), c('right', 'left')),
         fontStyle = styleEqual(c(0, 1), c('italic', 'normal'))
       )
+    } else {
+      datatable(no_data, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){",
+                                                                       "  $(thead).remove();",
+                                                                       "}")), rownames = FALSE)
+    }
+    
   })
   
   #######################################
@@ -275,7 +292,9 @@ server <- function(input, output, session) {
   #######################################
   
   selected_company_fuel_use <- reactive({
-    data_sheet_energy_transformed %>% 
+    
+    selected_company_fuel_use_filter <- 
+      data_sheet_energy_transformed %>% 
       filter(company == input$selected_company) %>% 
       mutate_at(vars(fuel_1_converted, #replace na values with 0
                      fuel_2_converted, fuel_3_converted, fuel_4_converted, 
@@ -310,18 +329,33 @@ server <- function(input, output, session) {
         category %in% "Self_managed" ~ "Self-managed",
         category %in% "Leased" ~ "Leased",
         category %in% "data_centers" ~ "Data centers")) %>% 
-      mutate_if(is.numeric, ~round(., 3)) %>% 
-      add_column(format = c(1,0,0)) %>% #need to figure out how to conditionally add this column only if dataframe is 3 units long
-      relocate(format)
+      mutate_if(is.numeric, ~round(., 3))
+    
+    if (dim(selected_company_fuel_use_filter)[1] > 0) {
+      selected_company_fuel_use_filter <- 
+        selected_company_fuel_use_filter %>% 
+        add_column(format = c(1,0,0), .before = 'category')
+    }
+    selected_company_fuel_use_filter
+    
   })
   
   output$other_fuel_use_table <- renderDataTable({
-    datatable(selected_company_fuel_use(), rownames = FALSE, options = list(columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
-      formatStyle(
-        'category', 'format',
-        textAlign = styleEqual(c(0, 1), c('right', 'left')),
-        fontStyle = styleEqual(c(0, 1), c('italic', 'normal'))
-      )
+    
+    if(dim(selected_company_fuel_use())[1] > 0) {
+      
+      datatable(selected_company_fuel_use(), rownames = FALSE, options = list(columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
+        formatStyle(
+          'category', 'format',
+          textAlign = styleEqual(c(0, 1), c('right', 'left')),
+          fontStyle = styleEqual(c(0, 1), c('italic', 'normal'))
+        )
+    } else {
+      datatable(no_data, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){",
+                                                                       "  $(thead).remove();",
+                                                                       "}")), rownames = FALSE)
+    }
+    
   })
   
   #######################################
