@@ -459,7 +459,8 @@ data_sheet_energy <- cbind(data_sheet_energy, electricity_conversion["electricit
               relocate(fuel_2_converted, .after = fuel_2_prepped) %>%
               relocate(fuel_3_converted, .after = fuel_3_prepped) %>%
               relocate(fuel_4_converted, .after = fuel_4_prepped) %>%
-              relocate(fuel_5_converted, .after = fuel_5_prepped)
+              relocate(fuel_5_converted, .after = fuel_5_prepped) %>% 
+              relocate(electricity_converted, .after = electricity_prepped)
 ```
 
 ```{r}
