@@ -165,7 +165,7 @@ company_analysis_page <- makePage(
               )
     ),
     Grid(
-      Stack(style = "text-align: center; padding: 25px", Text("Current Energy Reporting Snapshot", variant = "xxLarge", style = "color: #137AD1;")),
+      Stack(style = "text-align: center; padding: 25px", Text("Current Year Energy Reporting Snapshot", variant = "xxLarge", style = "color: #137AD1;")),
       GridItem(class = "ms-sm12 ms-xl4",                                               
                CompanyCard(
                  Text("Reported energy use levels", variant = "large", style = "text-align: center;"),
@@ -186,7 +186,7 @@ company_analysis_page <- makePage(
       )
     ),
     Grid(
-      Stack(style = "text-align: center; padding: 25px", Text("Energy Use Trend & Data", variant = "xxLarge", style = "color: #137AD1;")),
+      Stack(style = "text-align: center; padding: 25px", Text("Historical Energy Use Trend & Data", variant = "xxLarge", style = "color: #137AD1;")),
       GridItem(class = "ms-sm12 ms-xl6",
                CompanyCard(
                  Text("Electricity Use (TWh/yr)", variant = "large", style = "text-align: center;"),

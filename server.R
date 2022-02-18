@@ -248,11 +248,12 @@ server <- function(input, output, session) {
            Self_managed = ifelse("Self_managed" %in% names(.), Self_managed, 0),
            Total_company = ifelse("Total_company" %in% names(.), Total_company, 0)) %>%
       mutate(data_centers = Self_managed + Leased) %>% 
-      mutate(data_center_percentage = (data_centers/(data_centers + Total_company))) %>%
+      mutate(data_center_percentage = data_centers/(data_centers + Total_company)) %>%
       pivot_longer(!data_year, names_to = "category", values_to = "value") %>% 
+     # mutate(value = ifelse(category == 'data_center_percentage', percent(value), value))
       pivot_wider(names_from = data_year, values_from = value) %>% 
       mutate(category = case_when(
-        category %in% "Total_company" ~ "Total Company",
+        category %in% "Total_company" ~ "Total company",
         category %in% "Self_managed" ~ "Self-managed",
         category %in% "Leased" ~ "Leased",
         category %in% "data_centers" ~ "Data centers",
@@ -260,9 +261,13 @@ server <- function(input, output, session) {
       mutate_if(is.numeric, ~round(., 3))
     
       if (dim(selected_company_electricity_use_filter)[1] > 0) {
+        
         selected_company_electricity_use_filter <- 
           selected_company_electricity_use_filter %>% 
+          mutate(category = factor(category, levels = c("Data centers", "Self-managed", "Leased", "Total company", "Data center % of total electricity"))) %>%
+          arrange(category) %>% 
           add_column(format = c(1,0,0,1,1), .before = 'category')
+
       }
       selected_company_electricity_use_filter
   
@@ -333,7 +338,9 @@ server <- function(input, output, session) {
     
     if (dim(selected_company_fuel_use_filter)[1] > 0) {
       selected_company_fuel_use_filter <- 
-        selected_company_fuel_use_filter %>% 
+        selected_company_fuel_use_filter  %>% 
+        mutate(category = factor(category, levels = c("Data centers", "Self-managed", "Leased"))) %>%
+        arrange(category) %>% 
         add_column(format = c(1,0,0), .before = 'category')
     }
     selected_company_fuel_use_filter
@@ -364,47 +371,72 @@ server <- function(input, output, session) {
   #######################################
   
   selected_company_ns_energy_use <- reactive({
-    data_sheet_energy_transformed %>%
-    filter(company == input$selected_company, fuel_1_type == "Total Energy Use") %>% 
-    mutate_at(vars(fuel_1_type), ~replace_na(., 0)) %>%
-    filter(fuel_1_type != 0) %>%
-    select("data_year", "energy_reporting_scope", "level_of_ownership", "fuel_1_type", "fuel_1_converted") %>% 
-    mutate(energy_reporting_scope = case_when(
-      energy_reporting_scope %in% c("Multiple Data Centers", "Single Data Center") ~ "Data center electricity use",
-      energy_reporting_scope %in% "Total Operations"                               ~ "Company-wide electricity use")) %>% 
-    group_by(data_year, energy_reporting_scope, level_of_ownership) %>% 
-    summarize(value = sum(fuel_1_converted)) %>% 
-    mutate(value = value/1000000000) %>%
-    unite(energy_reporting_scope, energy_reporting_scope:level_of_ownership, sep = " | ") %>% 
-    mutate(energy_reporting_scope = case_when(
-      energy_reporting_scope %in% "Data center electricity use | Leased" ~ "Leased",
-      energy_reporting_scope %in% "Data center electricity use | Cloud" ~ "Cloud",
-      energy_reporting_scope %in% "Data center electricity use | Self-managed" ~ "Self_managed",
-      energy_reporting_scope %in% "Data center electricity use | " ~ "Self_managed", #If no level of ownership is given, assume self managed
-      energy_reporting_scope %in% "Data center electricity use | NA" ~ "Self_managed", #If no level of ownership is given, assume self managed
-      energy_reporting_scope %in% "Company-wide electricity use | Self-managed" ~ "Total_company",
-      energy_reporting_scope %in% "Company-wide electricity use | " ~ "Total_company",
-      energy_reporting_scope %in% "Company-wide electricity use | NA" ~ "Total_company")) %>%
-    pivot_wider(names_from = energy_reporting_scope, values_from = value) %>% 
-    replace(is.na(.), 0) %>% 
-    mutate(Leased = ifelse("Leased" %in% names(.), Leased, 0),
-           Self_managed = ifelse("Self_managed" %in% names(.), Self_managed, 0),
-           Total_company = ifelse("Total_company" %in% names(.), Total_company, 0)) %>% 
-    mutate(data_centers = Self_managed + Leased) %>% 
-    mutate(data_center_percentage = (data_centers/(data_centers + Total_company))) %>%
-    pivot_longer(!data_year, names_to = "category", values_to = "value") %>% 
-    pivot_wider(names_from = data_year, values_from = value) %>% 
-    mutate(category = case_when(
-      category %in% "Total_company" ~ "Total Company",
-      category %in% "Self_managed" ~ "Self-managed",
-      category %in% "Leased" ~ "Leased",
-      category %in% "data_centers" ~ "Data centers",
-      category %in% "data_center_percentage" ~ "Data center % of total electricity")) %>% 
-    mutate_if(is.numeric, ~round(., 3))
+    
+    selected_company_ns_energy_use_filter <-
+      data_sheet_energy_transformed %>%
+      filter(company == input$selected_company, fuel_1_type == "Total Energy Use") %>% 
+      mutate_at(vars(fuel_1_type), ~replace_na(., 0)) %>%
+      filter(fuel_1_type != 0) %>%
+      select("data_year", "energy_reporting_scope", "level_of_ownership", "fuel_1_type", "fuel_1_converted") %>% 
+      mutate(energy_reporting_scope = case_when(
+        energy_reporting_scope %in% c("Multiple Data Centers", "Single Data Center") ~ "Data center electricity use",
+        energy_reporting_scope %in% "Total Operations"                               ~ "Company-wide electricity use")) %>% 
+      group_by(data_year, energy_reporting_scope, level_of_ownership) %>% 
+      summarize(value = sum(fuel_1_converted)) %>% 
+      mutate(value = value/1000000000) %>%
+      unite(energy_reporting_scope, energy_reporting_scope:level_of_ownership, sep = " | ") %>% 
+      mutate(energy_reporting_scope = case_when(
+        energy_reporting_scope %in% "Data center electricity use | Leased" ~ "Leased",
+        energy_reporting_scope %in% "Data center electricity use | Cloud" ~ "Cloud",
+        energy_reporting_scope %in% "Data center electricity use | Self-managed" ~ "Self_managed",
+        energy_reporting_scope %in% "Data center electricity use | " ~ "Self_managed", #If no level of ownership is given, assume self managed
+        energy_reporting_scope %in% "Data center electricity use | NA" ~ "Self_managed", #If no level of ownership is given, assume self managed
+        energy_reporting_scope %in% "Company-wide electricity use | Self-managed" ~ "Total_company",
+        energy_reporting_scope %in% "Company-wide electricity use | " ~ "Total_company",
+        energy_reporting_scope %in% "Company-wide electricity use | NA" ~ "Total_company")) %>%
+      pivot_wider(names_from = energy_reporting_scope, values_from = value) %>% 
+      replace(is.na(.), 0) %>% 
+      mutate(Leased = ifelse("Leased" %in% names(.), Leased, 0),
+             Self_managed = ifelse("Self_managed" %in% names(.), Self_managed, 0),
+             Total_company = ifelse("Total_company" %in% names(.), Total_company, 0)) %>% 
+      mutate(data_centers = Self_managed + Leased) %>% 
+      mutate(data_center_percentage = (data_centers/(data_centers + Total_company))) %>%
+      pivot_longer(!data_year, names_to = "category", values_to = "value") %>% 
+      pivot_wider(names_from = data_year, values_from = value) %>% 
+      mutate(category = case_when(
+        category %in% "Total_company" ~ "Total company",
+        category %in% "Self_managed" ~ "Self-managed",
+        category %in% "Leased" ~ "Leased",
+        category %in% "data_centers" ~ "Data centers",
+        category %in% "data_center_percentage" ~ "Data center % of total electricity")) %>% 
+      mutate_if(is.numeric, ~round(., 3))
+    
+    if (dim(selected_company_ns_energy_use_filter)[1] > 0) {
+      selected_company_ns_energy_use_filter <- 
+        selected_company_ns_energy_use_filter %>% 
+        mutate(category = factor(category, levels = c("Data centers", "Self-managed", "Leased", "Total company", "Data center % of total electricity"))) %>%
+        arrange(category) %>% 
+        add_column(format = c(1,0,0,1,1), .before = 'category')
+    }
+    selected_company_ns_energy_use_filter
+    
   })
     
   output$ns_energy_use_table <- renderDataTable({
-    datatable(selected_company_ns_energy_use()[c(4,2,3,1,5:nrow(selected_company_ns_energy_use())), ], rownames = FALSE, options = list(scrollX = TRUE))
+    
+    if(dim(selected_company_ns_energy_use())[1] > 0) {
+      
+      datatable(selected_company_ns_energy_use(), rownames = FALSE, options = list(columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
+        formatStyle(
+          'category', 'format',
+          textAlign = styleEqual(c(0, 1), c('right', 'left')),
+          fontStyle = styleEqual(c(0, 1), c('italic', 'normal'))
+        )
+    } else {
+      datatable(no_data, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){",
+                                                                       "  $(thead).remove();",
+                                                                       "}")), rownames = FALSE)
+    }
   })
   
   #######################################
@@ -413,20 +445,30 @@ server <- function(input, output, session) {
   #######################################
   
   selected_company_pue <- reactive({
-    data_sheet_pue_raw %>% 
-      filter(company == input$selected_company) %>% 
-      select("applicable_year", "facility_scope", "geographical_scope", "pue_value") %>% 
-      unite(pue_facility_geographic, facility_scope:geographical_scope, sep = " | ") %>% 
-      pivot_wider(names_from = applicable_year, values_from = pue_value, names_sort = TRUE) %>%
-      mutate_all(~replace(., is.nan(.), NA)) %>% 
-      mutate_if(is.numeric, as.character) %>% 
-      replace(is.na(.), "0*") %>% 
-      rename(c("Facility Scope and Location" = pue_facility_geographic))
+    selected_company_pue_filter <-
+      data_sheet_pue_raw %>% 
+        filter(company == input$selected_company) %>% 
+        select("applicable_year", "facility_scope", "geographical_scope", "pue_value") %>% 
+        unite(pue_facility_geographic, facility_scope:geographical_scope, sep = " | ") %>% 
+        pivot_wider(names_from = applicable_year, values_from = pue_value, names_sort = TRUE) %>%
+        mutate_all(~replace(., is.nan(.), NA)) %>% 
+        mutate_if(is.numeric, as.character) %>% 
+        replace(is.na(.), "0*") %>% 
+        rename(c("Facility Scope and Location" = pue_facility_geographic))
   })
   
   output$pue_table <- renderDataTable({ #Tried to change width of first column, currently not working
-    datatable(selected_company_pue(), rownames = FALSE, options = list(pageLength = 5, autoWidth = TRUE, columnDefs = list(list(width = '300px',
-                                                                                                              targets = c(0)))))
+
+    if(dim(selected_company_pue())[1] > 0) {
+      
+      datatable(selected_company_pue(), rownames = FALSE, options = list(pageLength = 5, autoWidth = TRUE, columnDefs = list(list(width = '300px',
+                                                                                                                                  targets = c(0)))))
+    } else {
+      datatable(no_data, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){",
+                                                                       "  $(thead).remove();",
+                                                                       "}")), rownames = FALSE)
+    }
+    
   })
   
   #######################################
