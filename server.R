@@ -269,8 +269,22 @@ server <- function(input, output, session) {
           add_column(format = c(1,0,0,1,1), .before = 'category')
 
       }
-      selected_company_electricity_use_filter
-  
+      
+      extra_years <- list()
+      possible_years <- c(2007:as.integer(energy_sheet_selected_company_current_year()[1, "period_covered_start_date"]))
+      `%not_in%` <- purrr::negate(`%in%`)
+      
+      for (i in 1:length(possible_years)) {
+        if (possible_years[i] %not_in% names(selected_company_electricity_use_filter)) {
+          extra_years[i] <- possible_years[i]
+        }
+      }
+      
+      selected_company_electricity_use_filter %>% 
+        add_column(!!!set_names(as.list(rep(0, length(extra_years))),nm=extra_years)) %>% 
+        select(sort(current_vars())) %>% 
+        relocate(c(format, category), .before = '2007') %>% 
+        mutate_if(is.numeric, ~ifelse(. == 0, "", .))
   })
   
   output$electricity_use_table <- renderDataTable({
