@@ -12,6 +12,7 @@ library(DT)
 library(plotly)
 library(gt)
 library(scales)
+library(tidyselect)
 
 
 #############################

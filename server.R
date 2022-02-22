@@ -31,7 +31,7 @@ server <- function(input, output, session) {
     data_sheet_company_raw %>% filter(company_name == input$selected_company)
   })
   
-  #This dataset filters the raw energy sheet by the selected company's current year
+  #This dataset filters the raw energy sheet by the selected company's most recent year of data reporting
   energy_sheet_selected_company_current_year <- reactive({
     data_sheet_energy_raw %>% 
       filter(company == input$selected_company) %>% 
@@ -218,6 +218,7 @@ server <- function(input, output, session) {
   #Format values in last row as a percent, move "Total Company" row to the correct location, determine how many decimals to show
   
   no_data <- data.frame(no_data_reported = "No data reported")
+  `%not_in%` <- purrr::negate(`%in%`)
 
   selected_company_electricity_use <- reactive({
     
@@ -260,36 +261,35 @@ server <- function(input, output, session) {
         category %in% "data_center_percentage" ~ "Data center % of total electricity")) %>% 
       mutate_if(is.numeric, ~round(., 3))
     
-      if (dim(selected_company_electricity_use_filter)[1] > 0) {
-        
+      #If the dataframe contains at least 1 row, perform the following function
+      if (nrow(selected_company_electricity_use_filter != 0)) {
         selected_company_electricity_use_filter <- 
           selected_company_electricity_use_filter %>% 
           mutate(category = factor(category, levels = c("Data centers", "Self-managed", "Leased", "Total company", "Data center % of total electricity"))) %>%
           arrange(category) %>% 
           add_column(format = c(1,0,0,1,1), .before = 'category')
-
-      }
-      
-      extra_years <- list()
-      possible_years <- c(2007:as.integer(energy_sheet_selected_company_current_year()[1, "period_covered_start_date"]))
-      `%not_in%` <- purrr::negate(`%in%`)
-      
-      for (i in 1:length(possible_years)) {
-        if (possible_years[i] %not_in% names(selected_company_electricity_use_filter)) {
-          extra_years[i] <- possible_years[i]
+        
+        possible_years_electricity <- c(2007:as.integer(tail(colnames(selected_company_electricity_use_filter), n=1)))
+        extra_years_electricity <- list()
+        
+        for (i in 1:length(possible_years_electricity)) {
+          if (possible_years_electricity[i] %not_in% names(selected_company_electricity_use_filter)) {
+            extra_years_electricity[i] <- possible_years_electricity[i]
+          }
         }
+        
+        selected_company_electricity_use_filter %>% 
+          add_column(!!!set_names(as.list(rep(0, length(extra_years_electricity))),nm=extra_years_electricity)) %>% 
+          select(sort(tidyselect::peek_vars())) %>% 
+          relocate(c(format, category), .before = '2007') %>% 
+          mutate_if(is.numeric, ~ifelse(. == 0, "", .))
       }
-      
-      selected_company_electricity_use_filter %>% 
-        add_column(!!!set_names(as.list(rep(0, length(extra_years))),nm=extra_years)) %>% 
-        select(sort(current_vars())) %>% 
-        relocate(c(format, category), .before = '2007') %>% 
-        mutate_if(is.numeric, ~ifelse(. == 0, "", .))
   })
   
   output$electricity_use_table <- renderDataTable({
     
-    if(nrow(selected_company_electricity_use()) > 0) {
+    #If the dataframe output from the reactive electricity dataset is not empty then insert the dataset into a datatable, else show the no_data datatable
+    if(!is.null(selected_company_electricity_use())) {
     
     datatable(selected_company_electricity_use(), rownames = FALSE, options = list(columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
       formatStyle(
@@ -314,7 +314,7 @@ server <- function(input, output, session) {
     
     selected_company_fuel_use_filter <- 
       data_sheet_energy_transformed %>% 
-      filter(company == input$selected_company) %>% 
+      filter(company == "Facebook") %>% 
       mutate_at(vars(fuel_1_converted, #replace na values with 0
                      fuel_2_converted, fuel_3_converted, fuel_4_converted, 
                      fuel_5_converted), ~replace_na(., 0)) %>%
@@ -323,7 +323,8 @@ server <- function(input, output, session) {
                                             fuel_2_converted, fuel_3_converted, fuel_4_converted, 
                                             fuel_5_converted))) %>%
       filter(level_of_ownership != "Cloud") %>% 
-      select("data_year", "energy_reporting_scope", "level_of_ownership", "total_other_energy_use") %>% 
+      select("data_year", "energy_reporting_scope", "level_of_ownership", "total_other_energy_use") %>%
+      filter(total_other_energy_use != 0) %>%
       filter(energy_reporting_scope == "Multiple Data Centers" | energy_reporting_scope == "Single Data Center") %>% 
       mutate(energy_reporting_scope = case_when(
         energy_reporting_scope %in% c("Multiple Data Centers", "Single Data Center") ~ "Data center other fuel use")) %>% 
@@ -350,20 +351,35 @@ server <- function(input, output, session) {
         category %in% "data_centers" ~ "Data centers")) %>% 
       mutate_if(is.numeric, ~round(., 3))
     
-    if (dim(selected_company_fuel_use_filter)[1] > 0) {
+    #If the number of rows in the dataframe is not equal to 0
+    if (nrow(selected_company_fuel_use_filter != 0)) {
       selected_company_fuel_use_filter <- 
-        selected_company_fuel_use_filter  %>% 
-        mutate(category = factor(category, levels = c("Data centers", "Self-managed", "Leased"))) %>%
+        selected_company_fuel_use_filter %>% 
+        mutate(category = factor(category, levels = c("Data centers", "Self-managed", "Leased"))) %>% 
         arrange(category) %>% 
         add_column(format = c(1,0,0), .before = 'category')
+      
+      possible_years_fuel <- c(2007:as.integer(tail(colnames(selected_company_fuel_use_filter), n=1)))
+      extra_years_fuel <- list()
+      
+      for (i in 1:length(possible_years_fuel)) {
+        if (possible_years_fuel[i] %not_in% names(selected_company_fuel_use_filter)) {
+          extra_years_fuel[i] <- possible_years_fuel[i]
+        }
+      }
+      
+      selected_company_fuel_use_filter %>% 
+        add_column(!!!set_names(as.list(rep(0, length(extra_years_fuel))),nm=extra_years_fuel)) %>% 
+        select(sort(tidyselect::peek_vars())) %>% 
+        relocate(c(format, category), .before = '2007') %>% 
+        mutate_if(is.numeric, ~ifelse(. == 0, "", .))
     }
-    selected_company_fuel_use_filter
     
   })
   
   output$other_fuel_use_table <- renderDataTable({
     
-    if(dim(selected_company_fuel_use())[1] > 0) {
+    if(!is.null(selected_company_fuel_use())) {
       
       datatable(selected_company_fuel_use(), rownames = FALSE, options = list(columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
         formatStyle(
@@ -393,21 +409,21 @@ server <- function(input, output, session) {
       filter(fuel_1_type != 0) %>%
       select("data_year", "energy_reporting_scope", "level_of_ownership", "fuel_1_type", "fuel_1_converted") %>% 
       mutate(energy_reporting_scope = case_when(
-        energy_reporting_scope %in% c("Multiple Data Centers", "Single Data Center") ~ "Data center electricity use",
-        energy_reporting_scope %in% "Total Operations"                               ~ "Company-wide electricity use")) %>% 
+        energy_reporting_scope %in% c("Multiple Data Centers", "Single Data Center") ~ "Data center energy use",
+        energy_reporting_scope %in% "Total Operations"                               ~ "Company-wide energy use")) %>% 
       group_by(data_year, energy_reporting_scope, level_of_ownership) %>% 
       summarize(value = sum(fuel_1_converted)) %>% 
       mutate(value = value/1000000000) %>%
       unite(energy_reporting_scope, energy_reporting_scope:level_of_ownership, sep = " | ") %>% 
       mutate(energy_reporting_scope = case_when(
-        energy_reporting_scope %in% "Data center electricity use | Leased" ~ "Leased",
-        energy_reporting_scope %in% "Data center electricity use | Cloud" ~ "Cloud",
-        energy_reporting_scope %in% "Data center electricity use | Self-managed" ~ "Self_managed",
-        energy_reporting_scope %in% "Data center electricity use | " ~ "Self_managed", #If no level of ownership is given, assume self managed
-        energy_reporting_scope %in% "Data center electricity use | NA" ~ "Self_managed", #If no level of ownership is given, assume self managed
-        energy_reporting_scope %in% "Company-wide electricity use | Self-managed" ~ "Total_company",
-        energy_reporting_scope %in% "Company-wide electricity use | " ~ "Total_company",
-        energy_reporting_scope %in% "Company-wide electricity use | NA" ~ "Total_company")) %>%
+        energy_reporting_scope %in% "Data center energy use | Leased" ~ "Leased",
+        energy_reporting_scope %in% "Data center energy use | Cloud" ~ "Cloud",
+        energy_reporting_scope %in% "Data center energy use | Self-managed" ~ "Self_managed",
+        energy_reporting_scope %in% "Data center energy use | " ~ "Self_managed", #If no level of ownership is given, assume self managed
+        energy_reporting_scope %in% "Data center energy use | NA" ~ "Self_managed", #If no level of ownership is given, assume self managed
+        energy_reporting_scope %in% "Company-wide energy use | Self-managed" ~ "Total_company",
+        energy_reporting_scope %in% "Company-wide energy use | " ~ "Total_company",
+        energy_reporting_scope %in% "Company-wide energy use | NA" ~ "Total_company")) %>%
       pivot_wider(names_from = energy_reporting_scope, values_from = value) %>% 
       replace(is.na(.), 0) %>% 
       mutate(Leased = ifelse("Leased" %in% names(.), Leased, 0),
@@ -425,20 +441,36 @@ server <- function(input, output, session) {
         category %in% "data_center_percentage" ~ "Data center % of total electricity")) %>% 
       mutate_if(is.numeric, ~round(., 3))
     
-    if (dim(selected_company_ns_energy_use_filter)[1] > 0) {
+    #If the number of rows in the dataframe is not equal to 0
+    if (nrow(selected_company_ns_energy_use_filter != 0)) {
+      
       selected_company_ns_energy_use_filter <- 
         selected_company_ns_energy_use_filter %>% 
-        mutate(category = factor(category, levels = c("Data centers", "Self-managed", "Leased", "Total company", "Data center % of total electricity"))) %>%
+        mutate(category = factor(category, levels = c("Data centers", "Self-managed", "Leased", "Total company", "Data center % of total electricity"))) %>% 
         arrange(category) %>% 
         add_column(format = c(1,0,0,1,1), .before = 'category')
+      
+      possible_years_ns_energy <- c(2007:as.integer(tail(colnames(selected_company_ns_energy_use_filter), n=1)))
+      extra_years_ns_energy <- list()
+      
+      for (i in 1:length(possible_years_ns_energy)) {
+        if (possible_years_ns_energy[i] %not_in% names(selected_company_ns_energy_use_filter)) {
+          extra_years_ns_energy[i] <- possible_years_ns_energy[i]
+        }
+      }
+      
+      selected_company_ns_energy_use_filter %>% 
+        add_column(!!!set_names(as.list(rep(0, length(extra_years_ns_energy))),nm=extra_years_ns_energy)) %>% 
+        select(sort(tidyselect::peek_vars())) %>% 
+        relocate(c(format, category), .before = '2007') %>% 
+        mutate_if(is.numeric, ~ifelse(. == 0, "", .))
     }
-    selected_company_ns_energy_use_filter
     
   })
     
   output$ns_energy_use_table <- renderDataTable({
     
-    if(dim(selected_company_ns_energy_use())[1] > 0) {
+    if(!is.null(selected_company_ns_energy_use())) {
       
       datatable(selected_company_ns_energy_use(), rownames = FALSE, options = list(columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
         formatStyle(
@@ -467,13 +499,33 @@ server <- function(input, output, session) {
         pivot_wider(names_from = applicable_year, values_from = pue_value, names_sort = TRUE) %>%
         mutate_all(~replace(., is.nan(.), NA)) %>% 
         mutate_if(is.numeric, as.character) %>% 
-        replace(is.na(.), "0*") %>% 
+        replace(is.na(.), "") %>% 
         rename(c("Facility Scope and Location" = pue_facility_geographic))
+    
+    if (nrow(selected_company_pue_filter != 0)) {
+      
+      possible_years_pue <- c(2007:as.integer(tail(colnames(selected_company_pue_filter), n=1)))
+      extra_years_pue <- list()
+      
+      for (i in 1:length(possible_years_pue)) {
+        if (possible_years_pue[i] %not_in% names(selected_company_pue_filter)) {
+          extra_years_pue[i] <- possible_years_pue[i]
+        }
+      }
+      
+      selected_company_pue_filter %>% 
+        add_column(!!!set_names(as.list(rep(0, length(extra_years_pue))),nm=extra_years_pue)) %>% 
+        select(sort(tidyselect::peek_vars())) %>% 
+        relocate(c("Facility Scope and Location"), .before = '2007') %>% 
+        mutate_if(is.numeric, ~ifelse(. == 0, "", .))
+    }
+    
+    
   })
   
   output$pue_table <- renderDataTable({ #Tried to change width of first column, currently not working
 
-    if(dim(selected_company_pue())[1] > 0) {
+    if(!is.null(selected_company_pue())) {
       
       datatable(selected_company_pue(), rownames = FALSE, options = list(pageLength = 5, autoWidth = TRUE, columnDefs = list(list(width = '300px',
                                                                                                                                   targets = c(0)))))
