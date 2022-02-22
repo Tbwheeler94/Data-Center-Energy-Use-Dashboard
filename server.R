@@ -5,6 +5,12 @@ source(here("ui.R"))
 #Server code
 server <- function(input, output, session) {
   
+  #add full screen 3 second waiter
+  w = Waiter$new()
+  w$show()
+  Sys.sleep(3)
+  w$hide() 
+  
   #Tab 1
   output$years_reported <- renderUI({
     years_reported <- buildyearsreportedOutput(by_fuel_type_data)}
@@ -174,10 +180,17 @@ server <- function(input, output, session) {
     data_center_other_fuel_use_reporting_status <- ifelse(sum(energy_sheet_selected_company_current_year_dc_fuel()$fuel_1_value > 0), "Yes", "No")
     total_energy_reporting_status <- ifelse(sum(energy_sheet_selected_company_current_year_te()$electricity_value > 0), "Yes", "No")
     
-    reported_energy_levels_data <- data.frame(Level = c("Data center electricity use", "Self-managed", "Leased", "Cloud", "Data center other fuel use", "Company-wide electricty use"),
-               " Reporting Status " = c(data_center_electricity_reporting_status, data_center_self_managed_reporting_status, data_center_leased_reporting_status, data_center_cloud_reporting_status, data_center_other_fuel_use_reporting_status, total_energy_reporting_status), check.names = FALSE)
+    reported_energy_levels_data <- 
+      data.frame(Level = c("Data center electricity use", "Self-managed", "Leased", "Cloud", "Data center other fuel use", "Company-wide electricty use"),
+               " Reporting Status " = c(data_center_electricity_reporting_status, data_center_self_managed_reporting_status, data_center_leased_reporting_status, data_center_cloud_reporting_status, data_center_other_fuel_use_reporting_status, total_energy_reporting_status), check.names = FALSE) %>% 
+      add_column(format = c(1,0,0,0,1,1), .before = 'Level')
     
-    datatable(reported_energy_levels_data, rownames = FALSE, options = list(dom = 't'))
+    datatable(reported_energy_levels_data, rownames = FALSE, options = list(dom = 't', columnDefs = list(list(visible=FALSE, targets=0)))) %>% 
+      formatStyle(
+        'Level', 'format',
+        textAlign = styleEqual(c(0, 1), c('right', 'left')),
+        fontStyle = styleEqual(c(0, 1), c('italic', 'normal'))
+      )
   })
   
   #######################################

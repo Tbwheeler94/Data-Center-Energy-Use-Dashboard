@@ -13,6 +13,7 @@ library(plotly)
 library(gt)
 library(scales)
 library(tidyselect)
+library(waiter)
 
 
 #############################

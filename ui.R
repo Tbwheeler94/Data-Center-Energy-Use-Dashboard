@@ -28,6 +28,7 @@ CompanyCard <- function(..., title = NULL) {
   Stack(
     class = "ms-depth-8",
     tokens = list(padding = 20, childrenGap = 5),
+    style = 'border-radius: 5px; background-color: white; border-top: 8px solid #137AD1;',
     ...  
   )
 }
@@ -150,16 +151,17 @@ company_analysis_page <- makePage(
                                      placeHolder = "Google",
                                      dropdownWidth = 150),
                  downloadButton('download_standards'," Download full profile (.csv)"),
+                 useWaiter(),
                  dataTableOutput("selected_company_stats")
                )
       ),
       GridItem(class = "ms-sm12 ms-xl5",
-               CompanyCard(style = 'border-radius: 5px; background-color: white; border-top: 8px solid #137AD1;',
+               CompanyCard(
                            Text("Company Data Center Overview", variant = "xLarge"),
                            Text(uiOutput("company_data_center_overview"), variant = "mediumPlus"))
               ),
       GridItem(class = "ms-sm12 ms-xl4",
-               CompanyCard(style = 'border-radius: 5px; background-color: white; border-top: 8px solid #137AD1;',
+               CompanyCard(
                            Text("Energy Report Assessment", variant = "xLarge"), 
                            Text(uiOutput("energy_reporting_assessment"), variant = "mediumPlus"))
               )
@@ -169,7 +171,10 @@ company_analysis_page <- makePage(
       GridItem(class = "ms-sm12 ms-xl4",                                               
                CompanyCard(
                  Text("Reported energy use levels", variant = "large", style = "text-align: center;"),
-                 dataTableOutput("reported_energy_levels")
+                 dataTableOutput("reported_energy_levels"),
+                 Stack(horizontal = TRUE, style = "justify-content: end; color: #137AD1;", 
+                       TooltipHost(content = "This datatable displays a company's reported energy use levels",
+                       ActionButton(iconProps = list("iconName" = "Info"), text = "About This Table", style = "color: #137AD1;")))
                )
       ),
       GridItem(class = "ms-sm12 ms-xl4",                                               
@@ -221,7 +226,8 @@ company_analysis_page <- makePage(
     Grid(
       Stack(style = "text-align: center; padding: 25px", Text("Methodology", variant = "xxLarge", style = "color: #137AD1;")),
       GridItem(class = "ms-sm12 ms-xl12",
-               Stack(class = "ms-depth-8", tokens = list(padding = 20, childrenGap = 10), 
+               Stack(class = "ms-depth-8", tokens = list(padding = 20, childrenGap = 10),
+                     style = 'border-radius: 5px; background-color: white; border-top: 8px solid #137AD1;',
                      Text("All company data are based on a rigorous review of publicly-available resources.", variant = "large"),
                      PrimaryButton(text = "Learn More", style = "width: 120px; font-style: bold;"),
                      Text("If you spot errors or have more recent data, please let us know!", variant = "large"),
@@ -276,23 +282,9 @@ layout <- function(mainUI){
 }
 
 header <- tagList(
-  img(src = "ucsb.png", class = "logo"),
-  div(Text(variant = "xLarge", "Energy Use Dashboard"), class = "title"),
-  CommandBar(
-    items = list(
-      CommandBarItem("New", "Add", subitems = list(
-        CommandBarItem("Email message", "Mail", key = "emailMessage", href = "mailto:me@example.com"),
-        CommandBarItem("Calendar event", "Calendar", key = "calendarEvent")
-      )),
-      CommandBarItem("Upload sales plan", "Upload"),
-      CommandBarItem("Share analysis", "Share"),
-      CommandBarItem("Download report", "Download")
-    ),
-    farItems = list(
-      CommandBarItem("Grid view", "Tiles", iconOnly = TRUE),
-      CommandBarItem("Info", "Info", iconOnly = TRUE)
-    ),
-    style = list(width = "100%")))
+  img(src = "isalab.svg", class = "logo"),
+  div(Text(variant = "xLarge", "Data Center Energy Use Dashboard", style = "color: white;"), class = "title"),
+      style = list(width = "100%"))
 
 navigation <- Nav(
   groups = list(
@@ -319,7 +311,7 @@ footer <- Stack(
   horizontal = TRUE,
   horizontalAlign = 'space-between',
   tokens = list(childrenGap = 20),
-  Text(variant = "medium", "Built with ❤ by Industrial Sustainability Analysis Lab", block=TRUE),
+  Text(variant = "medium", "Built by the Industrial Sustainability Analysis Lab", block=TRUE),
   Text(variant = "medium", nowrap = FALSE, "If you'd like to learn more, reach out to us at info_isal@ucsb.edu"),
   Text(variant = "medium", nowrap = FALSE, "All rights reserved.")
 )
@@ -354,6 +346,6 @@ shiny_router_script_tag <- shiny::tags$script(type = "text/javascript", src = sh
 ui <- fluentPage(
   layout(router$ui),
   tags$head(
-    tags$link(href = "main.css", rel = "stylesheet", type = "text/css"),
+    tags$link(href = "style.css", rel = "stylesheet", type = "text/css"),
     shiny_router_script_tag
   ))
