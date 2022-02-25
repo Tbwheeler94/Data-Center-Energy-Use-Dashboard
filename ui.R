@@ -88,7 +88,7 @@ home_page <- makePage(
           HighlightsCard(
             FontIcon(iconName = "TableComputed", style = list(fontSize = 60)),
             Text(uiOutput("energy_reported"), variant = "mega", style = "color: #137AD1;"),
-            Text("Energy Reported", variant = "xxLarge")
+            Text("Data Center Electricty Use Reported", variant = "xxLarge")
           )
         )
     )
@@ -121,11 +121,7 @@ industry_trends_page <- makePage(
   div(
     Grid(
       GridItem(class = "ms-sm12 ms-xl12", 
-               style = "text-align: center",
-               MainCard(title = "Page Under Construction",
-                        FontIcon(iconName = "ConstructionCone", style = list(fontSize = 80)
-                        )
-               )
+               CompanyCard()
                
       )
     )
@@ -151,7 +147,7 @@ company_analysis_page <- makePage(
                                      placeHolder = "Google",
                                      dropdownWidth = 150),
                  downloadButton('download_standards'," Download full profile (.csv)"),
-                 useWaiter(),
+                 #useWaiter(), #add when ready to launch
                  dataTableOutput("selected_company_stats")
                )
       ),

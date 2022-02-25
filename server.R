@@ -1,28 +1,40 @@
-source(here("R", "yearsreportingOutput.R"))
-source(here("R", "companiesreportingOutput.R"))
 source(here("ui.R"))
 
 #Server code
 server <- function(input, output, session) {
   
   #add full screen 3 second waiter
-  w = Waiter$new()
-  w$show()
-  Sys.sleep(3)
-  w$hide() 
+  #w = Waiter$new()
+  #w$show()
+  #Sys.sleep(3)
+  #w$hide() 
   
   #Tab 1
   output$years_reported <- renderUI({
-    years_reported <- buildyearsreportedOutput(by_fuel_type_data)}
-  )
+    #output length of vector of unique values from report_year column
+    length(unique(data_sheet_energy_raw$report_year))
+    })
   
   output$companies_reporting <- renderUI({
-    buildcompaniesreportingOutput(by_fuel_type_data)}
-  )
+    
+    number_of_companies_reporting <- 
+      data_sheet_company_raw %>% 
+      filter(checked_back_to_founding_year_or_2007 == "Yes") #filter by only companies that have been checked back to 2007
+    
+    #output length of vector of unique values in the company column
+    length(unique(number_of_companies_reporting$company_name))
+    })
   
   output$energy_reported <- renderText({
-    energyusereportedOutput(aggregate_data)}
-  )
+  
+    energy_reported <- data_sheet_energy_transformed %>% 
+      mutate_at(vars(electricity_converted), ~replace_na(., 0)) %>%
+      select("company", "data_year", "energy_reporting_scope", "level_of_ownership", "electricity_converted") %>% 
+      filter(energy_reporting_scope == "Multiple Data Centers" | energy_reporting_scope == "Single Data Center" )
+    
+    paste(round(sum(energy_reported$electricity_converted)/1000000000, 1), "TWh")
+  
+  })
   
   #Tab 2: Industry Trends
   
@@ -717,18 +729,3 @@ server <- function(input, output, session) {
 #    geom_text(aes(y = max_pos +.1, label = dc_total_percentage), size = 4) +
 #    scale_fill_brewer()
 #})
-
-
-#######################################
-#######################################
-# OLD #################################
-#######################################
-
-# # Years reported output
-# output$years_reported <- renderText({buildyearsreportedOutput(by_fuel_type_data)})
-# 
-# # Companies reporting output
-# output$companies_reporting <- renderText({buildcompaniesreportingOutput(by_fuel_type_data)})
-# 
-# #Energy use reported
-# output$energy_reported <- renderText({energyusereportedOutput(aggregate_data)})

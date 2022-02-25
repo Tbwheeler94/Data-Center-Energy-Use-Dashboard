@@ -15,22 +15,26 @@ library(scales)
 library(tidyselect)
 library(waiter)
 
-
-#############################
-#######TEMPORARY SETUP#######
-#############################
-# When data is hosted remotely this page will consist of the following
-# (1) An API call to the AWS server to collect the latest version of the raw collection spreadsheet
-# (2) All of the code in the data_preprocessing.Rmd file to prefilter the data
-# (3) A list of objects with pre-sorted datasets that will feed into visualizations (which currently point to csvs)
-
-#Tab 1 - Home
-
-#Tab 2 - Aggregate Statistics
-aggregate_data <- read.csv(here('data', 'aggregate_data.csv'))
+##################################################
+#### NOTE: Need to transfer over code from data_preprocessing.Rmd to 
+#### data_sheet_energy_transformed <- read.csv(here('data', 'data_sheet_energy_transformed.csv'))
+#### to phase out using this csv as an intermediary
+##################################################
 
 ##################################################
-########### Tab 3 - Company Profiles #############
+################ Tab 1 - Home ####################
+##################################################
+
+##################################################
+######## Tab 2 - Data Center Energy 101 ##########
+##################################################
+
+##################################################
+########### Tab 3 - Industry Trends ##############
+##################################################
+
+##################################################
+########### Tab 4 - Company Profiles #############
 ##################################################
 
 #Import raw energy spreadsheet
@@ -70,11 +74,49 @@ colnames(data_sheet_energy_raw) [31] <- 'fuel_4_unit_scale'
 colnames(data_sheet_energy_raw) [35] <- 'fuel_5_value'
 colnames(data_sheet_energy_raw) [36] <- 'fuel_5_unit_scale'
 
+#Import raw company profile sheet
+data_sheet_company_raw <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 2, #the "2" specifies to import sheet 2
+                                     
+                                     #specify column data types to ensure proper recognition
+                                     colClasses=c("character","character","character","integer","Date", #columns 1-5
+                                                  "character","character","character","character","character", #columns 6-10
+                                                  "character","character","character","character","character", #columns 11-15
+                                                  "character","character","character","character","character", #columns 16-20
+                                                  "character","character","character","character","character", #columns 21-25
+                                                  "character","character","character","character","character", #columns 26-30
+                                                  "character","character","character","character","character", #columns 31-35
+                                                  "character","character","character","character")) #column 36-39
+
+#move second row values to column headers, put header names in tidy format
+data_sheet_company_raw <- data_sheet_company_raw %>% 
+  row_to_names(2) %>% 
+  clean_names() %>%
+  select(!c(who_added_the_company, x, qts, x2019, x_2, x_3, x_4))
+
+#change column names that were set to incorrect values when column classes were set
+colnames(data_sheet_company_raw) [3] <- 'company_founding_year'
+colnames(data_sheet_company_raw) [4] <- 'date_last_updated'
+
+#Import raw PUE sheet
+data_sheet_pue_raw <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 3, #the "3" specifies to import sheet 3
+                                 
+                                 #specify column data types to ensure proper recognition
+                                 colClasses=c("character","integer","character","character","character", #columns 1-5
+                                              "numeric","character","character","character","character", #columns 6-10
+                                              "character","character","character","character"))          #columns 11-14
+
+#move second row values to column headers, put header names in tidy format
+data_sheet_pue_raw <- data_sheet_pue_raw %>% 
+  row_to_names(1) %>% 
+  clean_names()
+
+colnames(data_sheet_pue_raw) [2] <- 'applicable_year'
+colnames(data_sheet_pue_raw) [6] <- 'pue_value'
+
 #Import pre-tranformed energy spreadsheet
 data_sheet_energy_transformed <- read.csv(here('data', 'data_sheet_energy_transformed.csv'))
 
 #Isolate fuel values from transformed dataset and then stack - for fuel data graph
-
 #isolate electricity values
 data_sheet_energy_electricity <- data_sheet_energy_transformed %>% 
   select("company", "data_year", "electricity_converted") %>% 
@@ -117,44 +159,6 @@ by_fuel_type_data <- rbind(data_sheet_energy_electricity, data_sheet_energy_comb
         data_sheet_energy_combined_4, data_sheet_energy_combined_5) %>%
   drop_na()
 
-#Import raw company profile sheet
-data_sheet_company_raw <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 2, #the "2" specifies to import sheet 2
-                                 
-                                 #specify column data types to ensure proper recognition
-                                 colClasses=c("character","character","character","integer","Date", #columns 1-5
-                                              "character","character","character","character","character", #columns 6-10
-                                              "character","character","character","character","character", #columns 11-15
-                                              "character","character","character","character","character", #columns 16-20
-                                              "character","character","character","character","character", #columns 21-25
-                                              "character","character","character","character","character", #columns 26-30
-                                              "character","character","character","character","character", #columns 31-35
-                                              "character","character","character","character")) #column 36-39
-
-#move second row values to column headers, put header names in tidy format
-data_sheet_company_raw <- data_sheet_company_raw %>% 
-  row_to_names(2) %>% 
-  clean_names() %>%
-  select(!c(who_added_the_company, x, qts, x2019, x_2, x_3, x_4))
-
-#change column names that were set to incorrect values when column classes were set
-colnames(data_sheet_company_raw) [3] <- 'company_founding_year'
-colnames(data_sheet_company_raw) [4] <- 'date_last_updated'
-
-#Import raw PUE sheet
-data_sheet_pue_raw <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 3, #the "3" specifies to import sheet 3
-                             
-                             #specify column data types to ensure proper recognition
-                             colClasses=c("character","integer","character","character","character", #columns 1-5
-                                          "numeric","character","character","character","character", #columns 6-10
-                                          "character","character","character","character"))          #columns 11-14
-
-#move second row values to column headers, put header names in tidy format
-data_sheet_pue_raw <- data_sheet_pue_raw %>% 
-  row_to_names(1) %>% 
-  clean_names()
-
-colnames(data_sheet_pue_raw) [2] <- 'applicable_year'
-colnames(data_sheet_pue_raw) [6] <- 'pue_value'
 
 #generate unique list of companies in alphabetical order and drop blank
 unique_companies <- list()
@@ -166,10 +170,10 @@ for (i in 1:length(companies)) {
                                text = {companies[i]})
 }
 
-##################################################
-########### Tab 4 - Methods #############
-##################################################
+#########################################
+########### Tab 5 - Methods #############
+#########################################
 
-#Tab 5 -
+#Tab 6 -
 
-#Tab 6 - Methodology
+#Tab 7 - Methodology
