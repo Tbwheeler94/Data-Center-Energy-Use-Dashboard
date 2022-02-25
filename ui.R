@@ -121,8 +121,26 @@ industry_trends_page <- makePage(
   div(
     Grid(
       GridItem(class = "ms-sm12 ms-xl12", 
-               CompanyCard()
-               
+               CompanyCard(
+                 plotlyOutput('transparency_graph')
+               )
+      )
+    ),
+    Grid(
+      GridItem(class = "ms-sm12 ms-xl12", 
+               CompanyCard(
+                 Dropdown.shinyInput("input_year", 
+                                     options = unique_years,
+                                     value = "2020",
+                                     placeHolder = "2020",
+                                     dropdownWidth = 150),
+                 Dropdown.shinyInput("input_reporting_scope", 
+                                     options = unique_scope_selection,
+                                     value = "Data Centers",
+                                     placeHolder = "Data Centers",
+                                     dropdownWidth = 150),
+                 plotlyOutput('energy_use_aggregated')
+               )
       )
     )
   )
@@ -147,7 +165,6 @@ company_analysis_page <- makePage(
                                      placeHolder = "Google",
                                      dropdownWidth = 150),
                  downloadButton('download_standards'," Download full profile (.csv)"),
-                 #useWaiter(), #add when ready to launch
                  dataTableOutput("selected_company_stats")
                )
       ),

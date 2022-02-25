@@ -38,6 +38,416 @@ server <- function(input, output, session) {
   
   #Tab 2: Industry Trends
   
+  ########################################################
+  ###### Generate reactive datasets for sub-rendering ####
+  ########################################################
+  
+  
+  ########################
+  #Dataset 1##############
+  #Reporting Transparency#
+  ########################
+  
+  # loop through all data years to create data frame for ggplot
+  # IMPORTANT: manually change years in for loop conditions for future use
+  
+  data_of_transparency <- reactive({
+  
+  for (year_count in 2007:as.integer(max(na.omit(data_sheet_energy_raw$report_year)))) {
+    # create a sub data frame that is filtered by data year and single data center scope
+    data_of_transparency_SDC <- data_sheet_energy_transformed %>%
+      filter(data_year == year_count, energy_reporting_scope == "Single Data Center") %>%
+      select(company, data_year, energy_reporting_scope, fuel_1_type) 
+    
+    # we only need 1 row of a company given a data year/reporting scope so erase repeating values
+    data_of_transparency_SDC <- distinct(data_of_transparency_SDC, .keep_all = TRUE)
+    
+    # create a sub data frame that is filtered by data year and multiple data centers scope
+    data_of_transparency_MDC <- data_sheet_energy_transformed %>%
+      filter(data_year == year_count, energy_reporting_scope == "Multiple Data Centers") %>%
+      select(company, data_year, energy_reporting_scope, fuel_1_type)
+    
+    # we only need 1 row of a company given a data year/reporting scope so erase repeating values
+    data_of_transparency_MDC <- distinct(data_of_transparency_MDC, .keep_all = TRUE)
+    
+    # create a sub data frame that is filtered by data year and company wide electricity scope
+    data_of_transparency_TO <- data_sheet_energy_transformed %>%
+      filter(data_year == year_count, energy_reporting_scope == "Total Operations") %>%
+      select(company, data_year, energy_reporting_scope, fuel_1_type) 
+    
+    # we only need 1 row of a company given a data year/reporting scope so erase repeating values
+    data_of_transparency_TO <- distinct(data_of_transparency_TO, .keep_all = TRUE)
+    
+    # create a sub data frame that is filtered by data year (***LOOK BACK AT THIS***)
+    # IMPORTANT: leave energy reporting scope column blank for this transparency level!
+    data_of_transparency_ND <- data_sheet_energy_transformed %>%
+      filter(data_year == year_count, energy_reporting_scope == "") %>%
+      select(company, data_year, energy_reporting_scope, fuel_1_type)
+    
+    # we only need 1 row of a company given a data year/reporting scope so erase repeating values
+    data_of_transparency_ND <- distinct(data_of_transparency_ND, .keep_all = TRUE)
+    
+    # stack single data center/multiple data center data frames on top of each other
+    data_of_transparency_L1 <- rbind(data_of_transparency_SDC, data_of_transparency_MDC)
+    # since single/multiple data centers fall under same level, diminish to 1 row per company
+    data_of_transparency_L1 <- distinct(data_of_transparency_L1, company, .keep_all = TRUE)
+    
+    # stack rest of the data frames together
+    data_of_transparency_L1 <- rbind(data_of_transparency_L1, data_of_transparency_TO,
+                                     data_of_transparency_ND)
+    data_of_transparency_L1 <- distinct(data_of_transparency_L1, company, .keep_all = TRUE)
+    data_of_transparency_L1$value <- nrow(data_of_transparency_L1)
+    
+    # create the master data frame from the first index of the for loop
+    # else: add the existing master data frame to the recently computed data frames
+    if (year_count == 2007) {
+      data_of_transparency <- rbind(data_of_transparency_L1)
+    } else {
+      data_of_transparency <- data_of_transparency %>% rbind(data_of_transparency_L1)
+    }
+    # sort graph in alphabetical order of company in order to make summation loop easier
+    data_of_transparency <- data_of_transparency[order(data_of_transparency[,"data_year"]), ]
+    #data_of_transparency <- distinct(data_of_transparency, company, .keep_all = TRUE)
+  }
+  
+  # create another data frame that is filtered by company founding year
+  data_founding_year <- data_sheet_company_raw %>% select(company_name, 
+                                                      checked_back_to_founding_year_or_2007,
+                                                      company_founding_year)
+  # drop all the excess rows that have NA data
+  data_founding_year <- na.omit(data_founding_year)
+  data_founding_year <- data_founding_year[data_founding_year$checked_back_to_founding_year_or_2007 == "Yes", ]
+  
+  data_of_transparency <- subset(data_of_transparency, 
+                                 company %in% data_founding_year$company_name)
+  
+  # assessing if there are companies in data_founding_year that ARE NOT in data_of_transparency
+  for (i in 1:nrow(data_founding_year)) {
+    if (!any(data_of_transparency == data_founding_year[i,1])) {
+      data_of_transparency[nrow(data_of_transparency)+1, ] <- 
+        c(data_founding_year[i,1], 2007, 0, 0, 0)
+    }
+  }
+  
+  # create new rows for companies that do not have L1/L2/L3 transparency in that given year
+  # in other words, create rows for level 4 companies (no report found)
+  data_of_transparency <- dummy_rows(data_of_transparency, 
+                                     select_columns = c("company", "data_year"),
+                                     dummy_value = 0)
+  data_of_transparency <- data_of_transparency[order(data_of_transparency[,"data_year"]), ]
+  
+  # NOW we have data for some companies that didn't even exist yet!
+  # take each company in data_founding year, compare with ALL rows in data_of_transparency,
+  # and if the founding year of the company is greater than the data year of the company,
+  # then keep track of that index in deleted_rows vector 
+  deleted_rows <- vector()
+  z = 1
+  for (i in 1:nrow(data_founding_year)) {
+    for (j in 1:nrow(data_of_transparency)) {
+      if (data_founding_year[i,1] == data_of_transparency[j,1]) {
+        if (data_founding_year[i,3] > data_of_transparency[j,2]) {
+          deleted_rows[z] <- j
+          z <- z + 1
+        }
+      }
+    }
+  }
+  
+  # drop all rows that have company data prior to their founding year
+  if (length(deleted_rows) != 0) {
+    data_of_transparency <- data_of_transparency[-c(deleted_rows), ]
+  }
+  
+  data_of_transparency$value <- 0
+  data_of_transparency$number_of_companies <- 0
+  data_of_transparency <- data_of_transparency %>% select(data_year, energy_reporting_scope, 
+                                                          fuel_1_type, value, number_of_companies)
+  
+  # temporary garbage values 
+  year_dummy = 2006
+  report_dummy = "Hi"
+  
+  # loop through all rows and rename energy reporting scopes
+  j = 0
+  for (i in 1:nrow(data_of_transparency)) {
+    if (data_of_transparency[i,2] == "Single Data Center" || data_of_transparency[i,2] == "Multiple Data Centers") {
+      data_of_transparency[i,2] <- "Reported Data Center Electricity"
+    } else if (data_of_transparency[i,2] == "Total Operations" && data_of_transparency[i,3] != "Total Energy Use") {
+      data_of_transparency[i,2] <- "Reported Company Wide Electricity"
+    } else if (data_of_transparency[i,2] == "Total Operations" && data_of_transparency[i,3] == "Total Energy Use") {
+      data_of_transparency[i,2] <- "Reported Company Wide Total Energy"
+    } else {
+      data_of_transparency[i,2] <- "No Reporting of Data"
+    }
+  }
+  
+  data_of_transparency <- data_of_transparency[order(data_of_transparency[,"data_year"],
+                                                     data_of_transparency[,"energy_reporting_scope"]), ]
+  
+  for (i in 1:nrow(data_of_transparency)) {
+    # sum the number rows based on company name and energy reporting scope
+    # keeping track of the summation at the first instance of a distinct row
+    if (data_of_transparency[i,1] == year_dummy && data_of_transparency[i,2] == report_dummy) {
+      data_of_transparency[i-j,4] <- data_of_transparency[i-j,4] + 1
+      j <- j + 1
+    } else {
+      year_dummy <- data_of_transparency[i,1]
+      report_dummy <- data_of_transparency[i,2]
+      data_of_transparency[i,4] <- 1
+      j <- 1
+    }
+  }
+  
+  # drop the rest of the rows with value of 0
+  #data_of_transparency <- data_of_transparency[order(data_of_transparency[,""]), ]
+  #data_of_transparency <- distinct(data_of_transparency, data_year, .keep_all = TRUE)
+  
+  # find line graph values
+  year_dummy = 2006
+  j = 0
+  for (i in 1:nrow(data_of_transparency)) {
+    if (data_of_transparency[i,1] == year_dummy) {
+      data_of_transparency[i-j,5] = data_of_transparency[i-j,5] + data_of_transparency[i,4]
+      j = j + 1
+    } else {
+      year_dummy = data_of_transparency[i,1]
+      data_of_transparency[i,5] = data_of_transparency[i,4]
+      j = 1
+    }
+  }
+  
+  # assign line graph values to each row with same year
+  year_dummy = 2006
+  for (i in 1:nrow(data_of_transparency)) {
+    if (data_of_transparency[i,1] == year_dummy) {
+      data_of_transparency[i,5] = data_of_transparency[i-1,5]
+    } else {
+      year_dummy = data_of_transparency[i,1]
+    }
+  }
+  
+  data_of_transparency
+  })
+  
+  ########################
+  # Dataset 2 ############
+  # Reported Energy Use ##
+  ########################
+  
+  energy_use_final <- reactive({
+  
+  for (year in 2007:as.integer(max(na.omit(data_sheet_energy_raw$report_year)))) {
+    # create a sub data frame that is filtered by data year and single data center scope
+    energy_use_SDC <- data_sheet_energy_transformed %>%
+      filter(data_year == year, energy_reporting_scope == "Single Data Center") %>%
+      select(company, data_year, energy_reporting_scope, level_of_ownership, electricity_converted) 
+    
+    # create a sub data frame that is filtered by data year and multiple data centers scope
+    energy_use_MDC <- data_sheet_energy_transformed %>%
+      filter(data_year == year, energy_reporting_scope == "Multiple Data Centers") %>%
+      select(company, data_year, energy_reporting_scope, level_of_ownership, electricity_converted)
+    
+    # create a sub data frame that is filtered by data year / company wide electricity scope
+    energy_use_TO <- data_sheet_energy_transformed %>%
+      filter(data_year == year, energy_reporting_scope == "Total Operations") %>%
+      select(company, data_year, energy_reporting_scope, level_of_ownership, electricity_converted) 
+    
+    if (year == 2007) {
+      energy_use_graph <- rbind(energy_use_SDC, energy_use_MDC, energy_use_TO)
+    } else {
+      energy_use_graph <- energy_use_graph %>% rbind(energy_use_SDC, energy_use_MDC, energy_use_TO)
+    }
+  }
+  
+  for (i in 1:nrow(energy_use_graph)) {
+    if (energy_use_graph[i,3] == "Single Data Center" || energy_use_graph[i,3] == "Multiple Data Centers") {
+      energy_use_graph[i,3] <- "Data Centers"
+    } else {
+      energy_use_graph[i,3] <- "Company Wide"
+    }
+  }
+  
+  # stack single data center/multiple data center data frames on top of each other
+  energy_use_graph <- energy_use_graph[!(energy_use_graph$level_of_ownership == ""),]
+  energy_use_graph <- na.omit(energy_use_graph)
+  energy_use_final <- energy_use_graph %>%
+    group_by(company,data_year,energy_reporting_scope,level_of_ownership) %>%
+    dplyr::summarise(electricity_converted = sum(electricity_converted)) %>%
+    as.data.frame()
+  energy_use_final <- energy_use_final %>%
+    group_by(company,data_year,energy_reporting_scope,level_of_ownership)
+  
+  energy_use_final <- energy_use_final %>%
+    filter(data_year == input$input_year, energy_reporting_scope == input$input_reporting_scope)
+  
+  energy_use_final
+  
+  })
+  
+  ########################
+  #Graph 1################
+  #Reporting Transparency#
+  ########################
+  
+  output$transparency_graph <- renderPlotly({
+  
+  p <- ggplot(data_of_transparency(), aes(x=data_year)) + 
+    geom_bar(aes(y=value, fill=energy_reporting_scope),
+             position=position_stack(reverse = TRUE), stat="identity") +
+    #geom_line(aes(y=number_of_companies), size=1.2, color="black") +
+    ggtitle("Data Center Transparency") +
+    scale_fill_manual(values = c("#E9967A", "#8FBC8F", "#00CED1", "#1E90FF")) +
+    xlab("Year") +
+    ylab("Number of Companies") +
+    labs(fill = "Energy Reporting Scope")
+  
+  ggplotly(p)
+  
+  })
+  
+  ########################
+  #Graph 2################
+  # Reported Energy Use ##
+  ########################
+  
+  output$energy_use_aggregated <- renderPlotly({
+    
+    if ("Data Centers" %in% energy_use_final()$energy_reporting_scope) {
+      
+      # create plot for data center electricity usage
+      dc <- ggplot(energy_use_final(), aes(x=electricity_converted)) + 
+        geom_bar(aes(y=company, fill=level_of_ownership), 
+                 position=position_stack(reverse = TRUE), stat="identity") +
+        ggtitle("Data Center Electricity Use by Year") +
+        theme_classic() +
+        scale_y_discrete(position = "right") +
+        scale_x_continuous() +
+        theme(legend.position = "left") +
+        xlab("Electricity Value (KWh)") +
+        ylab("Companies") +
+        labs(fill = "Level Of Ownership") 
+      ggplotly(dc)
+    } 
+    
+    else {
+      energy_use_final <- energy_use_final()
+      deleted_rows_1 <- vector()
+      deleted_rows_2 <- vector()
+      deleted_rows_3 <- vector()
+      deleted_rows_4 <- vector()
+      deleted_rows_5 <- vector()
+      a <- 1
+      b <- 1
+      c <- 1
+      d <- 1
+      e <- 1
+      for (i in 1:nrow(energy_use_final)) {
+        if (energy_use_final[i,5] > 10000000000) {
+          deleted_rows_1[a] <- i
+          a <- a + 1
+        } else if (energy_use_final[i,5] > 1000000000 && energy_use_final[i,5] < 10000000000) {
+          deleted_rows_2[b] <- i
+          b <- b + 1
+        } else if (energy_use_final[i,5] > 100000000 && energy_use_final[i,5] < 1000000000) {
+          deleted_rows_3[c] <- i
+          c <- c + 1
+        } else if (energy_use_final[i,5] > 10000000 && energy_use_final[i,5] < 100000000) {
+          deleted_rows_4[d] <- i
+          d <- d + 1
+        } else {
+          deleted_rows_5[e] <- i
+          e <- e + 1
+        }
+      }
+      
+      energy_use_L2_1 <- energy_use_final[c(deleted_rows_1), ]
+      energy_use_L2_2 <- energy_use_final[c(deleted_rows_2), ]
+      energy_use_L2_3 <- energy_use_final[c(deleted_rows_3), ]
+      energy_use_L2_4 <- energy_use_final[c(deleted_rows_4), ]
+      energy_use_L2_5 <- energy_use_final[c(deleted_rows_5), ]
+      
+      p3a <- plot_ly() %>% 
+        add_trace(x=energy_use_L2_1$electricity_converted, 
+                  y=reorder(energy_use_L2_1$company, energy_use_L2_1$electricity_converted), 
+                  type="bar", width = 0.5, marker = list(color = "rgb(255,127,80)")) 
+      
+      p3b <- plot_ly() %>% 
+        add_trace(x=energy_use_L2_2$electricity_converted, 
+                  y=reorder(energy_use_L2_2$company, energy_use_L2_2$electricity_converted),
+                  type="bar", width = 0.8, marker = list(color = "rgb(255,255,0)"))
+      
+      p3c <- plot_ly() %>% 
+        add_trace(x=energy_use_L2_3$electricity_converted, 
+                  y=reorder(energy_use_L2_3$company, energy_use_L2_3$electricity_converted),
+                  type="bar", width = 0.8, marker = list(color = "rgb(0,250,154)"))
+      
+      p3d <- plot_ly() %>% 
+        add_trace(x=energy_use_L2_4$electricity_converted, 
+                  y=reorder(energy_use_L2_4$company, energy_use_L2_4$electricity_converted),
+                  type="bar", width = 0.5, marker = list(color = "rgb(0,191,255)")) 
+      
+      p3e <- plot_ly() %>% 
+        add_trace(x=energy_use_L2_5$electricity_converted, 
+                  y=reorder(energy_use_L2_5$company, energy_use_L2_5$electricity_converted),
+                  type="bar", width = 0.5, marker = list(color = "rgb(128,0,128)"))
+      
+      p3 <- subplot(p3a,p3b,p3c,p3d,p3e, nrows = 5, margin = 0.05)
+      
+      p3 <- p3 %>% add_annotations(
+        x = 0.5,  
+        y = 0.77,  
+        text = "10s of TWh",  
+        xref = "paper",  
+        yref = "paper",  
+        xanchor = "center",  
+        yanchor = "bottom",  
+        showarrow = FALSE) %>%
+        add_annotations(
+          x = 0.5,  
+          y = 0.575,  
+          text = "1s of TWh",  
+          xref = "paper",  
+          yref = "paper",  
+          xanchor = "center",  
+          yanchor = "bottom",  
+          showarrow = FALSE
+        ) %>%
+        add_annotations(
+          x = 0.5,  
+          y = 0.35,  
+          text = "100s of GWh",  
+          xref = "paper",  
+          yref = "paper",  
+          xanchor = "center",  
+          yanchor = "bottom",  
+          showarrow = FALSE
+        ) %>%
+        add_annotations(
+          x = 0.5,  
+          y = 0.15,  
+          text = "10s of GWh",  
+          xref = "paper",  
+          yref = "paper",  
+          xanchor = "center",  
+          yanchor = "bottom",  
+          showarrow = FALSE
+        ) %>%
+        add_annotations(
+          x = 0.5,  
+          y = -0.1,  
+          text = "KWh to 1s of GWh",  
+          xref = "paper",  
+          yref = "paper",  
+          xanchor = "center",  
+          yanchor = "bottom",  
+          showarrow = FALSE
+        )
+      
+      ggplotly(p3)
+      
+    }
+  })
+  
   #Tab 3: Company Analysis
   
   ########################################################
@@ -158,6 +568,7 @@ server <- function(input, output, session) {
   datatable(selected_company_stats, rownames = FALSE, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){",
                                                                                   "  $(thead).remove();",
                                                                                   "}")))
+  
   })
   
   ##############################

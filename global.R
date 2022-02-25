@@ -5,7 +5,6 @@ library(lubridate)
 library(shiny)
 library(shiny.router)
 library(shiny.fluent)
-library(shiny.router)
 library(xlsx)
 library(readxl)
 library(DT)
@@ -14,6 +13,7 @@ library(gt)
 library(scales)
 library(tidyselect)
 library(waiter)
+library(fastDummies)
 
 ##################################################
 #### NOTE: Need to transfer over code from data_preprocessing.Rmd to 
@@ -32,6 +32,26 @@ library(waiter)
 ##################################################
 ########### Tab 3 - Industry Trends ##############
 ##################################################
+
+#Generate list of scope options
+unique_scope_selection <- list()
+industry_trends_scopes <- c('Data Centers', 'Company Wide')
+
+for (i in 1:length(industry_trends_scopes)) {
+  
+  unique_scope_selection[[i]]<- list(key = {industry_trends_scopes[i]}, 
+                               text = {industry_trends_scopes[i]})
+}
+
+#Generate list of years
+unique_years <- list()
+industry_trends_years <- str_subset(sort(unique(data_sheet_energy_transformed$data_year)),"")
+
+for (i in 1:length(industry_trends_years)) {
+  
+  unique_years[[i]]<- list(key = {industry_trends_years[i]}, 
+                               text = {industry_trends_years[i]})
+}
 
 ##################################################
 ########### Tab 4 - Company Profiles #############
