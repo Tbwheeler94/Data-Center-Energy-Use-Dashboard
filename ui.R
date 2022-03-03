@@ -33,6 +33,16 @@ CompanyCard <- function(..., title = NULL) {
   )
 }
 
+GraphCard <- function(..., title = NULL) {
+  
+  Stack(
+    class = "ms-depth-8",
+    tokens = list(padding = 20, childrenGap = 5),
+    style = 'border-radius: 5px; background-color: white; border-top: 8px solid #137AD1; max-height:400px; overflow-y: scroll; position: relative; overflow-y: scroll;',
+    ...  
+  )
+}
+
 ################################
 ##########Grid Layout###########
 ################################
@@ -118,6 +128,7 @@ dc_energy_101_page <- makePage(
 #############################################
 
 industry_trends_page <- makePage(
+  
   div(
     Grid(
       GridItem(class = "ms-sm12 ms-xl12", 
@@ -131,16 +142,33 @@ industry_trends_page <- makePage(
                CompanyCard(
                  Dropdown.shinyInput("input_year", 
                                      options = unique_years,
-                                     value = "2020",
-                                     placeHolder = "2020",
+                                     value = "2021",
+                                     placeHolder = "2021",
                                      dropdownWidth = 150),
                  Dropdown.shinyInput("input_reporting_scope", 
                                      options = unique_scope_selection,
                                      value = "Data Centers",
                                      placeHolder = "Data Centers",
-                                     dropdownWidth = 150),
-                 plotlyOutput('energy_use_aggregated')
+                                     dropdownWidth = 150)
                )
+      )
+    ),
+    Grid(
+      GridItem(class = "ms-sm12 ms-xl6",
+               GraphCard(plotlyOutput('energy_use_aggregated'))),
+      GridItem(class = "ms-sm12 ms-xl6",
+               GraphCard())
+    ),
+    div(id = "test-container",
+      Grid(
+        GridItem(class = "ms-sm12 ms-xl6",
+                 GraphCard()),
+        GridItem(class = "ms-sm12 ms-xl6",
+                 GraphCard())
+      ),
+      Grid(
+        GridItem(class = "ms-sm12 ms-xl6",
+                 GraphCard())
       )
     )
   )

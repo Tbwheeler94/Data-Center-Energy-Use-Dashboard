@@ -14,6 +14,7 @@ library(scales)
 library(tidyselect)
 library(waiter)
 library(fastDummies)
+library(shinyjs)
 
 ##################################################
 #### NOTE: Need to transfer over code from data_preprocessing.Rmd to 
@@ -45,7 +46,7 @@ for (i in 1:length(industry_trends_scopes)) {
 
 #Generate list of years
 unique_years <- list()
-industry_trends_years <- str_subset(sort(unique(data_sheet_energy_transformed$data_year)),"")
+industry_trends_years <- str_subset(sort(unique(data_sheet_energy_transformed$data_year), decreasing = TRUE),"")
 
 for (i in 1:length(industry_trends_years)) {
   

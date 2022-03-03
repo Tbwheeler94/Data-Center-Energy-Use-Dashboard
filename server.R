@@ -329,8 +329,8 @@ server <- function(input, output, session) {
       ggplotly(dc)
     } 
     
-    else {
-      energy_use_final <- energy_use_final()
+    else if ("Company Wide" %in% energy_use_final()$energy_reporting_scope) {
+      energy_use_final <- energy_use_final() %>% as.data.frame()
       deleted_rows_1 <- vector()
       deleted_rows_2 <- vector()
       deleted_rows_3 <- vector()
@@ -443,8 +443,23 @@ server <- function(input, output, session) {
           showarrow = FALSE
         )
       
-      ggplotly(p3)
+      p3b
       
+    }
+    
+    else {
+      
+      ggplot() +
+        theme_void() +
+        geom_text(aes(0,0,label='No Data Reported for This Year')) +
+        xlab(NULL)
+    }
+  })
+  
+  observeEvent(input$input_reporting_scope, {
+    
+    if(input$input_reporting_scope == "Company Wide") { 
+      removeUI(selector = "div#test-container")
     }
   })
   
