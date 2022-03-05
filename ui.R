@@ -130,6 +130,7 @@ dc_energy_101_page <- makePage(
 industry_trends_page <- makePage(
   
   div(
+    Stack(style = "text-align: center; padding: 25px", Text("Trends in Data Center Transparency", variant = "xxLarge", style = "color: #137AD1;")),
     Grid(
       GridItem(class = "ms-sm12 ms-xl12", 
                CompanyCard(
@@ -137,9 +138,11 @@ industry_trends_page <- makePage(
                )
       )
     ),
+    Stack(style = "text-align: center; padding: 25px", Text("Industry Trends", variant = "xxLarge", style = "color: #137AD1;")),
     Grid(
-      GridItem(class = "ms-sm12 ms-xl12", 
+      GridItem(class = "ms-sm12 ms-xl3", style = "align: center;",
                CompanyCard(
+                 Text("Select Year and Energy Reporting Scope", variant = "large", style = "text-align: center;"),
                  Dropdown.shinyInput("input_year", 
                                      options = unique_years,
                                      value = "2021",
@@ -147,19 +150,19 @@ industry_trends_page <- makePage(
                                      dropdownWidth = 150),
                  Dropdown.shinyInput("input_reporting_scope", 
                                      options = unique_scope_selection,
-                                     value = "Data Centers",
-                                     placeHolder = "Data Centers",
+                                     value = "Company Wide",
+                                     placeHolder = "Company Wide",
                                      dropdownWidth = 150)
                )
       )
     ),
-    Grid(
-      GridItem(class = "ms-sm12 ms-xl6",
-               GraphCard(plotlyOutput('energy_use_aggregated'))),
-      GridItem(class = "ms-sm12 ms-xl6",
-               GraphCard())
-    ),
-    div(id = "test-container",
+    div(id = 'testbox1',
+      Grid(
+        GridItem(class = "ms-sm12 ms-xl6",
+                 GraphCard(plotlyOutput('energy_use_aggregated'))),
+        GridItem(class = "ms-sm12 ms-xl6",
+                 GraphCard())
+      ),
       Grid(
         GridItem(class = "ms-sm12 ms-xl6",
                  GraphCard()),
@@ -170,7 +173,7 @@ industry_trends_page <- makePage(
         GridItem(class = "ms-sm12 ms-xl6",
                  GraphCard())
       )
-    )
+   )
   )
 )
 
@@ -385,6 +388,7 @@ shiny_router_js_src <- file.path("shiny.router", "shiny.router.js")
 shiny_router_script_tag <- shiny::tags$script(type = "text/javascript", src = shiny_router_js_src)
 
 ui <- fluentPage(
+  useShinyjs(),
   layout(router$ui),
   tags$head(
     tags$link(href = "style.css", rel = "stylesheet", type = "text/css"),

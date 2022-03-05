@@ -36,12 +36,15 @@ server <- function(input, output, session) {
   
   })
   
-  #Tab 2: Industry Trends
+  ########################################################
+  ########################################################
+  ###### Tab 2: Industry Trends  ######################### 
+  ########################################################
+  ########################################################
   
   ########################################################
   ###### Generate reactive datasets for sub-rendering ####
   ########################################################
-  
   
   ########################
   #Dataset 1##############
@@ -458,12 +461,19 @@ server <- function(input, output, session) {
   
   observeEvent(input$input_reporting_scope, {
     
-    if(input$input_reporting_scope == "Company Wide") { 
-      removeUI(selector = "div#test-container")
+    if(input$input_reporting_scope == "Data Centers") { 
+      shinyjs::hide(selector = "div#testbox1")
+    } else if (input$input_reporting_scope == "Company Wide") {
+      shinyjs::show(selector = "div#testbox1")
     }
+    
   })
   
-  #Tab 3: Company Analysis
+  ########################################################
+  ########################################################
+  ###### Tab 3: Company Analysis  ######################## 
+  ########################################################
+  ########################################################
   
   ########################################################
   ###### Generate reactive datasets for sub-rendering ####
@@ -713,7 +723,7 @@ server <- function(input, output, session) {
       mutate_if(is.numeric, ~round(., 3))
     
       #If the dataframe contains at least 1 row, perform the following function
-      if (nrow(selected_company_electricity_use_filter != 0)) {
+      if (nrow(selected_company_electricity_use_filter) != 0) {
         selected_company_electricity_use_filter <- 
           selected_company_electricity_use_filter %>% 
           mutate(category = factor(category, levels = c("Data centers", "Self-managed", "Leased", "Total company", "Data center % of total electricity"))) %>%
@@ -765,7 +775,7 @@ server <- function(input, output, session) {
     
     selected_company_fuel_use_filter <- 
       data_sheet_energy_transformed %>% 
-      filter(company == "Facebook") %>% 
+      filter(company == input$selected_company) %>% 
       mutate_at(vars(fuel_1_converted, #replace na values with 0
                      fuel_2_converted, fuel_3_converted, fuel_4_converted, 
                      fuel_5_converted), ~replace_na(., 0)) %>%
@@ -803,7 +813,7 @@ server <- function(input, output, session) {
       mutate_if(is.numeric, ~round(., 3))
     
     #If the number of rows in the dataframe is not equal to 0
-    if (nrow(selected_company_fuel_use_filter != 0)) {
+    if (nrow(selected_company_fuel_use_filter) != 0) {
       selected_company_fuel_use_filter <- 
         selected_company_fuel_use_filter %>% 
         mutate(category = factor(category, levels = c("Data centers", "Self-managed", "Leased"))) %>% 
@@ -893,7 +903,7 @@ server <- function(input, output, session) {
       mutate_if(is.numeric, ~round(., 3))
     
     #If the number of rows in the dataframe is not equal to 0
-    if (nrow(selected_company_ns_energy_use_filter != 0)) {
+    if (nrow(selected_company_ns_energy_use_filter) != 0) {
       
       selected_company_ns_energy_use_filter <- 
         selected_company_ns_energy_use_filter %>% 
@@ -953,7 +963,7 @@ server <- function(input, output, session) {
         replace(is.na(.), "") %>% 
         rename(c("Facility Scope and Location" = pue_facility_geographic))
     
-    if (nrow(selected_company_pue_filter != 0)) {
+    if (nrow(selected_company_pue_filter) != 0) {
       
       possible_years_pue <- c(2007:as.integer(tail(colnames(selected_company_pue_filter), n=1)))
       extra_years_pue <- list()

@@ -23,53 +23,21 @@ library(shinyjs)
 ##################################################
 
 ##################################################
-################ Tab 1 - Home ####################
-##################################################
-
-##################################################
-######## Tab 2 - Data Center Energy 101 ##########
-##################################################
-
-##################################################
-########### Tab 3 - Industry Trends ##############
-##################################################
-
-#Generate list of scope options
-unique_scope_selection <- list()
-industry_trends_scopes <- c('Data Centers', 'Company Wide')
-
-for (i in 1:length(industry_trends_scopes)) {
-  
-  unique_scope_selection[[i]]<- list(key = {industry_trends_scopes[i]}, 
-                               text = {industry_trends_scopes[i]})
-}
-
-#Generate list of years
-unique_years <- list()
-industry_trends_years <- str_subset(sort(unique(data_sheet_energy_transformed$data_year), decreasing = TRUE),"")
-
-for (i in 1:length(industry_trends_years)) {
-  
-  unique_years[[i]]<- list(key = {industry_trends_years[i]}, 
-                               text = {industry_trends_years[i]})
-}
-
-##################################################
-########### Tab 4 - Company Profiles #############
+### Import All Raw Sheets and Pre-process Data ###
 ##################################################
 
 #Import raw energy spreadsheet
 data_sheet_energy_raw <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 1, #the "1" specifies to import sheet 1
-                                
-                                #specify column data types to ensure proper recognition
-                                colClasses=c("character","integer","Date","Date","character", #columns 1-5
-                                             "character", "character","character","numeric","integer", #columns 6-10
-                                             "character", "character","character","character","numeric", #columns 11-15 (Fuel 1)
-                                             "integer", "character","character","character","numeric", #columns 15-20 (Fuel 2)
-                                             "integer", "character","character","character","numeric", #columns 21-25 (Fuel 3)
-                                             "integer", "character","character","character","numeric", #columns 26-30 (Fuel 4)
-                                             "integer", "character","character","character","numeric", #columns 31-35 (Fuel 5)
-                                             "integer", "character")) #column 36, 37 (Notes)
+                                    
+                                    #specify column data types to ensure proper recognition
+                                    colClasses=c("character","integer","Date","Date","character", #columns 1-5
+                                                 "character", "character","character","numeric","integer", #columns 6-10
+                                                 "character", "character","character","character","numeric", #columns 11-15 (Fuel 1)
+                                                 "integer", "character","character","character","numeric", #columns 15-20 (Fuel 2)
+                                                 "integer", "character","character","character","numeric", #columns 21-25 (Fuel 3)
+                                                 "integer", "character","character","character","numeric", #columns 26-30 (Fuel 4)
+                                                 "integer", "character","character","character","numeric", #columns 31-35 (Fuel 5)
+                                                 "integer", "character")) #column 36, 37 (Notes)
 
 #move second row values to column headers, put header names in tidy format
 data_sheet_energy_raw <- data_sheet_energy_raw %>% 
@@ -176,10 +144,45 @@ data_sheet_energy_combined_5 <- data_sheet_energy_transformed %>%
   rename(value = fuel_5_converted)
 
 by_fuel_type_data <- rbind(data_sheet_energy_electricity, data_sheet_energy_combined_1, #stack converted electricity, fuel values sheets on top of each other
-        data_sheet_energy_combined_2, data_sheet_energy_combined_3,
-        data_sheet_energy_combined_4, data_sheet_energy_combined_5) %>%
+                           data_sheet_energy_combined_2, data_sheet_energy_combined_3,
+                           data_sheet_energy_combined_4, data_sheet_energy_combined_5) %>%
   drop_na()
 
+##################################################
+################ Tab 1 - Home ####################
+##################################################
+
+##################################################
+######## Tab 2 - Data Center Energy 101 ##########
+##################################################
+
+##################################################
+########### Tab 3 - Industry Trends ##############
+##################################################
+
+#Generate list of scope options
+unique_scope_selection <- list()
+industry_trends_scopes <- c('Data Centers', 'Company Wide')
+
+for (i in 1:length(industry_trends_scopes)) {
+  
+  unique_scope_selection[[i]]<- list(key = {industry_trends_scopes[i]}, 
+                               text = {industry_trends_scopes[i]})
+}
+
+#Generate list of years
+unique_years <- list()
+industry_trends_years <- str_subset(sort(unique(data_sheet_energy_transformed$data_year), decreasing = TRUE),"")
+
+for (i in 1:length(industry_trends_years)) {
+  
+  unique_years[[i]]<- list(key = {industry_trends_years[i]}, 
+                               text = {industry_trends_years[i]})
+}
+
+##################################################
+########### Tab 4 - Company Profiles #############
+##################################################
 
 #generate unique list of companies in alphabetical order and drop blank
 unique_companies <- list()
