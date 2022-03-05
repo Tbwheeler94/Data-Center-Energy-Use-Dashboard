@@ -184,6 +184,9 @@ for (i in 1:length(industry_trends_years)) {
 ########### Tab 4 - Company Profiles #############
 ##################################################
 
+no_data <- data.frame(no_data_reported = "No data reported")
+`%not_in%` <- purrr::negate(`%in%`)
+
 #generate unique list of companies in alphabetical order and drop blank
 unique_companies <- list()
 companies <- str_subset(sort(unique(data_sheet_energy_raw$company)),"")
