@@ -16,6 +16,8 @@ library(waiter)
 library(fastDummies)
 library(shinyjs)
 
+source(here("R", "transformEnergyDataRaw.R"))
+
 ##################################################
 #### NOTE: Need to transfer over code from data_preprocessing.Rmd to 
 #### data_sheet_energy_transformed <- read.csv(here('data', 'data_sheet_energy_transformed.csv'))
@@ -28,16 +30,16 @@ library(shinyjs)
 
 #Import raw energy spreadsheet
 data_sheet_energy_raw <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 1, #the "1" specifies to import sheet 1
-                                    
-                                    #specify column data types to ensure proper recognition
-                                    colClasses=c("character","integer","Date","Date","character", #columns 1-5
-                                                 "character", "character","character","numeric","integer", #columns 6-10
-                                                 "character", "character","character","character","numeric", #columns 11-15 (Fuel 1)
-                                                 "integer", "character","character","character","numeric", #columns 15-20 (Fuel 2)
-                                                 "integer", "character","character","character","numeric", #columns 21-25 (Fuel 3)
-                                                 "integer", "character","character","character","numeric", #columns 26-30 (Fuel 4)
-                                                 "integer", "character","character","character","numeric", #columns 31-35 (Fuel 5)
-                                                 "integer", "character")) #column 36, 37 (Notes)
+                                
+                                #specify column data types to ensure proper recognition
+                                colClasses=c("character","integer","Date","Date","character", #columns 1-5
+                                             "character", "character","character","numeric","integer", #columns 6-10
+                                             "character", "character","character","character","numeric", #columns 11-15 (Fuel 1)
+                                             "integer", "character","character","character","numeric", #columns 15-20 (Fuel 2)
+                                             "integer", "character","character","character","numeric", #columns 21-25 (Fuel 3)
+                                             "integer", "character","character","character","numeric", #columns 26-30 (Fuel 4)
+                                             "integer", "character","character","character","numeric", #columns 31-35 (Fuel 5)
+                                             "integer", "character")) #column 36, 37 (Notes)
 
 #move second row values to column headers, put header names in tidy format
 data_sheet_energy_raw <- data_sheet_energy_raw %>% 
@@ -102,51 +104,8 @@ data_sheet_pue_raw <- data_sheet_pue_raw %>%
 colnames(data_sheet_pue_raw) [2] <- 'applicable_year'
 colnames(data_sheet_pue_raw) [6] <- 'pue_value'
 
-#Import pre-tranformed energy spreadsheet
-data_sheet_energy_transformed <- read.csv(here('data', 'data_sheet_energy_transformed.csv'))
-
-#Isolate fuel values from transformed dataset and then stack - for fuel data graph
-#isolate electricity values
-data_sheet_energy_electricity <- data_sheet_energy_transformed %>% 
-  select("company", "data_year", "electricity_converted") %>% 
-  add_column(fuel_type = "Electricity") %>% 
-  relocate("fuel_type", .after = data_year) %>% 
-  rename(value = electricity_converted)
-
-#isolate fuel 1 values
-data_sheet_energy_combined_1 <- data_sheet_energy_transformed %>% 
-  select("company", "data_year", "fuel_1_type", "fuel_1_converted") %>% 
-  rename(fuel_type = fuel_1_type) %>% 
-  rename(value = fuel_1_converted)
-
-#isolate fuel 2 values
-data_sheet_energy_combined_2 <- data_sheet_energy_transformed %>% 
-  select("company", "data_year", "fuel_2_type", "fuel_2_converted") %>% 
-  rename(fuel_type = fuel_2_type) %>% 
-  rename(value = fuel_2_converted)
-
-#isolate fuel 3 values
-data_sheet_energy_combined_3 <- data_sheet_energy_transformed %>% 
-  select("company", "data_year", "fuel_3_type", "fuel_3_converted") %>% 
-  rename(fuel_type = fuel_3_type) %>% 
-  rename(value = fuel_3_converted)
-
-#isolate fuel 4 values
-data_sheet_energy_combined_4 <- data_sheet_energy_transformed %>% 
-  select("company", "data_year", "fuel_4_type", "fuel_4_converted") %>% 
-  rename(fuel_type = fuel_4_type) %>% 
-  rename(value = fuel_4_converted)
-
-#isolate fuel 5 values
-data_sheet_energy_combined_5 <- data_sheet_energy_transformed %>% 
-  select("company", "data_year", "fuel_5_type", "fuel_5_converted") %>% 
-  rename(fuel_type = fuel_5_type) %>% 
-  rename(value = fuel_5_converted)
-
-by_fuel_type_data <- rbind(data_sheet_energy_electricity, data_sheet_energy_combined_1, #stack converted electricity, fuel values sheets on top of each other
-                           data_sheet_energy_combined_2, data_sheet_energy_combined_3,
-                           data_sheet_energy_combined_4, data_sheet_energy_combined_5) %>%
-  drop_na()
+#Transform raw spreadsheet
+data_sheet_energy_transformed <- transformEnergyDataRaw(data_sheet_energy_raw) #read.csv(here('data', 'data_sheet_energy_transformed.csv'))
 
 ##################################################
 ################ Tab 1 - Home ####################
