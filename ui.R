@@ -38,7 +38,7 @@ GraphCard <- function(..., title = NULL) {
   Stack(
     class = "ms-depth-8",
     tokens = list(padding = 20, childrenGap = 5),
-    style = 'border-radius: 5px; background-color: white; border-top: 8px solid #137AD1; max-height:600px; overflow-y: scroll; position: relative;',
+    style = 'border-radius: 5px; background-color: white; border-top: 8px solid #137AD1; max-height:500px; overflow-y: scroll; position: relative;',
     ...  
   )
 }
@@ -140,9 +140,13 @@ industry_trends_page <- makePage(
     ),
     Stack(style = "text-align: center; padding: 25px", Text("Industry Trends", variant = "xxLarge", style = "color: #137AD1;")),
     Grid(
-      GridItem(class = "ms-sm12 ms-xl3", style = "align: center;",
-               CompanyCard(
+      GridItem(class = "ms-xl4"),
+      GridItem(class = "ms-sm12 ms-xl4",
+               Stack(class = "ms-depth-8",
+                     tokens = list(padding = 20, childrenGap = 5),
+                     style = 'border-radius: 5px; background-color: white; border-top: 8px solid #137AD1;',
                  Text("Select Year and Energy Reporting Scope", variant = "large", style = "text-align: center;"),
+                 br(),
                  Dropdown.shinyInput("input_year", 
                                      options = unique_years,
                                      value = "2020",
@@ -156,29 +160,29 @@ industry_trends_page <- makePage(
                )
       )
     ),
-    div(id = 'testbox2',
+    div(id = 'data-center-plots',
         Grid(
           GridItem(class = "ms-sm12 ms-xl12",
            GraphCard(plotlyOutput('data_centerplot'))
            )
           )
         ),
-    div(id = 'testbox1',
+    div(id = 'company-wide-plots',
       Grid(
         GridItem(class = "ms-sm12 ms-xl6",
-                 GraphCard(plotlyOutput('company_wide_plot_1'))),
+                 GraphCard(plotOutput('company_wide_plot_1'))),
         GridItem(class = "ms-sm12 ms-xl6",
-                 GraphCard(plotlyOutput('company_wide_plot_2')))
+                 GraphCard(plotOutput('company_wide_plot_2')))
       ),
       Grid(
         GridItem(class = "ms-sm12 ms-xl6",
-                 GraphCard(plotlyOutput('company_wide_plot_3'))),
+                 GraphCard(plotOutput('company_wide_plot_3'))),
         GridItem(class = "ms-sm12 ms-xl6",
-                 GraphCard(plotlyOutput('company_wide_plot_4')))
+                 GraphCard(plotOutput('company_wide_plot_4')))
       ),
       Grid(
         GridItem(class = "ms-sm12 ms-xl6",
-                 GraphCard(plotlyOutput('company_wide_plot_5')))
+                 GraphCard(plotOutput('company_wide_plot_5')))
       )
    )
   )

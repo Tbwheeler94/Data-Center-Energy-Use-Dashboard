@@ -119,7 +119,7 @@ data_sheet_energy_transformed <- transformEnergyDataRaw(data_sheet_energy_raw) #
 ########### Tab 3 - Industry Trends ##############
 ##################################################
 
-#Generate list of scope options
+#Generate list of scope options for UI dropdown
 unique_scope_selection <- list()
 industry_trends_scopes <- c('Data Centers', 'Company Wide')
 
@@ -129,7 +129,7 @@ for (i in 1:length(industry_trends_scopes)) {
                                text = {industry_trends_scopes[i]})
 }
 
-#Generate list of years
+#Generate list of years for UI dropdown
 unique_years <- list()
 industry_trends_years <- str_subset(sort(unique(data_sheet_energy_transformed$data_year), decreasing = TRUE),"")
 
@@ -162,4 +162,4 @@ for (i in 1:length(companies)) {
 
 #Tab 6 -
 
-#Tab 7 - Methodology
+#Tab 7 - 

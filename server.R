@@ -120,8 +120,13 @@ server <- function(input, output, session) {
   })
   
   ###########################################################
-  # Generate Data Center or Company Wide Plots ##############
+  # Generate Data Center and Company Wide Plots ##############
   ###########################################################
+  
+  #create plot pops up if there is no data
+  void_plot <- ggplot() +
+                theme_void() +
+                xlab(NULL)
   
   ##################################
   ### Generate Data Center Plot ####
@@ -134,182 +139,174 @@ server <- function(input, output, session) {
   ##################################################
   ### Generate Company Wide Subdataset and Plots ###
   ##################################################
+  #
   
-  #energy_use_final <- reactive({ energy_use_final() %>% as.data.frame() })
-  #deleted_rows_1 <- vector()
-  #deleted_rows_2 <- vector()
-  #deleted_rows_3 <- vector()
-  #deleted_rows_4 <- vector()
-  #deleted_rows_5 <- vector()
-  #a <- 1
-  #b <- 1
-  #c <- 1
-  #d <- 1
-  #e <- 1
-  #for (i in 1:nrow(energy_use_final)) {
-  #  if (energy_use_final[i,5] > 10000000000) {
-  #    deleted_rows_1[a] <- i
-  #    a <- a + 1
-  #  } else if (energy_use_final[i,5] > 1000000000 && energy_use_final[i,5] < 10000000000) {
-  #    deleted_rows_2[b] <- i
-  #    b <- b + 1
-  #  } else if (energy_use_final[i,5] > 100000000 && energy_use_final[i,5] < 1000000000) {
-  #    deleted_rows_3[c] <- i
-  #    c <- c + 1
-  #  } else if (energy_use_final[i,5] > 10000000 && energy_use_final[i,5] < 100000000) {
-  #    deleted_rows_4[d] <- i
-  #    d <- d + 1
-  #  } else {
-  #    deleted_rows_5[e] <- i
-  #    e <- e + 1
-  #  }
-  #}
-  #
-  #energy_use_L2_1 <- energy_use_final[c(deleted_rows_1), ]
-  #energy_use_L2_2 <- energy_use_final[c(deleted_rows_2), ]
-  #energy_use_L2_3 <- energy_use_final[c(deleted_rows_3), ]
-  #energy_use_L2_4 <- energy_use_final[c(deleted_rows_4), ]
-  #energy_use_L2_5 <- energy_use_final[c(deleted_rows_5), ]
-  #
-  ############################
-  #### Company Wide Plot 1 ###
-  ############################
-  #
-  #output$company_wide_plot_1 <- renderPlotly({
-  #  
-  #  buildIndustryTrendsCompanyWide1Plot(energy_use_L2_1)
-  #  
-  #})
-  #
-  ############################
-  #### Company Wide Plot 2 ###
-  ############################
-  #
-  #output$company_wide_plot_2 <- renderPlotly({
-  #  
-  #  buildIndustryTrendsCompanyWide2Plot(energy_use_L2_2)
-  #
-  #})
-  #
-  ############################
-  #### Company Wide Plot 3 ###
-  ############################
-  #
-  #output$company_wide_plot_3 <- renderPlotly({
-  #  
-  #  buildIndustryTrendsCompanyWide3Plot(energy_use_L2_3)
-  #
-  #})
-  #
-  ############################
-  #### Company Wide Plot 4 ###
-  ############################
-  #
-  #output$company_wide_plot_4 <- renderPlotly({
-  #  
-  #  buildIndustryTrendsCompanyWide4Plot(energy_use_L2_4)
-  #  
-  #})
-  #
-  ############################
-  #### Company Wide Plot 5 ###
-  ############################
-  #
-  #output$company_wide_plot_5 <- renderPlotly({
-  #  
-  #  buildIndustryTrendsCompanyWide5Plot(energy_use_L2_5)
-  #  
-  #})
+  company_wide_graph_height <- function(input) {
+    if(nrow(input) == 0) {
+      350
+    } else if (nrow(input) == 1) {
+      125 
+    } else if (nrow(input) == 2) {
+      200
+    } else if (nrow(input) == 3) {
+      300
+    } else if (nrow(input) == 4) {
+      400
+    } else if (nrow(input) == 5) {
+      500
+    } else {
+      500 + nrow(input)*10
+    }
+  }
+  ###########################
+  ### Company Wide Plot 1 ###
+  ###########################
   
+  energy_use_L2_1 <- reactive({ 
+    energy_use_final() %>% 
+      filter(electricity_converted < 10000000)
+  })
   
+  company_wide_plot_1_height <- reactive({
+    company_wide_graph_height(energy_use_L2_1())
+  })
   
-  #p3a <- plot_ly() %>% 
-  #  add_trace(x=energy_use_L2_1$electricity_converted, 
-  #            y=reorder(energy_use_L2_1$company, energy_use_L2_1$electricity_converted), 
-  #            type="bar", width = 0.5, marker = list(color = "rgb(255,127,80)")) 
-  #
-  #p3b <- plot_ly() %>% 
-  #  add_trace(x=energy_use_L2_2$electricity_converted, 
-  #            y=reorder(energy_use_L2_2$company, energy_use_L2_2$electricity_converted),
-  #            type="bar", width = 0.8, marker = list(color = "rgb(255,255,0)"))
-  #
-  #p3c <- plot_ly() %>% 
-  #  add_trace(x=energy_use_L2_3$electricity_converted, 
-  #            y=reorder(energy_use_L2_3$company, energy_use_L2_3$electricity_converted),
-  #            type="bar", width = 0.8, marker = list(color = "rgb(0,250,154)"))
-  #
-  #p3d <- plot_ly() %>% 
-  #  add_trace(x=energy_use_L2_4$electricity_converted, 
-  #            y=reorder(energy_use_L2_4$company, energy_use_L2_4$electricity_converted),
-  #            type="bar", width = 0.5, marker = list(color = "rgb(0,191,255)")) 
-  #
-  #p3e <- plot_ly() %>% 
-  #  add_trace(x=energy_use_L2_5$electricity_converted, 
-  #            y=reorder(energy_use_L2_5$company, energy_use_L2_5$electricity_converted),
-  #            type="bar", width = 0.5, marker = list(color = "rgb(128,0,128)"))
-  #
-  #p3 <- subplot(p3a,p3b,p3c,p3d,p3e, nrows = 5, margin = 0.05)
-  #
-  #p3 <- p3 %>% add_annotations(
-  #  x = 0.5,  
-  #  y = 0.77,  
-  #  text = "10s of TWh",  
-  #  xref = "paper",  
-  #  yref = "paper",  
-  #  xanchor = "center",  
-  #  yanchor = "bottom",  
-  #  showarrow = FALSE) %>%
-  #  add_annotations(
-  #    x = 0.5,  
-  #    y = 0.575,  
-  #    text = "1s of TWh",  
-  #    xref = "paper",  
-  #    yref = "paper",  
-  #    xanchor = "center",  
-  #    yanchor = "bottom",  
-  #    showarrow = FALSE
-  #  ) %>%
-  #  add_annotations(
-  #    x = 0.5,  
-  #    y = 0.35,  
-  #    text = "100s of GWh",  
-  #    xref = "paper",  
-  #    yref = "paper",  
-  #    xanchor = "center",  
-  #    yanchor = "bottom",  
-  #    showarrow = FALSE
-  #  ) %>%
-  #  add_annotations(
-  #    x = 0.5,  
-  #    y = 0.15,  
-  #    text = "10s of GWh",  
-  #    xref = "paper",  
-  #    yref = "paper",  
-  #    xanchor = "center",  
-  #    yanchor = "bottom",  
-  #    showarrow = FALSE
-  #  ) %>%
-  #  add_annotations(
-  #    x = 0.5,  
-  #    y = -0.1,  
-  #    text = "KWh to 1s of GWh",  
-  #    xref = "paper",  
-  #    yref = "paper",  
-  #    xanchor = "center",  
-  #    yanchor = "bottom",  
-  #    showarrow = FALSE
-  #  )
-  #
-  #p3b
+  output$company_wide_plot_1 <- renderPlot({
+    
+    if (nrow(energy_use_L2_1()) != 0) {
+      
+      buildIndustryTrendsCompanyWide1Plot(energy_use_L2_1())
+      
+    } else {
+      
+      void_plot +
+        geom_text(aes(0,0,label='No Data Reported At The Scale of KWh to 1s of GWh'), size = 7)
+      
+    }
+    
+  }, height = reactive({company_wide_plot_1_height()}))
   
+  ###########################
+  ### Company Wide Plot 2 ###
+  ###########################
+  
+  energy_use_L2_2 <- reactive({ 
+    energy_use_final() %>% 
+      filter(electricity_converted > 10000000, electricity_converted < 100000000)
+  })
+  
+  company_wide_plot_2_height <- reactive({
+    company_wide_graph_height(energy_use_L2_2())
+  })
+  
+  output$company_wide_plot_2 <- renderPlot({
+    
+    if (nrow(energy_use_L2_2()) != 0) {
+      
+      buildIndustryTrendsCompanyWide2Plot(energy_use_L2_2())
+      
+    } else {
+      
+      void_plot +
+        geom_text(aes(0,0,label='No Data Reported At The Scale of 10s of GWh'), size = 7)
+      
+    }
+  
+  }, height = reactive({company_wide_plot_2_height()}))
+  
+  ###########################
+  ### Company Wide Plot 3 ###
+  ###########################
+  
+  energy_use_L2_3 <- reactive({ 
+    energy_use_final() %>% 
+      filter(electricity_converted > 100000000, electricity_converted < 1000000000)
+  })
+  
+  company_wide_plot_3_height <- reactive({
+    company_wide_graph_height(energy_use_L2_3())
+  })
+  
+  output$company_wide_plot_3 <- renderPlot({
+    
+    if (nrow(energy_use_L2_3()) != 0) {
+      
+      buildIndustryTrendsCompanyWide3Plot(energy_use_L2_3())
+      
+    } else {
+      
+      void_plot +
+        geom_text(aes(0,0,label='No Data Reported At The Scale of 100s of GWh'), size = 7)
+      
+    }
+  
+  }, height = reactive({company_wide_plot_3_height()}))
+  
+  ###########################
+  ### Company Wide Plot 4 ###
+  ###########################
+  
+  energy_use_L2_4 <- reactive({ 
+    energy_use_final() %>% 
+    filter(electricity_converted > 1000000000, electricity_converted < 10000000000)
+  })
+  
+  company_wide_plot_4_height <- reactive({
+    company_wide_graph_height(energy_use_L2_4())
+  })
+  
+  output$company_wide_plot_4 <- renderPlot({
+    
+    if (nrow(energy_use_L2_4()) != 0) {
+      
+      buildIndustryTrendsCompanyWide4Plot(energy_use_L2_4())
+      
+    } else {
+      
+      void_plot +
+        geom_text(aes(0,0,label='No Data Reported At The Scale of 1s of TWh'), size = 7)
+      
+    }
+    
+  }, height = reactive({company_wide_plot_4_height()}))
+  
+  ###########################
+  ### Company Wide Plot 5 ###
+  ###########################
+  
+  energy_use_L2_5 <- reactive({ 
+    energy_use_final() %>% 
+      filter(electricity_converted > 10000000000)
+  })
+  
+  company_wide_plot_5_height <- reactive({
+    company_wide_graph_height(energy_use_L2_5())
+  })
+  
+  output$company_wide_plot_5 <- renderPlot({
+    
+    if (nrow(energy_use_L2_5()) != 0) {
+      
+      buildIndustryTrendsCompanyWide5Plot(energy_use_L2_5())
+      
+    } else {
+      
+      void_plot +
+        geom_text(aes(0,0,label='No Data Reported At The Scale of 10s of TWh and Greater'), size = 7)
+      
+    }
+    
+  }, height = reactive({company_wide_plot_5_height()}))
+  
+  #Conditionally show either 1 data center plot or 5 company wide plots depending on user selection
   observeEvent(input$input_reporting_scope, {
     
     if(input$input_reporting_scope == "Company Wide") { 
-      shinyjs::hide(selector = "div#testbox2")
-      shinyjs::show(selector = "div#testbox1")
+      shinyjs::hide(selector = "div#data-center-plots")
+      shinyjs::show(selector = "div#company-wide-plots")
     } else if (input$input_reporting_scope == "Data Centers") {
-      shinyjs::show(selector = "div#testbox2")
-      shinyjs::hide(selector = "div#testbox1")
+      shinyjs::show(selector = "div#data-center-plots")
+      shinyjs::hide(selector = "div#company-wide-plots")
     }
     
   })
@@ -520,102 +517,6 @@ server <- function(input, output, session) {
   #Electricity Use (TWh/yr)##############
   #######################################
   
-  #Original code before being transferred to function
-  
-  #no_data <- data.frame(no_data_reported = "No data reported")
-  #`%not_in%` <- purrr::negate(`%in%`)
-
-  #selected_company_electricity_use <- reactive({
-  #  
-  #  selected_company_electricity_use_filter <- 
-  #    data_sheet_energy_transformed %>% 
-  #    filter(company == input$selected_company) %>% #filter by selected company
-  #    mutate_at(vars(electricity_converted), ~replace_na(., 0)) %>% #replace any NA electricity values with 0
-  #    mutate_at(vars(level_of_ownership), ~replace_na(., "")) %>% #replace any NA level of ownership values with 0
-  #    filter(electricity_converted != 0) %>% #filter out any rows where reported electricity is equal to 0
-  #    filter(level_of_ownership != "Cloud") %>% #filter out any rows where reported electricity is from Cloud providers
-  #    select("data_year", "energy_reporting_scope", "level_of_ownership", "electricity_converted") %>% 
-  #    mutate(energy_reporting_scope = case_when(
-  #      energy_reporting_scope %in% c("Multiple Data Centers", "Single Data Center") ~ "Data center electricity use",
-  #      energy_reporting_scope %in% "Total Operations"                               ~ "Company-wide electricity use")) %>% 
-  #    group_by(data_year, energy_reporting_scope, level_of_ownership) %>% 
-  #    summarize(value = sum(electricity_converted)) %>% 
-  #    mutate(value = value/1000000000) %>%
-  #    unite(energy_reporting_scope, energy_reporting_scope:level_of_ownership, sep = " | ") %>% 
-  #    mutate(energy_reporting_scope = case_when(
-  #      energy_reporting_scope %in% "Data center electricity use | Leased" ~ "Leased",
-  #      energy_reporting_scope %in% "Data center electricity use | Self-managed" ~ "Self_managed",
-  #      energy_reporting_scope %in% "Data center electricity use | " ~ "Self_managed", #If no level of ownership is given, assume self managed
-  #      energy_reporting_scope %in% "Company-wide electricity use | Leased" ~ "Total_company",
-  #      energy_reporting_scope %in% "Company-wide electricity use | Self-managed" ~ "Total_company",
-  #      energy_reporting_scope %in% "Company-wide electricity use | " ~ "Total_company")) %>% #If no level of ownership is given, assume self managed
-  #    pivot_wider(names_from = energy_reporting_scope, values_from = value)
-  #  
-  #  #If the dataframe contains at least 1 row, perform the following function
-  #  if (nrow(selected_company_electricity_use_filter) != 0) { 
-  #    selected_company_electricity_use_filter <- selected_company_electricity_use_filter %>%
-  #      replace(is.na(.), 0) %>% 
-  #      mutate(Leased = ifelse("Leased" %in% names(.), Leased, 0),
-  #             Self_managed = ifelse("Self_managed" %in% names(.), Self_managed, 0),
-  #             Total_company = ifelse("Total_company" %in% names(.), Total_company, 0)) %>%
-  #      mutate(data_centers = Self_managed + Leased) %>% 
-  #      mutate(data_center_percentage = percent(data_centers/(data_centers + Total_company))) %>%
-  #      mutate_if(is.numeric, ~round(., 3)) %>%
-  #      mutate(Total_company = as.character(Total_company), Self_managed = as.character(Self_managed), 
-  #             Leased = as.character(Leased), data_centers = as.character(data_centers)) %>%
-  #      pivot_longer(!data_year, names_to = "category", values_to = "value") %>% 
-  #      # mutate(value = ifelse(category == 'data_center_percentage', percent(value), value))
-  #      pivot_wider(names_from = data_year, values_from = value) %>% 
-  #      mutate(category = case_when(
-  #        category %in% "Total_company" ~ "Total company",
-  #        category %in% "Self_managed" ~ "Self-managed",
-  #        category %in% "Leased" ~ "Leased",
-  #        category %in% "data_centers" ~ "Data centers",
-  #        category %in% "data_center_percentage" ~ "Data center % of total electricity"))
-  #    selected_company_electricity_use_filter <- 
-  #      selected_company_electricity_use_filter %>% 
-  #      mutate(category = factor(category, levels = c("Data centers", "Self-managed", "Leased", "Total company", "Data center % of total electricity"))) %>%
-  #      arrange(category) %>% 
-  #      add_column(format = c(1,0,0,1,1), .before = 'category')
-  #    
-  #    possible_years_electricity <- c(2007:as.integer(tail(colnames(selected_company_electricity_use_filter), n=1)))
-  #    extra_years_electricity <- list()
-  #    
-  #    j <- 1
-  #    for (i in 1:length(possible_years_electricity)) {
-  #      if (!(possible_years_electricity[i] %in% names(selected_company_electricity_use_filter))) {
-  #        extra_years_electricity[j] <- possible_years_electricity[i]
-  #        j <- j + 1
-  #      }
-  #    }
-  #    
-  #    selected_company_electricity_use_filter %>% 
-  #      add_column(!!!set_names(as.list(rep(0, length(extra_years_electricity))),nm=extra_years_electricity)) %>% 
-  #      select(sort(tidyselect::peek_vars())) %>% 
-  #      relocate(c(format, category), .before = '2007') %>% 
-  #      mutate_if(is.numeric, ~ifelse(. == 0, "", .))
-  #  }
-  #})
-  #
-  #output$electricity_use_table <- renderDataTable({
-  #  
-  #  #If the dataframe output from the reactive electricity dataset is not empty then insert the dataset into a datatable, else show the no_data datatable
-  #  if(!is.null(selected_company_electricity_use())) {
-  #  
-  #  datatable(selected_company_electricity_use(), rownames = FALSE, options = list(columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
-  #    formatStyle(
-  #      'category', 'format',
-  #      textAlign = styleEqual(c(0, 1), c('right', 'left')),
-  #      fontStyle = styleEqual(c(0, 1), c('italic', 'normal'))
-  #    )
-  #  } else {
-  #    datatable(no_data, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){",
-  #                                                                     "  $(thead).remove();",
-  #                                                                     "}")), rownames = FALSE)
-  #  }
-  #  
-  #})
-  
   output$electricity_use_table <- renderDataTable({
     buildCompanyProfileElectricityUsePlot(input$selected_company)
   })
@@ -625,95 +526,6 @@ server <- function(input, output, session) {
   #Other Fuel Use (TWh/yr)###############
   #######################################
   
-  #Original code before being transferred to function
-  
-  #selected_company_fuel_use <- reactive({
-  #  
-  #  selected_company_fuel_use_filter <- 
-  #    data_sheet_energy_transformed %>% 
-  #    filter(company == input$selected_company) %>% 
-  #    mutate_at(vars(fuel_1_converted, #replace na values with 0
-  #                   fuel_2_converted, fuel_3_converted, fuel_4_converted, 
-  #                   fuel_5_converted), ~replace_na(., 0)) %>%
-  #    rowwise() %>% 
-  #    mutate(total_other_energy_use = sum(c(fuel_1_converted,
-  #                                          fuel_2_converted, fuel_3_converted, fuel_4_converted, 
-  #                                          fuel_5_converted))) %>%
-  #    filter(level_of_ownership != "Cloud") %>% 
-  #    select("data_year", "energy_reporting_scope", "level_of_ownership", "total_other_energy_use") %>%
-  #    filter(total_other_energy_use != 0) %>%
-  #    filter(energy_reporting_scope == "Multiple Data Centers" | energy_reporting_scope == "Single Data Center") %>% 
-  #    mutate(energy_reporting_scope = case_when(
-  #      energy_reporting_scope %in% c("Multiple Data Centers", "Single Data Center") ~ "Data center other fuel use")) %>% 
-  #    group_by(data_year, energy_reporting_scope, level_of_ownership) %>% 
-  #    summarize(value = sum(total_other_energy_use)) %>% 
-  #    mutate(value = value/1000000000) %>%
-  #    unite(energy_reporting_scope, energy_reporting_scope:level_of_ownership, sep = " | ") %>% 
-  #    mutate(energy_reporting_scope = case_when(
-  #      energy_reporting_scope %in% "Data center other fuel use | Leased" ~ "Leased",
-  #      energy_reporting_scope %in% "Data center other fuel use | Cloud" ~ "Cloud",
-  #      energy_reporting_scope %in% "Data center other fuel use | Self-managed" ~ "Self_managed",
-  #      energy_reporting_scope %in% "Data center other fuel use | " ~ "Self_managed", #If no level of ownership is given, assume self managed
-  #      energy_reporting_scope %in% "Data center other fuel use | NA" ~ "Self_managed")) %>%
-  #    pivot_wider(names_from = energy_reporting_scope, values_from = value) %>% 
-  #    replace(is.na(.), 0) %>% 
-  #    mutate(Leased = ifelse("Leased" %in% names(.), Leased, 0),
-  #           Self_managed = ifelse("Self_managed" %in% names(.), Self_managed, 0)) %>%
-  #    mutate(data_centers = Self_managed + Leased) %>% 
-  #    pivot_longer(!data_year, names_to = "category", values_to = "value") %>% 
-  #    pivot_wider(names_from = data_year, values_from = value) %>% 
-  #    mutate(category = case_when(
-  #      category %in% "Self_managed" ~ "Self-managed",
-  #      category %in% "Leased" ~ "Leased",
-  #      category %in% "data_centers" ~ "Data centers")) %>% 
-  #    mutate_if(is.numeric, ~round(., 3))
-  #  
-  #  #If the number of rows in the dataframe is not equal to 0
-  #  if (nrow(selected_company_fuel_use_filter) != 0) {
-  #    selected_company_fuel_use_filter <- 
-  #      selected_company_fuel_use_filter %>% 
-  #      mutate(category = factor(category, levels = c("Data centers", "Self-managed", "Leased"))) %>% 
-  #      arrange(category) %>% 
-  #      add_column(format = c(1,0,0), .before = 'category')
-  #    
-  #    possible_years_fuel <- c(2007:as.integer(tail(colnames(selected_company_fuel_use_filter), n=1)))
-  #    extra_years_fuel <- list()
-  #    
-  #    j <- 1
-  #    for (i in 1:length(possible_years_fuel)) {
-  #      if (possible_years_fuel[i] %not_in% names(selected_company_fuel_use_filter)) {
-  #        extra_years_fuel[j] <- possible_years_fuel[i]
-  #        j <- j+1
-  #      }
-  #    }
-  #    
-  #    selected_company_fuel_use_filter %>% 
-  #      add_column(!!!set_names(as.list(rep(0, length(extra_years_fuel))),nm=extra_years_fuel)) %>% 
-  #      select(sort(tidyselect::peek_vars())) %>% 
-  #      relocate(c(format, category), .before = '2007') %>% 
-  #      mutate_if(is.numeric, ~ifelse(. == 0, "", .))
-  #  }
-  #  
-  #})
-  #
-  #output$other_fuel_use_table <- renderDataTable({
-  #  
-  #  if(!is.null(selected_company_fuel_use())) {
-  #    
-  #    datatable(selected_company_fuel_use(), rownames = FALSE, options = list(columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
-  #      formatStyle(
-  #        'category', 'format',
-  #        textAlign = styleEqual(c(0, 1), c('right', 'left')),
-  #        fontStyle = styleEqual(c(0, 1), c('italic', 'normal'))
-  #      )
-  #  } else {
-  #    datatable(no_data, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){",
-  #                                                                     "  $(thead).remove();",
-  #                                                                     "}")), rownames = FALSE)
-  #  }
-  #  
-  #})
-  
   output$other_fuel_use_table <- renderDataTable({
     buildCompanyProfileFuelUsePlot(input$selected_company)
   })
@@ -722,95 +534,6 @@ server <- function(input, output, session) {
   #Table 10##############################
   #Non-specified energy use (TWh/yr)#####
   #######################################
-  
-  #selected_company_ns_energy_use <- reactive({
-  #  
-  #  selected_company_ns_energy_use_filter <-
-  #    data_sheet_energy_transformed %>%
-  #    filter(company == input$selected_company, fuel_1_type == "Total Energy Use") %>% 
-  #    mutate_at(vars(fuel_1_type), ~replace_na(., 0)) %>%
-  #    filter(fuel_1_type != 0) %>%
-  #    select("data_year", "energy_reporting_scope", "level_of_ownership", "fuel_1_type", "fuel_1_converted") %>% 
-  #    mutate(energy_reporting_scope = case_when(
-  #      energy_reporting_scope %in% c("Multiple Data Centers", "Single Data Center") ~ "Data center energy use",
-  #      energy_reporting_scope %in% "Total Operations"                               ~ "Company-wide energy use")) %>% 
-  #    group_by(data_year, energy_reporting_scope, level_of_ownership) %>% 
-  #    summarize(value = sum(fuel_1_converted)) %>% 
-  #    mutate(value = value/1000000000) %>%
-  #    unite(energy_reporting_scope, energy_reporting_scope:level_of_ownership, sep = " | ") %>% 
-  #    mutate(energy_reporting_scope = case_when(
-  #      energy_reporting_scope %in% "Data center energy use | Leased" ~ "Leased",
-  #      energy_reporting_scope %in% "Data center energy use | Cloud" ~ "Cloud",
-  #      energy_reporting_scope %in% "Data center energy use | Self-managed" ~ "Self_managed",
-  #      energy_reporting_scope %in% "Data center energy use | " ~ "Self_managed", #If no level of ownership is given, assume self managed
-  #      energy_reporting_scope %in% "Data center energy use | NA" ~ "Self_managed", #If no level of ownership is given, assume self managed
-  #      energy_reporting_scope %in% "Company-wide energy use | Self-managed" ~ "Total_company",
-  #      energy_reporting_scope %in% "Company-wide energy use | " ~ "Total_company",
-  #      energy_reporting_scope %in% "Company-wide energy use | NA" ~ "Total_company")) %>%
-  #    pivot_wider(names_from = energy_reporting_scope, values_from = value)
-  #  
-  #  #If the number of rows in the dataframe is not equal to 0
-  #  if (nrow(selected_company_ns_energy_use_filter) != 0) {
-  #    selected_company_ns_energy_use_filter <- selected_company_ns_energy_use_filter %>%
-  #    replace(is.na(.), 0) %>% 
-  #      mutate(Leased = ifelse("Leased" %in% names(.), Leased, 0),
-  #             Self_managed = ifelse("Self_managed" %in% names(.), Self_managed, 0),
-  #             Total_company = ifelse("Total_company" %in% names(.), Total_company, 0)) %>% 
-  #      mutate(data_centers = Self_managed + Leased) %>% 
-  #      mutate(data_center_percentage = percent(data_centers/(data_centers + Total_company))) %>%
-  #      mutate_if(is.numeric, ~round(., 3)) %>%
-  #      mutate(Total_company = as.character(Total_company), Self_managed = as.character(Self_managed), 
-  #             Leased = as.character(Leased), data_centers = as.character(data_centers)) %>%
-  #      pivot_longer(!data_year, names_to = "category", values_to = "value") %>% 
-  #      pivot_wider(names_from = data_year, values_from = value) %>% 
-  #      mutate(category = case_when(
-  #        category %in% "Total_company" ~ "Total company",
-  #        category %in% "Self_managed" ~ "Self-managed",
-  #        category %in% "Leased" ~ "Leased",
-  #        category %in% "data_centers" ~ "Data centers",
-  #        category %in% "data_center_percentage" ~ "Data center % of total electricity"))
-  #    selected_company_ns_energy_use_filter <- 
-  #      selected_company_ns_energy_use_filter %>% 
-  #      mutate(category = factor(category, levels = c("Data centers", "Self-managed", "Leased", "Total company", "Data center % of total electricity"))) %>% 
-  #      arrange(category) %>% 
-  #      add_column(format = c(1,0,0,1,1), .before = 'category')
-  #    
-  #    possible_years_ns_energy <- c(2007:as.integer(tail(colnames(selected_company_ns_energy_use_filter), n=1)))
-  #    extra_years_ns_energy <- list()
-  #    
-  #    j <- 1
-  #    for (i in 1:length(possible_years_ns_energy)) {
-  #      if (possible_years_ns_energy[i] %not_in% names(selected_company_ns_energy_use_filter)) {
-  #        extra_years_ns_energy[j] <- possible_years_ns_energy[i]
-  #        j <- j + 1
-  #      }
-  #    }
-  #    
-  #    selected_company_ns_energy_use_filter %>% 
-  #      add_column(!!!set_names(as.list(rep(0, length(extra_years_ns_energy))),nm=extra_years_ns_energy)) %>% 
-  #      select(sort(tidyselect::peek_vars())) %>% 
-  #      relocate(c(format, category), .before = '2007') %>% 
-  #      mutate_if(is.numeric, ~ifelse(. == 0, "", .))
-  #  }
-  #  
-  #})
-  #  
-  #output$ns_energy_use_table <- renderDataTable({
-  #  
-  #  if(!is.null(selected_company_ns_energy_use())) {
-  #    
-  #    datatable(selected_company_ns_energy_use(), rownames = FALSE, options = list(columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
-  #      formatStyle(
-  #        'category', 'format',
-  #        textAlign = styleEqual(c(0, 1), c('right', 'left')),
-  #        fontStyle = styleEqual(c(0, 1), c('italic', 'normal'))
-  #      )
-  #  } else {
-  #    datatable(no_data, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){",
-  #                                                                     "  $(thead).remove();",
-  #                                                                     "}")), rownames = FALSE)
-  #  }
-  #})
   
   output$ns_energy_use_table <- renderDataTable({
     buildCompanyProfileNonSpecifiedEnergyUsePlot(input$selected_company)
