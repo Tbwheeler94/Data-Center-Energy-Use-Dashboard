@@ -2,6 +2,7 @@ source(here("ui.R"))
 source(here("R", "CompanyProfilePlots", "companyProfileElectricityUsePlot.R"))
 source(here("R", "CompanyProfilePlots", "companyProfileFuelUsePlot.R"))
 source(here("R", "CompanyProfilePlots", "companyProfileNonSpecifiedEnergyUsePlot.R"))
+source(here("R", "CompanyProfilePlots", "companyProfilePUEPlot.R"))
 source(here("R", "CompanyProfilePlots", "companyProfileMethodsTable.R"))
 source(here("R", "IndustryTrendsPlots", "industryTrendsDataCenterPlot.R"))
 source(here("R", "IndustryTrendsPlots", "industryTrendsCompanyWide1Plot.R"))
@@ -14,13 +15,32 @@ source(here("R", "IndustryTrendsPlots", "industryTrendsTransparencyPlot.R"))
 #Server code
 server <- function(input, output, session) {
   
+  ########################################################
+  ########################################################
+  ###### Pre-render setup  ###############################
+  ########################################################
+  ########################################################
+  
+  ########################################################
+  ###### Initialize waiter loading bar on full page ######
+  ########################################################
+  
   #add full screen 3 second waiter
   #w = Waiter$new()
   #w$show()
   #Sys.sleep(3)
   #w$hide() 
   
-  #Tab 1
+  ########################################################
+  ########################################################
+  ###### Tab 1: Home  #################################### 
+  ########################################################
+  ########################################################
+  
+  #####################################################################
+  ###### Card 1.2: Dynamically generate number of years reported ######
+  #####################################################################
+  
   output$years_reported <- renderUI({
     #output length of vector of unique values from report_year column
     length(unique(data_sheet_energy_raw$report_year))
@@ -28,9 +48,13 @@ server <- function(input, output, session) {
   
   output$companies_reporting <- renderUI({
     
+    #generate complete list of companies reporting from Company Profiles sheet
+    
     number_of_companies_reporting <- 
       data_sheet_company_raw %>% 
-      filter(checked_back_to_founding_year_or_2007 == "Yes") #filter by only companies that have been checked back to 2007
+      
+      #filter by only companies that have been checked back to 2007
+      filter(checked_back_to_founding_year_or_2007 == "Yes")
     
     #output length of vector of unique values in the company column
     length(unique(number_of_companies_reporting$company_name))
@@ -493,14 +517,6 @@ server <- function(input, output, session) {
     datatable(sasb_cdp_gri_status(), rownames = FALSE, options = list(dom = 't'))
   })
   
-  #UI downloadable CSV
-  output$download_standards <- downloadHandler(
-    filename = function(){"data_standards.csv"}, 
-    content = function(fname){
-      write.csv(sasb_cdp_gri_status(), fname)
-    }
-  )
-  
   #######################################
   #Table 6###############################
   #Other metrics reported################
@@ -544,50 +560,9 @@ server <- function(input, output, session) {
   #PUE###################################
   #######################################
   
-  selected_company_pue <- reactive({
-    selected_company_pue_filter <-
-      data_sheet_pue_raw %>% 
-        filter(company == input$selected_company) %>% 
-        select("applicable_year", "facility_scope", "geographical_scope", "pue_value") %>% 
-        unite(pue_facility_geographic, facility_scope:geographical_scope, sep = " | ") %>% 
-        pivot_wider(names_from = applicable_year, values_from = pue_value, names_sort = TRUE) %>%
-        mutate_all(~replace(., is.nan(.), NA)) %>% 
-        mutate_if(is.numeric, as.character) %>% 
-        replace(is.na(.), "") %>% 
-        rename(c("Facility Scope and Location" = pue_facility_geographic))
-    
-    if (nrow(selected_company_pue_filter) != 0) {
-      
-      possible_years_pue <- c(2007:as.integer(tail(colnames(selected_company_pue_filter), n=1)))
-      extra_years_pue <- list()
-      
-      for (i in 1:length(possible_years_pue)) {
-        if (possible_years_pue[i] %not_in% names(selected_company_pue_filter)) {
-          extra_years_pue[i] <- possible_years_pue[i]
-        }
-      }
-      
-      selected_company_pue_filter %>% 
-        add_column(!!!set_names(as.list(rep(0, length(extra_years_pue))),nm=extra_years_pue)) %>% 
-        select(sort(tidyselect::peek_vars())) %>% 
-        relocate(c("Facility Scope and Location"), .before = '2007') %>% 
-        mutate_if(is.numeric, ~ifelse(. == 0, "", .))
-    }
-    
-    
-  })
-  
-  output$pue_table <- renderDataTable({ #Tried to change width of first column, currently not working
+  output$pue_table <- renderDataTable({
 
-    if(!is.null(selected_company_pue())) {
-      
-      datatable(selected_company_pue(), rownames = FALSE, options = list(pageLength = 5, autoWidth = TRUE, columnDefs = list(list(width = '300px',
-                                                                                                                                  targets = c(0)))))
-    } else {
-      datatable(no_data, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){",
-                                                                       "  $(thead).remove();",
-                                                                       "}")), rownames = FALSE)
-    }
+    buildCompanyProfilePUEPlot(input$selected_company)
     
   })
   
@@ -599,6 +574,27 @@ server <- function(input, output, session) {
   output$sources_table <- renderDataTable({
     buildCompanyProfileMethodsTable(data_sheet_energy_transformed)
   })
+  
+  ##############################################################################################################
+  ##### Additional interactivity: Conditionally show data tables based on whether they contain data or not #####
+  ##############################################################################################################
+  
+  #Conditionally show either 1 data center plot or 5 company wide plots depending on user selection
+  #observeEvent(output$electricity_use_table, {
+  #  
+  #  if(nrow(output$electricity_use_table) == 1) { 
+  #    shinyjs::hide(selector = "div#ns-energy-use-table")
+  #  } else if (output$electricity_use_table != 1) {
+  #    shinyjs::show(selector = "div#ns-energy-use-table")
+  #  }
+  #  
+  #})
+  
+  ########################################################
+  ########################################################
+  ###### Tab 5: Methodology  ############################# 
+  ########################################################
+  ########################################################
   
   router$server(input, output, session)
 }

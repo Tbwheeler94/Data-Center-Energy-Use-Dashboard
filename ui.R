@@ -130,7 +130,7 @@ dc_energy_101_page <- makePage(
 industry_trends_page <- makePage(
   
   div(
-    Stack(style = "text-align: center; padding: 25px", Text("Trends in Data Center Transparency", variant = "xxLarge", style = "color: #137AD1;")),
+    Stack(style = "text-align: center; padding: 25px", Text("Trends in Data Center Energy Reporting Transparency", variant = "xxLarge", style = "color: #137AD1;")),
     Grid(
       GridItem(class = "ms-sm12 ms-xl12", 
                CompanyCard(
@@ -138,7 +138,7 @@ industry_trends_page <- makePage(
                )
       )
     ),
-    Stack(style = "text-align: center; padding: 25px", Text("Industry Trends", variant = "xxLarge", style = "color: #137AD1;")),
+    Stack(style = "text-align: center; padding: 25px", Text("Annual Reported Energy Use By Year Across Reporting Companies", variant = "xxLarge", style = "color: #137AD1;")),
     Grid(
       GridItem(class = "ms-xl4"),
       GridItem(class = "ms-sm12 ms-xl4",
@@ -206,7 +206,7 @@ company_analysis_page <- makePage(
                                      value = "Google",
                                      placeHolder = "Google",
                                      dropdownWidth = 150),
-                 downloadButton('download_standards'," Download full profile (.csv)"),
+                 downloadButton('download_standards'," Download all reported data (.csv)"),
                  dataTableOutput("selected_company_stats")
                )
       ),
@@ -250,7 +250,7 @@ company_analysis_page <- makePage(
       GridItem(class = "ms-sm12 ms-xl6",
                CompanyCard(
                  Text("Electricity Use (TWh/yr)", variant = "large", style = "text-align: center;"),
-                 div(DT::dataTableOutput("electricity_use_table"), style = "width: 100%") 
+                 div(dataTableOutput("electricity_use_table"), style = "width: 100%") 
                )
                
       ),
@@ -266,7 +266,7 @@ company_analysis_page <- makePage(
       GridItem(class = "ms-sm12 ms-xl6",
                CompanyCard(
                  Text("Non-specified energy use (TWh/yr)", variant = "large", style = "text-align: center;"),
-                 div(dataTableOutput("ns_energy_use_table"), style = "width: 100%")
+                 div(dataTableOutput("ns_energy_use_table"), style = "width: 100%", id = "ns-energy-use-table")
                )
                
       ),
@@ -366,7 +366,7 @@ footer <- Stack(
   horizontal = TRUE,
   horizontalAlign = 'space-between',
   tokens = list(childrenGap = 20),
-  Text(variant = "medium", "Built by the Industrial Sustainability Analysis Lab", block=TRUE),
+  Text(variant = "medium", "Built by the Industrial Sustainability Analysis Lab at UCSB", block=TRUE),
   Text(variant = "medium", nowrap = FALSE, "If you'd like to learn more, reach out to us at info_isal@ucsb.edu"),
   Text(variant = "medium", nowrap = FALSE, "All rights reserved.")
 )
