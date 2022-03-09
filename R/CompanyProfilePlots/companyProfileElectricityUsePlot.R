@@ -63,7 +63,7 @@ buildCompanyProfileElectricityUsePlot <- function(selected_company) {
       }
     }
     
-    selected_company_electricity_use_filter <-
+    selected_company_electricity_use_filter <- 
       selected_company_electricity_use_filter %>% 
       add_column(!!!set_names(as.list(rep(0, length(extra_years_electricity))),nm=extra_years_electricity)) %>% 
       select(sort(tidyselect::peek_vars())) %>% 
@@ -72,19 +72,5 @@ buildCompanyProfileElectricityUsePlot <- function(selected_company) {
       mutate_if(is.character, ~ifelse(. == "0", "", .)) %>% 
       mutate(format = c(1,0,0,1,1))
   }
-  
-  #If the dataframe output from the reactive electricity dataset is not empty then insert the dataset into a datatable, else show the no_data datatable
-  if(nrow(selected_company_electricity_use_filter) != 0) {
-    
-    datatable(selected_company_electricity_use_filter, rownames = FALSE, options = list(columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
-      formatStyle(
-        'category', 'format',
-        textAlign = styleEqual(c(0, 1), c('right', 'left')),
-        fontStyle = styleEqual(c(0, 1), c('italic', 'normal'))
-      )
-  } else {
-    datatable(no_data, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){",
-                                                                     "  $(thead).remove();",
-                                                                     "}")), rownames = FALSE)
-  }
+  selected_company_electricity_use_filter
 }

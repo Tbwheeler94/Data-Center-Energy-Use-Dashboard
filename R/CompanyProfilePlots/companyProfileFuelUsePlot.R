@@ -59,25 +59,13 @@ buildCompanyProfileFuelUsePlot <- function(selected_company) {
       }
     }
     
-    selected_company_fuel_use_filter <- selected_company_fuel_use_filter %>% 
+    selected_company_fuel_use_filter <- 
+    selected_company_fuel_use_filter %>% 
       add_column(!!!set_names(as.list(rep(0, length(extra_years_fuel))),nm=extra_years_fuel)) %>% 
       select(sort(tidyselect::peek_vars())) %>% 
       relocate(c(format, category), .before = '2007') %>% 
       mutate_if(is.numeric, ~ifelse(. == 0, "", .)) %>% 
       mutate(format = c(1,0,0))
   }
-  
-  if(nrow(selected_company_fuel_use_filter) != 0) {
-    
-    datatable(selected_company_fuel_use_filter, rownames = FALSE, options = list(columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
-      formatStyle(
-        'category', 'format',
-        textAlign = styleEqual(c(0, 1), c('right', 'left')),
-        fontStyle = styleEqual(c(0, 1), c('italic', 'normal'))
-      )
-  } else {
-    datatable(no_data, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){",
-                                                                     "  $(thead).remove();",
-                                                                     "}")), rownames = FALSE)
-  }
+  selected_company_fuel_use_filter
 }

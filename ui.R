@@ -257,7 +257,7 @@ company_analysis_page <- makePage(
       GridItem(class = "ms-sm12 ms-xl6",
                CompanyCard(
                  Text("Other fuel use (TWh/yr)", variant = "large", style = "text-align: center;"),
-                 div(dataTableOutput("other_fuel_use_table"), style = "width: 100%")
+                 div(dataTableOutput("other_fuel_use_table"), style = "width: 100%", id = "fuel-use-table")
                )
                
       )
@@ -266,7 +266,7 @@ company_analysis_page <- makePage(
       GridItem(class = "ms-sm12 ms-xl6",
                CompanyCard(
                  Text("Non-specified energy use (TWh/yr)", variant = "large", style = "text-align: center;"),
-                 div(dataTableOutput("ns_energy_use_table"), style = "width: 100%", id = "ns-energy-use-table")
+                 div(dataTableOutput("ns_energy_use_table"), style = "width: 100%")
                )
                
       ),

@@ -426,39 +426,40 @@ server <- function(input, output, session) {
       drop_na(electricity_value)
   })
   
-  #####################################################################
-  ########## Render datatables, box text, and plots for UI ############
-  #####################################################################
+  #########################################################
+  ####### Table 3.1: Select company quick stats ###########
+  #########################################################
   
-  ########################
-  #Table 1################
-  #Selected company stats#
-  ########################
-  
-  output$selected_company_stats <- renderDataTable({
-    
   #Does Company X report any energy use?
-    
-  energy_reporting_status <- ifelse(sum(energy_sheet_selected_company_current_year()$electricity_value > 0, na.rm = TRUE) | sum(energy_sheet_selected_company_current_year()$fuel_1_value > 0, na.rm = TRUE), "Yes", "No")
+  
+  energy_reporting_status <- reactive({
+    ifelse(sum(energy_sheet_selected_company_current_year()$electricity_value > 0, na.rm = TRUE) | 
+             sum(energy_sheet_selected_company_current_year()$fuel_1_value > 0, na.rm = TRUE), "Yes", "No")
+  })
   
   #Year of most recent data
-  year_of_most_recent_data <- energy_sheet_selected_company_current_year()[1, "period_covered_start_date"]  
+  year_of_most_recent_data <- reactive({
+    energy_sheet_selected_company_current_year()[1, "period_covered_start_date"]
+  })  
   
   #Render list of external service providers  
-  external_service_provider_list <- paste(company_sheet_selected_company()[1, "provider_1"], company_sheet_selected_company()[1, "provider_2"],
-    company_sheet_selected_company()[1, "provider_3"], company_sheet_selected_company()[1, "provider_4"],
-    company_sheet_selected_company()[1, "provider_5"], company_sheet_selected_company()[1, "provider_6"],
-    company_sheet_selected_company()[1, "provider_7"], company_sheet_selected_company()[1, "provider_8"],
-    company_sheet_selected_company()[1, "provider_9"], company_sheet_selected_company()[1, "provider_10"],sep = ", ") %>% 
-    str_remove_all(", NA") %>% str_remove_all(", ,") %>% str_remove_all(" , ") %>% str_remove_all("[:punct:]*\\s*$") %>% 
-    str_remove_all("NA")
+  external_service_provider_list <- reactive({ paste(company_sheet_selected_company()[1, "provider_1"], company_sheet_selected_company()[1, "provider_2"],
+                                          company_sheet_selected_company()[1, "provider_3"], company_sheet_selected_company()[1, "provider_4"],
+                                          company_sheet_selected_company()[1, "provider_5"], company_sheet_selected_company()[1, "provider_6"],
+                                          company_sheet_selected_company()[1, "provider_7"], company_sheet_selected_company()[1, "provider_8"],
+                                          company_sheet_selected_company()[1, "provider_9"], company_sheet_selected_company()[1, "provider_10"],sep = ", ") %>%
+                                          str_remove_all(", NA") %>% str_remove_all(", ,") %>% str_remove_all(" , ") %>% str_remove_all("[:punct:]*\\s*$") %>% 
+                                          str_remove_all("NA")
+  })
   
-  selected_company_stats <- data.frame(A = c("Does company report energy use?", "Year of most recent data", "Lease/Cloud Providers"),
-             B = c(energy_reporting_status, year_of_most_recent_data, ifelse(external_service_provider_list == "", "No External Providers Reported", external_service_provider_list)), check.names = FALSE)
+  selected_company_stats <- reactive({ data.frame(A = c("Does company report energy use?", "Year of most recent data", "Lease/Cloud Providers"),
+                                       B = c(energy_reporting_status(), year_of_most_recent_data(), ifelse(external_service_provider_list() == "", "No External Providers Reported",
+                                                                                                           external_service_provider_list())), check.names = FALSE)
+  })
   
-  datatable(selected_company_stats, rownames = FALSE, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){",
-                                                                                  "  $(thead).remove();",
-                                                                                  "}")))
+  output$selected_company_stats <- renderDataTable({
+  
+  datatable(selected_company_stats(), rownames = FALSE, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){", "  $(thead).remove();","}")))
   
   })
   
@@ -485,21 +486,27 @@ server <- function(input, output, session) {
   #Currently reported energy use levels##
   #######################################
   
+  data_center_electricity_reporting_status <- reactive({ ifelse(sum(energy_sheet_selected_company_current_year_dc_electricity()$electricity_value > 0), "Yes", "No") })
+  data_center_self_managed_reporting_status <- reactive({ ifelse("Self-managed" %in% energy_sheet_selected_company_current_year_dc()$level_of_ownership, "Yes", "No") })
+  data_center_leased_reporting_status <- reactive({ ifelse("Leased" %in% energy_sheet_selected_company_current_year_dc()$level_of_ownership, "Yes", "No") })
+  data_center_cloud_reporting_status <- reactive({ ifelse("Cloud" %in% energy_sheet_selected_company_current_year_dc()$level_of_ownership, "Yes", "No") })
+  data_center_other_fuel_use_reporting_status <- reactive({ ifelse(sum(energy_sheet_selected_company_current_year_dc_fuel()$fuel_1_value > 0), "Yes", "No") })
+  total_energy_reporting_status <- reactive({ ifelse(sum(energy_sheet_selected_company_current_year_te()$electricity_value > 0), "Yes", "No") })
+  
+  reported_energy_levels_data <- reactive({
+    data.frame(Level = c("Data center electricity use", "Self-managed", "Leased", "Cloud", "Data center other fuel use", "Company-wide electricty use"),
+               " Reporting Status " = c(data_center_electricity_reporting_status(), 
+                                        data_center_self_managed_reporting_status(), 
+                                        data_center_leased_reporting_status(), 
+                                        data_center_cloud_reporting_status(), 
+                                        data_center_other_fuel_use_reporting_status(), 
+                                        total_energy_reporting_status()), check.names = FALSE) %>% 
+    add_column(format = c(1,0,0,0,1,1), .before = 'Level')
+  })
+    
   output$reported_energy_levels <- renderDataTable({
     
-    data_center_electricity_reporting_status <- ifelse(sum(energy_sheet_selected_company_current_year_dc_electricity()$electricity_value > 0), "Yes", "No")
-    data_center_self_managed_reporting_status <- ifelse("Self-managed" %in% energy_sheet_selected_company_current_year_dc()$level_of_ownership, "Yes", "No")
-    data_center_leased_reporting_status <- ifelse("Leased" %in% energy_sheet_selected_company_current_year_dc()$level_of_ownership, "Yes", "No")
-    data_center_cloud_reporting_status <- ifelse("Cloud" %in% energy_sheet_selected_company_current_year_dc()$level_of_ownership, "Yes", "No")
-    data_center_other_fuel_use_reporting_status <- ifelse(sum(energy_sheet_selected_company_current_year_dc_fuel()$fuel_1_value > 0), "Yes", "No")
-    total_energy_reporting_status <- ifelse(sum(energy_sheet_selected_company_current_year_te()$electricity_value > 0), "Yes", "No")
-    
-    reported_energy_levels_data <- 
-      data.frame(Level = c("Data center electricity use", "Self-managed", "Leased", "Cloud", "Data center other fuel use", "Company-wide electricty use"),
-               " Reporting Status " = c(data_center_electricity_reporting_status, data_center_self_managed_reporting_status, data_center_leased_reporting_status, data_center_cloud_reporting_status, data_center_other_fuel_use_reporting_status, total_energy_reporting_status), check.names = FALSE) %>% 
-      add_column(format = c(1,0,0,0,1,1), .before = 'Level')
-    
-    datatable(reported_energy_levels_data, rownames = FALSE, options = list(dom = 't', columnDefs = list(list(visible=FALSE, targets=0)))) %>% 
+    datatable(reported_energy_levels_data(), rownames = FALSE, options = list(dom = 't', columnDefs = list(list(visible=FALSE, targets=0)))) %>% 
       formatStyle(
         'Level', 'format',
         textAlign = styleEqual(c(0, 1), c('right', 'left')),
@@ -534,7 +541,16 @@ server <- function(input, output, session) {
   #######################################
   
   output$electricity_use_table <- renderDataTable({
-    buildCompanyProfileElectricityUsePlot(input$selected_company)
+    
+    selected_company_electricity_use_filter <- buildCompanyProfileElectricityUsePlot(input$selected_company)
+    
+    #If the dataframe output from the reactive electricity dataset is not empty then insert the dataset into a datatable, else show the no_data datatable
+    if(nrow(selected_company_electricity_use_filter) != 0) {
+      datatable(selected_company_electricity_use_filter, rownames = FALSE, options = list(columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
+        formatStyle('category', 'format', textAlign = styleEqual(c(0, 1), c('right', 'left')), fontStyle = styleEqual(c(0, 1), c('italic', 'normal')))
+    } else {
+      datatable(no_data, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){", "  $(thead).remove();", "}")), rownames = FALSE)
+    }
   })
   
   #######################################
@@ -543,7 +559,15 @@ server <- function(input, output, session) {
   #######################################
   
   output$other_fuel_use_table <- renderDataTable({
-    buildCompanyProfileFuelUsePlot(input$selected_company)
+    
+    selected_company_fuel_use_filter <- buildCompanyProfileFuelUsePlot(input$selected_company)
+    
+    if(nrow(selected_company_fuel_use_filter) != 0) {
+      datatable(selected_company_fuel_use_filter, rownames = FALSE, options = list(columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
+        formatStyle('category', 'format', textAlign = styleEqual(c(0, 1), c('right', 'left')), fontStyle = styleEqual(c(0, 1), c('italic', 'normal')))
+    } else {
+      datatable(no_data, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){","  $(thead).remove();","}")), rownames = FALSE)
+    }
   })
   
   #######################################
@@ -552,7 +576,15 @@ server <- function(input, output, session) {
   #######################################
   
   output$ns_energy_use_table <- renderDataTable({
-    buildCompanyProfileNonSpecifiedEnergyUsePlot(input$selected_company)
+    
+    selected_company_ns_energy_use_filter <- buildCompanyProfileNonSpecifiedEnergyUsePlot(input$selected_company)
+    
+    if(nrow(selected_company_ns_energy_use_filter) != 0) {
+      datatable(selected_company_ns_energy_use_filter, rownames = FALSE, options = list(columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
+        formatStyle('category', 'format', textAlign = styleEqual(c(0, 1), c('right', 'left')), fontStyle = styleEqual(c(0, 1), c('italic', 'normal')))
+    } else {
+      datatable(no_data, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){", "  $(thead).remove();", "}")), rownames = FALSE)
+    }
   })
   
   #######################################
@@ -562,7 +594,13 @@ server <- function(input, output, session) {
   
   output$pue_table <- renderDataTable({
 
-    buildCompanyProfilePUEPlot(input$selected_company)
+    selected_company_pue_filter <- buildCompanyProfilePUEPlot(input$selected_company)
+    
+    if(nrow(selected_company_pue_filter) != 0) {
+      datatable(selected_company_pue_filter, rownames = FALSE, options = list(pageLength = 5, autoWidth = TRUE, columnDefs = list(list(width = '300px',targets = c(0)))))
+    } else {
+      datatable(no_data, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){","  $(thead).remove();","}")), rownames = FALSE)
+    }
     
   })
   
@@ -576,18 +614,45 @@ server <- function(input, output, session) {
   })
   
   ##############################################################################################################
+  ##### Generate downloadable csv of full company profile ######################################################
+  ##############################################################################################################
+  
+ #full_company_profile_csv <- reactive({
+ #  bind_rows(selected_company_stats(), buildCompanyProfileElectricityUsePlot(input$selected_company), buildCompanyProfileFuelUsePlot(input$selected_company)) %>% 
+ #    add_column(banana = c(1,0,0,0,0))
+ #})
+  
+  
+  #UI downloadable CSV
+  output$download_standards <- downloadHandler(
+    filename = function(){sprintf("%s_profile_download.csv", input$selected_company)}, 
+    content = function(fname){
+      write.table(data.frame(x = c("Exported company profile page from movingbits.com","License XX"))[1:3,] %>% replace(is.na(.), ""), fname, col.names = FALSE, sep = ',', row.names = F)
+      write.table(data.frame(x = c("Company Overview","Note: These values apply only to the company's most recent year of data reporting"))[1:3,] %>% replace(is.na(.), ""), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+      write.table(data.frame(x = "Company name", y = input$selected_company), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+      write.table(selected_company_stats(), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+      write.table(data.frame(x = "Company data center overview", y = company_sheet_selected_company()[1, "company_data_center_overview"]), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+      write.table(data.frame(x = "Energy report assessment", y = company_sheet_selected_company()[1, "energy_reporting_assessment"])[1:2,] %>% replace(is.na(.), ""), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+      write.table(data.frame(x = c("Reported energy use levels","Note: These values apply only to the company's most recent year of data reporting"))[1:3,] %>% replace(is.na(.), ""), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+      write.table(reported_energy_levels_data()[1:7,2:3] %>% replace(is.na(.), ""), fname, sep = ',', append = TRUE, row.names = F)
+      write.table(data.frame(x = c("Data Standard","Note: These values apply only to the company's most recent year of data reporting"))[1:3,] %>% replace(is.na(.), ""), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+      write.table(buildCompanyProfileElectricityUsePlot(input$selected_company)[-1], fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)
+    }
+  )
+  
+  ##############################################################################################################
   ##### Additional interactivity: Conditionally show data tables based on whether they contain data or not #####
   ##############################################################################################################
   
   #Conditionally show either 1 data center plot or 5 company wide plots depending on user selection
-  #observeEvent(output$electricity_use_table, {
+  #observeEvent(selected_company_fuel_use_filter(), {
   #  
-  #  if(nrow(output$electricity_use_table) == 1) { 
-  #    shinyjs::hide(selector = "div#ns-energy-use-table")
-  #  } else if (output$electricity_use_table != 1) {
-  #    shinyjs::show(selector = "div#ns-energy-use-table")
-  #  }
-  #  
+  # if(!is.null(selected_company_fuel_use_filter())) { 
+  #   shinyjs::hide(selector = "div#fuel-use-table")
+  # } else if (!is.null(selected_company_fuel_use_filter())) {
+  #   shinyjs::show(selector = "div#fuel-use-table")
+  # }
+  # 
   #})
   
   ########################################################

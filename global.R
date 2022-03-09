@@ -15,6 +15,7 @@ library(tidyselect)
 library(waiter)
 library(fastDummies)
 library(shinyjs)
+library(data.table)
 
 source(here("R", "transformEnergyDataRaw.R"))
 

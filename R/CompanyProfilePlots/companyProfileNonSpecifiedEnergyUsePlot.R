@@ -44,6 +44,7 @@ buildCompanyProfileNonSpecifiedEnergyUsePlot <- function(selected_company) {
         category %in% "Leased" ~ "Leased",
         category %in% "data_centers" ~ "Data centers",
         category %in% "data_center_percentage" ~ "Data center % of total electricity"))
+    
     selected_company_ns_energy_use_filter <- 
       selected_company_ns_energy_use_filter %>% 
       mutate(category = factor(category, levels = c("Data centers", "Self-managed", "Leased", "Total company", "Data center % of total electricity"))) %>% 
@@ -70,17 +71,5 @@ buildCompanyProfileNonSpecifiedEnergyUsePlot <- function(selected_company) {
       mutate(format = c(1,0,0,1,1))
   }
   
-  if(nrow(selected_company_ns_energy_use_filter) != 0) {
-    
-    datatable(selected_company_ns_energy_use_filter, rownames = FALSE, options = list(columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
-      formatStyle(
-        'category', 'format',
-        textAlign = styleEqual(c(0, 1), c('right', 'left')),
-        fontStyle = styleEqual(c(0, 1), c('italic', 'normal'))
-      )
-  } else {
-    datatable(no_data, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){",
-                                                                     "  $(thead).remove();",
-                                                                     "}")), rownames = FALSE)
-  }
+  selected_company_ns_energy_use_filter
 }  

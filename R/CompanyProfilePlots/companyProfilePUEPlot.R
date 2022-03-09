@@ -2,7 +2,7 @@ buildCompanyProfilePUEPlot <- function(selected_company) {
   
   selected_company_pue_filter <-
     data_sheet_pue_raw %>% 
-    filter(company == "Oracle") %>% 
+    filter(company == selected_company) %>% 
     select("applicable_year", "facility_scope", "geographical_scope", "pue_value") %>% 
     unite(pue_facility_geographic, facility_scope:geographical_scope, sep = " | ") %>% 
     pivot_wider(names_from = applicable_year, values_from = pue_value, names_sort = TRUE) %>%
@@ -32,14 +32,6 @@ buildCompanyProfilePUEPlot <- function(selected_company) {
       mutate_if(is.numeric, ~ifelse(. == 0, "", .))
   }
   
-  if(nrow(selected_company_pue_filter) != 0) {
-    
-    datatable(selected_company_pue_filter, rownames = FALSE, options = list(pageLength = 5, autoWidth = TRUE, columnDefs = list(list(width = '300px',
-                                                                                                                                targets = c(0)))))
-  } else {
-    datatable(no_data, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){",
-                                                                     "  $(thead).remove();",
-                                                                     "}")), rownames = FALSE)
-  }
+  selected_company_pue_filter
 
 }
