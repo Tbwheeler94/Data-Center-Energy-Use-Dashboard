@@ -163,7 +163,6 @@ server <- function(input, output, session) {
   ##################################################
   ### Generate Company Wide Subdataset and Plots ###
   ##################################################
-  #
   
   company_wide_graph_height <- function(input) {
     if(nrow(input) == 0) {
@@ -616,12 +615,6 @@ server <- function(input, output, session) {
   ##############################################################################################################
   ##### Generate downloadable csv of full company profile ######################################################
   ##############################################################################################################
-  
- #full_company_profile_csv <- reactive({
- #  bind_rows(selected_company_stats(), buildCompanyProfileElectricityUsePlot(input$selected_company), buildCompanyProfileFuelUsePlot(input$selected_company)) %>% 
- #    add_column(banana = c(1,0,0,0,0))
- #})
-  
   
   #UI downloadable CSV
   output$download_standards <- downloadHandler(
