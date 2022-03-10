@@ -149,7 +149,7 @@ no_data <- data.frame(no_data_reported = "No data reported")
 
 #generate unique list of companies in alphabetical order and drop blank
 unique_companies <- list()
-companies <- str_subset(sort(unique(data_sheet_energy_raw$company)),"")
+companies <- str_subset(sort(unique(data_sheet_company_raw %>% filter(checked_back_to_founding_year_or_2007 == "Yes") %>% pull(company_name))),"")
 
 for (i in 1:length(companies)) {
   
