@@ -628,15 +628,30 @@ server <- function(input, output, session) {
     filename = function(){sprintf("%s_profile_download.csv", input$selected_company)}, 
     content = function(fname){
       write.table(data.frame(x = c("Exported company profile page from movingbits.com","License XX"))[1:3,] %>% replace(is.na(.), ""), fname, col.names = FALSE, sep = ',', row.names = F)
-      write.table(data.frame(x = c("Company Overview","Note: These values apply only to the company's most recent year of data reporting"))[1:3,] %>% replace(is.na(.), ""), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+      write.table(data.frame(x = c("Section 1: Company Overview","Note: These values apply only to the company's most recent year of data reporting"))[1:3,] %>% replace(is.na(.), ""), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
       write.table(data.frame(x = "Company name", y = input$selected_company), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
       write.table(selected_company_stats(), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
       write.table(data.frame(x = "Company data center overview", y = company_sheet_selected_company()[1, "company_data_center_overview"]), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
       write.table(data.frame(x = "Energy report assessment", y = company_sheet_selected_company()[1, "energy_reporting_assessment"])[1:2,] %>% replace(is.na(.), ""), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
-      write.table(data.frame(x = c("Reported energy use levels","Note: These values apply only to the company's most recent year of data reporting"))[1:3,] %>% replace(is.na(.), ""), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+      write.table(data.frame(x = c("Section 2: Reported Energy Use Levels","Note: These values apply only to the company's most recent year of data reporting"))[1:3,] %>% replace(is.na(.), ""), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
       write.table(reported_energy_levels_data()[1:7,2:3] %>% replace(is.na(.), ""), fname, sep = ',', append = TRUE, row.names = F)
-      write.table(data.frame(x = c("Data Standard","Note: These values apply only to the company's most recent year of data reporting"))[1:3,] %>% replace(is.na(.), ""), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
-      write.table(buildCompanyProfileElectricityUsePlot(input$selected_company)[-1], fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)
+      write.table(data.frame(x = c("Section 3: Data Standards","Note: These values apply only to the company's most recent year of data reporting"))[1:3,] %>% replace(is.na(.), ""), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+      write.table(sasb_cdp_gri_status()[1:4,] %>% replace(is.na(.), ""), fname, sep = ',', append = TRUE, row.names = F)
+      write.table(data.frame(x = c("Section 4: Other Metrics Reported","Note: These values apply only to the company's most recent year of data reporting"))[1:3,] %>% replace(is.na(.), ""), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+      write.table(pue_wue_renewables_status()[1:4,] %>% replace(is.na(.), ""), fname, sep = ',', append = TRUE, row.names = F)
+      write.table(data.frame(x = c("Section 5: Historical Energy Use Trend & Data")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+      if(nrow(buildCompanyProfileElectricityUsePlot(input$selected_company) != 0)) {
+        write.table(data.frame(x = c("", "Electricity Use (TWh/yr)")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+        write.table(buildCompanyProfileElectricityUsePlot(input$selected_company)[-1], fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
+      if(nrow(buildCompanyProfileFuelUsePlot(input$selected_company) != 0)) {
+        write.table(data.frame(x = c("", "Other fuel use (TWh/yr)")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+        write.table(buildCompanyProfileFuelUsePlot(input$selected_company)[-1], fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
+      if(nrow(buildCompanyProfileNonSpecifiedEnergyUsePlot(input$selected_company) != 0)) {
+        write.table(data.frame(x = c("", "Non-specified energy use (TWh/yr)")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+        write.table(buildCompanyProfileNonSpecifiedEnergyUsePlot(input$selected_company)[-1], fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
+      if(nrow(buildCompanyProfilePUEPlot(input$selected_company) != 0)) {
+        write.table(data.frame(x = c("", "PUE")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+        write.table(buildCompanyProfilePUEPlot(input$selected_company), fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
     }
   )
   
