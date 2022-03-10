@@ -68,6 +68,7 @@ buildCompanyProfileNonSpecifiedEnergyUsePlot <- function(selected_company) {
       relocate(c(format, category), .before = '2007') %>% 
       mutate_if(is.numeric, ~ifelse(. == 0, "", .)) %>% 
       mutate_if(is.character, ~ifelse(. == "0", "", .)) %>% 
+      mutate_if(is.character, ~ifelse(. == "0%" | . == "Inf", "NA", .)) %>% 
       mutate(format = c(1,0,0,1,1))
   }
   
