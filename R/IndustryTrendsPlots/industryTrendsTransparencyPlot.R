@@ -58,15 +58,13 @@ buildIndustryTrendsTransparencyPlot <- function(data_sheet_energy_raw) {
   }
   
   # create another data frame that is filtered by company founding year
-  data_founding_year <- data_sheet_company_raw %>% select(company_name, 
-                                                          checked_back_to_founding_year_or_2007,
-                                                          company_founding_year)
+  data_founding_year <- data_sheet_company %>% select(company_name, 
+                                                      checked_back_to_founding_year_or_2007,
+                                                      company_founding_year)
   # drop all the excess rows that have NA data
   data_founding_year <- na.omit(data_founding_year)
-  data_founding_year <- data_founding_year[data_founding_year$checked_back_to_founding_year_or_2007 == "Yes", ]
-  
-  data_of_transparency <- subset(data_of_transparency, 
-                                 company %in% data_founding_year$company_name)
+  data_founding_year <- data_founding_year[data_founding_year$checked_back_to_founding_year_or_2007=="Yes", ]
+  data_of_transparency <- subset(data_of_transparency, company %in% data_founding_year$company_name)
   
   # assessing if there are companies in data_founding_year that ARE NOT in data_of_transparency
   for (i in 1:nrow(data_founding_year)) {
@@ -105,14 +103,10 @@ buildIndustryTrendsTransparencyPlot <- function(data_sheet_energy_raw) {
     data_of_transparency <- data_of_transparency[-c(deleted_rows), ]
   }
   
-  data_of_transparency$value <- 0
-  data_of_transparency$number_of_companies <- 0
+  data_of_transparency$value <- 1
+  data_of_transparency$number_of_companies <- 1
   data_of_transparency <- data_of_transparency %>% select(data_year, energy_reporting_scope, 
                                                           fuel_1_type, value, number_of_companies)
-  
-  # temporary garbage values 
-  year_dummy = 2006
-  report_dummy = "Hi"
   
   # loop through all rows and rename energy reporting scopes
   j = 0
@@ -128,61 +122,50 @@ buildIndustryTrendsTransparencyPlot <- function(data_sheet_energy_raw) {
     }
   }
   
-  data_of_transparency <- data_of_transparency[order(data_of_transparency[,"data_year"],
-                                                     data_of_transparency[,"energy_reporting_scope"]), ]
+  # stack single data center/multiple data center data frames on top of each other
+  data_of_transparency_final <- data_of_transparency %>%
+    group_by(data_year,energy_reporting_scope) %>%
+    dplyr::summarise(value = sum(value), .groups = "rowwise") %>%
+    as.data.frame()
+  data_of_transparency_final <- data_of_transparency_final %>%
+    group_by(data_year,energy_reporting_scope)
   
+  data_of_transparency_line <- data_of_transparency %>%
+    group_by(data_year) %>%
+    dplyr::summarise(number_of_companies = sum(number_of_companies)) %>%
+    as.data.frame()
+  
+  data_of_transparency <- data_of_transparency_final
+  data_of_transparency$number_of_companies <- 0
+  
+  k <- 1
   for (i in 1:nrow(data_of_transparency)) {
     # sum the number rows based on company name and energy reporting scope
     # keeping track of the summation at the first instance of a distinct row
-    if (data_of_transparency[i,1] == year_dummy && data_of_transparency[i,2] == report_dummy) {
-      data_of_transparency[i-j,4] <- data_of_transparency[i-j,4] + 1
-      j <- j + 1
+    if (data_of_transparency[i,1] == data_of_transparency_line[k,1]) {
+      data_of_transparency[i,4] <- data_of_transparency_line[k,2]
     } else {
-      year_dummy <- data_of_transparency[i,1]
-      report_dummy <- data_of_transparency[i,2]
-      data_of_transparency[i,4] <- 1
-      j <- 1
+      k <- k + 1
+      data_of_transparency[i,4] <- data_of_transparency_line[k,2]
     }
   }
   
-  # drop the rest of the rows with value of 0
-  #data_of_transparency <- data_of_transparency[order(data_of_transparency[,""]), ]
-  #data_of_transparency <- distinct(data_of_transparency, data_year, .keep_all = TRUE)
+  data_of_transparency$energy_reporting_scope <- factor(data_of_transparency$energy_reporting_scope, 
+                                                        levels=c("Reported Data Center Electricity",
+                                                                 "Reported Company Wide Electricity",
+                                                                 "Reported Company Wide Total Energy",
+                                                                 "No Reporting of Data"))
   
-  # find line graph values
-  year_dummy = 2006
-  j = 0
-  for (i in 1:nrow(data_of_transparency)) {
-    if (data_of_transparency[i,1] == year_dummy) {
-      data_of_transparency[i-j,5] = data_of_transparency[i-j,5] + data_of_transparency[i,4]
-      j = j + 1
-    } else {
-      year_dummy = data_of_transparency[i,1]
-      data_of_transparency[i,5] = data_of_transparency[i,4]
-      j = 1
-    }
-  }
-  
-  # assign line graph values to each row with same year
-  year_dummy = 2006
-  for (i in 1:nrow(data_of_transparency)) {
-    if (data_of_transparency[i,1] == year_dummy) {
-      data_of_transparency[i,5] = data_of_transparency[i-1,5]
-    } else {
-      year_dummy = data_of_transparency[i,1]
-    }
-  }
-  
-  p <- ggplot(data_of_transparency, aes(x=data_year)) + 
+  p <- ggplot(data_of_transparency, aes(x=data_year, 
+        text=paste("Data Year: ", data_year, "\nNumber of Companies: ", value))) + 
     geom_bar(aes(y=value, fill=energy_reporting_scope),
-             position=position_stack(reverse = TRUE), stat="identity") +
-    #geom_line(aes(y=number_of_companies), size=1.2, color="black") +
-    ggtitle("Data Center Transparency") +
-    scale_fill_manual(values = c("#E9967A", "#8FBC8F", "#00CED1", "#1E90FF")) +
+             position="stack", stat="identity") +
+    scale_fill_brewer() +
+    theme_classic() +
     xlab("Year") +
     ylab("Number of Companies") +
     labs(fill = "Energy Reporting Scope")
   
-  ggplotly(p)
+  ggplotly(p, tooltip = "text")
   
 }
