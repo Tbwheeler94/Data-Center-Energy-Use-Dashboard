@@ -2,7 +2,7 @@ buildCompanyProfilePUEPlot <- function(selected_company) {
   
   selected_company_pue_filter <-
     data_sheet_pue_raw %>% 
-    filter(company == selected_company) %>% 
+    filter(company %in% selected_company) %>% 
     select("applicable_year", "facility_scope", "geographical_scope", "pue_value") %>% 
     unite(pue_facility_geographic, facility_scope:geographical_scope, sep = " | ") %>% 
     pivot_wider(names_from = applicable_year, values_from = pue_value, names_sort = TRUE) %>%

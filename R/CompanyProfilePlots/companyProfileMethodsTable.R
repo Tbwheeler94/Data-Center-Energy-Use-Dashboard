@@ -1,6 +1,6 @@
 buildCompanyProfileMethodsTable <- function(data_sheet_energy_transformed) {
   
-  colnames(data_sheet_energy_transformed) [3] <- 'period_covered_start_date'
+  #colnames(data_sheet_energy_transformed) [3] <- 'period_covered_start_date'
 
   #stack sources columns on top of each other
   source_assessed_1 <- data_sheet_energy_transformed %>% 
@@ -32,6 +32,7 @@ buildCompanyProfileMethodsTable <- function(data_sheet_energy_transformed) {
     rbind(source_assessed_1, source_assessed_2, source_assessed_3, source_assessed_4, source_assessed_5) %>% 
     drop_na(report_type) %>% distinct() %>% 
     mutate(row = row_number()) %>%
+    #because there are blank rows in report_type column, R does not know what to name this column after pivoting and throws the error (Error: Column 3 must be named. Use .name_repair to specify repair.)
     pivot_wider(names_from = report_type, values_from = link) %>% 
     select(-row)
   

@@ -8,6 +8,8 @@ transformEnergyDataRaw <- function(data_sheet_energy_raw) {
   ########## Prepare values for transformation ##################
   ###############################################################
   
+  data_sheet_energy_raw <- as_tibble(data_sheet_energy_raw)
+  
   data_sheet_energy_scaled <- data_sheet_energy_raw %>% 
     #calculate total number of reported days data is applicable to by subtracting the period covered start date from the end date (R recognizes date values as integers)
     mutate(year_total_reported_days = period_covered_end_date - period_covered_start_date, .after = period_covered_end_date) %>% 

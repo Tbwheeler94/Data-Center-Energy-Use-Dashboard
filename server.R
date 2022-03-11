@@ -117,6 +117,15 @@ server <- function(input, output, session) {
       energy_use_graph <- energy_use_graph %>% rbind(energy_use_SDC, energy_use_MDC, energy_use_TO)
     }
   }
+    
+  # create another data frame that is filtered by company founding year
+  data_founding_year <- data_sheet_company_raw %>% select(company_name, 
+                                                      checked_back_to_founding_year_or_2007,
+                                                      company_founding_year)
+  # drop all the excess rows that have NA data
+  data_founding_year <- na.omit(data_founding_year)
+  data_founding_year <- data_founding_year[data_founding_year$checked_back_to_founding_year_or_2007=="Yes", ]
+  energy_use_graph <- subset(energy_use_graph, company %in% data_founding_year$company_name)
   
   for (i in 1:nrow(energy_use_graph)) {
     if (energy_use_graph[i,3] == "Single Data Center" || energy_use_graph[i,3] == "Multiple Data Centers") {
@@ -137,7 +146,7 @@ server <- function(input, output, session) {
     group_by(company,data_year,energy_reporting_scope,level_of_ownership)
   
   energy_use_final <- energy_use_final %>%
-    filter(data_year == input$input_year, energy_reporting_scope == input$input_reporting_scope)
+    filter(data_year %in% input$input_year, energy_reporting_scope %in% input$input_reporting_scope)
   
   energy_use_final
   
@@ -346,22 +355,23 @@ server <- function(input, output, session) {
   
   #This dataset filters the raw company profiles sheet by the selected company's current year
   company_sheet_selected_company <- reactive({
-    data_sheet_company_raw %>% filter(company_name == input$selected_company)
+    data_sheet_company_raw %>% filter(company_name %in% input$selected_company)
   })
   
   #This dataset filters the raw energy sheet by the selected company's most recent year of data reporting
   energy_sheet_selected_company_current_year <- reactive({
+    
     data_sheet_energy_raw %>% 
-      filter(company == input$selected_company) %>% 
+      filter(company %in% input$selected_company) %>% 
       mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
-      filter(period_covered_start_date == max(period_covered_start_date))
+      filter(period_covered_start_date == max(period_covered_start_date, na.rm = TRUE)) 
   })
   
   #This dataset is used to check for SASB, GRI, CDP reporting
   sasb_cdp_gri_status <- reactive({
     
     energy_sheet_selected_company_current_year_scg <- data_sheet_energy_raw %>% 
-      filter(company == input$selected_company) %>% 
+      filter(company %in% input$selected_company) %>% 
       mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
       filter(period_covered_start_date == max(period_covered_start_date))
     
@@ -377,7 +387,7 @@ server <- function(input, output, session) {
   pue_wue_renewables_status <- reactive({
     
     energy_sheet_selected_company_current_year_pwr <- data_sheet_energy_raw %>% 
-      filter(company == input$selected_company) %>% 
+      filter(company %in% input$selected_company) %>% 
       mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
       filter(period_covered_start_date == max(period_covered_start_date))
     
@@ -392,7 +402,7 @@ server <- function(input, output, session) {
   
   #This dataset is use to check if a company is reporting data center electricity use
   energy_sheet_selected_company_current_year_dc_electricity <- reactive({
-    data_sheet_energy_raw %>% filter(company == input$selected_company) %>% 
+    data_sheet_energy_raw %>% filter(company %in% input$selected_company) %>% 
       mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
       filter(period_covered_start_date == max(period_covered_start_date)) %>% 
       filter(energy_reporting_scope == "Single Data Center" | energy_reporting_scope == "Multiple Data Centers") %>% 
@@ -401,7 +411,7 @@ server <- function(input, output, session) {
   
   #This dataset is use to check if a company is reporting data center fuel use
   energy_sheet_selected_company_current_year_dc_fuel <- reactive({
-    data_sheet_energy_raw %>% filter(company == input$selected_company) %>% 
+    data_sheet_energy_raw %>% filter(company %in% input$selected_company) %>% 
       mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
       filter(period_covered_start_date == max(period_covered_start_date)) %>% 
       filter(energy_reporting_scope == "Single Data Center" | energy_reporting_scope == "Multiple Data Centers") %>% 
@@ -410,7 +420,7 @@ server <- function(input, output, session) {
   
   #This dataset is used to check what level of data center management the company is reporting (filters out total operations rows as sometimes total operations rows are marked as "self-managed)
   energy_sheet_selected_company_current_year_dc <- reactive({
-    data_sheet_energy_raw %>% filter(company == input$selected_company) %>% 
+    data_sheet_energy_raw %>% filter(company %in% input$selected_company) %>% 
       mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
       filter(period_covered_start_date == max(period_covered_start_date)) %>% 
       filter(energy_reporting_scope == "Single Data Center" | energy_reporting_scope == "Multiple Data Centers")
@@ -418,7 +428,7 @@ server <- function(input, output, session) {
   
   #This dataset is use to check if a company is reporting company-wide electricity use
   energy_sheet_selected_company_current_year_te <- reactive({
-    data_sheet_energy_raw %>% filter(company == input$selected_company) %>% 
+    data_sheet_energy_raw %>% filter(company %in% input$selected_company) %>% 
       mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
       filter(period_covered_start_date == max(period_covered_start_date)) %>% 
       filter(energy_reporting_scope == "Total Operations") %>% 
@@ -608,9 +618,9 @@ server <- function(input, output, session) {
   #Sources Assessed######################
   #######################################
   
-  output$sources_table <- renderDataTable({
-    buildCompanyProfileMethodsTable(data_sheet_energy_transformed)
-  })
+  #output$sources_table <- renderDataTable({
+  #  buildCompanyProfileMethodsTable(data_sheet_energy_transformed)
+  #})
   
   ##############################################################################################################
   ##### Generate downloadable csv of full company profile ######################################################
@@ -652,7 +662,7 @@ server <- function(input, output, session) {
   ##### Additional interactivity: Conditionally show data tables based on whether they contain data or not #####
   ##############################################################################################################
   
-  #Conditionally show either 1 data center plot or 5 company wide plots depending on user selection
+  #Conditionally show data tables depending on data availability
   #observeEvent(selected_company_fuel_use_filter(), {
   #  
   # if(!is.null(selected_company_fuel_use_filter())) { 

@@ -17,6 +17,16 @@ library(fastDummies)
 library(shinyjs)
 library(data.table)
 
+########################################################
+###### Suppress warning from group by function #########
+########################################################
+
+options(dplyr.summarise.inform = FALSE)
+
+########################################################
+###### Suppress warning from group by function #########
+########################################################
+
 source(here("R", "transformEnergyDataRaw.R"))
 
 ##################################################

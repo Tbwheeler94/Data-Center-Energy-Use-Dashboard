@@ -2,7 +2,7 @@ buildCompanyProfileElectricityUsePlot <- function(selected_company) {
 
   selected_company_electricity_use_filter <- 
     data_sheet_energy_transformed %>% 
-    filter(company == selected_company) %>% #filter by selected company
+    filter(company %in% selected_company) %>% #filter by selected company
     mutate_at(vars(electricity_converted), ~replace_na(., 0)) %>% #replace any NA electricity values with 0
     mutate_at(vars(level_of_ownership), ~replace_na(., "")) %>% #replace any NA level of ownership values with 0
     filter(electricity_converted != 0) %>% #filter out any rows where reported electricity is equal to 0

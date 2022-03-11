@@ -2,7 +2,7 @@ buildCompanyProfileFuelUsePlot <- function(selected_company) {
   
   selected_company_fuel_use_filter <- 
     data_sheet_energy_transformed %>% 
-    filter(company == selected_company) %>% 
+    filter(company %in% selected_company) %>% 
     mutate_at(vars(fuel_1_converted, #replace na values with 0
                    fuel_2_converted, fuel_3_converted, fuel_4_converted, 
                    fuel_5_converted), ~replace_na(., 0)) %>%

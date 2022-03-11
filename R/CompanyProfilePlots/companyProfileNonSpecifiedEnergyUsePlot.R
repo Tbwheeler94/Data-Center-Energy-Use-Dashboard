@@ -2,7 +2,7 @@ buildCompanyProfileNonSpecifiedEnergyUsePlot <- function(selected_company) {
   
   selected_company_ns_energy_use_filter <-
     data_sheet_energy_transformed %>%
-    filter(company == selected_company, fuel_1_type == "Total Energy Use") %>% 
+    filter(company %in% selected_company, fuel_1_type == "Total Energy Use") %>% 
     mutate_at(vars(fuel_1_type), ~replace_na(., 0)) %>%
     filter(fuel_1_type != 0) %>%
     select("data_year", "energy_reporting_scope", "level_of_ownership", "fuel_1_type", "fuel_1_converted") %>% 
