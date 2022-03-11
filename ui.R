@@ -8,7 +8,7 @@ MainCard <- function(..., title = NULL) {
   Stack(
     class = "ms-depth-8",
     tokens = list(padding = 20, childrenGap = 5),
-    if (!is.null(title)) Text(title, variant = "xxLarge"),
+    style = 'border-radius: 5px; background-color: white; border-top: 8px solid #137AD1; text-align: center;',
     ...  
   )
 }
@@ -77,7 +77,6 @@ home_page <- makePage(
     Grid(
       GridItem(class = "ms-sm12 ms-xl12",
         MainCard(title = "About the Data",
-                 style = "border-radius: 5px; background-color: white; border-top: 8px solid #137AD1;",
                  Text("We are a team of University of California, Santa Barbara based researchers aiming to increase transparency and understanding of trends in global data center energy use. This website is a dashboard for modelers, policy-makers, and the general public to gain insight into data currently being reported by many of the world largest technology companies. Our visualization uses aggregated energy data primarily collected from publicly disclosed corporate sustainability reports.", variant = "large"))
         ),
         GridItem(class = "ms-sm12 ms-xl4",
@@ -113,7 +112,7 @@ dc_energy_101_page <- makePage(
   div(
     Grid(
       GridItem(class = "ms-sm12 ms-xl12", style = "text-align: center",
-               MainCard(title = "Page Under Construction",
+               MainCard(Text('Page Under Construction', variant = "xxLarge"),
                         FontIcon(iconName = "ConstructionCone", style = list(fontSize = 80)
                         )
                )
@@ -255,8 +254,8 @@ company_analysis_page <- makePage(
                )
       )
     ),
+    Grid(Stack(style = "text-align: center; padding: 25px", Text("Historical Energy Use Trend & Data", variant = "xxLarge", style = "color: #137AD1;"))),
     Grid(
-      Stack(style = "text-align: center; padding: 25px", Text("Historical Energy Use Trend & Data", variant = "xxLarge", style = "color: #137AD1;")),
       GridItem(class = "ms-sm12 ms-xl6",
                CompanyCard(
                  Text("Electricity Use (TWh/yr)", variant = "large", style = "text-align: center;"),
@@ -264,16 +263,16 @@ company_analysis_page <- makePage(
                )
                
       ),
-      GridItem(class = "ms-sm12 ms-xl6",
+      GridItem(class = "ms-sm12 ms-xl6", id = "fuel-use-table",
                CompanyCard(
                  Text("Other fuel use (TWh/yr)", variant = "large", style = "text-align: center;"),
-                 div(dataTableOutput("other_fuel_use_table"), style = "width: 100%", id = "fuel-use-table")
+                 div(dataTableOutput("other_fuel_use_table"), style = "width: 100%")
                )
                
       )
     ),
     Grid(
-      GridItem(class = "ms-sm12 ms-xl6",
+      GridItem(class = "ms-sm12 ms-xl6",  id = "ns-energy-use-table",
                CompanyCard(
                  Text("Non-specified energy use (TWh/yr)", variant = "large", style = "text-align: center;"),
                  div(dataTableOutput("ns_energy_use_table"), style = "width: 100%")
@@ -294,17 +293,17 @@ company_analysis_page <- makePage(
                Stack(class = "ms-depth-8", tokens = list(padding = 20, childrenGap = 10),
                      style = 'border-radius: 5px; background-color: white; border-top: 8px solid #137AD1;',
                      Text("All company data are based on a rigorous review of publicly-available resources.", variant = "large"),
-                     PrimaryButton(text = "Learn More", style = "width: 120px; font-style: bold;"),
+                     PrimaryButton.shinyInput("learnmore", text = "Learn More", style = "width: 120px; font-style: bold;"),
                      Text("If you spot errors or have more recent data, please let us know!", variant = "large"),
                      PrimaryButton(text = "Report Issue", style = "width: 130px; font-style: bold;"))
       )
     ),
     Grid(
       Stack(style = "text-align: center; padding: 25px", Text("Sources Assessed", variant = "xxLarge", style = "color: #137AD1;")),
-      GridItem(class = "ms-sm12 ms-xl12",
-               CompanyCard(
-                 Text("Energy Data", variant = "large", style = "text-align: center;"),
-                 dataTableOutput("sources_table")
+      GridItem(class = "ms-sm12 ms-xl12", style = "text-align: center",
+               MainCard(Text('Section Under Construction', variant = "xxLarge"),
+                        FontIcon(iconName = "ConstructionCone", style = list(fontSize = 80)
+                        )
                )
       )
     )
@@ -408,10 +407,12 @@ shiny::addResourcePath("shiny.router", system.file("www", package = "shiny.route
 shiny_router_js_src <- file.path("shiny.router", "shiny.router.js")
 shiny_router_script_tag <- shiny::tags$script(type = "text/javascript", src = shiny_router_js_src)
 
-ui <- fluentPage(
-  useShinyjs(),
-  layout(router$ui),
-  tags$head(
-    tags$link(href = "style.css", rel = "stylesheet", type = "text/css"),
-    shiny_router_script_tag
-  ))
+ui <- #secure_app(head_auth = tags$script(inactivity), #authetication
+                 fluentPage(
+                 useShinyjs(),
+                 layout(router$ui),
+                 tags$head(
+                   tags$link(href = "style.css", rel = "stylesheet", type = "text/css"),
+                   shiny_router_script_tag
+                 ))
+                 #)

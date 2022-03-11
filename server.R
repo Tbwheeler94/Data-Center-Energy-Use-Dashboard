@@ -32,6 +32,16 @@ server <- function(input, output, session) {
   #w$hide() 
   
   ########################################################
+  ###### Check login credentials (authetication) #########
+  ########################################################
+  
+  #result_auth <- secure_server(check_credentials = check_credentials(credentials))
+  #
+  #output$res_auth <- renderPrint({
+  #  reactiveValuesToList(result_auth)
+  #})
+  
+  ########################################################
   ########################################################
   ###### Tab 1: Home  #################################### 
   ########################################################
@@ -47,16 +57,6 @@ server <- function(input, output, session) {
     #output length of vector of unique values from report_year column
     number_of_reporting_years
     })
-  
-  observe({
-    invalidateLater(100, session)
-    isolate({
-      i <- 0
-      if (i < number_of_reporting_years) {
-        newVal <- number_of_reporting_years + 1
-      }
-    })
-  })
   
   output$companies_reporting <- renderUI({
     
@@ -584,9 +584,11 @@ server <- function(input, output, session) {
     selected_company_fuel_use_filter <- buildCompanyProfileFuelUsePlot(input$selected_company)
     
     if(nrow(selected_company_fuel_use_filter) != 0) {
+      #shinyjs::show(selector = "div#fuel-use-table")
       datatable(selected_company_fuel_use_filter, rownames = FALSE, options = list(columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
         formatStyle('category', 'format', textAlign = styleEqual(c(0, 1), c('right', 'left')), fontStyle = styleEqual(c(0, 1), c('italic', 'normal')))
     } else {
+      #shinyjs::hide(selector = "div#fuel-use-table")
       datatable(no_data, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){","  $(thead).remove();","}")), rownames = FALSE)
     }
   })
@@ -670,9 +672,13 @@ server <- function(input, output, session) {
     }
   )
   
-  ##############################################################################################################
-  ##### Additional interactivity: Conditionally show data tables based on whether they contain data or not #####
-  ##############################################################################################################
+  ####################################
+  ##### Additional interactivity #####
+  ####################################
+  
+  ##########################################
+  ##### Display or hide fuel-use-table #####
+  ##########################################
   
   #Conditionally show data tables depending on data availability
   #observeEvent(selected_company_fuel_use_filter(), {
@@ -685,6 +691,15 @@ server <- function(input, output, session) {
   # 
   #})
   
+  ##############################################################################################################
+  ##### Additional interactivity: Conditionally show data tables based on whether they contain data or not #####
+  ##############################################################################################################
+  
+  observeEvent(input$learnmore, {
+    onclick('learnmore', change_page('/methods', session = shiny::getDefaultReactiveDomain(), mode = "push"))
+    #onclick('learnmore', updateNavbarPage('methods', session = shiny::getDefaultReactiveDomain()))
+  })
+
   ########################################################
   ########################################################
   ###### Tab 5: Methodology  ############################# 

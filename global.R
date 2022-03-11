@@ -16,24 +16,49 @@ library(waiter)
 library(fastDummies)
 library(shinyjs)
 library(data.table)
+library(shinymanager)
 
 ########################################################
-###### Suppress warning from group by function #########
+###### Suppress warnings ###############################
 ########################################################
 
+#suppress groupby warning
 options(dplyr.summarise.inform = FALSE)
 
 ########################################################
-###### Suppress warning from group by function #########
+###### Reference sub-function ##########################
 ########################################################
 
 source(here("R", "transformEnergyDataRaw.R"))
 
-##################################################
-#### NOTE: Need to transfer over code from data_preprocessing.Rmd to 
-#### data_sheet_energy_transformed <- read.csv(here('data', 'data_sheet_energy_transformed.csv'))
-#### to phase out using this csv as an intermediary
-##################################################
+########################################################
+###### Authorize user login (authentication) ###########
+########################################################
+
+#inactivity <- "function idleTimer() {
+#    var t = setTimeout(logout, 120000);
+#    window.onmousemove = resetTimer; // catches mouse movements
+#    window.onmousedown = resetTimer; // catches mouse movements
+#    window.onclick = resetTimer;     // catches mouse clicks
+#    window.onscroll = resetTimer;    // catches scrolling
+#    window.onkeypress = resetTimer;  //catches keyboard actions
+#    
+#    function logout() {
+#    window.close();  //close the window
+#    }
+#    
+#    function resetTimer() {
+#    clearTimeout(t);
+#    t = setTimeout(logout, 120000);  // time is in milliseconds (1000 is 1 second)
+#    }
+#    }
+#    idleTimer();"
+#
+#
+## data.frame with credentials info
+#credentials <- data.frame(
+#  user = c("ucsb"),
+#  password = c("isal"))
 
 ##################################################
 ### Import All Raw Sheets and Pre-process Data ###
