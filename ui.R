@@ -170,19 +170,29 @@ industry_trends_page <- makePage(
     div(id = 'company-wide-plots',
       Grid(
         GridItem(class = "ms-sm12 ms-xl6",
-                 GraphCard(plotOutput('company_wide_plot_1'))),
+                 GraphCard(Text("Company Wide Energy Use At Scale of KWh to 1s of GWh", variant = "large", style = "text-align: center;"),
+                           br(),
+                           plotOutput('company_wide_plot_1'))),
         GridItem(class = "ms-sm12 ms-xl6",
-                 GraphCard(plotOutput('company_wide_plot_2')))
+                 GraphCard(Text("Company Wide Energy Use At Scale of 10s of GWh", variant = "large", style = "text-align: center;"),
+                           br(),
+                           plotOutput('company_wide_plot_2')))
       ),
       Grid(
         GridItem(class = "ms-sm12 ms-xl6",
-                 GraphCard(plotOutput('company_wide_plot_3'))),
+                 GraphCard(Text("Company Wide Energy Use At Scale of 100s of GWh", variant = "large", style = "text-align: center;"),
+                           br(),
+                           plotOutput('company_wide_plot_3'))),
         GridItem(class = "ms-sm12 ms-xl6",
-                 GraphCard(plotOutput('company_wide_plot_4')))
+                 GraphCard(Text("Company Wide Energy Use At Scale of 1s of TWh", variant = "large", style = "text-align: center;"),
+                           br(),
+                           plotOutput('company_wide_plot_4')))
       ),
       Grid(
         GridItem(class = "ms-sm12 ms-xl6",
-                 GraphCard(plotOutput('company_wide_plot_5')))
+                 GraphCard(Text("Company Wide Energy Use At Scale of 10s of TWh and Greater", variant = "large", style = "text-align: center;"),
+                           br(),
+                           plotOutput('company_wide_plot_5')))
       )
    )
   )

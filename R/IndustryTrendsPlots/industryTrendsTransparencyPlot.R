@@ -58,7 +58,7 @@ buildIndustryTrendsTransparencyPlot <- function(data_sheet_energy_raw) {
   }
   
   # create another data frame that is filtered by company founding year
-  data_founding_year <- data_sheet_company %>% select(company_name, 
+  data_founding_year <- data_sheet_company_raw %>% select(company_name, 
                                                       checked_back_to_founding_year_or_2007,
                                                       company_founding_year)
   # drop all the excess rows that have NA data

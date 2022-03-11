@@ -41,10 +41,22 @@ server <- function(input, output, session) {
   ###### Card 1.2: Dynamically generate number of years reported ######
   #####################################################################
   
+  number_of_reporting_years <- length(unique(data_sheet_energy_raw$report_year))
+  
   output$years_reported <- renderUI({
     #output length of vector of unique values from report_year column
-    length(unique(data_sheet_energy_raw$report_year))
+    number_of_reporting_years
     })
+  
+  observe({
+    invalidateLater(100, session)
+    isolate({
+      i <- 0
+      if (i < number_of_reporting_years) {
+        newVal <- number_of_reporting_years + 1
+      }
+    })
+  })
   
   output$companies_reporting <- renderUI({
     
@@ -212,7 +224,7 @@ server <- function(input, output, session) {
     } else {
       
       void_plot +
-        geom_text(aes(0,0,label='No Data Reported At The Scale of KWh to 1s of GWh'), size = 7)
+        geom_text(aes(0,0,label='No Data Reported At This Scale'), size = 7)
       
     }
     
@@ -240,7 +252,7 @@ server <- function(input, output, session) {
     } else {
       
       void_plot +
-        geom_text(aes(0,0,label='No Data Reported At The Scale of 10s of GWh'), size = 7)
+        geom_text(aes(0,0,label='No Data Reported At This Scale'), size = 7)
       
     }
   
@@ -268,7 +280,7 @@ server <- function(input, output, session) {
     } else {
       
       void_plot +
-        geom_text(aes(0,0,label='No Data Reported At The Scale of 100s of GWh'), size = 7)
+        geom_text(aes(0,0,label='No Data Reported At This Scale'), size = 7)
       
     }
   
@@ -296,7 +308,7 @@ server <- function(input, output, session) {
     } else {
       
       void_plot +
-        geom_text(aes(0,0,label='No Data Reported At The Scale of 1s of TWh'), size = 7)
+        geom_text(aes(0,0,label='No Data Reported At This Scale'), size = 7)
       
     }
     
@@ -324,7 +336,7 @@ server <- function(input, output, session) {
     } else {
       
       void_plot +
-        geom_text(aes(0,0,label='No Data Reported At The Scale of 10s of TWh and Greater'), size = 7)
+        geom_text(aes(0,0,label='No Data Reported At This Scale'), size = 7)
       
     }
     
