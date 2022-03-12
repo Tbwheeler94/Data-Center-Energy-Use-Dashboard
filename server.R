@@ -35,11 +35,11 @@ server <- function(input, output, session) {
   ###### Check login credentials (authetication) #########
   ########################################################
   
-  #result_auth <- secure_server(check_credentials = check_credentials(credentials))
-  #
-  #output$res_auth <- renderPrint({
-  #  reactiveValuesToList(result_auth)
-  #})
+  result_auth <- secure_server(check_credentials = check_credentials(credentials))
+  
+  output$res_auth <- renderPrint({
+    reactiveValuesToList(result_auth)
+  })
   
   ########################################################
   ########################################################

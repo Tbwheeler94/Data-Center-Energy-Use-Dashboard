@@ -76,8 +76,8 @@ home_page <- makePage(
   div(
     Grid(
       GridItem(class = "ms-sm12 ms-xl12",
-        MainCard(title = "About the Data",
-                 Text("We are a team of University of California, Santa Barbara based researchers aiming to increase transparency and understanding of trends in global data center energy use. This website is a dashboard for modelers, policy-makers, and the general public to gain insight into data currently being reported by many of the world largest technology companies. Our visualization uses aggregated energy data primarily collected from publicly disclosed corporate sustainability reports.", variant = "large"))
+        MainCard(Text('About the data', variant = "xxLarge", style = "text-align: left;"),
+                 Text("We are a team of University of California, Santa Barbara based researchers aiming to increase transparency and understanding of trends in global data center energy use. This website is a dashboard for modelers, policy-makers, and the general public to gain insight into data currently being reported by many of the world largest technology companies. Our visualization uses aggregated energy data primarily collected from publicly disclosed corporate sustainability reports.", variant = "large", style = "text-align: left;"))
         ),
         GridItem(class = "ms-sm12 ms-xl4",
           HighlightsCard(
@@ -319,9 +319,9 @@ methods_page <- makePage(
   div(
     Grid(
       GridItem(class = "ms-sm12 ms-xl12", style = "text-align: center",
-               MainCard(title = "Page Under Construction",
-               FontIcon(iconName = "ConstructionCone", style = list(fontSize = 80))
-               )
+               MainCard(Text('Section Under Construction', variant = "xxLarge"),
+                        FontIcon(iconName = "ConstructionCone", style = list(fontSize = 80))
+                        )
       )
     )
   )
@@ -407,7 +407,7 @@ shiny::addResourcePath("shiny.router", system.file("www", package = "shiny.route
 shiny_router_js_src <- file.path("shiny.router", "shiny.router.js")
 shiny_router_script_tag <- shiny::tags$script(type = "text/javascript", src = shiny_router_js_src)
 
-ui <- #secure_app(head_auth = tags$script(inactivity), #authetication
+ui <- secure_app(head_auth = tags$script(inactivity), #authetication
                  fluentPage(
                  useShinyjs(),
                  layout(router$ui),
@@ -415,4 +415,4 @@ ui <- #secure_app(head_auth = tags$script(inactivity), #authetication
                    tags$link(href = "style.css", rel = "stylesheet", type = "text/css"),
                    shiny_router_script_tag
                  ))
-                 #)
+                 )
