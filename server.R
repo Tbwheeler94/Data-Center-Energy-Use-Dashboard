@@ -177,9 +177,14 @@ server <- function(input, output, session) {
   ### Generate Data Center Plot ####
   ##################################
   
-  output$data_centerplot <- renderPlotly({
-    buildIndustryTrendsDataCenterPlot(energy_use_final())
-    })
+  output$data_centerplot <- renderPlot({
+    if (nrow(energy_use_final()) != 0) {
+      buildIndustryTrendsDataCenterPlot(energy_use_final())
+    } else {
+      void_plot +
+        geom_text(aes(0,0,label='No Data Reported For This Year'), size = 7)
+    }
+  })
     
   ##################################################
   ### Generate Company Wide Subdataset and Plots ###

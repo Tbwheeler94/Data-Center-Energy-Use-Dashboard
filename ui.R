@@ -162,9 +162,10 @@ industry_trends_page <- makePage(
     div(id = 'data-center-plots',
         Grid(
           GridItem(class = "ms-sm12 ms-xl12",
-           GraphCard(plotlyOutput('data_centerplot'))
+           GraphCard(Text("Data Center Electricity Use by Year", variant = "large", style = "text-align: center;"),
+                     br(),
+                     plotOutput('data_centerplot')))
            )
-          )
         ),
     div(id = 'company-wide-plots',
       Grid(
