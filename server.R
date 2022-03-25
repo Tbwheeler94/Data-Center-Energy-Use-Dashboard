@@ -632,9 +632,9 @@ server <- function(input, output, session) {
   #Sources Assessed######################
   #######################################
   
-  #output$sources_table <- renderDataTable({
-  #  buildCompanyProfileMethodsTable(data_sheet_energy_transformed)
-  #})
+  output$sources_table <- renderDataTable({
+    buildCompanyProfileMethodsTable(data_sheet_energy_transformed, input$selected_company)
+  })
   
   ##############################################################################################################
   ##### Generate downloadable csv of full company profile ######################################################

@@ -301,10 +301,14 @@ company_analysis_page <- makePage(
     Grid(
       Stack(style = "text-align: center; padding: 25px", Text("Sources Assessed", variant = "xxLarge", style = "color: #137AD1;")),
       GridItem(class = "ms-sm12 ms-xl12", style = "text-align: center",
-               MainCard(Text('Section Under Construction', variant = "xxLarge"),
-                        FontIcon(iconName = "ConstructionCone", style = list(fontSize = 80)
-                        )
+               CompanyCard(
+                 Text(variant = "large", style = "text-align: center;"),
+                 div(dataTableOutput("sources_table"), style = "width: 100%;")
                )
+               #MainCard(Text('Section Under Construction', variant = "xxLarge"),
+                        #FontIcon(iconName = "ConstructionCone", style = list(fontSize = 80)
+                        #)
+               #)
       )
     )
   )
