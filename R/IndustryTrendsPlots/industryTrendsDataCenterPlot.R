@@ -1,8 +1,8 @@
-buildIndustryTrendsDataCenterPlot <- function(energy_use_DC) {
+buildIndustryTrendsDataCenterPlot <- function(energy_use_final) {
   
   if ("Data Centers" %in% energy_use_final$energy_reporting_scope){
     # create plot for data center electricity usage
-    ggplot(energy_use_DC, aes(x=electricity_converted)) + 
+    ggplot(energy_use_final, aes(x=electricity_converted)) + 
       geom_bar(aes(y=company, fill=level_of_ownership), 
                position=position_stack(reverse = TRUE), stat="identity") +
       theme_classic() +
