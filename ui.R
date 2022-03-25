@@ -305,10 +305,6 @@ company_analysis_page <- makePage(
                  Text(variant = "large", style = "text-align: center;"),
                  div(dataTableOutput("sources_table"), style = "width: 100%;")
                )
-               #MainCard(Text('Section Under Construction', variant = "xxLarge"),
-                        #FontIcon(iconName = "ConstructionCone", style = list(fontSize = 80)
-                        #)
-               #)
       )
     )
   )
