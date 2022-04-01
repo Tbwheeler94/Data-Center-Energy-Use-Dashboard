@@ -408,7 +408,7 @@ shiny::addResourcePath("shiny.router", system.file("www", package = "shiny.route
 shiny_router_js_src <- file.path("shiny.router", "shiny.router.js")
 shiny_router_script_tag <- shiny::tags$script(type = "text/javascript", src = shiny_router_js_src)
 
-ui <- secure_app(head_auth = tags$script(inactivity), #authetication
+ui <- #secure_app(head_auth = tags$script(inactivity), #authetication
                  fluentPage(
                  useShinyjs(),
                  layout(router$ui),
@@ -416,4 +416,4 @@ ui <- secure_app(head_auth = tags$script(inactivity), #authetication
                    tags$link(href = "style.css", rel = "stylesheet", type = "text/css"),
                    shiny_router_script_tag
                  ))
-                 )
+                 #)
