@@ -9,14 +9,14 @@ library(xlsx)
 library(readxl)
 library(DT)
 library(plotly)
-library(gt)
 library(scales)
 library(tidyselect)
-library(waiter)
-library(fastDummies)
-library(shinyjs)
+library(fastDummies) 
+library(shinyjs) #enables use of javascript functions
 library(data.table)
-library(shinymanager)
+library(shinymanager) #generates a user authentication page
+library(shinycssloaders) #package for generating loading animations
+library(waiter) #package for generating loading animations
 
 ########################################################
 ###### Suppress warnings ###############################

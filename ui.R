@@ -408,8 +408,12 @@ shiny::addResourcePath("shiny.router", system.file("www", package = "shiny.route
 shiny_router_js_src <- file.path("shiny.router", "shiny.router.js")
 shiny_router_script_tag <- shiny::tags$script(type = "text/javascript", src = shiny_router_js_src)
 
-ui <- #secure_app(head_auth = tags$script(inactivity), #authetication
+ui <- #secure_app(head_auth = tags$script(inactivity), #authentication
                  fluentPage(
+                 autoWaiter(id = c("data_centerplot", "transparency_graph", "selected_company_stats", 
+                                   "company_data_center_overview", "reported_energy_levels", "data_standards",
+                                   "other_metrics", "electricity_use_table"), 
+                            html = spin_3(), color = transparent(1), fadeout = TRUE),
                  useShinyjs(),
                  layout(router$ui),
                  tags$head(
