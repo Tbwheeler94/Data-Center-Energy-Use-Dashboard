@@ -4,7 +4,6 @@
 ################
 
 MainCard <- function(..., title = NULL) {
-  
   Stack(
     class = "ms-depth-8",
     tokens = list(padding = 20, childrenGap = 5),
@@ -14,7 +13,6 @@ MainCard <- function(..., title = NULL) {
 }
 
 HighlightsCard <- function(...) {
-  
   Stack(
     class = "ms-depth-8",
     tokens = list(padding = 20, childrenGap = 5),
@@ -24,7 +22,6 @@ HighlightsCard <- function(...) {
 }
 
 CompanyCard <- function(..., title = NULL) {
-  
   Stack(
     class = "ms-depth-8",
     tokens = list(padding = 20, childrenGap = 5),
@@ -34,7 +31,6 @@ CompanyCard <- function(..., title = NULL) {
 }
 
 GraphCard <- function(..., title = NULL) {
-  
   Stack(
     class = "ms-depth-8",
     tokens = list(padding = 20, childrenGap = 5),
@@ -289,19 +285,15 @@ company_analysis_page <- makePage(
       )
     ),
     Grid(
-      Stack(style = "text-align: center; padding: 25px", Text("Methodology", variant = "xxLarge", style = "color: #137AD1;")),
-      GridItem(class = "ms-sm12 ms-xl12",
-               Stack(class = "ms-depth-8", tokens = list(padding = 20, childrenGap = 10),
-                     style = 'border-radius: 5px; background-color: white; border-top: 8px solid #137AD1;',
-                     Text("All company data are based on a rigorous review of publicly-available resources.", variant = "large"),
-                     PrimaryButton.shinyInput("learnmore", text = "Learn More", style = "width: 120px; font-style: bold;"),
+      GridItem(class = "ms-sm12 ms-xl4",
+               Stack(style = "text-align: center; padding: 25px;",Text("Methodology", variant = "xxLarge", style = "color: #137AD1;")),
+               CompanyCard(Text("All company data are based on a rigorous review of publicly-available resources.", variant = "large"),
+                     PrimaryButton.shinyInput("learn-more", text = "Learn More", style = "width: 120px; font-style: bold;"),
                      Text("If you spot errors or have more recent data, please let us know!", variant = "large"),
-                     PrimaryButton(text = "Report Issue", style = "width: 130px; font-style: bold;"))
-      )
-    ),
-    Grid(
-      Stack(style = "text-align: center; padding: 25px", Text("Sources Assessed", variant = "xxLarge", style = "color: #137AD1;")),
-      GridItem(class = "ms-sm12 ms-xl12", style = "text-align: center",
+                     PrimaryButton.shinyInput("report-issue", text = "Report Issue", style = "width: 130px; font-style: bold;"))
+      ),
+      GridItem(class = "ms-sm12 ms-xl8",
+               Stack(style = "text-align: center; padding: 25px;", Text("Sources Assessed", variant = "xxLarge", style = "color: #137AD1;")),
                CompanyCard(
                  Text(variant = "large", style = "text-align: center;"),
                  div(dataTableOutput("sources_table"), style = "width: 100%;")
@@ -323,6 +315,22 @@ methods_page <- makePage(
                MainCard(Text('Section Under Construction', variant = "xxLarge"),
                         FontIcon(iconName = "ConstructionCone", style = list(fontSize = 80))
                         )
+      )
+    )
+  )
+)
+
+###########################################
+######### CONTACT PAGE ###################
+###########################################
+
+contact_page <- makePage(
+  div(
+    Grid(
+      GridItem(class = "ms-sm12 ms-xl12", style = "text-align: center",
+               MainCard(Text('Section Under Construction', variant = "xxLarge"),
+                        FontIcon(iconName = "ConstructionCone", style = list(fontSize = 80))
+               )
       )
     )
   )
@@ -359,7 +367,8 @@ navigation <- Nav(
       list(name = 'Industry Trends', url = '#!/industry-trends', key = 'trends', icon = 'AnalyticsReport'),
       list(name = 'Company Analysis', url = '#!/company-analysis', key = 'analysis', icon = 'AnalyticsView'),
       list(name = 'Methods', url = '#!/methods', key = 'methods', icon = 'WebAppBuilderFragment'),
-      list(name = 'ISAL', url = 'http://www.ucsb.edu/', key = 'isal', icon = 'MiniLink')
+      list(name = 'Contact Us', url = '#!/contact-us', key = 'contact', icon = 'Send'),
+      list(name = 'ISA Lab Website', url = 'https://bren.ucsb.edu/people/eric-masanet', key = 'isal', icon = 'MiniLink')
     ))
   ),
   initialSelectedKey = 'home',
@@ -377,7 +386,7 @@ footer <- Stack(
   horizontalAlign = 'space-between',
   tokens = list(childrenGap = 20),
   Text(variant = "medium", "Built by the Industrial Sustainability Analysis Lab at UCSB", block=TRUE),
-  Text(variant = "medium", nowrap = FALSE, "If you'd like to learn more, reach out to us at info_isal@ucsb.edu"),
+  Text(variant = "medium", nowrap = FALSE, "If you'd like to connect, reach out to us at info@isalab.edu"),
   Text(variant = "medium", nowrap = FALSE, "All rights reserved.")
 )
 
@@ -400,7 +409,8 @@ router <- make_router(
   route("data-center-energy", dc_energy_101_page),
   route("industry-trends", industry_trends_page),
   route("company-analysis", company_analysis_page),
-  route("methods", methods_page)
+  route("methods", methods_page),
+  route("contact-us", contact_page)
   )
 
 # Add shiny.router dependencies manually: they are not picked up because they're added in a non-standard way.
@@ -408,8 +418,14 @@ shiny::addResourcePath("shiny.router", system.file("www", package = "shiny.route
 shiny_router_js_src <- file.path("shiny.router", "shiny.router.js")
 shiny_router_script_tag <- shiny::tags$script(type = "text/javascript", src = shiny_router_js_src)
 
-ui <- #secure_app(head_auth = tags$script(inactivity), #authetication
+ui <- #secure_app(head_auth = tags$script(inactivity), #authentication
                  fluentPage(
+                 autoWaiter(id = c("data_centerplot", "transparency_graph", "selected_company_stats", 
+                                   "company_data_center_overview", "energy_reporting_assessment",
+                                   "reported_energy_levels", "data_standards",
+                                   "other_metrics", "electricity_use_table", "other_fuel_use_table",
+                                   "ns_energy_use_table", "sources_table"), 
+                            html = spin_2(), color = transparent(1), fadeout = TRUE),
                  useShinyjs(),
                  layout(router$ui),
                  tags$head(

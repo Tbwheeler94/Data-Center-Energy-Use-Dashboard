@@ -629,6 +629,19 @@ server <- function(input, output, session) {
   
   #######################################
   #Table 12##############################
+  # Methodology ######################
+  #######################################
+
+  #change to methods page when the learn more button is clicked
+  onclick('learn-more', {change_page('/methods', session = shiny::getDefaultReactiveDomain(), mode = "push");
+                          Nav(selectedKey = 'methods')})
+  
+  #change to contact us page when the report issue button is clicked
+  onclick('report-issue', change_page('/contact-us', session = shiny::getDefaultReactiveDomain(), mode = "push"))
+  #onclick('learnmore', Nav(selectedKey = 'methods'))
+  
+  #######################################
+  #Table 13##############################
   #Sources Assessed######################
   #######################################
   
@@ -690,15 +703,6 @@ server <- function(input, output, session) {
   # }
   # 
   #})
-  
-  ##############################################################################################################
-  ##### Additional interactivity: Conditionally show data tables based on whether they contain data or not #####
-  ##############################################################################################################
-  
-  observeEvent(input$learnmore, {
-    onclick('learnmore', change_page('/methods', session = shiny::getDefaultReactiveDomain(), mode = "push"))
-    #onclick('learnmore', updateNavbarPage('methods', session = shiny::getDefaultReactiveDomain()))
-  })
 
   ########################################################
   ########################################################
