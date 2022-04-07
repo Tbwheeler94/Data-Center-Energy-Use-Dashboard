@@ -1,12 +1,10 @@
 buildIndustryTrendsCompanyWide2Plot <- function(energy_use_L2_2) {
   
   ggplot(data = energy_use_L2_2) +
-    geom_bar(mapping = aes(x = electricity_converted, y=reorder(energy_use_L2_2$company, energy_use_L2_2$electricity_converted)),
+    geom_bar(mapping = aes(x = electricity_converted/1000000, y=reorder(energy_use_L2_2$company, energy_use_L2_2$electricity_converted)),
              stat = 'identity',
              fill = '#ff7f50') +
-    scale_x_continuous(position = 'top', 
-                       expand = expansion(mult = c(0, 0.05)), 
-                       labels = scales::label_number_si()) +
+    scale_x_continuous(position = 'top') +
     theme_classic() +
     theme(axis.title.x=element_blank(),
           axis.title.y=element_blank(),
