@@ -632,9 +632,15 @@ server <- function(input, output, session) {
   # Methodology ######################
   #######################################
 
+  #selected_nav <- 'home'
+  
   #change to methods page when the learn more button is clicked
-  onclick('learn-more', {change_page('/methods', session = shiny::getDefaultReactiveDomain(), mode = "push");
-                          Nav(selectedKey = 'methods')})
+  #onclick('learn-more', selected_nav <- 'method')
+  onclick('learn-more', change_page('/methods', session = shiny::getDefaultReactiveDomain(), mode = "push"))
+  
+  #output$selected_nav <- renderText({ selected_nav })
+  
+  #environment(navigation[["children"]][[2]])[["data"]][["props"]][["value"]][["selectedKey"]] <- "method"
   
   #change to contact us page when the report issue button is clicked
   onclick('report-issue', change_page('/contact-us', session = shiny::getDefaultReactiveDomain(), mode = "push"))

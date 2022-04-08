@@ -424,7 +424,7 @@ ui <- #secure_app(head_auth = tags$script(inactivity), #authentication
                                    "company_data_center_overview", "energy_reporting_assessment",
                                    "reported_energy_levels", "data_standards",
                                    "other_metrics", "electricity_use_table", "other_fuel_use_table",
-                                   "ns_energy_use_table", "sources_table"), 
+                                   "ns_energy_use_table", "pue_table", "sources_table"), 
                             html = spin_2(), color = transparent(1), fadeout = TRUE),
                  useShinyjs(),
                  layout(router$ui),
