@@ -200,7 +200,7 @@ industry_trends_page <- makePage(
 
 company_analysis_page <- makePage(
   div(
-    Grid(style = "display: flex;",
+    Grid(
       GridItem(class = "ms-sm12 ms-xl3",
                Stack(
                  class = "ms-depth-8",
@@ -420,10 +420,14 @@ shiny_router_script_tag <- shiny::tags$script(type = "text/javascript", src = sh
 
 ui <- #secure_app(head_auth = tags$script(inactivity), #authentication
                  fluentPage(
-                 autoWaiter(id = c("data_centerplot", "transparency_graph", "selected_company_stats", 
-                                   "company_data_center_overview", "energy_reporting_assessment",
-                                   "reported_energy_levels", "data_standards",
-                                   "other_metrics", "electricity_use_table", "other_fuel_use_table",
+                 autoWaiter(id = c(#add loading animations to industry trend graphs
+                                   "transparency_graph", "data_centerplot", "company_wide_plot_1",
+                                   "company_wide_plot_2", "company_wide_plot_3", "company_wide_plot_4",
+                                   "company_wide_plot_5", 
+                                   #add loading animations to company analysis page
+                                   "selected_company_stats", "company_data_center_overview", "energy_reporting_assessment",
+                                   "reported_energy_levels", "data_standards", "other_metrics",
+                                   "electricity_use_table", "other_fuel_use_table",
                                    "ns_energy_use_table", "pue_table", "sources_table"), 
                             html = spin_2(), color = transparent(1), fadeout = TRUE),
                  useShinyjs(),

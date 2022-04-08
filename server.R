@@ -51,36 +51,91 @@ server <- function(input, output, session) {
   ###### Card 1.2: Dynamically generate number of years reported ######
   #####################################################################
   
-  number_of_reporting_years <- length(unique(data_sheet_energy_raw$report_year))
+  #calculate number of years reported by finding the length of a vector of unique report year values
+  number_of_reporting_years <- length(unique(data_sheet_energy_transformed$data_year))
+  
+  #assign function to start value for report year
+  number_of_reporting_years_start_val <- reactiveVal(0)
+  
+  #this section creates a number incrementing animation on the home page it works by
+  #1. observing if the start value above is less than the number_of_reporting_years values
+  #2. if it is, then one is added to the number_of_reporting_years_start_val, this new value is assigned to number_of_reporting_years_new_val
+  #3. number_of_reporting_years_new_val replaces the start value
+  #4. this repeats itself, but is delayed by 100 milliseconds each time using invalidateLater
+  observe({
+    invalidateLater(100, session)
+    isolate({
+      if(number_of_reporting_years_start_val() < number_of_reporting_years) {
+        number_of_reporting_years_new_val <- number_of_reporting_years_start_val()+1
+        number_of_reporting_years_start_val(number_of_reporting_years_new_val)
+      }
+    })
+  })
   
   output$years_reported <- renderUI({
     #output length of vector of unique values from report_year column
-    number_of_reporting_years
+    number_of_reporting_years_start_val()
     })
   
-  output$companies_reporting <- renderUI({
-    
-    #generate complete list of companies reporting from Company Profiles sheet
-    
-    number_of_companies_reporting <- 
-      data_sheet_company_raw %>% 
-      
-      #filter by only companies that have been checked back to 2007
-      filter(checked_back_to_founding_year_or_2007 == "Yes")
-    
+  ##########################################################################
+  ###### Card 1.3: Dynamically generate number of companies reporting ######
+  ##########################################################################
+  
+  #generate complete list of companies reporting from Company Profiles sheet
+  data_frame_of_companies_reporting <- 
+    data_sheet_company_raw %>% 
+    #filter by only companies that have been checked back to 2007
+    filter(checked_back_to_founding_year_or_2007 == "Yes")
     #output length of vector of unique values in the company column
-    length(unique(number_of_companies_reporting$company_name))
+  
+  #calculate the number of companies reporting by getting the length of a vector of unique values from the company_name column
+  number_of_companies_reporting <- length(unique(data_frame_of_companies_reporting$company_name))
+  
+  #assign function for counter
+  number_of_companies_reporting_start_val <- reactiveVal(0)
+  
+  observe({
+    invalidateLater(100, session)
+    isolate({
+      if(number_of_companies_reporting_start_val() < number_of_companies_reporting) {
+        number_of_companies_reporting_new_val <- number_of_companies_reporting_start_val()+1
+        number_of_companies_reporting_start_val(number_of_companies_reporting_new_val)
+      }
     })
+  })
+  
+  output$companies_reporting <- renderUI({
+    number_of_companies_reporting_start_val()
+    })
+  
+  ########################################################################################
+  ###### Card 1.4: Dynamically generate total amount of data center energy reported ######
+  ########################################################################################
+  
+  total_data_center_electricity_use_reported <- data_sheet_energy_transformed %>% 
+    mutate_at(vars(electricity_converted), ~replace_na(., 0)) %>%
+    select("company", "data_year", "energy_reporting_scope", "level_of_ownership", "electricity_converted") %>% 
+    filter(energy_reporting_scope == "Multiple Data Centers" | energy_reporting_scope == "Single Data Center" )
+  
+  total_data_center_electricity_use_reported <- round(sum(total_data_center_electricity_use_reported$electricity_converted)/1000000000, 1)
+  
+  #assign function for counter
+  total_data_center_electricity_use_reported_start_val <- reactiveVal(0)
+  
+  observe({
+    invalidateLater(25, session)
+    isolate({
+      if(total_data_center_electricity_use_reported_start_val() < total_data_center_electricity_use_reported) {
+        total_data_center_electricity_use_reported_new_val <- total_data_center_electricity_use_reported_start_val()+1
+        total_data_center_electricity_use_reported_start_val(total_data_center_electricity_use_reported_new_val)
+      }
+    })
+  })
   
   output$energy_reported <- renderText({
   
-    energy_reported <- data_sheet_energy_transformed %>% 
-      mutate_at(vars(electricity_converted), ~replace_na(., 0)) %>%
-      select("company", "data_year", "energy_reporting_scope", "level_of_ownership", "electricity_converted") %>% 
-      filter(energy_reporting_scope == "Multiple Data Centers" | energy_reporting_scope == "Single Data Center" )
+    paste(total_data_center_electricity_use_reported_start_val(), "TWh")
     
-    paste(round(sum(energy_reported$electricity_converted)/1000000000, 1), "TWh")
-  
   })
   
   ########################################################
