@@ -11,16 +11,35 @@
   background-color: #fffff;
   padding-left: 40px;
   padding-right: 32px;
-  padding-top: 20px;
+  padding-top: 30px;
   max-width: calc(100vw - 400px);
   max-height: calc(100vh - 100px);
   overflow: auto;
 }
 
-.footer {
-  grid-area: footer;
-  background-color: #f3f2f1;
-  padding: 12px 20px;
+.header {
+  grid-area: header;
+  background-color: rgba(4, 55, 95);
+  padding: 6px 0px 6px 10px;
+  display: flex;
+  height: 55px;
+}
+
+/* Adjusts Data Center Energy Use Dashboard Text */
+
+.title {
+  padding: 0px 14px 0px 14px;
+  color: #737373;
+  margin: 6px 0px 6px 10px;
+  border-left: 1px solid darkgray;
+  width: 600px;
+}
+
+/* Adjusts ISAL logo */
+
+.logo {
+  height: 44px;
+  padding-top: 5px;
 }
 
 .page-title {
@@ -35,23 +54,22 @@
   background-clip: padding-box;
 }
 
-.title {
-  padding: 0px 14px 0px 14px;
-  color: #737373;
-  margin: 6px 0px 6px 10px;
-  border-left: 1px solid darkgray;
-  width: 400px;
-}
-
-.logo {
-  height: 44px;
-}
-
 .sidenav {
-  background-color: white;
-  padding: 25px;
-  left: 0px;
-  transition: 0.5s;
+  grid-area: sidenav;
+  padding-top: 20px;
+  padding-left: 12px;
+}
+
+/* Adjusts font size of nave bar items */
+
+.ms-Nav-linkText {
+  font-size: 20px;
+}
+
+/* Adjusts padding below nav bar items */
+
+.ms-Nav-navItem {
+  padding-bottom: 10px;
 }
 
 body {
@@ -62,11 +80,10 @@ body {
   transition: 0.5s;
 }
 
-.header {
-  grid-area: header;
-  background-color: rgba(4, 55, 95);
-  padding: 6px 0px 6px 10px;
-  display: flex;
+.footer {
+  grid-area: footer;
+  background-color: #f3f2f1;
+  padding: 12px 20px;
 }
 
 /* rgba(225, 223, 221, 0.2) old gray color

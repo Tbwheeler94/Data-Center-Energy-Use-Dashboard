@@ -118,11 +118,11 @@ dc_energy_101_page <- makePage(
   )
 )
 
-#############################################
-######### INDUSTRY TRENDS PAGE ##############
-#############################################
+########################################################
+######### TRENDS IN ENERGY REPORTING PAGE ##############
+########################################################
 
-industry_trends_page <- makePage(
+reporting_trends_page <- makePage(
   
   div(
     Stack(style = "text-align: center; padding: 25px", Text("Trends in Data Center Energy Reporting Transparency", variant = "xxLarge", style = "color: #137AD1;")),
@@ -132,65 +132,84 @@ industry_trends_page <- makePage(
                  plotlyOutput('transparency_graph')
                )
       )
-    ),
-    Stack(style = "text-align: center; padding: 25px", Text("Annual Reported Energy Use By Year Across Reporting Companies", variant = "xxLarge", style = "color: #137AD1;")),
+    )
+  )
+)
+
+########################################################
+############## ENERGY DATA TRENDS PAGE #################
+########################################################
+
+energy_data_trends <- makePage(
+  
+  div(Stack(style = "text-align: center; padding: 25px", Text("Annual Reported Energy Use By Year Across Reporting Companies", variant = "xxLarge", style = "color: #137AD1;")),
     Grid(
       GridItem(class = "ms-xl4"),
       GridItem(class = "ms-sm12 ms-xl4",
                Stack(class = "ms-depth-8",
                      tokens = list(padding = 20, childrenGap = 5),
                      style = 'border-radius: 5px; background-color: white; border-top: 8px solid #137AD1;',
-                 Text("Select Year and Energy Reporting Scope", variant = "large", style = "text-align: center;"),
-                 br(),
-                 Dropdown.shinyInput("input_year", 
-                                     options = unique_years,
-                                     value = "2020",
-                                     placeHolder = "2020",
-                                     dropdownWidth = 150),
-                 Dropdown.shinyInput("input_reporting_scope", 
-                                     options = unique_scope_selection,
-                                     value = "Company Wide",
-                                     placeHolder = "Company Wide",
-                                     dropdownWidth = 150)
+                     Text("Select Year and Energy Reporting Scope", variant = "large", style = "text-align: center;"),
+                     br(),
+                     Dropdown.shinyInput("input_year", 
+                                         options = unique_years,
+                                         value = "2020",
+                                         placeHolder = "2020",
+                                         dropdownWidth = 150),
+                     Dropdown.shinyInput("input_reporting_scope", 
+                                         options = unique_scope_selection,
+                                         value = "Company Wide",
+                                         placeHolder = "Company Wide",
+                                         dropdownWidth = 150)
                )
       )
     ),
     div(id = 'data-center-plots',
         Grid(
           GridItem(class = "ms-sm12 ms-xl12",
-           GraphCard(Text("Data Center Electricity Use At Scale of KWh to 1s of TWh", variant = "large", style = "text-align: center;"),
-                     br(),
-                     plotOutput('data_centerplot')))
-           )
-        ),
+                   GraphCard(Text("Data Center Electricity Use At Scale of KWh to 1s of TWh", variant = "large", style = "text-align: center;"),
+                             br(),
+                             plotOutput('data_centerplot')))
+        )
+    ),
     div(id = 'company-wide-plots',
-      Grid(
-        GridItem(class = "ms-sm12 ms-xl6",
-                 GraphCard(Text("Company Wide Energy Use At Scale of KWh to 1s of GWh", variant = "large", style = "text-align: center;"),
-                           br(),
-                           plotOutput('company_wide_plot_1'))),
-        GridItem(class = "ms-sm12 ms-xl6",
-                 GraphCard(Text("Company Wide Energy Use At Scale of 10s of GWh", variant = "large", style = "text-align: center;"),
-                           br(),
-                           plotOutput('company_wide_plot_2')))
-      ),
-      Grid(
-        GridItem(class = "ms-sm12 ms-xl6",
-                 GraphCard(Text("Company Wide Energy Use At Scale of 100s of GWh", variant = "large", style = "text-align: center;"),
-                           br(),
-                           plotOutput('company_wide_plot_3'))),
-        GridItem(class = "ms-sm12 ms-xl6",
-                 GraphCard(Text("Company Wide Energy Use At Scale of 1s of TWh", variant = "large", style = "text-align: center;"),
-                           br(),
-                           plotOutput('company_wide_plot_4')))
-      ),
-      Grid(
-        GridItem(class = "ms-sm12 ms-xl6",
-                 GraphCard(Text("Company Wide Energy Use At Scale of 10s of TWh and Greater", variant = "large", style = "text-align: center;"),
-                           br(),
-                           plotOutput('company_wide_plot_5')))
-      )
-   )
+        Grid(
+          GridItem(class = "ms-sm12 ms-xl6",
+                   GraphCard(Text("Company Wide Energy Use At Scale of KWh to 1s of GWh", variant = "large", style = "text-align: center;"),
+                             br(),
+                             plotOutput('company_wide_plot_1'))),
+          GridItem(class = "ms-sm12 ms-xl6",
+                   GraphCard(Text("Company Wide Energy Use At Scale of 10s of GWh", variant = "large", style = "text-align: center;"),
+                             br(),
+                             plotOutput('company_wide_plot_2')))
+        ),
+        Grid(
+          GridItem(class = "ms-sm12 ms-xl6",
+                   GraphCard(Text("Company Wide Energy Use At Scale of 100s of GWh", variant = "large", style = "text-align: center;"),
+                             br(),
+                             plotOutput('company_wide_plot_3'))),
+          GridItem(class = "ms-sm12 ms-xl6",
+                   GraphCard(Text("Company Wide Energy Use At Scale of 1s of TWh", variant = "large", style = "text-align: center;"),
+                             br(),
+                             plotOutput('company_wide_plot_4')))
+        ),
+        Grid(
+          GridItem(class = "ms-sm12 ms-xl6",
+                   GraphCard(Text("Company Wide Energy Use At Scale of 10s of TWh and Greater", variant = "large", style = "text-align: center;"),
+                             br(),
+                             plotOutput('company_wide_plot_5')))
+        )
+    )
+  )
+)
+
+########################################################
+############## REPORTING TIMELINE PAGE #################
+########################################################
+
+reporting_timeline_page <- makePage(
+  div(
+    
   )
 )
 
@@ -356,29 +375,30 @@ layout <- function(mainUI){
 
 header <- tagList(
   img(src = "isalab.svg", class = "logo"),
-  div(Text(variant = "xLarge", "Data Center Energy Use Dashboard", style = "color: white;"), class = "title"),
-      style = list(width = "100%"))
+  div(Text(variant = "xxLarge", "Data Center Energy Use Dashboard", style = "color: white;"), class = "title"))
 
 navigation <- Nav(
+  className = 'sidenav',
   groups = list(
     list(links = list(
       list(name = 'Home', url = '#!/', key = 'home', icon = 'Home'),
       list(name = 'Data Center Energy 101', url = '#!/data-center-energy', key = 'dce', icon = 'D365TalentLearn'),
-      list(name = 'Industry Trends', url = '#!/industry-trends', key = 'trends', icon = 'AnalyticsReport'),
-      list(name = 'Company Analysis', url = '#!/company-analysis', key = 'analysis', icon = 'AnalyticsView'),
+      list(name = 'Industry Trends', 
+           expandAriaLabel = 'Expand Industry Trends',
+           collapseAriaLabel = 'Collapse Industry Trends',
+           links = list(
+             list(name = 'Trends in Energy Reporting', url = '#!/reporting-trends', key = 'reporting-trends', icon = 'Trending12'),
+             list(name = 'Energy Data Trends', url = '#!/energy-data-trends', key = 'data-trends', icon = 'Trending12'),
+             list(name = 'Reporting Timeline', url = '#!/reporting-timeline', key = 'reporting-timeline', icon = 'TimelineProgress')), 
+           isExpanded = FALSE
+           ),
+      list(name = 'Company Analysis', url = '#!/company-analysis', key = 'analysis', icon = 'ExploreData'),
       list(name = 'Methods', url = '#!/methods', key = 'methods', icon = 'WebAppBuilderFragment'),
       list(name = 'Contact Us', url = '#!/contact-us', key = 'contact', icon = 'Send'),
       list(name = 'ISA Lab Website', url = 'https://bren.ucsb.edu/people/eric-masanet', key = 'isal', icon = 'MiniLink')
     ))
   ),
-  initialSelectedKey = 'home',
-  styles = list(
-    root = list(
-      height = '100%',
-      boxSizing = 'border-box',
-      overflowY = 'auto'
-    )
-  )
+  initialSelectedKey = 'home'
 )
 
 footer <- Stack(
@@ -407,7 +427,9 @@ layout <- function(mainUI){
 router <- make_router(
   route("/", home_page),
   route("data-center-energy", dc_energy_101_page),
-  route("industry-trends", industry_trends_page),
+  route("reporting-trends", reporting_trends_page),
+  route("energy-data-trends", energy_data_trends),
+  route("reporting-timeline", reporting_timeline_page),
   route("company-analysis", company_analysis_page),
   route("methods", methods_page),
   route("contact-us", contact_page)
