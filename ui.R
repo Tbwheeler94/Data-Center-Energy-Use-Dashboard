@@ -209,7 +209,14 @@ energy_data_trends <- makePage(
 
 reporting_timeline_page <- makePage(
   div(
-    
+    Stack(style = "text-align: center; padding: 25px", Text("Data Center Energy Reporting Transparency Timeline", variant = "xxLarge", style = "color: #137AD1;")),
+    Grid(
+      GridItem(class = "ms-sm12 ms-xl12", 
+               Stack(class = "ms-depth-8 timeline-graph",
+                 plotlyOutput('reporting_timeline')
+               )
+      )
+    )
   )
 )
 
@@ -445,7 +452,7 @@ ui <- #secure_app(head_auth = tags$script(inactivity), #authentication
                  autoWaiter(id = c(#add loading animations to industry trend graphs
                                    "transparency_graph", "data_centerplot", "company_wide_plot_1",
                                    "company_wide_plot_2", "company_wide_plot_3", "company_wide_plot_4",
-                                   "company_wide_plot_5", 
+                                   "company_wide_plot_5", "reporting_timeline",
                                    #add loading animations to company analysis page
                                    "selected_company_stats", "company_data_center_overview", "energy_reporting_assessment",
                                    "reported_energy_levels", "data_standards", "other_metrics",

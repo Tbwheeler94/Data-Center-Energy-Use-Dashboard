@@ -11,10 +11,20 @@
   background-color: #fffff;
   padding-left: 40px;
   padding-right: 32px;
-  padding-top: 30px;
+  padding-top: 10px;
+  margin-top: 30px;
   max-width: calc(100vw - 400px);
   max-height: calc(100vh - 100px);
   overflow: auto;
+}
+
+.timeline-graph {
+  border-radius: 5px; 
+  background-color: white; 
+  border-top: 8px solid #137AD1;
+  height: calc(100vh - 290px); 
+  overflow-y: scroll; 
+  position: relative;
 }
 
 .header {

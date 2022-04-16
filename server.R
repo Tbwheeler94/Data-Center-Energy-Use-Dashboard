@@ -11,6 +11,7 @@ source(here("R", "IndustryTrendsPlots", "industryTrendsCompanyWide3Plot.R"))
 source(here("R", "IndustryTrendsPlots", "industryTrendsCompanyWide4Plot.R"))
 source(here("R", "IndustryTrendsPlots", "industryTrendsCompanyWide5Plot.R"))
 source(here("R", "IndustryTrendsPlots", "industryTrendsTransparencyPlot.R"))
+source(here("R", "IndustryTrendsPlots", "IndustryTrendsTimelinePlot.R"))
 
 #Server code
 server <- function(input, output, session) {
@@ -408,6 +409,14 @@ server <- function(input, output, session) {
       shinyjs::hide(selector = "div#company-wide-plots")
     }
     
+  })
+  
+  ###############################
+  ### Reporting Timeline Plot ###
+  ###############################
+  
+  output$reporting_timeline <- renderPlotly({
+    buildIndustryTrendsTimelinePlot(data_sheet_energy_transformed)
   })
   
   ########################################################

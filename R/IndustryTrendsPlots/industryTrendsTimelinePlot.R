@@ -48,6 +48,6 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
     #xlim(as.Date("2007-01-01"), as.Date("2020-12-31")) +
     theme_classic()
   
-  ggplotly(p)
+  ggplotly(p, height = 1500)
   
 }
