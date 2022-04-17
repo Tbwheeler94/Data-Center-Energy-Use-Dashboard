@@ -12,6 +12,7 @@ source(here("R", "IndustryTrendsPlots", "industryTrendsCompanyWide4Plot.R"))
 source(here("R", "IndustryTrendsPlots", "industryTrendsCompanyWide5Plot.R"))
 source(here("R", "IndustryTrendsPlots", "industryTrendsTransparencyPlot.R"))
 source(here("R", "IndustryTrendsPlots", "IndustryTrendsTimelinePlot.R"))
+source(here("R", "CompanyProfilePlots", "companyProfileTransparencyOverTimePlot.R"))
 
 #Server code
 server <- function(input, output, session) {
@@ -220,14 +221,42 @@ server <- function(input, output, session) {
   
   })
   
-  ###########################################################
-  # Generate Data Center and Company Wide Plots ##############
-  ###########################################################
+  ##################################################################################################
+  #Conditionally show either 1 data center plot or 5 company wide plots depending on user selection#
+  ##################################################################################################
   
-  #create plot pops up if there is no data
-  void_plot <- ggplot() +
-                theme_void() +
-                xlab(NULL)
+  observeEvent(input$input_reporting_scope, {
+    
+    if(input$input_reporting_scope == "Company Wide") { 
+      shinyjs::hide(selector = "div#data-center-plots")
+      shinyjs::show(selector = "div#company-wide-plot-1")
+      shinyjs::show(selector = "div#company-wide-plot-2")
+      shinyjs::show(selector = "div#company-wide-plot-3")
+      shinyjs::show(selector = "div#company-wide-plot-4")
+      shinyjs::show(selector = "div#company-wide-plot-5")
+    } else if (input$input_reporting_scope == "Data Centers") {
+      shinyjs::show(selector = "div#data-center-plots")
+      shinyjs::hide(selector = "div#company-wide-plot-1")
+      shinyjs::hide(selector = "div#company-wide-plot-2")
+      shinyjs::hide(selector = "div#company-wide-plot-3")
+      shinyjs::hide(selector = "div#company-wide-plot-4")
+      shinyjs::hide(selector = "div#company-wide-plot-5")
+    }
+    
+  })
+  
+  observeEvent(input$input_year, {
+    
+    if(input$input_reporting_scope == "Company Wide") { 
+    shinyjs::show(selector = "div#company-wide-plot-1")
+    shinyjs::show(selector = "div#company-wide-plot-2")
+    shinyjs::show(selector = "div#company-wide-plot-3")
+    shinyjs::show(selector = "div#company-wide-plot-4")
+    shinyjs::show(selector = "div#company-wide-plot-5")
+    shinyjs::hide(selector = "div#data-center-plots")
+    }
+    
+  })
   
   ##################################
   ### Generate Data Center Plot ####
@@ -274,16 +303,10 @@ server <- function(input, output, session) {
   output$company_wide_plot_1 <- renderPlot({
     
     if (nrow(energy_use_L2_1()) != 0) {
-      
       buildIndustryTrendsCompanyWide1Plot(energy_use_L2_1())
-      
     } else {
-      
-      void_plot +
-        geom_text(aes(0,0,label='No Data Reported At This Scale'), size = 7)
-      
+      shinyjs::hide(selector = "div#company-wide-plot-1")
     }
-    
   }, height = reactive({company_wide_plot_1_height()}))
   
   ###########################
@@ -307,8 +330,7 @@ server <- function(input, output, session) {
       
     } else {
       
-      void_plot +
-        geom_text(aes(0,0,label='No Data Reported At This Scale'), size = 7)
+      shinyjs::hide(selector = "div#company-wide-plot-2")
       
     }
   
@@ -335,8 +357,7 @@ server <- function(input, output, session) {
       
     } else {
       
-      void_plot +
-        geom_text(aes(0,0,label='No Data Reported At This Scale'), size = 7)
+      shinyjs::hide(selector = "div#company-wide-plot-3")
       
     }
   
@@ -363,8 +384,7 @@ server <- function(input, output, session) {
       
     } else {
       
-      void_plot +
-        geom_text(aes(0,0,label='No Data Reported At This Scale'), size = 7)
+      shinyjs::hide(selector = "div#company-wide-plot-4")
       
     }
     
@@ -391,25 +411,11 @@ server <- function(input, output, session) {
       
     } else {
       
-      void_plot +
-        geom_text(aes(0,0,label='No Data Reported At This Scale'), size = 7)
+      shinyjs::hide(selector = "div#company-wide-plot-5")
       
     }
     
   }, height = reactive({company_wide_plot_5_height()}))
-  
-  #Conditionally show either 1 data center plot or 5 company wide plots depending on user selection
-  observeEvent(input$input_reporting_scope, {
-    
-    if(input$input_reporting_scope == "Company Wide") { 
-      shinyjs::hide(selector = "div#data-center-plots")
-      shinyjs::show(selector = "div#company-wide-plots")
-    } else if (input$input_reporting_scope == "Data Centers") {
-      shinyjs::show(selector = "div#data-center-plots")
-      shinyjs::hide(selector = "div#company-wide-plots")
-    }
-    
-  })
   
   ###############################
   ### Reporting Timeline Plot ###
@@ -537,14 +543,16 @@ server <- function(input, output, session) {
                                           str_remove_all("NA")
   })
   
-  selected_company_stats <- reactive({ data.frame(A = c("Does company report energy use?", "Year of most recent data", "Lease/Cloud Providers"),
+  selected_company_stats <- reactive({ data.frame(A = c("Does company report any energy use?", "Year of most recent data", "Lease/cloud providers"),
                                        B = c(energy_reporting_status(), year_of_most_recent_data(), ifelse(external_service_provider_list() == "", "No External Providers Reported",
                                                                                                            external_service_provider_list())), check.names = FALSE)
   })
   
   output$selected_company_stats <- renderDataTable({
   
-  datatable(selected_company_stats(), rownames = FALSE, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){", "  $(thead).remove();","}")))
+  datatable(selected_company_stats(), rownames = FALSE, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){", "  $(thead).remove();","}"))) %>% 
+      formatStyle(columns = c(2), fontSize = '16pt', textAlign = 'center') %>% 
+      formatStyle(columns = c(1), fontSize = '14pt', fontWeight = 'bold')
   
   })
   
@@ -625,6 +633,14 @@ server <- function(input, output, session) {
   #Electricity Use (TWh/yr)##############
   #######################################
   
+  #Show all 4 tables to start
+  observeEvent(input$selected_company, {
+    shinyjs::show(selector = "div#electricity-use-table")
+    shinyjs::show(selector = "div#other-fuel-use-table")
+    shinyjs::show(selector = "div#ns-energy-use-table")
+    shinyjs::show(selector = "div#pue-table")
+  })
+  
   output$electricity_use_table <- renderDataTable({
     
     selected_company_electricity_use_filter <- buildCompanyProfileElectricityUsePlot(input$selected_company)
@@ -634,7 +650,7 @@ server <- function(input, output, session) {
       datatable(selected_company_electricity_use_filter, rownames = FALSE, options = list(columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
         formatStyle('category', 'format', textAlign = styleEqual(c(0, 1), c('right', 'left')), fontStyle = styleEqual(c(0, 1), c('italic', 'normal')))
     } else {
-      datatable(no_data, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){", "  $(thead).remove();", "}")), rownames = FALSE)
+      shinyjs::hide(selector = "div#electricity-use-table")
     }
   })
   
@@ -648,12 +664,10 @@ server <- function(input, output, session) {
     selected_company_fuel_use_filter <- buildCompanyProfileFuelUsePlot(input$selected_company)
     
     if(nrow(selected_company_fuel_use_filter) != 0) {
-      #shinyjs::show(selector = "div#fuel-use-table")
       datatable(selected_company_fuel_use_filter, rownames = FALSE, options = list(columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
         formatStyle('category', 'format', textAlign = styleEqual(c(0, 1), c('right', 'left')), fontStyle = styleEqual(c(0, 1), c('italic', 'normal')))
     } else {
-      #shinyjs::hide(selector = "div#fuel-use-table")
-      datatable(no_data, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){","  $(thead).remove();","}")), rownames = FALSE)
+      shinyjs::hide(selector = "div#other-fuel-use-table")
     }
   })
   
@@ -670,7 +684,7 @@ server <- function(input, output, session) {
       datatable(selected_company_ns_energy_use_filter, rownames = FALSE, options = list(columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
         formatStyle('category', 'format', textAlign = styleEqual(c(0, 1), c('right', 'left')), fontStyle = styleEqual(c(0, 1), c('italic', 'normal')))
     } else {
-      datatable(no_data, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){", "  $(thead).remove();", "}")), rownames = FALSE)
+      shinyjs::hide(selector = "div#ns-energy-use-table")
     }
   })
   
@@ -686,9 +700,17 @@ server <- function(input, output, session) {
     if(nrow(selected_company_pue_filter) != 0) {
       datatable(selected_company_pue_filter, rownames = FALSE, options = list(pageLength = 5, autoWidth = TRUE, columnDefs = list(list(width = '300px',targets = c(0)))))
     } else {
-      datatable(no_data, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){","  $(thead).remove();","}")), rownames = FALSE)
+      shinyjs::hide(selector = "div#pue-table")
     }
     
+  })
+  
+  #########################################
+  ### Company Transparency over Time Plot ###
+  #########################################
+  
+  output$transparency_over_time_plot <- renderPlot({
+    buildCompanyProfileTransparencyOverTimePlot(data_sheet_energy_transformed, input$selected_company)
   })
   
   #######################################

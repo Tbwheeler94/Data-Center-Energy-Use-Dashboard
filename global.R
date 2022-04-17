@@ -1,3 +1,7 @@
+########################################################
+###### Load dependencies ###############################
+########################################################
+
 library(here)
 library(janitor)
 library(tidyverse)
@@ -15,7 +19,6 @@ library(fastDummies)
 library(shinyjs) #enables use of javascript functions
 library(data.table)
 library(shinymanager) #generates a user authentication page
-library(shinycssloaders) #package for generating loading animations
 library(waiter) #package for generating loading animations
 
 ########################################################
@@ -25,9 +28,9 @@ library(waiter) #package for generating loading animations
 #suppress groupby warning
 options(dplyr.summarise.inform = FALSE)
 
-########################################################
-###### Reference sub-function ##########################
-########################################################
+###################################################################################################################################
+###### Reference function which prepares takes raw dataset and transforms data to be visualization-ready ##########################
+###################################################################################################################################
 
 source(here("R", "transformEnergyDataRaw.R"))
 
@@ -60,9 +63,9 @@ source(here("R", "transformEnergyDataRaw.R"))
 #  user = c("ucsb"),
 #  password = c("isal"))
 
-##################################################
-### Import All Raw Sheets and Pre-process Data ###
-##################################################
+######################################################################################################################################################
+### Import Sheet 1 from DataCenterEnergyUse-RawCollection.xlsx which contains energy data and transform data via transformEnergyDataRaw() function ###
+######################################################################################################################################################
 
 #Import raw energy spreadsheet
 data_sheet_energy_raw <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 1, #the "1" specifies to import sheet 1
@@ -100,6 +103,13 @@ colnames(data_sheet_energy_raw) [30] <- 'fuel_4_value'
 colnames(data_sheet_energy_raw) [31] <- 'fuel_4_unit_scale'
 colnames(data_sheet_energy_raw) [35] <- 'fuel_5_value'
 colnames(data_sheet_energy_raw) [36] <- 'fuel_5_unit_scale'
+
+#Transform raw spreadsheet
+data_sheet_energy_transformed <- transformEnergyDataRaw(data_sheet_energy_raw) #read.csv(here('data', 'data_sheet_energy_transformed.csv'))
+
+######################################################################################################
+### Import Sheet 2 from DataCenterEnergyUse-RawCollection.xlsx which contains company profile data ###
+######################################################################################################
 
 #Import raw company profile sheet
 data_sheet_company_raw <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 2, #the "2" specifies to import sheet 2
@@ -139,9 +149,6 @@ data_sheet_pue_raw <- data_sheet_pue_raw %>%
 
 colnames(data_sheet_pue_raw) [2] <- 'applicable_year'
 colnames(data_sheet_pue_raw) [6] <- 'pue_value'
-
-#Transform raw spreadsheet
-data_sheet_energy_transformed <- transformEnergyDataRaw(data_sheet_energy_raw) #read.csv(here('data', 'data_sheet_energy_transformed.csv'))
 
 ##################################################
 ################ Tab 1 - Home ####################
