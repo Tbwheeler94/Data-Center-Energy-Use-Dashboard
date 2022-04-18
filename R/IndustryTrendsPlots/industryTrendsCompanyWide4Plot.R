@@ -4,7 +4,7 @@ buildIndustryTrendsCompanyWide4Plot <- function(energy_use_L2_4) {
     geom_bar(mapping = aes(x = electricity_converted/1000000000, y=reorder(energy_use_L2_4$company, energy_use_L2_4$electricity_converted)),
              stat = 'identity',
              fill = 'lightblue') +
-    scale_x_continuous(breaks = c(0,2,4,6,8), label = c("0 TWh", "2 TWh", "4 TWh", "6 TWh", "8 TWh"), position = 'top') +
+    scale_x_continuous(breaks = c(0,2,4,6,8), label = c("0", "2 TWh", "4 TWh", "6 TWh", "8 TWh"), position = 'top') +
     theme_classic() +
     theme(axis.title.x=element_blank(),
           axis.title.y=element_blank(),

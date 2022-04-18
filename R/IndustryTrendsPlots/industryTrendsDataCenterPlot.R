@@ -10,11 +10,14 @@ buildIndustryTrendsDataCenterPlot <- function(energy_use_final) {
       theme_classic() +
       scale_fill_brewer(palette = "Greens") +
       scale_y_discrete(position = "left") +
-      scale_x_continuous(position = 'top', 
+      scale_x_continuous(breaks = c(0, 200000000, 400000000,600000000, 800000000, 1000000000, 
+                                    1200000000, 1400000000, 1600000000, 1800000000, 2000000000), 
+                         label = c("0", "200 GWh", "400 GWh", "600 GWh", "800 GWh", "1 TWh", 
+                                   "1.2 TWh", "1.4 TWh", "1.6 TWh", "1.8 TWh", "2 TWh"), position = 'top') + 
                          #breaks = energy_use_final$electricity_converted, 
-                         expand = expansion(mult = c(0, 0.05)), 
+                         #expand = expansion(mult = c(0, 0.05)), 
                          #labels = humanReadable(energy_use_final$electricity_converted, standard = "Unix", sep = "")) +
-                         labels = scales::label_number_si()) +
+                         #labels = scales::label_number_si()) +
       theme(legend.position = "right",
             legend.title=element_text(size = 14),
             legend.text=element_text(size = 12),
