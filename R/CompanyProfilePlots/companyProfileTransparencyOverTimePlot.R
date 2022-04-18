@@ -2,32 +2,32 @@ buildCompanyProfileTransparencyOverTimePlot <- function(data_sheet_energy_transf
   for (year in 2007:as.integer(max(na.omit(data_sheet_energy_raw$report_year)))) {
     # create a sub data frame that is filtered by data year and single data center scope
     company_SDC <- data_sheet_energy_transformed %>%
-      filter(company == "Apple", data_year == year, energy_reporting_scope == "Single Data Center") %>%
+      filter(company %in% selected_company, data_year == year, energy_reporting_scope == "Single Data Center") %>%
       select(company, data_year, energy_reporting_scope, fuel_1_type) 
     
     # create a sub data frame that is filtered by data year and multiple data centers scope
     company_MDC <- data_sheet_energy_transformed %>%
-      filter(company == "Apple", data_year == year, energy_reporting_scope == "Multiple Data Centers") %>%
+      filter(company %in% selected_company, data_year == year, energy_reporting_scope == "Multiple Data Centers") %>%
       select(company, data_year, energy_reporting_scope, fuel_1_type)
     
     # create a sub data frame that is filtered by data year / company wide electricity scope
     company_CW <- data_sheet_energy_transformed %>%
-      filter(company == "Apple", data_year == year, energy_reporting_scope == "Total Operations") %>%
+      filter(company %in% selected_company, data_year == year, energy_reporting_scope == "Total Operations") %>%
       select(company, data_year, energy_reporting_scope, fuel_1_type) 
     
     company_EN <- data_sheet_energy_transformed %>%
-      filter(company == "Apple", data_year == year, fuel_1_type == "Total Energy Use") %>%
+      filter(company %in% selected_company, data_year == year, fuel_1_type == "Total Energy Use") %>%
       select(company, data_year, energy_reporting_scope, fuel_1_type) 
     
     if (year == 2007) {
       company_transparency <- rbind(company_SDC, company_MDC, company_CW, company_EN)
        if (nrow(company_transparency) == 0) {
-         company_transparency[nrow(company_transparency)+1, ] <- c("Apple",year,"","")
+         company_transparency[nrow(company_transparency)+1, ] <- c(selected_company,year,"","")
        }
     } else {
       company_transparency <- company_transparency %>% rbind(company_SDC, company_MDC, company_CW, company_EN)
       if (!(year %in% company_transparency)) {
-         company_transparency[nrow(company_transparency)+1, ] <- c("Apple",year,"","")
+         company_transparency[nrow(company_transparency)+1, ] <- c(selected_company,year,"","")
        }
     }
   }
@@ -97,10 +97,9 @@ buildCompanyProfileTransparencyOverTimePlot <- function(data_sheet_energy_transf
     geom_hline(yintercept=0, color="black", size=0.3) +
     geom_point(data=year_axis, aes(y=0), size=3) +
     geom_segment(data=company_transparency, aes(y=position,yend=0,xend=data_year), color='black', size=0.2) +
-    geom_text(data=company_transparency, aes(y=text_position, label=energy_reporting_scope), size=3) +
-    geom_text(data=year_axis, aes(x=year_text, y=-0.02, label=year_text), color="black", size=2.5) +
+    geom_label(data=company_transparency, aes(y=text_position, label=energy_reporting_scope), fill="white", size=5) +
+    geom_text(data=year_axis, aes(x=year_text, y=-0.02, label=year_text), color="black", size=3.5) +
     scale_color_manual(values=status_colors, labels=status_levels, drop = FALSE) +
-    ggtitle("Apple's Timeline") +
     theme_classic() +
     labs(col="Reporting Scope") +
     theme(axis.line.y=element_blank(),
@@ -111,6 +110,6 @@ buildCompanyProfileTransparencyOverTimePlot <- function(data_sheet_energy_transf
           axis.text.x=element_blank(),
           axis.ticks.x=element_blank(),
           axis.line.x=element_blank(),
-          legend.position = "bottom"
+          legend.position = "none"
     )
 }
