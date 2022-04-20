@@ -68,21 +68,23 @@ buildCompanyProfileTransparencyOverTimePlot <- function(data_sheet_energy_transf
   
   company_transparency$position <- 0
   company_transparency$text_position <- 0
-  position_val <- 0.25
-  factor <- 1.5
-  company_transparency[1,3] <- 0.25
-  company_transparency[1,4] <- 0.27
+  position_val_1 <- 5
+  position_val_2 <- 5
+  factor <- 0.5
+  company_transparency[1,3] <- 5
+  company_transparency[1,4] <- 5
   for (i in 2:nrow(company_transparency)) {
     if (i %% 2 == 0) {
-      position_val <- position_val * factor
-      company_transparency[i,3] <- position_val
-      company_transparency[i,4] <- position_val+0.02
-      factor <- factor / 1.25
+      position_val_1 <- position_val_1 + factor
+      company_transparency[i,3] <- position_val_1
+      company_transparency[i,4] <- position_val_1
+      if (i == 4 || i == 8) {factor <- factor * -1}
+      factor <- factor * -1
     } else {
-      position_val <- position_val / factor
-      company_transparency[i,3] <- position_val
-      company_transparency[i,4] <- position_val+0.02
-      factor <- factor * 1.25
+      position_val_2 <- position_val_2 - factor
+      company_transparency[i,3] <- position_val_2
+      company_transparency[i,4] <- position_val_2
+      if (i == 5 || i == 7) {factor <- factor * -1}
     }
   }
   
@@ -98,7 +100,7 @@ buildCompanyProfileTransparencyOverTimePlot <- function(data_sheet_energy_transf
     geom_point(data=year_axis, aes(y=0), size=3) +
     geom_segment(data=company_transparency, aes(y=position,yend=0,xend=data_year), color='black', size=0.2) +
     geom_label(data=company_transparency, aes(y=text_position, label=energy_reporting_scope), fill="white", size=5) +
-    geom_text(data=year_axis, aes(x=year_text, y=-0.02, label=year_text), color="black", size=3.5) +
+    geom_text(data=year_axis, aes(x=year_text, y=-0.5, label=year_text), color="black", size=4) +
     scale_color_manual(values=status_colors, labels=status_levels, drop = FALSE) +
     theme_classic() +
     labs(col="Reporting Scope") +
