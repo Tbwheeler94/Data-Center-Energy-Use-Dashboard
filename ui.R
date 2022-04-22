@@ -265,8 +265,7 @@ company_analysis_page <- makePage(
     ),
     Grid(
       Stack(style = "text-align: center; padding: 25px", Text("Current Year Energy Reporting Snapshot", variant = "xxLarge", style = "color: #137AD1;")),
-      GridItem(class = "ms-sm0 ms-xl3"),
-      GridItem(class = "ms-sm12 ms-xl2",                                               
+      GridItem(class = "ms-sm12 ms-xl4",                                               
                CompanyCard(
                  Text("Reported energy use levels", variant = "large", style = "text-align: center;"),
                  dataTableOutput("reported_energy_levels"),
@@ -275,13 +274,13 @@ company_analysis_page <- makePage(
                        ActionButton(iconProps = list("iconName" = "Info"), text = "About This Table", style = "color: #137AD1;")))
                )
       ),
-      GridItem(class = "ms-sm12 ms-xl2",                                               
+      GridItem(class = "ms-sm12 ms-xl4",                                               
                CompanyCard(
                  Text("Data standards", variant = "large", style = "text-align: center;"),
                  dataTableOutput("data_standards")
                )
       ),
-      GridItem(class = "ms-sm12 ms-xl2",
+      GridItem(class = "ms-sm12 ms-xl4",
                CompanyCard(
                  Text("Other metrics reported", variant = "large", style = "text-align: center;"),
                  dataTableOutput("other_metrics")
