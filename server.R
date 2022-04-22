@@ -175,10 +175,15 @@ server <- function(input, output, session) {
       filter(data_year == year, energy_reporting_scope == "Multiple Data Centers") %>%
       select(company, data_year, energy_reporting_scope, level_of_ownership, electricity_converted)
     
+    company_DC <- c(energy_use_SDC$company, energy_use_MDC$company)
+    company_DC <- company_DC %>% unique()
+    
     # create a sub data frame that is filtered by data year / company wide electricity scope
     energy_use_TO <- data_sheet_energy_transformed %>%
       filter(data_year == year, energy_reporting_scope == "Total Operations") %>%
       select(company, data_year, energy_reporting_scope, level_of_ownership, electricity_converted) 
+    
+    energy_use_TO <- energy_use_TO[!(energy_use_TO$company %in% company_DC),]
     
     if (year == 2007) {
       energy_use_graph <- rbind(energy_use_SDC, energy_use_MDC, energy_use_TO)
@@ -194,18 +199,14 @@ server <- function(input, output, session) {
   # drop all the excess rows that have NA data
   data_founding_year <- na.omit(data_founding_year)
   data_founding_year <- data_founding_year[data_founding_year$checked_back_to_founding_year_or_2007=="Yes", ]
-  energy_use_graph <- subset(energy_use_graph, company %in% data_founding_year$company_name)
+  energy_use_graph <- subset(energy_use_graph, company %in% data_founding_year$company_name) 
   
-  for (i in 1:nrow(energy_use_graph)) {
-    if (energy_use_graph[i,3] == "Single Data Center" || energy_use_graph[i,3] == "Multiple Data Centers") {
-      energy_use_graph[i,3] <- "Data Centers"
-    } else {
-      energy_use_graph[i,3] <- "Company Wide"
-    }
-  }
+  energy_use_graph$energy_reporting_scope[energy_use_graph$energy_reporting_scope == "Single Data Center"] <- "Data Centers"
+  energy_use_graph$energy_reporting_scope[energy_use_graph$energy_reporting_scope == "Multiple Data Centers"] <- "Data Centers"
+  energy_use_graph$energy_reporting_scope[energy_use_graph$energy_reporting_scope == "Total Operations"] <- "Company Wide"
   
   # stack single data center/multiple data center data frames on top of each other
-  energy_use_graph <- energy_use_graph[!(energy_use_graph$level_of_ownership == ""),]
+  energy_use_graph <- energy_use_graph[!(energy_use_graph$energy_reporting_scope == "Data Centers" && energy_use_graph$level_of_ownership == ""),]
   energy_use_graph <- na.omit(energy_use_graph)
   energy_use_final <- energy_use_graph %>%
     group_by(company,data_year,energy_reporting_scope,level_of_ownership) %>%

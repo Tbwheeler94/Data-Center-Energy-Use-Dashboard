@@ -104,23 +104,15 @@ buildIndustryTrendsTransparencyPlot <- function(data_sheet_energy_raw) {
   }
   
   data_of_transparency$value <- 1
-  data_of_transparency$number_of_companies <- 1
   data_of_transparency <- data_of_transparency %>% select(data_year, energy_reporting_scope, 
-                                                          fuel_1_type, value, number_of_companies)
+                                                          fuel_1_type, value)
   
   # loop through all rows and rename energy reporting scopes
-  j = 0
-  for (i in 1:nrow(data_of_transparency)) {
-    if (data_of_transparency[i,2] == "Single Data Center" || data_of_transparency[i,2] == "Multiple Data Centers") {
-      data_of_transparency[i,2] <- "Reported Data Center Electricity"
-    } else if (data_of_transparency[i,2] == "Total Operations" && data_of_transparency[i,3] != "Total Energy Use") {
-      data_of_transparency[i,2] <- "Reported Company Wide Electricity"
-    } else if (data_of_transparency[i,2] == "Total Operations" && data_of_transparency[i,3] == "Total Energy Use") {
-      data_of_transparency[i,2] <- "Reported Company Wide Total Energy"
-    } else {
-      data_of_transparency[i,2] <- "No Reporting of Data"
-    }
-  }
+  data_of_transparency$energy_reporting_scope[data_of_transparency$energy_reporting_scope == "Single Data Center" ] <- "Reported Data Center Electricity"
+  data_of_transparency$energy_reporting_scope[data_of_transparency$energy_reporting_scope == "Multiple Data Centers" ] <- "Reported Data Center Electricity"
+  data_of_transparency$energy_reporting_scope[data_of_transparency$energy_reporting_scope == "Total Operations"] <- "Reported Company Wide Electricity"
+  data_of_transparency$energy_reporting_scope[data_of_transparency$fuel_1_type == "Total Energy Use"] <- "Reported Company Wide Total Energy"
+  data_of_transparency$energy_reporting_scope[data_of_transparency$energy_reporting_scope == "0"] <- "No Reporting of Data"
   
   # stack single data center/multiple data center data frames on top of each other
   data_of_transparency_final <- data_of_transparency %>%
@@ -130,25 +122,7 @@ buildIndustryTrendsTransparencyPlot <- function(data_sheet_energy_raw) {
   data_of_transparency_final <- data_of_transparency_final %>%
     group_by(data_year,energy_reporting_scope)
   
-  data_of_transparency_line <- data_of_transparency %>%
-    group_by(data_year) %>%
-    dplyr::summarise(number_of_companies = sum(number_of_companies)) %>%
-    as.data.frame()
-  
   data_of_transparency <- data_of_transparency_final
-  data_of_transparency$number_of_companies <- 0
-  
-  k <- 1
-  for (i in 1:nrow(data_of_transparency)) {
-    # sum the number rows based on company name and energy reporting scope
-    # keeping track of the summation at the first instance of a distinct row
-    if (data_of_transparency[i,1] == data_of_transparency_line[k,1]) {
-      data_of_transparency[i,4] <- data_of_transparency_line[k,2]
-    } else {
-      k <- k + 1
-      data_of_transparency[i,4] <- data_of_transparency_line[k,2]
-    }
-  }
   
   data_of_transparency$energy_reporting_scope <- factor(data_of_transparency$energy_reporting_scope, 
                                                         levels=c("Reported Data Center Electricity",
