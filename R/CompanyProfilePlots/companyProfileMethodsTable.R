@@ -125,7 +125,7 @@ buildCompanyProfileMethodsTable <- function(data_sheet_energy_transformed, selec
   colnames(sources_assessed) [1] <- "Data Year"
   
   # produce HTML table widget using DT library
-  datatable(sources_assessed, rownames = FALSE, options = list(dom = 't', lengthMenu = list(c(15, -1), c("15", "All")), columnDefs = list(list(targets=0, className = "dt-left"), list(targets=columns_centered, className = "dt-center"), list(targets=columns_hidden, visible=FALSE))), 
+  datatable(sources_assessed, rownames = FALSE, options = list(dom = 't', lengthMenu = list(c(-1), c("All")), columnDefs = list(list(targets=0, className = "dt-left"), list(targets=columns_centered, className = "dt-center"), list(targets=columns_hidden, visible=FALSE)), scrollY=300, scrollCollapse=TRUE), 
             caption = "Green indicates if report provided electricity or fuel use data; Red indicates if report did not provide electricity or fuel use data", escape = FALSE) %>%
     formatStyle(columns = columns_displayed, 
                 valueColumns = columns_value, target = 'cell',
