@@ -34,19 +34,19 @@ buildCompanyProfileTransparencyOverTimePlot <- function(data_sheet_energy_transf
 
   #company_transparency <- company_transparency %>% distinct(company, data_year, .keep_all = TRUE)
   year_axis <- company_transparency %>% distinct(company, data_year, .keep_all = TRUE) %>% select(-c(company, fuel_1_type))
-  year_axis$energy_reporting_scope[year_axis$energy_reporting_scope == "Single Data Center"] <- "Reported Data Center Electricity"
-  year_axis$energy_reporting_scope[year_axis$energy_reporting_scope == "Multiple Data Centers"] <- "Reported Data Center Electricity"
-  year_axis$energy_reporting_scope[year_axis$energy_reporting_scope == "Total Operations"] <- "Reported Company Wide Electricity"
-  year_axis$energy_reporting_scope[year_axis$fuel_1_type == "Total Energy Use"] <- "Reported Company Wide Energy"
-  year_axis$energy_reporting_scope[year_axis$energy_reporting_scope == ""] <- "No Reporting of Data"
+  year_axis$energy_reporting_scope[year_axis$energy_reporting_scope == "Single Data Center"] <- "Reported Data\nCenter Electricity"
+  year_axis$energy_reporting_scope[year_axis$energy_reporting_scope == "Multiple Data Centers"] <- "Reported Data\nCenter Electricity"
+  year_axis$energy_reporting_scope[year_axis$energy_reporting_scope == "Total Operations"] <- "Reported Company\nWide Electricity"
+  year_axis$energy_reporting_scope[year_axis$fuel_1_type == "Total Energy Use"] <- "Reported Company\nWide Energy"
+  year_axis$energy_reporting_scope[year_axis$energy_reporting_scope == ""] <- "No Reporting\nof Data"
   
   #company_transparency <- company_transparency %>% distinct(company, data_year, .keep_all = TRUE) %>% distinct(company, energy_reporting_scope, .keep_all = TRUE)
   company_transparency <- company_transparency %>% distinct(company, data_year, .keep_all = TRUE)
-  company_transparency$energy_reporting_scope[company_transparency$energy_reporting_scope == "Single Data Center"] <- "Reported Data Center Electricity"
-  company_transparency$energy_reporting_scope[company_transparency$energy_reporting_scope == "Multiple Data Centers"] <- "Reported Data Center Electricity"
-  company_transparency$energy_reporting_scope[company_transparency$energy_reporting_scope == "Total Operations"] <- "Reported Company Wide Electricity"
-  company_transparency$energy_reporting_scope[company_transparency$fuel_1_type == "Total Energy Use"] <- "Reported Company Wide Energy"
-  company_transparency$energy_reporting_scope[company_transparency$energy_reporting_scope == ""] <- "No Reporting of Data"
+  company_transparency$energy_reporting_scope[company_transparency$energy_reporting_scope == "Single Data Center"] <- "Reported Data\nCenter Electricity"
+  company_transparency$energy_reporting_scope[company_transparency$energy_reporting_scope == "Multiple Data Centers"] <- "Reported Data\nCenter Electricity"
+  company_transparency$energy_reporting_scope[company_transparency$energy_reporting_scope == "Total Operations"] <- "Reported Company\nWide Electricity"
+  company_transparency$energy_reporting_scope[company_transparency$fuel_1_type == "Total Energy Use"] <- "Reported Company\nWide Energy"
+  company_transparency$energy_reporting_scope[company_transparency$energy_reporting_scope == ""] <- "No Reporting\nof Data"
   company_transparency <- company_transparency %>% select(-c(company, fuel_1_type))
   
   company_transparency$group <- 0
@@ -68,28 +68,25 @@ buildCompanyProfileTransparencyOverTimePlot <- function(data_sheet_energy_transf
   
   company_transparency$position <- 0
   company_transparency$text_position <- 0
-  position_val_1 <- 5
-  position_val_2 <- 5
-  factor <- 0.5
-  company_transparency[1,3] <- 5
-  company_transparency[1,4] <- 5
-  for (i in 2:nrow(company_transparency)) {
-    if (i %% 2 == 0) {
-      position_val_1 <- position_val_1 + factor
-      company_transparency[i,3] <- position_val_1
-      company_transparency[i,4] <- position_val_1
-      if (i == 4 || i == 8) {factor <- factor * -1}
-      factor <- factor * -1
-    } else {
-      position_val_2 <- position_val_2 - factor
-      company_transparency[i,3] <- position_val_2
-      company_transparency[i,4] <- position_val_2
-      if (i == 5 || i == 7) {factor <- factor * -1}
+  for (i in 1:nrow(company_transparency)) {
+    if (i %% 3 == 0) {
+      company_transparency[i,3] <- 1
+      company_transparency[i,4] <- 1
+    } else if (i %% 3 == 1) {
+      company_transparency[i,3] <- 0.5
+      company_transparency[i,4] <- 0.5
+    } else if (i %% 3 == 2) {
+      company_transparency[i,3] <- 1.5
+      company_transparency[i,4] <- 1.5
     }
+    # position_val <- position_val + factor
+    # company_transparency[i,3] <- position_val
+    # company_transparency[i,4] <- position_val
+    # factor <- factor * -1
   }
   
-  status_levels <- c("Reported Data Center Electricity", "Reported Company Wide Electricity", 
-                     "Reported Company Wide Energy", "No Reporting of Data")
+  status_levels <- c("Reported Data\nCenter Electricity", "Reported Company\nWide Electricity", 
+                     "Reported Company\nWide Energy", "No Reporting\nof Data")
   status_colors <- c("#0070C0", "#00B050", "#FFC000", "#C00000")
   
   year_axis$energy_reporting_scope <- factor(year_axis$energy_reporting_scope, levels=status_levels, ordered=TRUE)
@@ -99,9 +96,10 @@ buildCompanyProfileTransparencyOverTimePlot <- function(data_sheet_energy_transf
     geom_hline(yintercept=0, color="black", size=0.3) +
     geom_point(data=year_axis, aes(y=0), size=3) +
     geom_segment(data=company_transparency, aes(y=position,yend=0,xend=data_year), color='black', size=0.2) +
-    geom_label(data=company_transparency, aes(y=text_position, label=energy_reporting_scope), fill="white", size=5) +
-    geom_text(data=year_axis, aes(x=year_text, y=-0.5, label=year_text), color="black", size=4) +
+    geom_label(data=company_transparency, aes(y=text_position, label=energy_reporting_scope), fill="white", size=5, vjust="inward") +
+    geom_text(data=year_axis, aes(x=year_text, y=-0.2, label=year_text), color="black", size=4) +
     scale_color_manual(values=status_colors, labels=status_levels, drop = FALSE) +
+    scale_x_discrete(expand = expansion(mult = 0.1)) +
     theme_classic() +
     labs(col="Reporting Scope") +
     theme(axis.line.y=element_blank(),
