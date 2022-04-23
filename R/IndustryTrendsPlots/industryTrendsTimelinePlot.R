@@ -26,6 +26,9 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
     }
   }
   
+  company_profile <- data_sheet_company_raw %>% select(company_name, checked_back_to_founding_year_or_2007) %>%
+    filter(checked_back_to_founding_year_or_2007 == "Yes")
+  
   industry_transparency <- industry_transparency %>% distinct(company, data_year, .keep_all = TRUE)
   industry_transparency <- dummy_rows(industry_transparency, 
                                      select_columns = c("company", "data_year"),
@@ -36,18 +39,30 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
   industry_transparency$energy_reporting_scope[industry_transparency$energy_reporting_scope == "Total Operations"] <- "Reported Company Wide Electricity"
   industry_transparency$energy_reporting_scope[industry_transparency$fuel_1_type == "Total Energy Use"] <- "Reported Company Wide Energy"
   industry_transparency$energy_reporting_scope[industry_transparency$energy_reporting_scope == ""] <- "No Reporting of Data"
-  industry_transparency <- industry_transparency %>% select(-c(fuel_1_type))
+  industry_transparency <- industry_transparency %>% select(-c(fuel_1_type)) %>% filter(company %in% company_profile$company_name)
+  industry_transparency <- industry_transparency[order(industry_transparency$company),]
+  industry_transparency$company <- factor(industry_transparency$company, levels=rev(unique(industry_transparency$company)))
   
   industry_transparency$data_year <- paste0("01/01/", industry_transparency$data_year)
   industry_transparency$data_year <- as.Date(industry_transparency$data_year, "%d/%m/%Y")
   
-  p <- ggplot(industry_transparency, aes(x=data_year, y=company)) +
-    geom_tile(aes(fill=energy_reporting_scope), height=0.75) +
-    #geom_bar(aes(fill=energy_reporting_scope), stat="identity", position="stack") +
-    #scale_x_date(breaks = industry_transparency$data_year) +
-    #xlim(as.Date("2007-01-01"), as.Date("2020-12-31")) +
-    theme_classic()
+  p <- ggplot(industry_transparency, aes(x=data_year, y=company, 
+                                         text=paste("Company: ", company, "\nData Year: ", 
+                                                    format(data_year, format="%Y"), 
+                                                    "\nReporting Scope: ", energy_reporting_scope))) +
+    geom_tile(aes(fill=energy_reporting_scope), height=0.95) +
+    labs(energy_reporting_scope="Reporting Scope") +
+    theme(legend.position = "none",
+      axis.line.x=element_blank(),
+      axis.text.x=element_blank(),
+      axis.title.x=element_blank(),
+      axis.ticks.x=element_blank(),
+      axis.title.y=element_blank(),
+      axis.text.y = element_text(size = 12),
+      axis.line.y=element_line(colour="black", size=1),
+      panel.background = element_blank()
+    )
   
-  ggplotly(p, height = 1500)
+  ggplotly(p, tooltip = "text")
   
 }
