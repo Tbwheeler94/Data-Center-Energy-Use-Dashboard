@@ -1,4 +1,4 @@
-buildCompanyProfileMethodsTable <- function(data_sheet_energy_transformed, selected_company) {
+buildCompanyProfileSourcesAssessedTable <- function(data_sheet_energy_transformed, selected_company) {
 
   #stack sources columns on top of each other
   source_assessed_1 <- data_sheet_energy_transformed %>% 
