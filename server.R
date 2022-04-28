@@ -3,6 +3,7 @@ source(here("R", "CompanyProfilePlots", "companyProfileElectricityUsePlot.R"))
 source(here("R", "CompanyProfilePlots", "companyProfileFuelUsePlot.R"))
 source(here("R", "CompanyProfilePlots", "companyProfileNonSpecifiedEnergyUsePlot.R"))
 source(here("R", "CompanyProfilePlots", "companyProfilePUEPlot.R"))
+source(here("R", "CompanyProfilePlots", "companyProfileMethodologyTable.R"))
 source(here("R", "CompanyProfilePlots", "companyProfileSourcesAssessedTable.R"))
 source(here("R", "IndustryTrendsPlots", "industryTrendsDataCenterPlot.R"))
 source(here("R", "IndustryTrendsPlots", "industryTrendsCompanyWide1Plot.R"))
@@ -716,7 +717,7 @@ server <- function(input, output, session) {
   
   #######################################
   #Table 12##############################
-  # Methodology ######################
+  # Methodology #########################
   #######################################
 
   #selected_nav <- 'home'
@@ -732,6 +733,10 @@ server <- function(input, output, session) {
   #change to contact us page when the report issue button is clicked
   onclick('report-issue', change_page('/contact-us', session = shiny::getDefaultReactiveDomain(), mode = "push"))
   #onclick('learnmore', Nav(selectedKey = 'methods'))
+  
+  output$methodology_table <- renderDataTable({
+    buildCompanyProfileMethodologyTable(input$selected_company)
+  })
   
   #######################################
   #Table 13##############################
