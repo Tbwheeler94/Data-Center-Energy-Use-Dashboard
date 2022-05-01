@@ -1,4 +1,13 @@
-buildCompanyProfileNonSpecifiedEnergyUsePlot <- function(selected_company) {
+buildCompanyProfileNonSpecifiedEnergyUsePlot <- function(selected_company, methodology_table_lookup) {
+  
+  #filter methodology table for only values with a note associated with them in the "notes_2" column, reserved for methodological notes about an electricity value.
+  #convert values in the reporting scope column to match data_centers or Total_company
+  methodology_table_lookup_filtered <- methodology_table_lookup %>% 
+    filter(`Methodological Notes Category` == "Non-specified Energy Use") %>% 
+    mutate(`Reporting Scope` = case_when(
+      `Reporting Scope` %in% "Data center" ~ "data_centers",
+      `Reporting Scope` %in% "Total company" ~ "Total_company")) %>% 
+    rename("data_year" = `Data Year`, "category" = `Reporting Scope`)
   
   selected_company_ns_energy_use_filter <-
     data_sheet_energy_transformed %>%
@@ -37,6 +46,9 @@ buildCompanyProfileNonSpecifiedEnergyUsePlot <- function(selected_company) {
       mutate(Total_company = as.character(Total_company), Self_managed = as.character(Self_managed), 
              Leased = as.character(Leased), data_centers = as.character(data_centers)) %>%
       pivot_longer(!data_year, names_to = "category", values_to = "value") %>% 
+      #add asterisk to ns energy data that has a note associated with it
+      mutate(value = ifelse(data_year %in% methodology_table_lookup_filtered$data_year & category %in% methodology_table_lookup_filtered$category, 
+                            paste(value,"*", sep = ""), value)) %>% 
       pivot_wider(names_from = data_year, values_from = value) %>% 
       mutate(category = case_when(
         category %in% "Total_company" ~ "Total company",
@@ -67,7 +79,7 @@ buildCompanyProfileNonSpecifiedEnergyUsePlot <- function(selected_company) {
       select(sort(tidyselect::peek_vars())) %>% 
       relocate(c(format, category), .before = '2007') %>% 
       mutate_if(is.numeric, ~ifelse(. == 0, "", .)) %>% 
-      mutate_if(is.character, ~ifelse(. == "0", "", .)) %>% 
+      mutate_if(is.character, ~ifelse(. == "0" | . == "0*", "", .)) %>% 
       mutate_if(is.character, ~ifelse(. == "0%" | . == "Inf", "NA", .)) %>% 
       mutate(format = c(1,0,0,1,1))
   }

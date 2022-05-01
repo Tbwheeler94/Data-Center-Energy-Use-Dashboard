@@ -84,15 +84,8 @@ server <- function(input, output, session) {
   ###### Card 1.3: Dynamically generate number of companies reporting ######
   ##########################################################################
   
-  #generate complete list of companies reporting from Company Profiles sheet
-  data_frame_of_companies_reporting <- 
-    data_sheet_company_raw %>% 
-    #filter by only companies that have been checked back to 2007
-    filter(checked_back_to_founding_year_or_2007 == "Yes")
-    #output length of vector of unique values in the company column
-  
-  #calculate the number of companies reporting by getting the length of a vector of unique values from the company_name column
-  number_of_companies_reporting <- length(unique(data_frame_of_companies_reporting$company_name))
+  #calculate the number of companies reporting by getting the length of the companies vector from global
+  number_of_companies_reporting <- length(companies)
   
   #assign function for counter
   number_of_companies_reporting_start_val <- reactiveVal(0)
@@ -631,9 +624,11 @@ server <- function(input, output, session) {
   })
   
   #######################################
-  #Table 7###############################
-  #Electricity Use (TWh/yr)##############
+  #Table 7-10 Prep. #####################
+  #Interactivity and Method Table Lookup
   #######################################
+  
+  methodology_table_lookup <- reactive({buildCompanyProfileMethodologyTable(input$selected_company)})
   
   #Show all 4 tables to start
   observeEvent(input$selected_company, {
@@ -643,9 +638,14 @@ server <- function(input, output, session) {
     shinyjs::show(selector = "div#pue-table")
   })
   
+  #######################################
+  #Table 7###############################
+  #Electricity Use (TWh/yr)##############
+  #######################################
+  
   output$electricity_use_table <- renderDataTable({
     
-    selected_company_electricity_use_filter <- buildCompanyProfileElectricityUsePlot(input$selected_company)
+    selected_company_electricity_use_filter <- buildCompanyProfileElectricityUsePlot(input$selected_company, methodology_table_lookup())
     
     #If the dataframe output from the reactive electricity dataset is not empty then insert the dataset into a datatable, else show the no_data datatable
     if(nrow(selected_company_electricity_use_filter) != 0) {
@@ -663,7 +663,7 @@ server <- function(input, output, session) {
   
   output$other_fuel_use_table <- renderDataTable({
     
-    selected_company_fuel_use_filter <- buildCompanyProfileFuelUsePlot(input$selected_company)
+    selected_company_fuel_use_filter <- buildCompanyProfileFuelUsePlot(input$selected_company, methodology_table_lookup())
     
     if(nrow(selected_company_fuel_use_filter) != 0) {
       datatable(selected_company_fuel_use_filter, rownames = FALSE, options = list(dom = 't', columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
@@ -680,7 +680,7 @@ server <- function(input, output, session) {
   
   output$ns_energy_use_table <- renderDataTable({
     
-    selected_company_ns_energy_use_filter <- buildCompanyProfileNonSpecifiedEnergyUsePlot(input$selected_company)
+    selected_company_ns_energy_use_filter <- buildCompanyProfileNonSpecifiedEnergyUsePlot(input$selected_company, methodology_table_lookup())
     
     if(nrow(selected_company_ns_energy_use_filter) != 0) {
       datatable(selected_company_ns_energy_use_filter, rownames = FALSE, options = list(dom = 't', columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
@@ -697,7 +697,7 @@ server <- function(input, output, session) {
   
   output$pue_table <- renderDataTable({
 
-    selected_company_pue_filter <- buildCompanyProfilePUEPlot(input$selected_company)
+    selected_company_pue_filter <- buildCompanyProfilePUEPlot(input$selected_company, methodology_table_lookup())
     
     if(nrow(selected_company_pue_filter) != 0) {
       datatable(selected_company_pue_filter, rownames = FALSE, options = list(dom = 't', autoWidth = TRUE, columnDefs = list(list(width = '300px',targets = c(0))), scrollY=200, scrollCollapse=TRUE))
@@ -735,7 +735,10 @@ server <- function(input, output, session) {
   #onclick('learnmore', Nav(selectedKey = 'methods'))
   
   output$methodology_table <- renderDataTable({
-    buildCompanyProfileMethodologyTable(input$selected_company)
+    
+    methodology_notes <- buildCompanyProfileMethodologyTable(input$selected_company)
+    
+    datatable(methodology_notes, rownames = FALSE, options = list(dom = 't', scrollY=300, scrollCollapse=TRUE))
   })
   
   #######################################

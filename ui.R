@@ -289,7 +289,10 @@ company_analysis_page <- makePage(
       GridItem(class = "ms-sm12 ms-xl10",
                CompanyCard(
                  Text("Electricity Use (TWh/yr)", variant = "large", style = "text-align: center;"),
-                 div(dataTableOutput("electricity_use_table"), style = "width: 100%") 
+                 div(dataTableOutput("electricity_use_table"), style = "width: 100%"),
+                 Stack(horizontal = TRUE, style = "justify-content: end; color: #137AD1;", 
+                       TooltipHost(content = "Values marked with asterisk are inferred, scroll down to Methodology table below to see how the value was calculated",
+                       ActionButton(iconProps = list("iconName" = "Info"), text = "About This Table", style = "color: #137AD1;")))
                )
                
       ),
@@ -299,7 +302,10 @@ company_analysis_page <- makePage(
       GridItem(class = "ms-sm12 ms-xl10",
                CompanyCard(
                  Text("Other fuel use (TWh/yr)", variant = "large", style = "text-align: center;"),
-                 div(dataTableOutput("other_fuel_use_table"), style = "width: 100%")
+                 div(dataTableOutput("other_fuel_use_table"), style = "width: 100%"),
+                 Stack(horizontal = TRUE, style = "justify-content: end; color: #137AD1;", 
+                       TooltipHost(content = "Values marked with asterisk are inferred, scroll down to Methodology table below to see how the value was calculated",
+                       ActionButton(iconProps = list("iconName" = "Info"), text = "About This Table", style = "color: #137AD1;")))
                )
                
       )
@@ -309,7 +315,10 @@ company_analysis_page <- makePage(
       GridItem(class = "ms-sm12 ms-xl10",  id = "ns-energy-use-table",
                CompanyCard(
                  Text("Non-specified energy use (TWh/yr)", variant = "large", style = "text-align: center;"),
-                 div(dataTableOutput("ns_energy_use_table"), style = "width: 100%")
+                 div(dataTableOutput("ns_energy_use_table"), style = "width: 100%"),
+                 Stack(horizontal = TRUE, style = "justify-content: end; color: #137AD1;", 
+                       TooltipHost(content = "Values marked with asterisk are inferred, scroll down to Methodology table below to see how the value was calculated",
+                       ActionButton(iconProps = list("iconName" = "Info"), text = "About This Table", style = "color: #137AD1;")))
                )
                
       ),
@@ -319,7 +328,10 @@ company_analysis_page <- makePage(
       GridItem(class = "ms-sm12 ms-xl10",
                CompanyCard(
                  Text("PUE", variant = "large", style = "text-align: center;"),
-                 div(dataTableOutput("pue_table"), style = "width: 100%; overflow-x:auto;")
+                 div(dataTableOutput("pue_table"), style = "width: 100%; overflow-x:auto;"),
+                 Stack(horizontal = TRUE, style = "justify-content: end; color: #137AD1;", 
+                       TooltipHost(content = "Values marked with asterisk are inferred, scroll down to Methodology table below to see how the value was calculated",
+                       ActionButton(iconProps = list("iconName" = "Info"), text = "About This Table", style = "color: #137AD1;")))
                )
                
       )
@@ -329,8 +341,8 @@ company_analysis_page <- makePage(
       GridItem(class = "ms-sm0 ms-xl10", plotOutput('transparency_over_time_plot'))
     ),
     Grid(
-      GridItem(class = "ms-sm0 ms-xl2"),
-      GridItem(class = "ms-sm12 ms-xl8",
+      GridItem(class = "ms-sm0 ms-xl1"),
+      GridItem(class = "ms-sm12 ms-xl10",
                Stack(style = "text-align: center; padding: 25px;",Text("Methodology", variant = "xxLarge", style = "color: #137AD1;")),
                CompanyCard(div(dataTableOutput("methodology_table"), style = "width: 100%; overflow-x:auto;"),
                            div(PrimaryButton.shinyInput("learn-more", text = "Learn Our Methods", style = "width: 180px; font-style: bold; margin-right: 10px;"),
