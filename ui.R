@@ -451,9 +451,9 @@ footer <- Stack(
   horizontal = TRUE,
   horizontalAlign = 'space-between',
   tokens = list(childrenGap = 20),
-  Text(variant = "medium", "Built by the Industrial Sustainability Analysis Lab at UCSB", block=TRUE),
-  Text(variant = "medium", nowrap = FALSE, "If you'd like to connect, reach out to us at info@isalab.edu"),
-  Text(variant = "medium", nowrap = FALSE, "All rights reserved.")
+  Text(variant = "mediumPlus", "Built by the Industrial Sustainability Analysis Lab at UCSB", block=TRUE),
+  Text(variant = "mediumPlus", nowrap = FALSE, "If you'd like to connect, reach out to us at info@isalab.edu"),
+  Text(variant = "mediumPlus", nowrap = FALSE, "All rights reserved.")
 )
 
 
