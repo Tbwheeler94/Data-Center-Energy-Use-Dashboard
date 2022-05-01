@@ -229,8 +229,8 @@ reporting_timeline_page <- makePage(
 company_analysis_page <- makePage(
   div(
     Grid(
-      GridItem(class = "ms-sm0 ms-xl4"),
-      GridItem(class = "ms-sm12 ms-xl4",
+      GridItem(class = "ms-sm0 ms-xl3"),
+      GridItem(class = "ms-sm12 ms-xl6",
                Stack(
                  class = "ms-depth-8",
                  style = 'border-radius: 5px; background-color: white; border-top: 8px solid #137AD1;',
@@ -243,22 +243,26 @@ company_analysis_page <- makePage(
                                      dropdownWidth = 150,
                                      style = "width: 150px; margin: auto; font-size: 12pt;"),
                  downloadButton('download_standards'," Download all reported data (.csv)", style = "text-align: center; font-size: 12pt;"),
-                 dataTableOutput("selected_company_stats")
+                 dataTableOutput("selected_company_stats"),
+                 div(reactOutput("company_data_center_overview"),
+                     reactOutput("company_energy_reporting_assessment_overview"),
+                     PrimaryButton.shinyInput("show_company_data_center_overview", text = "Data Center Overview"),
+                     PrimaryButton.shinyInput("show_company_energy_reporting_assessment_overview", text = "Energy Overview", style = "float: right;"))
                )
       )
     ),
-    Grid(
-      GridItem(class = "ms-sm12 ms-xl6",
-               CompanyCard(
-                           Text("Company Data Center Overview", variant = "xxLarge", style = "text-align: center;"),
-                           Text(uiOutput("company_data_center_overview"), variant = "large"))
-              ),
-      GridItem(class = "ms-sm12 ms-xl6",
-               CompanyCard(
-                 Text("Energy Report Assessment", variant = "xxLarge", style = "text-align: center;"), 
-                 Text(uiOutput("energy_reporting_assessment"), variant = "large"))
-      )
-    ),
+    #Grid(
+    #  GridItem(class = "ms-sm12 ms-xl6",
+    #           CompanyCard(
+    #                       Text("Company Data Center Overview", variant = "xxLarge", style = "text-align: center;"),
+    #                       Text(uiOutput("company_data_center_overview"), variant = "large"))
+    #          ),
+    #  GridItem(class = "ms-sm12 ms-xl6",
+    #           CompanyCard(
+    #             Text("Energy Report Assessment", variant = "xxLarge", style = "text-align: center;"), 
+    #             Text(uiOutput("energy_reporting_assessment"), variant = "large"))
+    #  )
+    #),
     Grid(
       Stack(style = "text-align: center; padding: 25px", Text("Current Year Energy Reporting Snapshot", variant = "xxLarge", style = "color: #137AD1;")),
       GridItem(class = "ms-sm12 ms-xl4",                                               

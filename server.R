@@ -556,8 +556,22 @@ server <- function(input, output, session) {
   #Company data center overview#
   ##############################
   
-  output$company_data_center_overview <- renderText({
-    company_sheet_selected_company()[1, "company_data_center_overview"]
+  data_center_modal_visible <- reactiveVal(FALSE)
+  observeEvent(input$show_company_data_center_overview, data_center_modal_visible(TRUE))
+  observeEvent(input$hide_company_data_center_overview, data_center_modal_visible(FALSE))
+  
+  output$company_data_center_overview <- renderReact({
+    
+    Modal(isOpen = data_center_modal_visible(),
+          styles = "width: 150px",
+          Stack(tokens = list(padding = "15px", childrenGap = "10px"),
+                div(style = list(display = "flex"),
+                    Text("Data Center Overview", variant = "xLarge"),
+                    div(style = list(flexGrow = 1)),
+                    IconButton.shinyInput("hide_company_data_center_overview", iconProps = list(iconName = "Cancel")),
+                ),
+                div(Text(company_sheet_selected_company()[1, "company_data_center_overview"], variant = "large")
+                )))
   })
   
   ##############################
@@ -565,8 +579,21 @@ server <- function(input, output, session) {
   #Energy reporting assessment##
   ##############################
   
-  output$energy_reporting_assessment <- renderText({
-    company_sheet_selected_company()[1, "energy_reporting_assessment"]
+  energy_assessement_modal_visible <- reactiveVal(FALSE)
+  observeEvent(input$show_company_energy_reporting_assessment_overview, energy_assessement_modal_visible(TRUE))
+  observeEvent(input$hide_company_energy_reporting_assessment_overview, energy_assessement_modal_visible(FALSE))
+  
+  output$company_energy_reporting_assessment_overview <- renderReact({
+    
+    Modal(isOpen = energy_assessement_modal_visible(),
+          Stack(tokens = list(padding = "15px", childrenGap = "10px"),
+                div(style = list(display = "flex"),
+                    Text("Energy Reporting Assessment", variant = "xLarge"),
+                    div(style = list(flexGrow = 1)),
+                    IconButton.shinyInput("hide_company_energy_reporting_assessment_overview", iconProps = list(iconName = "Cancel")),
+                ),
+                div(Text(company_sheet_selected_company()[1, "energy_reporting_assessment"], variant = "large")
+                )))
   })
   
   #######################################
