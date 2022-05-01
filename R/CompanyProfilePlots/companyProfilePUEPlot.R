@@ -2,7 +2,7 @@ buildCompanyProfilePUEPlot <- function(selected_company, methodology_table_looku
   
   #filter methodology table for only values with a note associated with them in the "notes_2" column, reserved for methodological notes about an electricity value.
   #convert values in the reporting scope column to match data_centers or Total_company
-  methodology_table_lookup_filtered <- methodology_notes %>% 
+  methodology_table_lookup_filtered <- methodology_table_lookup %>% 
     filter(`Methodological Notes Category` == "PUE") %>% 
     rename("data_year" = `Data Year`, "category" = `Reporting Scope`)
   
