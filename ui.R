@@ -349,10 +349,10 @@ company_analysis_page <- makePage(
       GridItem(class = "ms-sm12 ms-xl10",
                Stack(style = "text-align: center; padding: 25px;",Text(uiOutput("company_profiles_title_3"), variant = "xxLarge", style = "color: #137AD1;")),
                CompanyCard(div(dataTableOutput("methodology_table"), style = "width: 100%; overflow-x:auto;"),
-                           div(PrimaryButton.shinyInput("learn-more", text = "Learn Our Methods", style = "width: 180px; font-style: bold; margin-right: 10px;"),
+                           div(PrimaryButton.shinyInput("learn-more", text = "Learn More", style = "width: 120px; font-style: bold; margin-right: 10px;"),
                                Text("All data are collected from publicly available sources and reviewed prior to being displayed on the website. Click the button to learn more about our methods.", variant = "large")),
-                           div(PrimaryButton.shinyInput("report-issue", text = "Report Issue", style = "width: 140px; font-style: bold; margin-right: 10px;"),
-                               Text("If you spot errors or have more recent data, please let us know!", variant = "large")))
+                           div(PrimaryButton.shinyInput("report-issue", text = "Contact Us", style = "width: 120px; font-style: bold; margin-right: 10px;"),
+                               Text("See an error in the reported data or have access to data you'd like our team to process? Contact us.", variant = "large")))
       ),
     ),
     Grid(
