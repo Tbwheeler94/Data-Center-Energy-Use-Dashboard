@@ -93,7 +93,7 @@ home_page <- makePage(
           HighlightsCard(
             FontIcon(iconName = "TableComputed", style = list(fontSize = 60)),
             Text(uiOutput("energy_reported"), variant = "mega", style = "color: #137AD1;"),
-            Text("Data Center Electricty Use Reported This Year", variant = "xxLarge")
+            Text(uiOutput("energy_reported_text"), variant = "xxLarge")
           )
         )
     )
@@ -234,7 +234,7 @@ company_analysis_page <- makePage(
                Stack(
                  class = "ms-depth-8",
                  style = 'border-radius: 5px; background-color: white; border-top: 8px solid #137AD1;',
-                 tokens = list(padding = 20, childrenGap = 20),
+                 tokens = list(padding = 20, childrenGap = 10),
                  Text("Select A Company To View", variant = "xxLarge", style = "text-align: center;"),
                  Dropdown.shinyInput("selected_company", 
                                      options = unique_companies,
@@ -243,11 +243,11 @@ company_analysis_page <- makePage(
                                      dropdownWidth = 150,
                                      style = "width: 150px; margin: auto; font-size: 12pt;"),
                  downloadButton('download_standards'," Download all reported data (.csv)", style = "text-align: center; font-size: 12pt;"),
+                 div(PrimaryButton.shinyInput("show_company_data_center_overview", text = "Read Data Center Overview", style = "margin-right: 10px;"),
+                 PrimaryButton.shinyInput("show_company_energy_reporting_assessment_overview", text = "Read Energy Overview"), style = "margin: auto; margin-top: 10px;"),
                  dataTableOutput("selected_company_stats"),
                  div(reactOutput("company_data_center_overview"),
-                     reactOutput("company_energy_reporting_assessment_overview"),
-                     PrimaryButton.shinyInput("show_company_data_center_overview", text = "Data Center Overview"),
-                     PrimaryButton.shinyInput("show_company_energy_reporting_assessment_overview", text = "Energy Overview", style = "float: right;"))
+                     reactOutput("company_energy_reporting_assessment_overview"))
                )
       )
     ),
@@ -264,7 +264,7 @@ company_analysis_page <- makePage(
     #  )
     #),
     Grid(
-      Stack(style = "text-align: center; padding: 25px", Text("Current Year Energy Reporting Snapshot", variant = "xxLarge", style = "color: #137AD1;")),
+      Stack(style = "text-align: center; padding: 25px", Text(uiOutput("company_profiles_title_1"), variant = "xxLarge", style = "color: #137AD1;")),
       GridItem(class = "ms-sm12 ms-xl4",                                               
                CompanyCard(
                  Text("Reported energy use levels", variant = "large", style = "text-align: center;"),
@@ -287,7 +287,7 @@ company_analysis_page <- makePage(
                )
       )
     ),
-    Grid(Stack(style = "text-align: center; padding: 25px", Text("Historical Energy Use Trend & Data", variant = "xxLarge", style = "color: #137AD1;"))),
+    Grid(Stack(style = "text-align: center; padding: 25px", Text(uiOutput("company_profiles_title_2"), variant = "xxLarge", style = "color: #137AD1;"))),
     Grid(id = "electricity-use-table",
       GridItem(class = "ms-sm0 ms-xl1"),
       GridItem(class = "ms-sm12 ms-xl10",
@@ -347,7 +347,7 @@ company_analysis_page <- makePage(
     Grid(
       GridItem(class = "ms-sm0 ms-xl1"),
       GridItem(class = "ms-sm12 ms-xl10",
-               Stack(style = "text-align: center; padding: 25px;",Text("Methodology", variant = "xxLarge", style = "color: #137AD1;")),
+               Stack(style = "text-align: center; padding: 25px;",Text(uiOutput("company_profiles_title_3"), variant = "xxLarge", style = "color: #137AD1;")),
                CompanyCard(div(dataTableOutput("methodology_table"), style = "width: 100%; overflow-x:auto;"),
                            div(PrimaryButton.shinyInput("learn-more", text = "Learn Our Methods", style = "width: 180px; font-style: bold; margin-right: 10px;"),
                                Text("All data are collected from publicly available sources and reviewed prior to being displayed on the website. Click the button to learn more about our methods.", variant = "large")),
@@ -358,7 +358,7 @@ company_analysis_page <- makePage(
     Grid(
       GridItem(class = "ms-sm0 ms-xl1"),
       GridItem(class = "ms-sm12 ms-xl10",
-               Stack(style = "text-align: center; padding: 25px;", Text("Sources Assessed", variant = "xxLarge", style = "color: #137AD1;")),
+               Stack(style = "text-align: center; padding: 25px;", Text(uiOutput("company_profiles_title_4"), variant = "xxLarge", style = "color: #137AD1;")),
                CompanyCard(
                  Text(variant = "large", style = "text-align: center;"),
                  div(dataTableOutput("sources_table"), style = "width: 100%;")
@@ -493,6 +493,7 @@ ui <- #secure_app(head_auth = tags$script(inactivity), #authentication
                                    "company_wide_plot_2", "company_wide_plot_3", "company_wide_plot_4",
                                    "company_wide_plot_5", "reporting_timeline",
                                    #add loading animations to company analysis page
+                                   "company_profiles_title_1", "company_profiles_title_2", "company_profiles_title_3", "company_profiles_title_4",
                                    "selected_company_stats", "company_data_center_overview", "energy_reporting_assessment",
                                    "reported_energy_levels", "data_standards", "other_metrics",
                                    "electricity_use_table", "other_fuel_use_table",

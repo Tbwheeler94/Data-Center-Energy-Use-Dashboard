@@ -44,11 +44,11 @@ server <- function(input, output, session) {
   #  reactiveValuesToList(result_auth)
   #})
   
-  ########################################################
-  ########################################################
-  ###### Tab 1: Home  #################################### 
-  ########################################################
-  ########################################################
+###########################################################################################################################################################
+###########################################################################################################################################################
+###### Tab 1: Home  #######################################################################################################################################
+###########################################################################################################################################################
+###########################################################################################################################################################
   
   #####################################################################
   ###### Card 1.2: Dynamically generate number of years reported ######
@@ -111,7 +111,8 @@ server <- function(input, output, session) {
   total_data_center_electricity_use_reported <- data_sheet_energy_transformed %>% 
     mutate_at(vars(electricity_converted), ~replace_na(., 0)) %>%
     select("company", "data_year", "energy_reporting_scope", "level_of_ownership", "electricity_converted") %>% 
-    filter(energy_reporting_scope == "Multiple Data Centers" | energy_reporting_scope == "Single Data Center" )
+    filter(energy_reporting_scope == "Multiple Data Centers" | energy_reporting_scope == "Single Data Center" ) %>% 
+    filter(data_year == (max(data_year)-1))
   
   total_data_center_electricity_use_reported <- round(sum(total_data_center_electricity_use_reported$electricity_converted)/1000000000, 1)
   
@@ -128,17 +129,21 @@ server <- function(input, output, session) {
     })
   })
   
+  #Render total data center energy use reported in second most recent year in UI"
   output$energy_reported <- renderText({
-  
     paste(total_data_center_electricity_use_reported_start_val(), "TWh")
-    
   })
   
-  ########################################################
-  ########################################################
-  ###### Tab 2: Industry Trends  ######################### 
-  ########################################################
-  ########################################################
+  #Render "Data Center Electricity Use Reported In <1 year minus the latest year in reporting> in UI"
+  output$energy_reported_text <- renderText({
+    paste("Data Center Electricty Use Reported In", (max(data_sheet_energy_transformed$data_year)-1))
+  })
+  
+###########################################################################################################################################################
+###########################################################################################################################################################
+###### Tab 2: Industry Trends  ############################################################################################################################
+###########################################################################################################################################################
+###########################################################################################################################################################
   
   ########################################################
   ###### Generate transparency graph #####################
@@ -401,13 +406,9 @@ server <- function(input, output, session) {
   output$company_wide_plot_5 <- renderPlot({
     
     if (nrow(energy_use_L2_5()) != 0) {
-      
       buildIndustryTrendsCompanyWide5Plot(energy_use_L2_5())
-      
     } else {
-      
       shinyjs::hide(selector = "div#company-wide-plot-5")
-      
     }
     
   }, height = reactive({company_wide_plot_5_height()}))
@@ -420,14 +421,34 @@ server <- function(input, output, session) {
     buildIndustryTrendsTimelinePlot(data_sheet_energy_transformed)
   })
   
-  ########################################################
-  ########################################################
-  ###### Tab 3: Company Analysis  ######################## 
-  ########################################################
-  ########################################################
+###########################################################################################################################################################
+###########################################################################################################################################################
+###### Tab 3: Company Analysis  ###########################################################################################################################
+###########################################################################################################################################################
+###########################################################################################################################################################
+  
+  ###############################################################
+  ###### Generate reactive titles based on user selection #######
+  ###############################################################
+  
+  output$company_profiles_title_1 <- renderText({
+    paste("Current Year Energy Reporting Snapshot For", input$selected_company)
+  })
+  
+  output$company_profiles_title_2 <- renderText({
+    paste("Historical Energy Use Trend & Data For", input$selected_company)
+  })
+  
+  output$company_profiles_title_3 <- renderText({
+    paste("Methodological Notes For", input$selected_company)
+  })
+  
+  output$company_profiles_title_4 <- renderText({
+    paste("Sources Assessed For", input$selected_company)
+  })
   
   ########################################################
-  ###### Generate reactive datasets for sub-rendering ####
+  ###### Generate reactive datasets for subsetting #######
   ########################################################
   
   #This dataset filters the raw company profiles sheet by the selected company's current year
@@ -513,7 +534,7 @@ server <- function(input, output, session) {
   })
   
   #########################################################
-  ####### Table 3.1: Select company quick stats ###########
+  ####### Table 1: Select company quick stats #############
   #########################################################
   
   #Does Company X report any energy use?
@@ -763,9 +784,8 @@ server <- function(input, output, session) {
   
   output$methodology_table <- renderDataTable({
     
-    methodology_notes <- buildCompanyProfileMethodologyTable(input$selected_company)
-    
-    datatable(methodology_notes, rownames = FALSE, options = list(dom = 't', scrollY=300, scrollCollapse=TRUE))
+    #add "pageLength" = 100 to ensure datatable is showing up to 100 lines of methodological notes (default is 10 and any comments beyond that are hidden from the user)
+    datatable(buildCompanyProfileMethodologyTable(input$selected_company), rownames = FALSE, options = list(dom = 't', scrollY=200, scrollCollapse=TRUE, "pageLength" = 100))
   })
   
   #######################################
