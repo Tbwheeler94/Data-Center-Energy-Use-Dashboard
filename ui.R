@@ -488,6 +488,7 @@ shiny_router_script_tag <- shiny::tags$script(type = "text/javascript", src = sh
 
 ui <- #secure_app(head_auth = tags$script(inactivity), #authentication
                  fluentPage(
+                 tags$title("Data Center Energy Dashboard"),
                  autoWaiter(id = c(#add loading animations to industry trend graphs
                                    "transparency_graph", "data_centerplot", "company_wide_plot_1",
                                    "company_wide_plot_2", "company_wide_plot_3", "company_wide_plot_4",

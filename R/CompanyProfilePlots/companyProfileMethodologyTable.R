@@ -54,7 +54,7 @@ buildCompanyProfileMethodologyTable <- function(selected_company) {
                              selected_company_methodology_ns_energy,
                              selected_company_methodology_pue) %>% 
                        rename(`Data Year` = "data_year", `Reporting Scope` = "energy_reporting_scope", `Methodological Note` = "notes",
-                              `Data Category` = "methodological_note_category")
+                              `Methodological Notes Category` = "methodological_note_category")
   
   methodology_notes
   
