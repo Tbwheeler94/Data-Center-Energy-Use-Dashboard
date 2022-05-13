@@ -44,11 +44,11 @@ server <- function(input, output, session) {
   #  reactiveValuesToList(result_auth)
   #})
   
-  ########################################################
-  ########################################################
-  ###### Tab 1: Home  #################################### 
-  ########################################################
-  ########################################################
+###########################################################################################################################################################
+###########################################################################################################################################################
+###### Tab 1: Home  #######################################################################################################################################
+###########################################################################################################################################################
+###########################################################################################################################################################
   
   #####################################################################
   ###### Card 1.2: Dynamically generate number of years reported ######
@@ -84,15 +84,8 @@ server <- function(input, output, session) {
   ###### Card 1.3: Dynamically generate number of companies reporting ######
   ##########################################################################
   
-  #generate complete list of companies reporting from Company Profiles sheet
-  data_frame_of_companies_reporting <- 
-    data_sheet_company_raw %>% 
-    #filter by only companies that have been checked back to 2007
-    filter(checked_back_to_founding_year_or_2007 == "Yes")
-    #output length of vector of unique values in the company column
-  
-  #calculate the number of companies reporting by getting the length of a vector of unique values from the company_name column
-  number_of_companies_reporting <- length(unique(data_frame_of_companies_reporting$company_name))
+  #calculate the number of companies reporting by getting the length of the companies vector from global
+  number_of_companies_reporting <- length(companies)
   
   #assign function for counter
   number_of_companies_reporting_start_val <- reactiveVal(0)
@@ -118,7 +111,8 @@ server <- function(input, output, session) {
   total_data_center_electricity_use_reported <- data_sheet_energy_transformed %>% 
     mutate_at(vars(electricity_converted), ~replace_na(., 0)) %>%
     select("company", "data_year", "energy_reporting_scope", "level_of_ownership", "electricity_converted") %>% 
-    filter(energy_reporting_scope == "Multiple Data Centers" | energy_reporting_scope == "Single Data Center" )
+    filter(energy_reporting_scope == "Multiple Data Centers" | energy_reporting_scope == "Single Data Center" ) %>% 
+    filter(data_year == (max(data_year)-1))
   
   total_data_center_electricity_use_reported <- round(sum(total_data_center_electricity_use_reported$electricity_converted)/1000000000, 1)
   
@@ -135,17 +129,21 @@ server <- function(input, output, session) {
     })
   })
   
+  #Render total data center energy use reported in second most recent year in UI"
   output$energy_reported <- renderText({
-  
     paste(total_data_center_electricity_use_reported_start_val(), "TWh")
-    
   })
   
-  ########################################################
-  ########################################################
-  ###### Tab 2: Industry Trends  ######################### 
-  ########################################################
-  ########################################################
+  #Render "Data Center Electricity Use Reported In <1 year minus the latest year in reporting> in UI"
+  output$energy_reported_text <- renderText({
+    paste("Data Center Electricty Use Reported In", (max(data_sheet_energy_transformed$data_year)-1))
+  })
+  
+###########################################################################################################################################################
+###########################################################################################################################################################
+###### Tab 2: Industry Trends  ############################################################################################################################
+###########################################################################################################################################################
+###########################################################################################################################################################
   
   ########################################################
   ###### Generate transparency graph #####################
@@ -408,13 +406,9 @@ server <- function(input, output, session) {
   output$company_wide_plot_5 <- renderPlot({
     
     if (nrow(energy_use_L2_5()) != 0) {
-      
       buildIndustryTrendsCompanyWide5Plot(energy_use_L2_5())
-      
     } else {
-      
       shinyjs::hide(selector = "div#company-wide-plot-5")
-      
     }
     
   }, height = reactive({company_wide_plot_5_height()}))
@@ -427,14 +421,34 @@ server <- function(input, output, session) {
     buildIndustryTrendsTimelinePlot(data_sheet_energy_transformed)
   })
   
-  ########################################################
-  ########################################################
-  ###### Tab 3: Company Analysis  ######################## 
-  ########################################################
-  ########################################################
+###########################################################################################################################################################
+###########################################################################################################################################################
+###### Tab 3: Company Analysis  ###########################################################################################################################
+###########################################################################################################################################################
+###########################################################################################################################################################
+  
+  ###############################################################
+  ###### Generate reactive titles based on user selection #######
+  ###############################################################
+  
+  output$company_profiles_title_1 <- renderText({
+    paste("Current Year Energy Reporting Snapshot For", input$selected_company)
+  })
+  
+  output$company_profiles_title_2 <- renderText({
+    paste("Historical Energy Use Trend & Data For", input$selected_company)
+  })
+  
+  output$company_profiles_title_3 <- renderText({
+    paste("Methodological Notes For", input$selected_company)
+  })
+  
+  output$company_profiles_title_4 <- renderText({
+    paste("Sources Assessed For", input$selected_company)
+  })
   
   ########################################################
-  ###### Generate reactive datasets for sub-rendering ####
+  ###### Generate reactive datasets for subsetting #######
   ########################################################
   
   #This dataset filters the raw company profiles sheet by the selected company's current year
@@ -520,7 +534,7 @@ server <- function(input, output, session) {
   })
   
   #########################################################
-  ####### Table 3.1: Select company quick stats ###########
+  ####### Table 1: Select company quick stats #############
   #########################################################
   
   #Does Company X report any energy use?
@@ -563,8 +577,22 @@ server <- function(input, output, session) {
   #Company data center overview#
   ##############################
   
-  output$company_data_center_overview <- renderText({
-    company_sheet_selected_company()[1, "company_data_center_overview"]
+  data_center_modal_visible <- reactiveVal(FALSE)
+  observeEvent(input$show_company_data_center_overview, data_center_modal_visible(TRUE))
+  observeEvent(input$hide_company_data_center_overview, data_center_modal_visible(FALSE))
+  
+  output$company_data_center_overview <- renderReact({
+    
+    Modal(isOpen = data_center_modal_visible(),
+          styles = "width: 150px",
+          Stack(tokens = list(padding = "15px", childrenGap = "10px"),
+                div(style = list(display = "flex"),
+                    Text("Data Center Overview", variant = "xLarge"),
+                    div(style = list(flexGrow = 1)),
+                    IconButton.shinyInput("hide_company_data_center_overview", iconProps = list(iconName = "Cancel")),
+                ),
+                div(Text(company_sheet_selected_company()[1, "company_data_center_overview"], variant = "large")
+                )))
   })
   
   ##############################
@@ -572,8 +600,21 @@ server <- function(input, output, session) {
   #Energy reporting assessment##
   ##############################
   
-  output$energy_reporting_assessment <- renderText({
-    company_sheet_selected_company()[1, "energy_reporting_assessment"]
+  energy_assessement_modal_visible <- reactiveVal(FALSE)
+  observeEvent(input$show_company_energy_reporting_assessment_overview, energy_assessement_modal_visible(TRUE))
+  observeEvent(input$hide_company_energy_reporting_assessment_overview, energy_assessement_modal_visible(FALSE))
+  
+  output$company_energy_reporting_assessment_overview <- renderReact({
+    
+    Modal(isOpen = energy_assessement_modal_visible(),
+          Stack(tokens = list(padding = "15px", childrenGap = "10px"),
+                div(style = list(display = "flex"),
+                    Text("Energy Reporting Assessment", variant = "xLarge"),
+                    div(style = list(flexGrow = 1)),
+                    IconButton.shinyInput("hide_company_energy_reporting_assessment_overview", iconProps = list(iconName = "Cancel")),
+                ),
+                div(Text(company_sheet_selected_company()[1, "energy_reporting_assessment"], variant = "large")
+                )))
   })
   
   #######################################
@@ -631,9 +672,11 @@ server <- function(input, output, session) {
   })
   
   #######################################
-  #Table 7###############################
-  #Electricity Use (TWh/yr)##############
+  #Table 7-10 Prep. #####################
+  #Interactivity and Method Table Lookup
   #######################################
+  
+  methodology_table_lookup <- reactive({buildCompanyProfileMethodologyTable(input$selected_company)})
   
   #Show all 4 tables to start
   observeEvent(input$selected_company, {
@@ -643,9 +686,14 @@ server <- function(input, output, session) {
     shinyjs::show(selector = "div#pue-table")
   })
   
+  #######################################
+  #Table 7###############################
+  #Electricity Use (TWh/yr)##############
+  #######################################
+  
   output$electricity_use_table <- renderDataTable({
     
-    selected_company_electricity_use_filter <- buildCompanyProfileElectricityUsePlot(input$selected_company)
+    selected_company_electricity_use_filter <- buildCompanyProfileElectricityUsePlot(input$selected_company, methodology_table_lookup())
     
     #If the dataframe output from the reactive electricity dataset is not empty then insert the dataset into a datatable, else show the no_data datatable
     if(nrow(selected_company_electricity_use_filter) != 0) {
@@ -663,7 +711,7 @@ server <- function(input, output, session) {
   
   output$other_fuel_use_table <- renderDataTable({
     
-    selected_company_fuel_use_filter <- buildCompanyProfileFuelUsePlot(input$selected_company)
+    selected_company_fuel_use_filter <- buildCompanyProfileFuelUsePlot(input$selected_company, methodology_table_lookup())
     
     if(nrow(selected_company_fuel_use_filter) != 0) {
       datatable(selected_company_fuel_use_filter, rownames = FALSE, options = list(dom = 't', columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
@@ -680,7 +728,7 @@ server <- function(input, output, session) {
   
   output$ns_energy_use_table <- renderDataTable({
     
-    selected_company_ns_energy_use_filter <- buildCompanyProfileNonSpecifiedEnergyUsePlot(input$selected_company)
+    selected_company_ns_energy_use_filter <- buildCompanyProfileNonSpecifiedEnergyUsePlot(input$selected_company, methodology_table_lookup())
     
     if(nrow(selected_company_ns_energy_use_filter) != 0) {
       datatable(selected_company_ns_energy_use_filter, rownames = FALSE, options = list(dom = 't', columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
@@ -697,7 +745,7 @@ server <- function(input, output, session) {
   
   output$pue_table <- renderDataTable({
 
-    selected_company_pue_filter <- buildCompanyProfilePUEPlot(input$selected_company)
+    selected_company_pue_filter <- buildCompanyProfilePUEPlot(input$selected_company, methodology_table_lookup())
     
     if(nrow(selected_company_pue_filter) != 0) {
       datatable(selected_company_pue_filter, rownames = FALSE, options = list(dom = 't', autoWidth = TRUE, columnDefs = list(list(width = '300px',targets = c(0))), scrollY=200, scrollCollapse=TRUE))
@@ -735,7 +783,9 @@ server <- function(input, output, session) {
   #onclick('learnmore', Nav(selectedKey = 'methods'))
   
   output$methodology_table <- renderDataTable({
-    buildCompanyProfileMethodologyTable(input$selected_company)
+    
+    #add "pageLength" = 100 to ensure datatable is showing up to 100 lines of methodological notes (default is 10 and any comments beyond that are hidden from the user)
+    datatable(buildCompanyProfileMethodologyTable(input$selected_company), rownames = FALSE, options = list(dom = 't', scrollY=200, scrollCollapse=TRUE, "pageLength" = 100))
   })
   
   #######################################

@@ -103,10 +103,7 @@ colnames(data_sheet_energy_raw) [30] <- 'fuel_4_value'
 colnames(data_sheet_energy_raw) [31] <- 'fuel_4_unit_scale'
 colnames(data_sheet_energy_raw) [35] <- 'fuel_5_value'
 colnames(data_sheet_energy_raw) [36] <- 'fuel_5_unit_scale'
-
-#Transform raw spreadsheet
-data_sheet_energy_transformed <- transformEnergyDataRaw(data_sheet_energy_raw) #read.csv(here('data', 'data_sheet_energy_transformed.csv'))
-
+  
 ######################################################################################################
 ### Import Sheet 2 from DataCenterEnergyUse-RawCollection.xlsx which contains company profile data ###
 ######################################################################################################
@@ -124,11 +121,12 @@ data_sheet_company_raw <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollect
                                                   "character","character","character","character","character", #columns 31-35
                                                   "character","character","character","character")) #column 36-39
 
-#move second row values to column headers, put header names in tidy format
+#move second row values to column headers, put header names in tidy format and filter by only companies that have been checked back to 2007
 data_sheet_company_raw <- data_sheet_company_raw %>% 
   row_to_names(2) %>% 
   clean_names() %>%
-  select(!c(who_added_the_company, x, qts, x2019, x_2, x_3, x_4))
+  select(!c(who_added_the_company, x, qts, x2019, x_2, x_3, x_4)) %>% 
+  filter(checked_back_to_founding_year_or_2007 == "Yes")
 
 #change column names that were set to incorrect values when column classes were set
 colnames(data_sheet_company_raw) [3] <- 'company_founding_year'
@@ -149,6 +147,13 @@ data_sheet_pue_raw <- data_sheet_pue_raw %>%
 
 colnames(data_sheet_pue_raw) [2] <- 'applicable_year'
 colnames(data_sheet_pue_raw) [6] <- 'pue_value'
+
+
+#Transform raw energy data spreadsheet, filter to include only data newer than 2006 and include only companies that have been checked back to 2007
+data_sheet_energy_transformed <- transformEnergyDataRaw(data_sheet_energy_raw) %>%  #read.csv(here('data', 'data_sheet_energy_transformed.csv'))
+                                    #only include data years after 2006
+                                    filter(data_year > 2006) %>% 
+                                    filter(company %in% data_sheet_company_raw$company_name)
 
 ##################################################
 ################ Tab 1 - Home ####################
@@ -191,7 +196,7 @@ no_data <- data.frame(no_data_reported = "No data reported")
 
 #generate unique list of companies in alphabetical order and drop blank
 unique_companies <- list()
-companies <- str_subset(sort(unique(data_sheet_company_raw %>% filter(checked_back_to_founding_year_or_2007 == "Yes") %>% pull(company_name))),"")
+companies <- str_subset(sort(unique(data_sheet_company_raw %>% pull(company_name))),"")
 
 for (i in 1:length(companies)) {
   

@@ -52,7 +52,7 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
                                                     "\nReporting Scope: ", energy_reporting_scope))) +
     geom_tile(aes(fill=energy_reporting_scope), height=0.95) +
     labs(energy_reporting_scope="Reporting Scope") +
-    theme(legend.position = "none",
+    theme(legend.position = "top",
       axis.line.x=element_blank(),
       axis.text.x=element_blank(),
       axis.title.x=element_blank(),
@@ -63,6 +63,9 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
       panel.background = element_blank()
     )
   
-  ggplotly(p, tooltip = "text")
+  #ggplotly(p, tooltip = "text")
+  
+  return(ggplotly(p, tooltip = "text") %>% config(displayModeBar = F)  %>%
+           plotly::layout(legend = list(orientation = "h", x = 0.05, y = 1.1)))
   
 }

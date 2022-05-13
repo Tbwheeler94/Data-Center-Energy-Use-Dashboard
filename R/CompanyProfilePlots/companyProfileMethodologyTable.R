@@ -45,7 +45,7 @@ buildCompanyProfileMethodologyTable <- function(selected_company) {
     filter(company %in% selected_company, notes != "") %>% 
     mutate(facility_location = paste(facility_scope, geographical_scope, sep = " | ")) %>% 
     select("applicable_year", "facility_location", "notes") %>% 
-    mutate(methodological_note_category = "pue") %>% 
+    mutate(methodological_note_category = "PUE") %>% 
     rename(data_year = "applicable_year", energy_reporting_scope = "facility_location")
   
   methodology_notes <- rbind(selected_company_methodology_general, 
@@ -53,9 +53,9 @@ buildCompanyProfileMethodologyTable <- function(selected_company) {
                              selected_company_methodology_fuel, 
                              selected_company_methodology_ns_energy,
                              selected_company_methodology_pue) %>% 
-                       rename(`Data Year` = "data_year", `Reporting Scope` = "energy_reporting_scope", `Methodological Notes` = "notes",
+                       rename(`Data Year` = "data_year", `Reporting Scope` = "energy_reporting_scope", `Methodological Note` = "notes",
                               `Methodological Notes Category` = "methodological_note_category")
   
-  datatable(methodology_notes, rownames = FALSE, options = list(dom = 't', scrollY=300, scrollCollapse=TRUE))
+  methodology_notes
   
   }

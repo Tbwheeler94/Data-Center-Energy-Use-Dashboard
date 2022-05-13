@@ -1,4 +1,13 @@
-buildCompanyProfileFuelUsePlot <- function(selected_company) {
+buildCompanyProfileFuelUsePlot <- function(selected_company, methodology_table_lookup) {
+  
+  #filter methodology table for only values with a note associated with them in the "notes_2" column, reserved for methodological notes about an electricity value.
+  #convert values in the reporting scope column to match data_centers or Total_company
+  methodology_table_lookup_filtered <- methodology_table_lookup %>% 
+    filter(`Methodological Notes Category` == "Other Fuel Use") %>% 
+    mutate(`Reporting Scope` = case_when(
+      `Reporting Scope` %in% "Data center" ~ "data_centers",
+      `Reporting Scope` %in% "Total company" ~ "Total_company")) %>% 
+    rename("data_year" = `Data Year`, "category" = `Reporting Scope`)
   
   selected_company_fuel_use_filter <- 
     data_sheet_energy_transformed %>% 
@@ -31,7 +40,10 @@ buildCompanyProfileFuelUsePlot <- function(selected_company) {
     mutate(Leased = ifelse("Leased" %in% names(.), Leased, 0),
            Self_managed = ifelse("Self_managed" %in% names(.), Self_managed, 0)) %>%
     mutate(data_centers = Self_managed + Leased) %>% 
-    pivot_longer(!data_year, names_to = "category", values_to = "value") %>% 
+    pivot_longer(!data_year, names_to = "category", values_to = "value") %>%
+    #add asterisk to fuel data that has a note associated with it
+    mutate(value = ifelse(data_year %in% methodology_table_lookup_filtered$data_year & category %in% methodology_table_lookup_filtered$category, 
+                          paste(value,"*", sep = ""), value)) %>% 
     pivot_wider(names_from = data_year, values_from = value) %>% 
     mutate(category = case_when(
       category %in% "Self_managed" ~ "Self-managed",
@@ -64,7 +76,7 @@ buildCompanyProfileFuelUsePlot <- function(selected_company) {
       add_column(!!!set_names(as.list(rep(0, length(extra_years_fuel))),nm=extra_years_fuel)) %>% 
       select(sort(tidyselect::peek_vars())) %>% 
       relocate(c(format, category), .before = '2007') %>% 
-      mutate_if(is.numeric, ~ifelse(. == 0, "", .)) %>% 
+      mutate_if(is.numeric, ~ifelse(. == 0 | . == "0*", "", .)) %>% 
       mutate(format = c(1,0,0))
   }
   selected_company_fuel_use_filter
