@@ -3,24 +3,24 @@ buildCompanyProfileTransparencyOverTimePlot <- function(data_sheet_energy_transf
     # create a sub data frame that is filtered by data year and single data center scope
     company_SDC <- data_sheet_energy_transformed %>%
       filter(company %in% selected_company, data_year == year, energy_reporting_scope == "Single Data Center") %>%
-      # filter(company == "QTS", data_year == year, energy_reporting_scope == "Single Data Center") %>%
+      # filter(company == "Google", data_year == year, energy_reporting_scope == "Single Data Center") %>%
       select(company, data_year, energy_reporting_scope, fuel_1_type) 
     
     # create a sub data frame that is filtered by data year and multiple data centers scope
     company_MDC <- data_sheet_energy_transformed %>%
       filter(company %in% selected_company, data_year == year, energy_reporting_scope == "Multiple Data Centers") %>%
-      # filter(company == "QTS", data_year == year, energy_reporting_scope == "Multiple Data Centers") %>%
+      # filter(company == "Google", data_year == year, energy_reporting_scope == "Multiple Data Centers") %>%
       select(company, data_year, energy_reporting_scope, fuel_1_type)
     
     # create a sub data frame that is filtered by data year / company wide electricity scope
     company_CW <- data_sheet_energy_transformed %>%
       filter(company %in% selected_company, data_year == year, energy_reporting_scope == "Total Operations") %>%
-      # filter(company == "QTS", data_year == year, energy_reporting_scope == "Total Operations") %>%
+      # filter(company == "Google", data_year == year, energy_reporting_scope == "Total Operations") %>%
       select(company, data_year, energy_reporting_scope, fuel_1_type) 
     
     company_EN <- data_sheet_energy_transformed %>%
       filter(company %in% selected_company, data_year == year, fuel_1_type == "Total Energy Use") %>%
-      # filter(company == "QTS", data_year == year, fuel_1_type == "Total Energy Use") %>%
+      # filter(company == "Google", data_year == year, fuel_1_type == "Total Energy Use") %>%
       select(company, data_year, energy_reporting_scope, fuel_1_type) 
     
     if (year == 2007) {
@@ -44,6 +44,9 @@ buildCompanyProfileTransparencyOverTimePlot <- function(data_sheet_energy_transf
   year_axis$energy_reporting_scope[year_axis$energy_reporting_scope == "Total Operations"] <- "Reported Company\nWide Electricity"
   year_axis$energy_reporting_scope[year_axis$fuel_1_type == "Total Energy Use"] <- "Reported Company\nWide Energy"
   year_axis$energy_reporting_scope[year_axis$energy_reporting_scope == ""] <- "No Reporting\nof Data"
+  if (year_axis$energy_reporting_scope[year_axis$data_year == max(na.omit(data_sheet_energy_raw$report_year))] == "No Reporting\nof Data") {
+    year_axis$energy_reporting_scope[year_axis$data_year == max(na.omit(data_sheet_energy_raw$report_year))] <- "Data Not\nReleased Yet"
+  }
   year_axis <- year_axis %>% select(-c(company, fuel_1_type))
   
   #company_transparency <- company_transparency %>% distinct(company, data_year, .keep_all = TRUE) %>% distinct(company, energy_reporting_scope, .keep_all = TRUE)
@@ -53,10 +56,10 @@ buildCompanyProfileTransparencyOverTimePlot <- function(data_sheet_energy_transf
   company_transparency$energy_reporting_scope[company_transparency$energy_reporting_scope == "Total Operations"] <- "Reported Company\nWide Electricity"
   company_transparency$energy_reporting_scope[company_transparency$fuel_1_type == "Total Energy Use"] <- "Reported Company\nWide Energy"
   company_transparency$energy_reporting_scope[company_transparency$energy_reporting_scope == ""] <- "No Reporting\nof Data"
+  if (company_transparency$energy_reporting_scope[company_transparency$data_year == max(na.omit(data_sheet_energy_raw$report_year))] == "No Reporting\nof Data") {
+    company_transparency$energy_reporting_scope[company_transparency$data_year == max(na.omit(data_sheet_energy_raw$report_year))] <- "Data Not\nReleased Yet"
+  }
   company_transparency <- company_transparency %>% select(-c(company, fuel_1_type))
-  
-  company_transparency$energy_reporting_scope[company_transparency$data_year == max(na.omit(data_sheet_energy_raw$report_year))] <- "Data Not\nReleased Yet"
-  year_axis$energy_reporting_scope[year_axis$data_year == max(na.omit(data_sheet_energy_raw$report_year))] <- "Data Not\nReleased Yet"
   
   company_transparency$group <- 0
   count <- 1
