@@ -392,10 +392,25 @@ methods_page <- makePage(
 contact_page <- makePage(
   div(
     Grid(
-      GridItem(class = "ms-sm12 ms-xl12", style = "text-align: center",
-               MainCard(Text('Section Under Construction', variant = "xxLarge"),
-                        FontIcon(iconName = "ConstructionCone", style = list(fontSize = 80))
-               )
+      GridItem(class = "ms-sm12 ms-xl2"),
+      GridItem(class = "ms-sm12 ms-xl8", style = "text-align: center",
+               MainCard(Text('Contact Us', variant = "xxLarge", style = "text-align: center; color: #137AD1;"),
+                        br(),
+                        br(),
+                        Stack(
+                        div(Text("First Name", variant = "large"),
+                        div(TextField.shinyInput("first_name_input"), style = "width: 200px; padding-top: 5px;"), style = "margin-right: 50px; text-align: left;"),
+                        div(Text("Last Name", variant = "large"),
+                        div(TextField.shinyInput("last_name_input"), style = "width: 200px;padding-top: 5px;"), style = "text-align: left;"), horizontal = TRUE),
+                        br(),
+                        Text("Email", variant = "large", style = "text-align: left;"),
+                        div(TextField.shinyInput("user_email_input"), style = "width: 300px"),
+                        br(),
+                        Text("How Did You Hear About Us?", variant = "large", style = "text-align: left;"),
+                        div(Dropdown.shinyInput("referral_input"), style = "width: 100px"),
+                        br(),
+                        Text("Message", variant = "large", style = "text-align: left;"),
+                        div(TextField.shinyInput("user_message_input", multiline = TRUE), style = "width: 600px;"))
       )
     )
   )
