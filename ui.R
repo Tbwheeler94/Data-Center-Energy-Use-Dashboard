@@ -396,6 +396,7 @@ contact_page <- makePage(
       GridItem(class = "ms-sm12 ms-xl8", style = "text-align: center",
                MainCard(Text('Contact Us', variant = "xxLarge", style = "text-align: center; color: #137AD1;"),
                         br(),
+                        div(id = "submission-form",
                         br(),
                         Stack(
                         div(Text("First Name", variant = "large"),
@@ -403,14 +404,18 @@ contact_page <- makePage(
                         div(Text("Last Name", variant = "large"),
                         div(TextField.shinyInput("last_name_input"), style = "width: 200px;padding-top: 5px;"), style = "text-align: left;"), horizontal = TRUE),
                         br(),
-                        Text("Email", variant = "large", style = "text-align: left;"),
-                        div(TextField.shinyInput("user_email_input"), style = "width: 300px"),
+                        div(Text("Email", variant = "large", style = "text-align: left;"), style = "text-align: left;"),
+                        div(TextField.shinyInput("user_email_input"), style = "width: 300px; padding-top: 5px;"),
                         br(),
-                        Text("How Did You Hear About Us?", variant = "large", style = "text-align: left;"),
-                        div(Dropdown.shinyInput("referral_input"), style = "width: 100px"),
+                        div(Text("How Did You Hear About Us?", variant = "large", style = "text-align: left;"), style = "text-align: left;"),
+                        div(Dropdown.shinyInput("referral_input"), style = "width: 100px; padding-top: 5px;"),
                         br(),
-                        Text("Message", variant = "large", style = "text-align: left;"),
-                        div(TextField.shinyInput("user_message_input", multiline = TRUE), style = "width: 600px;"))
+                        div(Text("Message", variant = "large", style = "text-align: left;"), style = "text-align: left;"),
+                        div(TextField.shinyInput("user_message_input", multiline = TRUE, style = "height: 200px;"), style = "width: fill; padding-top: 5px;"),
+                        br(),
+                        div(PrimaryButton.shinyInput("contact-form-submit", text = "Submit", style = "width: 110px; height: 40px; font-style: bold; margin-right: 10px; float: left;"))),
+                        div(id = 'thank-you-for-submission', tags$p("Submission Successful"), style = "text-align: left;")
+               )
       )
     )
   )
@@ -467,7 +472,7 @@ footer <- Stack(
   horizontalAlign = 'space-between',
   tokens = list(childrenGap = 20),
   Text(variant = "mediumPlus", "Built by the Industrial Sustainability Analysis Lab at UCSB", block=TRUE),
-  Text(variant = "mediumPlus", nowrap = FALSE, "If you'd like to connect, reach out to us at info@isalab.edu"),
+  Text(variant = "mediumPlus", nowrap = FALSE, "© ISA Lab 2022"),
   Text(variant = "mediumPlus", nowrap = FALSE, "All rights reserved.")
 )
 

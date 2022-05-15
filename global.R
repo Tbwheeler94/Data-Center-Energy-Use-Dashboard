@@ -21,6 +21,7 @@ library(data.table)
 library(shinymanager) #generates a user authentication page
 library(waiter) #package for generating loading animations
 library(googlesheets4) #package for connecting to google sheet and adding rows
+library(googledrive)
 
 ########################################################
 ###### Suppress warnings ###############################

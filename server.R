@@ -858,6 +858,61 @@ server <- function(input, output, session) {
   ########################################################
   ########################################################
   
+  ########################################################
+  ########################################################
+  ###### Tab 6: Contact Us  ############################## 
+  ########################################################
+  ########################################################
+  
+  #Step 1: Generate and store authetication token in .secrets folder this will allow app to access to google drive drive account and write on spreadsheet
+  #see this tutorial for google drive authetication process: https://www.jdtrat.com/blog/connect-shiny-google/#fn1
+  
+  #options(
+  #  # whenever there is one account token found, use the cached token
+  #  gargle_oauth_email = TRUE,
+  #  # specify auth tokens should be stored in a hidden directory ".secrets"
+  #  gargle_oauth_cache = ".secrets"
+  #)
+  #
+  #sheet_id <- drive_get("Data-Center-Energy-Dashboard-Contact-Submissions")$id
+  #
+  #rlang::format_error_bullets()
+  #sheet_id <- gs4_get("https://docs.google.com/spreadsheets/d/1IFKl40N4QqBREfU-qDecwBXZhzvq6SQKV17awtv2y_E/edit#gid=0")
+  #my_data <- read_sheet("https://docs.google.com/spreadsheets/d/1IFKl40N4QqBREfU-qDecwBXZhzvq6SQKV17awtv2y_E/edit#gid=0", sheet = "Sheet1", col_types="c")
+  #
+  #
+  #sheet_append(contact_sheet_link, data = tibble(first_name = 'test',
+  #                                        last_name = 'test',
+  #                                        email = 'test',
+  #                                        how_did_you_hear = 'test',
+  #                                        message = 'test'))
+  
+  #Step 2: Collection submission from form and send to google drive
+  
+  hide(selector = 'div#thank-you-for-submission')
+  
+  contact_form_submission <- reactive({
+    tibble(first_name = input$first_name_input,
+           last_name = input$last_name_input,
+           email = input$user_email_input,
+           how_did_you_hear = input$referral_input,
+           message = input$user_message_input)
+  })
+  
+  contactFormSubmission <- function() {
+    hide(selector = "div#submission-form")
+    show(selector = "div#thank-you-for-submission")
+    sheet_append(contact_sheet_link, data = contact_form_submission())
+  }
+  
+  onclick('contact-form-submit', contactFormSubmission())
+  
+  #observeEvent(input$contact-form-submit, {
+  #
+  #  hide(selector = "div#submission-form")
+  #  
+  #})
+  
   router$server(input, output, session)
 }
 
