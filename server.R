@@ -873,15 +873,15 @@ server <- function(input, output, session) {
   #  # specify auth tokens should be stored in a hidden directory ".secrets"
   #  gargle_oauth_cache = ".secrets"
   #)
-  #
-  #sheet_id <- drive_get("Data-Center-Energy-Dashboard-Contact-Submissions")$id
-  #
-  #rlang::format_error_bullets()
-  #sheet_id <- gs4_get("https://docs.google.com/spreadsheets/d/1IFKl40N4QqBREfU-qDecwBXZhzvq6SQKV17awtv2y_E/edit#gid=0")
-  #my_data <- read_sheet("https://docs.google.com/spreadsheets/d/1IFKl40N4QqBREfU-qDecwBXZhzvq6SQKV17awtv2y_E/edit#gid=0", sheet = "Sheet1", col_types="c")
-  #
-  #
-  #sheet_append(contact_sheet_link, data = tibble(first_name = 'test',
+  # contact-submission-form@contact-submission-form-350321.iam.gserviceaccount.com
+  # Set authentication token to be stored in a folder called `.secrets`
+  options(gargle_oauth_cache = ".secrets")
+  
+  # Authenticate using token. If no browser opens, the authentication works.
+  gs4_auth(cache = ".secrets", email = "isaldatacenterdashboard@gmail.com")
+  contact_form_gspreadsheet <- gs4_get("1IFKl40N4QqBREfU-qDecwBXZhzvq6SQKV17awtv2y_E")
+  
+  #sheet_append(ss, data = tibble(first_name = 'test',
   #                                        last_name = 'test',
   #                                        email = 'test',
   #                                        how_did_you_hear = 'test',
@@ -890,6 +890,7 @@ server <- function(input, output, session) {
   #Step 2: Collection submission from form and send to google drive
   
   hide(selector = 'div#thank-you-for-submission')
+  hide(selector = 'div#missing-fields')
   
   contact_form_submission <- reactive({
     tibble(first_name = input$first_name_input,
@@ -900,9 +901,16 @@ server <- function(input, output, session) {
   })
   
   contactFormSubmission <- function() {
-    hide(selector = "div#submission-form")
+    
+    if (input$first_name_input == "" | input$user_email_input == "" | input$user_message_input == "") {
+      show(selector = "div#missing-fields")
+    } else {
+    hide(selector = "form#submission-form")
+    hide(selector = "div#missing-fields")
     show(selector = "div#thank-you-for-submission")
-    sheet_append(contact_sheet_link, data = contact_form_submission())
+    sheet_append(contact_form_gspreadsheet, data = contact_form_submission())
+    }
+    
   }
   
   onclick('contact-form-submit', contactFormSubmission())

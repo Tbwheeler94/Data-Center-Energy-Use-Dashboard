@@ -396,25 +396,26 @@ contact_page <- makePage(
       GridItem(class = "ms-sm12 ms-xl8", style = "text-align: center",
                MainCard(Text('Contact Us', variant = "xxLarge", style = "text-align: center; color: #137AD1;"),
                         br(),
-                        div(id = "submission-form",
+                        tags$form(id = "submission-form",
                         br(),
                         Stack(
                         div(Text("First Name", variant = "large"),
-                        div(TextField.shinyInput("first_name_input"), style = "width: 200px; padding-top: 5px;"), style = "margin-right: 50px; text-align: left;"),
+                        div(TextField.shinyInput("first_name_input", required = TRUE), style = "width: 200px; padding-top: 5px;"), style = "margin-right: 50px; text-align: left;"),
                         div(Text("Last Name", variant = "large"),
                         div(TextField.shinyInput("last_name_input"), style = "width: 200px;padding-top: 5px;"), style = "text-align: left;"), horizontal = TRUE),
                         br(),
                         div(Text("Email", variant = "large", style = "text-align: left;"), style = "text-align: left;"),
-                        div(TextField.shinyInput("user_email_input"), style = "width: 300px; padding-top: 5px;"),
+                        div(TextField.shinyInput("user_email_input", required = TRUE), style = "width: 300px; padding-top: 5px;"),
                         br(),
                         div(Text("How Did You Hear About Us?", variant = "large", style = "text-align: left;"), style = "text-align: left;"),
                         div(Dropdown.shinyInput("referral_input"), style = "width: 100px; padding-top: 5px;"),
                         br(),
                         div(Text("Message", variant = "large", style = "text-align: left;"), style = "text-align: left;"),
-                        div(TextField.shinyInput("user_message_input", multiline = TRUE, style = "height: 200px;"), style = "width: fill; padding-top: 5px;"),
+                        div(TextField.shinyInput("user_message_input", required = TRUE, multiline = TRUE, style = "height: 200px;"), style = "width: fill; padding-top: 5px;"),
                         br(),
                         div(PrimaryButton.shinyInput("contact-form-submit", text = "Submit", style = "width: 110px; height: 40px; font-style: bold; margin-right: 10px; float: left;"))),
-                        div(id = 'thank-you-for-submission', tags$p("Submission Successful"), style = "text-align: left;")
+                        div(id = 'thank-you-for-submission', tags$p("Submission Successful"), style = "text-align: left;"),
+                        div(id = 'missing-fields', tags$p("*Please fill out all required field(s)"), style = "text-align: left; color: red;")
                )
       )
     )
