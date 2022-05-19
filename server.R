@@ -864,21 +864,19 @@ server <- function(input, output, session) {
   ########################################################
   ########################################################
   
-  #Step 1: Generate and store authetication token in .secrets folder this will allow app to access to google drive drive account and write on spreadsheet
+  #Step 1: Generate and store authetication token in .secrets folder this will allow app to access to google drive drive account and write on spreadsheet (NOTE: make sure you enable Sheets API on google cloud console beforehand)
   #see this tutorial for google drive authetication process: https://www.jdtrat.com/blog/connect-shiny-google/#fn1
   
-  #options(
-  #  # whenever there is one account token found, use the cached token
-  #  gargle_oauth_email = TRUE,
-  #  # specify auth tokens should be stored in a hidden directory ".secrets"
-  #  gargle_oauth_cache = ".secrets"
-  #)
-  # contact-submission-form@contact-submission-form-350321.iam.gserviceaccount.com
   # Set authentication token to be stored in a folder called `.secrets`
   options(gargle_oauth_cache = ".secrets")
   
-  # Authenticate using token. If no browser opens, the authentication works.
+  #If credentials have not been set up yet and stored in .secrets, uncomment this code and run, it should open a browser window where you give the package permission to access
+  #gs4_auth()
+  
+  # Authenticate using stored tokens. If no browser opens, the authentication works.
   gs4_auth(cache = ".secrets", email = "isaldatacenterdashboard@gmail.com")
+  
+  #get spreadsheet using spreadsheet id (part of spreadsheet link)
   contact_form_gspreadsheet <- gs4_get("1IFKl40N4QqBREfU-qDecwBXZhzvq6SQKV17awtv2y_E")
   
   #sheet_append(ss, data = tibble(first_name = 'test',
@@ -889,9 +887,6 @@ server <- function(input, output, session) {
   
   #Step 2: Collection submission from form and send to google drive
   
-  hide(selector = 'div#thank-you-for-submission')
-  hide(selector = 'div#missing-fields')
-  
   contact_form_submission <- reactive({
     tibble(first_name = input$first_name_input,
            last_name = input$last_name_input,
@@ -900,6 +895,7 @@ server <- function(input, output, session) {
            message = input$user_message_input)
   })
   
+  #Step 3: Generate function to execute when user clicks submission form
   contactFormSubmission <- function() {
     
     if (input$first_name_input == "" | input$user_email_input == "" | input$user_message_input == "") {
@@ -913,13 +909,12 @@ server <- function(input, output, session) {
     
   }
   
-  onclick('contact-form-submit', contactFormSubmission())
+  #Hide thank you for submission text and missing fields text
+  hide(selector = 'div#thank-you-for-submission')
+  hide(selector = 'div#missing-fields')
   
-  #observeEvent(input$contact-form-submit, {
-  #
-  #  hide(selector = "div#submission-form")
-  #  
-  #})
+  #when Submit button is click, run function above
+  onclick('contact-form-submit', contactFormSubmission())
   
   router$server(input, output, session)
 }
