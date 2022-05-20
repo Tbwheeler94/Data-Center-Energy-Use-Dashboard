@@ -400,7 +400,7 @@ contact_page <- makePage(
                         br(),
                         Stack(
                         div(Text("First Name", variant = "large"),
-                        div(TextField.shinyInput("first_name_input", required = TRUE), style = "width: 200px; padding-top: 5px;"), style = "margin-right: 50px; text-align: left;"),
+                        div(id = "first_name_input_div", TextField.shinyInput("first_name_input", required = TRUE), style = "width: 200px; padding-top: 5px;"), style = "margin-right: 50px; text-align: left;"),
                         div(Text("Last Name", variant = "large"),
                         div(TextField.shinyInput("last_name_input"), style = "width: 200px;padding-top: 5px;"), style = "text-align: left;"), horizontal = TRUE),
                         br(),
@@ -454,7 +454,7 @@ navigation <- Nav(
            expandAriaLabel = 'Expand Industry Trends',
            collapseAriaLabel = 'Collapse Industry Trends',
            links = list(
-             list(name = 'Trends in Energy Reporting', url = '#!/reporting-trends', key = 'reporting-trends', icon = 'Trending12'),
+             list(name = 'Energy Reporting Trends', url = '#!/reporting-trends', key = 'reporting-trends', icon = 'Trending12'),
              list(name = 'Energy Data Trends', url = '#!/energy-data-trends', key = 'data-trends', icon = 'Trending12'),
              list(name = 'Reporting Timeline', url = '#!/reporting-timeline', key = 'reporting-timeline', icon = 'TimelineProgress')), 
            isExpanded = FALSE

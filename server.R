@@ -894,12 +894,14 @@ server <- function(input, output, session) {
            how_did_you_hear = input$referral_input,
            message = input$user_message_input)
   })
-  
+    
   #Step 3: Generate function to execute when user clicks submission form
   contactFormSubmission <- function() {
     
     if (input$first_name_input == "" | input$user_email_input == "" | input$user_message_input == "") {
       show(selector = "div#missing-fields")
+      
+      #tags$style("#first_name_input_div {border: 8px solid #137AD1;}")
     } else {
     hide(selector = "form#submission-form")
     hide(selector = "div#missing-fields")
