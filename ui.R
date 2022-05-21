@@ -400,7 +400,7 @@ contact_page <- makePage(
                         br(),
                         Stack(
                         div(Text("First Name", variant = "large"),
-                        div(id = "first_name_input_div", TextField.shinyInput("first_name_input", required = TRUE), style = "width: 200px; padding-top: 5px;"), style = "margin-right: 50px; text-align: left;"),
+                        div(TextField.shinyInput("first_name_input", required = TRUE), style = "width: 200px; padding-top: 5px;"), style = "margin-right: 50px; text-align: left;"),
                         div(Text("Last Name", variant = "large"),
                         div(TextField.shinyInput("last_name_input"), style = "width: 200px;padding-top: 5px;"), style = "text-align: left;"), horizontal = TRUE),
                         br(),
@@ -408,14 +408,15 @@ contact_page <- makePage(
                         div(TextField.shinyInput("user_email_input", required = TRUE), style = "width: 300px; padding-top: 5px;"),
                         br(),
                         div(Text("How Did You Hear About Us?", variant = "large", style = "text-align: left;"), style = "text-align: left;"),
-                        div(Dropdown.shinyInput("referral_input"), style = "width: 100px; padding-top: 5px;"),
+                        div(Dropdown.shinyInput("referral_input", options = contact_referral_options), style = "width: 100px; padding-top: 5px;"),
                         br(),
                         div(Text("Message", variant = "large", style = "text-align: left;"), style = "text-align: left;"),
                         div(TextField.shinyInput("user_message_input", required = TRUE, multiline = TRUE, style = "height: 200px;"), style = "width: fill; padding-top: 5px;"),
                         br(),
                         div(PrimaryButton.shinyInput("contact-form-submit", text = "Submit", style = "width: 110px; height: 40px; font-style: bold; margin-right: 10px; float: left;"))),
                         div(id = 'thank-you-for-submission', tags$p("Submission Successful"), style = "text-align: left;"),
-                        div(id = 'missing-fields', tags$p("*Please fill out all required field(s)"), style = "text-align: left; color: red;")
+                        div(id = 'missing-fields', tags$p("*Please fill out missing field"), style = "text-align: left; color: red;"),
+                        div(id = 'invalid-email', tags$p("*Please enter a valid email address (must include @ and .)"), style = "text-align: left; color: red;")
                )
       )
     )

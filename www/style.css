@@ -96,7 +96,11 @@ body {
   padding: 12px 20px;
 }
 
-/* Adjust width of input boxes */
+/* Add red to input boxes that are not filled out */
+
+.red-border {
+  border: 2px solid red;
+}
 
 /*
 .fieldGroup-131 {

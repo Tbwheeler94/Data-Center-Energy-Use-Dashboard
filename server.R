@@ -894,17 +894,35 @@ server <- function(input, output, session) {
            how_did_you_hear = input$referral_input,
            message = input$user_message_input)
   })
-    
+
   #Step 3: Generate function to execute when user clicks submission form
   contactFormSubmission <- function() {
     
-    if (input$first_name_input == "" | input$user_email_input == "" | input$user_message_input == "") {
+    #check if first name is blank
+    if (input$first_name_input == "") { 
       show(selector = "div#missing-fields")
-      
-      #tags$style("#first_name_input_div {border: 8px solid #137AD1;}")
-    } else {
+      addCssClass(id = "first_name_input", class = "red-border")
+    } 
+    
+    #check if valid email is used by checking to see if an @ or . are included in the submission
+    else if (!grepl("@", input$user_email_input, fixed = TRUE) || !grepl(".", input$user_email_input, fixed = TRUE)) { 
+      hide(selector = "div#missing-fields")
+      show(selector = "div#invalid-email")
+      addCssClass(id = "user_email_input", class = "red-border")
+    } 
+    
+    #check if message is blank
+    else if (input$user_message_input == "") { 
+      hide(selector = "div#invalid-email")
+      show(selector = "div#missing-fields")
+      addCssClass(id = "user_message_input", class = "red-border")
+    } 
+    
+    #if no errors, submit form and hide
+    else {
     hide(selector = "form#submission-form")
     hide(selector = "div#missing-fields")
+    hide(selector = 'div#invalid-email')
     show(selector = "div#thank-you-for-submission")
     sheet_append(contact_form_gspreadsheet, data = contact_form_submission())
     }
@@ -912,6 +930,7 @@ server <- function(input, output, session) {
   }
   
   #Hide thank you for submission text and missing fields text
+  hide(selector = 'div#invalid-email')
   hide(selector = 'div#thank-you-for-submission')
   hide(selector = 'div#missing-fields')
   

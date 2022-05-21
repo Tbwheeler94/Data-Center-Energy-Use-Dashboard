@@ -210,6 +210,15 @@ for (i in 1:length(companies)) {
 ########### Tab 5 - Methods #############
 #########################################
 
-#Tab 6 -
+##############################################
+########### Tab 7 - Contact Page #############
+##############################################
 
-#Tab 7 - 
+contact_referral_options <- list()
+referal_option_list <- c("Website", "Newspaper", "Podcast", "Friend", "Other")
+
+for (i in 1:length(referal_option_list)) {
+  
+  contact_referral_options[[i]]<- list(key = {referal_option_list[i]}, 
+                               text = {referal_option_list[i]})
+}
