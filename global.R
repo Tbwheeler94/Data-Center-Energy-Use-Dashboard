@@ -6,22 +6,37 @@ library(here)
 library(janitor)
 library(tidyverse)
 library(lubridate)
+
+#initiating core shiny, multiple web-pages and fluent ui styling, respectively
 library(shiny)
 library(shiny.router)
 library(shiny.fluent)
+
+#used for importing data spreadsheet
 library(xlsx)
 library(readxl)
+
+#used to develop rapidly deployable and stylable datatables
 library(DT)
+library(data.table)
+
+#others
 library(plotly)
 library(scales)
 library(tidyselect)
 library(fastDummies) 
 library(shinyjs) #enables use of javascript functions
-library(data.table)
 library(shinymanager) #generates a user authentication page
 library(waiter) #package for generating loading animations
-library(googlesheets4) #package for connecting to google sheet and adding rows
+
+#packages used to create connection between google sheet storing contact form responses and app
+library(googlesheets4) 
 library(googledrive)
+
+#used to developed accordion on methods page
+#library(htmltools)
+#library(shinydashboard)
+#library(shinydashboardPlus)
 
 ########################################################
 ###### Suppress warnings ###############################

@@ -251,18 +251,6 @@ company_analysis_page <- makePage(
                )
       )
     ),
-    #Grid(
-    #  GridItem(class = "ms-sm12 ms-xl6",
-    #           CompanyCard(
-    #                       Text("Company Data Center Overview", variant = "xxLarge", style = "text-align: center;"),
-    #                       Text(uiOutput("company_data_center_overview"), variant = "large"))
-    #          ),
-    #  GridItem(class = "ms-sm12 ms-xl6",
-    #           CompanyCard(
-    #             Text("Energy Report Assessment", variant = "xxLarge", style = "text-align: center;"), 
-    #             Text(uiOutput("energy_reporting_assessment"), variant = "large"))
-    #  )
-    #),
     Grid(
       Stack(style = "text-align: center; padding: 25px", Text(uiOutput("company_profiles_title_1"), variant = "xxLarge", style = "color: #137AD1;")),
       GridItem(class = "ms-sm12 ms-xl4",                                               
@@ -373,13 +361,77 @@ company_analysis_page <- makePage(
 ######### METHODS PAGE ###################
 ###########################################
 
+#create function to set up styling of panes
+pane <- function(header, paragraphs) {
+  div(
+    Sticky(
+      div(
+        style = "background-color: #137AD1; border-top: 1px solid; border-bottom: 1px solid; padding: 10px;",
+        Text(header, variant = "large", style = "color: white;")
+      )
+    ),
+    div(stringi::stri_rand_lipsum(paragraphs), style = "padding: 10px;")
+  )
+}
+
 methods_page <- makePage(
   div(
     Grid(
-      GridItem(class = "ms-sm12 ms-xl12", style = "text-align: center",
-               MainCard(Text('Section Under Construction', variant = "xxLarge"),
-                        FontIcon(iconName = "ConstructionCone", style = list(fontSize = 80))
+      GridItem(class = "ms-sm0 ms-xl2"),
+      GridItem(class = "ms-sm12 ms-xl8", style = "text-align: center",
+               MainCard(div(Text('Methodology Overview', variant = "xxLarge", style = "color: #137AD1; margin-right: 15px; text-align: center;"),
+                        FontIcon(iconName = "Settings", style = list(fontSize = 30, color = "#137AD1"))),
+                        br(),
+                        Text("This page provides a detailed review of our process for discovering, importing, and visualizing the publicly reported data made accessible through our dashboard.", variant = "large", style = "text-align: left;"),
+                        br(),
+                        Text("In an effort to align with our goal of increasing transparency and understanding of trends in global data center energy use, we aim to be as transparent and open as possible in describing our methodology and welcome any feedback from our viewers.", variant = "large", style = "text-align: left;")
                         )
+      )
+    ),
+               Stack(style = "text-align: center; padding: 25px", Text('General Approach to Methodology', variant = "xxLarge", style = "text-align: center; color: #137AD1;")),
+    Grid(
+      GridItem(class = "ms-sm0 ms-xl2"),
+      GridItem(class = "ms-sm12 ms-xl8", style = "text-align: center",
+               ScrollablePane(
+                 styles = list(
+                   root = list(position = "relative", height = "700px", width = "100%")
+                 ),
+                 pane("Step 1: Identifying and Downloading Publicly Available Data Sources", 2),
+                 pane("Step 2: Collecting Data In Our Standardized Template", 2),
+                 pane("Step 3: Calculating Energy Use Values", 2),
+                 pane("Step 4: Step 4: Visualizing Data", 2)
+               )
+      )
+    ),
+    Stack(style = "text-align: center; padding: 25px", Text('Categories of Methodological Notes', variant = "xxLarge", style = "text-align: center; color: #137AD1;")),
+    Grid(
+      GridItem(class = "ms-sm0 ms-xl2"),
+      GridItem(class = "ms-sm12 ms-xl8", style = "text-align: center",
+               MainCard(div(Text('Methodological Notes Overview', variant = "xxLarge", style = "color: #137AD1; margin-right: 15px; text-align: center;"),
+                            FontIcon(iconName = "Settings", style = list(fontSize = 30, color = "#137AD1"))),
+                        br(),
+                        Text("In the absence of required standards for publicly reporting energy use data, individual companies report their energy use using a wide range of units and methodologies. To capture as much data as possible for each company, our data processing team sometimes needs to use indirect calculations or estimation to find energy values. When one or more of these methods are used, data values reported on the “Company Analysis” page are accompanied by a methodological note which allows dashboard viewers to trace the listed value back to the original report. Below are our current categories of methods.", variant = "large", style = "text-align: left;")
+               )
+      )
+    ),
+    Grid(
+      GridItem(class = "ms-sm0 ms-xl2"),
+      GridItem(class = "ms-sm12 ms-xl8", style = "text-align: center",
+               accordion(
+                 id = "accordion1",
+                 accordionItem(
+                   title = "Accordion 1 Item 1",
+                   status = "danger",
+                   collapsed = TRUE,
+                   "This is some text!"
+                 ),
+                 accordionItem(
+                   title = "Accordion 1 Item 2",
+                   status = "warning",
+                   collapsed = FALSE,
+                   "This is some text!"
+                 )
+               )
       )
     )
   )
@@ -417,6 +469,22 @@ contact_page <- makePage(
                         div(id = 'thank-you-for-submission', tags$p("Submission Successful"), style = "text-align: left;"),
                         div(id = 'missing-fields', tags$p("*Please fill out missing field"), style = "text-align: left; color: red;"),
                         div(id = 'invalid-email', tags$p("*Please enter a valid email address (must include @ and .)"), style = "text-align: left; color: red;")
+               )
+      )
+    )
+  )
+)
+
+###########################################
+######### ABOUT ISA LAB ###################
+###########################################
+
+about_page <- makePage(
+  div(
+    Grid(
+      GridItem(class = "ms-sm12 ms-xl12", style = "text-align: center",
+               MainCard(Text('Section Under Construction', variant = "xxLarge"),
+                        FontIcon(iconName = "ConstructionCone", style = list(fontSize = 80))
                )
       )
     )
@@ -461,9 +529,10 @@ navigation <- Nav(
            isExpanded = FALSE
            ),
       list(name = 'Company Analysis', url = '#!/company-analysis', key = 'analysis', icon = 'ExploreData'),
-      list(name = 'Methods', url = '#!/methods', key = 'methods', icon = 'WebAppBuilderFragment'),
+      list(name = 'Methods', url = '#!/methods', key = 'methods', icon = 'Settings'),
       list(name = 'Contact Us', url = '#!/contact-us', key = 'contact', icon = 'Send'),
-      list(name = 'ISA Lab Website', url = 'https://bren.ucsb.edu/people/eric-masanet', key = 'isal', icon = 'MiniLink')
+      list(name = 'About This Project', url = '#!/about-us', key = 'about', icon = 'TestBeakerSolid'),
+      list(name = 'ISA Lab Website', url = 'https://carlobroderick.wixsite.com/isalab', key = 'isal', icon = 'MiniLink')
     ))
   ),
   initialSelectedKey = 'home'
@@ -500,7 +569,8 @@ router <- make_router(
   route("reporting-timeline", reporting_timeline_page),
   route("company-analysis", company_analysis_page),
   route("methods", methods_page),
-  route("contact-us", contact_page)
+  route("contact-us", contact_page),
+  route("about-us", about_page)
   )
 
 # Add shiny.router dependencies manually: they are not picked up because they're added in a non-standard way.
