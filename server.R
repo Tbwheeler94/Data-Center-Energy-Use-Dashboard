@@ -75,9 +75,9 @@ server <- function(input, output, session) {
     })
   })
   
-  output$years_reported <- renderUI({
+  output$years_reported <- renderText({
     #output length of vector of unique values from report_year column
-    number_of_reporting_years_start_val()
+    paste(number_of_reporting_years_start_val())
     })
   
   ##########################################################################
@@ -85,7 +85,7 @@ server <- function(input, output, session) {
   ##########################################################################
   
   #calculate the number of companies reporting by getting the length of the companies vector from global
-  number_of_companies_reporting <- length(companies)
+  number_of_companies_reporting <- length(unique_companies)
   
   #assign function for counter
   number_of_companies_reporting_start_val <- reactiveVal(0)
@@ -100,8 +100,8 @@ server <- function(input, output, session) {
     })
   })
   
-  output$companies_reporting <- renderUI({
-    number_of_companies_reporting_start_val()
+  output$companies_reporting <- renderText({
+    paste(number_of_companies_reporting_start_val())
     })
   
   ########################################################################################

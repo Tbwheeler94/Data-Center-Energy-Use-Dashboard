@@ -394,7 +394,7 @@ methods_page <- makePage(
       GridItem(class = "ms-sm12 ms-xl8", style = "text-align: center",
                ScrollablePane(
                  styles = list(
-                   root = list(position = "relative", height = "700px", width = "100%")
+                   root = list(position = "relative", height = "500px", width = "100%")
                  ),
                  pane("Step 1: Identifying and Downloading Publicly Available Data Sources", 2),
                  pane("Step 2: Collecting Data In Our Standardized Template", 2),
@@ -416,22 +416,8 @@ methods_page <- makePage(
     ),
     Grid(
       GridItem(class = "ms-sm0 ms-xl2"),
-      GridItem(class = "ms-sm12 ms-xl8", style = "text-align: center",
-               accordion(
-                 id = "accordion1",
-                 accordionItem(
-                   title = "Accordion 1 Item 1",
-                   status = "danger",
-                   collapsed = TRUE,
-                   "This is some text!"
-                 ),
-                 accordionItem(
-                   title = "Accordion 1 Item 2",
-                   status = "warning",
-                   collapsed = FALSE,
-                   "This is some text!"
-                 )
-               )
+      GridItem(class = "ms-sm12 ms-xl8", style = "text-align: center"
+               
       )
     )
   )
