@@ -113,6 +113,7 @@ buildIndustryTrendsTransparencyPlot <- function(data_sheet_energy_raw) {
   data_of_transparency$energy_reporting_scope[data_of_transparency$energy_reporting_scope == "Total Operations"] <- "Reported Company Wide Electricity"
   data_of_transparency$energy_reporting_scope[data_of_transparency$fuel_1_type == "Total Energy Use"] <- "Reported Company Wide Total Energy"
   data_of_transparency$energy_reporting_scope[data_of_transparency$energy_reporting_scope == "0"] <- "No Reporting of Data"
+  data_of_transparency$energy_reporting_scope[data_of_transparency$energy_reporting_scope == "No Reporting of Data" & data_of_transparency$data_year == max(na.omit(data_sheet_energy_raw$report_year))] <- "Pending Data Submission"
   
   # stack single data center/multiple data center data frames on top of each other
   data_of_transparency_final <- data_of_transparency %>%
@@ -128,7 +129,8 @@ buildIndustryTrendsTransparencyPlot <- function(data_sheet_energy_raw) {
                                                         levels=c("Reported Data Center Electricity",
                                                                  "Reported Company Wide Electricity",
                                                                  "Reported Company Wide Total Energy",
-                                                                 "No Reporting of Data"))
+                                                                 "No Reporting of Data",
+                                                                 "Pending Data Submission"))
   
   p <- ggplot(data_of_transparency, aes(x=data_year, 
         text=paste("Data Year: ", data_year, "\nNumber of Companies: ", value))) + 

@@ -45,7 +45,7 @@ buildCompanyProfileTransparencyOverTimePlot <- function(data_sheet_energy_transf
   year_axis$energy_reporting_scope[year_axis$fuel_1_type == "Total Energy Use"] <- "Reported Company\nWide Energy"
   year_axis$energy_reporting_scope[year_axis$energy_reporting_scope == ""] <- "No Reporting\nof Data"
   if (year_axis$energy_reporting_scope[year_axis$data_year == max(na.omit(data_sheet_energy_raw$report_year))] == "No Reporting\nof Data") {
-    year_axis$energy_reporting_scope[year_axis$data_year == max(na.omit(data_sheet_energy_raw$report_year))] <- "Data Not\nReleased Yet"
+    year_axis$energy_reporting_scope[year_axis$data_year == max(na.omit(data_sheet_energy_raw$report_year))] <- "Pending Data\nSubmission"
   }
   year_axis <- year_axis %>% select(-c(company, fuel_1_type))
   
@@ -56,9 +56,7 @@ buildCompanyProfileTransparencyOverTimePlot <- function(data_sheet_energy_transf
   company_transparency$energy_reporting_scope[company_transparency$energy_reporting_scope == "Total Operations"] <- "Reported Company\nWide Electricity"
   company_transparency$energy_reporting_scope[company_transparency$fuel_1_type == "Total Energy Use"] <- "Reported Company\nWide Energy"
   company_transparency$energy_reporting_scope[company_transparency$energy_reporting_scope == ""] <- "No Reporting\nof Data"
-  if (company_transparency$energy_reporting_scope[company_transparency$data_year == max(na.omit(data_sheet_energy_raw$report_year))] == "No Reporting\nof Data") {
-    company_transparency$energy_reporting_scope[company_transparency$data_year == max(na.omit(data_sheet_energy_raw$report_year))] <- "Data Not\nReleased Yet"
-  }
+  company_transparency$energy_reporting_scope[company_transparency$energy_reporting_scope == "No Reporting\nof Data" & company_transparency$data_year == max(na.omit(data_sheet_energy_raw$report_year))] <- "Pending Data\nSubmission"
   company_transparency <- company_transparency %>% select(-c(company, fuel_1_type))
   
   company_transparency$group <- 0
@@ -94,7 +92,7 @@ buildCompanyProfileTransparencyOverTimePlot <- function(data_sheet_energy_transf
   }
   
   status_levels <- c("Reported Data\nCenter Electricity", "Reported Company\nWide Electricity", 
-                     "Reported Company\nWide Energy", "No Reporting\nof Data", "Data Not\nReleased Yet")
+                     "Reported Company\nWide Energy", "No Reporting\nof Data", "Pending Data\nSubmission")
   status_colors <- c("#0070C0", "#00B050", "#FFC000", "#C00000", "#B88C8C")
   
   year_axis$energy_reporting_scope <- factor(year_axis$energy_reporting_scope, levels=status_levels, ordered=TRUE)

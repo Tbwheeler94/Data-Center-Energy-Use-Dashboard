@@ -39,6 +39,7 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
   industry_transparency$energy_reporting_scope[industry_transparency$energy_reporting_scope == "Total Operations"] <- "Reported Company Wide Electricity"
   industry_transparency$energy_reporting_scope[industry_transparency$fuel_1_type == "Total Energy Use"] <- "Reported Company Wide Energy"
   industry_transparency$energy_reporting_scope[industry_transparency$energy_reporting_scope == ""] <- "No Reporting of Data"
+  industry_transparency$energy_reporting_scope[industry_transparency$energy_reporting_scope == "No Reporting of Data" & industry_transparency$data_year == max(na.omit(data_sheet_energy_raw$report_year))] <- "Pending Data Submission"
   industry_transparency <- industry_transparency %>% select(-c(fuel_1_type)) %>% filter(company %in% company_profile$company_name)
   industry_transparency <- industry_transparency[order(industry_transparency$company),]
   industry_transparency$company <- factor(industry_transparency$company, levels=rev(unique(industry_transparency$company)))
@@ -50,9 +51,10 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
                                          text=paste("Company: ", company, "\nData Year: ", 
                                                     format(data_year, format="%Y"), 
                                                     "\nReporting Scope: ", energy_reporting_scope))) +
-    geom_tile(aes(fill=energy_reporting_scope), height=0.95) +
+    geom_tile(aes(fill=energy_reporting_scope), height=0.75) +
     labs(energy_reporting_scope="Reporting Scope") +
     theme(legend.position = "top",
+      legend.text=element_text(size=7),
       axis.line.x=element_blank(),
       axis.text.x=element_blank(),
       axis.title.x=element_blank(),
