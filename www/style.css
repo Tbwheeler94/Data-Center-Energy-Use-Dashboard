@@ -102,6 +102,18 @@ body {
   border: 2px solid red;
 }
 
+/* Make Modal pop ups stretch only across 65% of the screen for easier reading */
+
+#ModalFocusTrapZone72 {
+  width: 50%;
+  margin: auto;
+}
+
+#ModalFocusTrapZone73 {
+  width: 50%;
+  margin: auto;
+}
+
 /*
 .fieldGroup-131 {
   width: 50px;

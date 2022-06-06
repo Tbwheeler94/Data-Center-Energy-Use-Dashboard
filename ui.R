@@ -229,8 +229,8 @@ reporting_timeline_page <- makePage(
 company_analysis_page <- makePage(
   div(
     Grid(
-      GridItem(class = "ms-sm0 ms-xl3"),
-      GridItem(class = "ms-sm12 ms-xl6",
+      GridItem(class = "ms-md0 ms-xl3"),
+      GridItem(class = "ms-md12 ms-xl6",
                Stack(
                  class = "ms-depth-8",
                  style = 'border-radius: 5px; background-color: white; border-top: 8px solid #137AD1;',
@@ -244,10 +244,10 @@ company_analysis_page <- makePage(
                                      style = "width: 150px; margin: auto; font-size: 12pt;"),
                  downloadButton('download_standards'," Download all reported data (.csv)", style = "text-align: center; font-size: 12pt;"),
                  div(PrimaryButton.shinyInput("show_company_data_center_overview", text = "Read Data Center Overview", style = "margin-right: 10px;"),
-                 PrimaryButton.shinyInput("show_company_energy_reporting_assessment_overview", text = "Read Energy Overview"), style = "margin: auto; margin-top: 10px;"),
-                 dataTableOutput("selected_company_stats"),
+                 PrimaryButton.shinyInput("show_company_energy_reporting_assessment_overview", text = "Read Energy Overview"), style = "margin: auto; margin-top: 10px; margin-bottom: -10px"),
+                 #dataTableOutput("selected_company_stats"),
                  div(reactOutput("company_data_center_overview"),
-                     reactOutput("company_energy_reporting_assessment_overview"))
+                     reactOutput("company_energy_reporting_assessment_overview"), style = "width: 200px;")
                )
       )
     ),
@@ -573,8 +573,7 @@ ui <- #secure_app(head_auth = tags$script(inactivity), #authentication
                                    "company_wide_plot_5", "reporting_timeline",
                                    #add loading animations to company analysis page
                                    "company_profiles_title_1", "company_profiles_title_2", "company_profiles_title_3", "company_profiles_title_4",
-                                   "selected_company_stats", "company_data_center_overview", "energy_reporting_assessment",
-                                   "reported_energy_levels", "data_standards", "other_metrics",
+                                   "selected_company_stats", "reported_energy_levels", "data_standards", "other_metrics",
                                    "electricity_use_table", "other_fuel_use_table",
                                    "ns_energy_use_table", "pue_table", "transparency_over_time_plot", "sources_table"), 
                             html = spin_2(), color = transparent(1), fadeout = TRUE),

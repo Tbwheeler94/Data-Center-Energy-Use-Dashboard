@@ -559,18 +559,20 @@ server <- function(input, output, session) {
                                           str_remove_all("NA")
   })
   
-  selected_company_stats <- reactive({ data.frame(A = c("Does company report any energy use?", "Year of most recent data", "Lease/cloud providers"),
-                                       B = c(energy_reporting_status(), year_of_most_recent_data(), ifelse(external_service_provider_list() == "", "No External Providers Reported",
-                                                                                                           external_service_provider_list())), check.names = FALSE)
-  })
+  #removed reactive table from "Select a Company To View" header box
   
-  output$selected_company_stats <- renderDataTable({
+  #selected_company_stats <- reactive({ data.frame(A = c("Does company report any energy use?", "Year of most recent data", "Lease/cloud providers"),
+  #                                     B = c(energy_reporting_status(), year_of_most_recent_data(), ifelse(external_service_provider_list() == "", "No External Providers Reported",
+  #                                                                                                         external_service_provider_list())), check.names = FALSE)
+  #})
   
-  datatable(selected_company_stats(), rownames = FALSE, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){", "  $(thead).remove();","}"))) %>% 
-      formatStyle(columns = c(2), fontSize = '16pt', textAlign = 'center') %>% 
-      formatStyle(columns = c(1), fontSize = '14pt', fontWeight = 'bold')
-  
-  })
+  #output$selected_company_stats <- renderDataTable({
+  #
+  #datatable(selected_company_stats(), rownames = FALSE, options = list(dom = 't', headerCallback = JS("function(thead, data, start, end, display){", "  $(thead).remove();","}"))) %>% 
+  #    formatStyle(columns = c(2), fontSize = '16pt', textAlign = 'center') %>% 
+  #    formatStyle(columns = c(1), fontSize = '14pt', fontWeight = 'bold')
+  #
+  #})
   
   ##############################
   #Box 2########################
@@ -584,8 +586,7 @@ server <- function(input, output, session) {
   output$company_data_center_overview <- renderReact({
     
     Modal(isOpen = data_center_modal_visible(),
-          styles = "width: 150px",
-          Stack(tokens = list(padding = "15px", childrenGap = "10px"),
+          Stack(tokens = list(padding = "25px", childrenGap = "10px"),
                 div(style = list(display = "flex"),
                     Text("Data Center Overview", variant = "xLarge"),
                     div(style = list(flexGrow = 1)),
@@ -607,7 +608,7 @@ server <- function(input, output, session) {
   output$company_energy_reporting_assessment_overview <- renderReact({
     
     Modal(isOpen = energy_assessement_modal_visible(),
-          Stack(tokens = list(padding = "15px", childrenGap = "10px"),
+          Stack(tokens = list(padding = "25px", childrenGap = "10px"),
                 div(style = list(display = "flex"),
                     Text("Energy Reporting Assessment", variant = "xLarge"),
                     div(style = list(flexGrow = 1)),
