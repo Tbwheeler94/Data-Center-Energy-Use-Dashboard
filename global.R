@@ -149,6 +149,10 @@ data_sheet_company_raw <- data_sheet_company_raw %>%
 colnames(data_sheet_company_raw) [3] <- 'company_founding_year'
 colnames(data_sheet_company_raw) [4] <- 'date_last_updated'
 
+###########################################################################################
+### Import Sheet 3 from DataCenterEnergyUse-RawCollection.xlsx which contains pue data ####
+###########################################################################################
+
 #Import raw PUE sheet
 data_sheet_pue_raw <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 3, #the "3" specifies to import sheet 3
                                  
