@@ -12,7 +12,8 @@ source(here("R", "IndustryTrendsPlots", "industryTrendsCompanyWide3Plot.R"))
 source(here("R", "IndustryTrendsPlots", "industryTrendsCompanyWide4Plot.R"))
 source(here("R", "IndustryTrendsPlots", "industryTrendsCompanyWide5Plot.R"))
 source(here("R", "IndustryTrendsPlots", "industryTrendsTransparencyPlot.R"))
-source(here("R", "IndustryTrendsPlots", "IndustryTrendsTimelinePlot.R"))
+source(here("R", "IndustryTrendsPlots", "industryTrendsTimelinePlot.R"))
+source(here("R", "IndustryTrendsPlots", "industryTrendsLeaseCloudNetworkPlot.R"))
 source(here("R", "CompanyProfilePlots", "companyProfileTransparencyOverTimePlot.R"))
 
 #Server code
@@ -419,6 +420,14 @@ server <- function(input, output, session) {
   
   output$reporting_timeline <- renderPlotly({
     buildIndustryTrendsTimelinePlot(data_sheet_energy_transformed)
+  })
+  
+  ##########################################
+  ### Cloud/Lease Providers Network Plot ###
+  ##########################################
+  
+  output$lease_cloud_network <- renderVisNetwork({
+    buildIndustryTrendsLeaseCloudNetworkPlot()
   })
   
 ###########################################################################################################################################################

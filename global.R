@@ -20,9 +20,12 @@ library(readxl)
 library(DT)
 library(data.table)
 
-#others
+#plotting
 library(plotly)
+library(visNetwork) 
 library(scales)
+
+#website interactivity
 library(tidyselect)
 library(fastDummies) 
 library(shinyjs) #enables use of javascript functions

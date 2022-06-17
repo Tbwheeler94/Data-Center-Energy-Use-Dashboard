@@ -147,7 +147,7 @@ energy_data_trends <- makePage(
       GridItem(class = "ms-sm12 ms-xl12",
                GraphCard(horizontal = TRUE,
                          Stack(tokens = list(childrenGap = 5),
-                               style = "width: 250px; margin-top: 30px;",
+                               style = "width: 250px; margin-top: 30px; margin-left: 10px;",
                                br(),
                                Text("Select Reporting Year", variant = "mediumPlus", style = "font-weight: bold;"),
                                Dropdown.shinyInput("input_year", 
@@ -217,6 +217,19 @@ reporting_timeline_page <- makePage(
                )
       )
     )
+  )
+)
+
+########################################################
+############## LEASE/CLOUD NETWORK PAGE ################
+########################################################
+
+lease_cloud_network_page <- makePage(
+  div(
+    Stack(style = "text-align: center; padding: 25px", Text("Network of Data Center Lease/Cloud Providers", variant = "xxLarge", style = "color: #137AD1;")),
+    br(),
+    Stack(style = "text-align: center;", Text("Click to see relationship + scroll to zoom", variant = "medium", style = "color: gray;")),
+    visNetworkOutput('lease_cloud_network', height = "75vh")
   )
 )
 
@@ -509,7 +522,8 @@ navigation <- Nav(
            links = list(
              list(name = 'Energy Reporting Trends', url = '#!/reporting-trends', key = 'reporting-trends', icon = 'Trending12'),
              list(name = 'Energy Data Trends', url = '#!/energy-data-trends', key = 'data-trends', icon = 'Trending12'),
-             list(name = 'Reporting Timeline', url = '#!/reporting-timeline', key = 'reporting-timeline', icon = 'TimelineProgress')), 
+             list(name = 'Reporting Timeline', url = '#!/reporting-timeline', key = 'reporting-timeline', icon = 'TimelineProgress'),
+             list(name = 'Industry Relationships', url = '#!/lease-cloud-network', key = "lease-cloud-network", icon = "SplitObject")), 
            isExpanded = FALSE
            ),
       list(name = 'Company Analysis', url = '#!/company-analysis', key = 'analysis', icon = 'ExploreData'),
@@ -551,6 +565,7 @@ router <- make_router(
   route("reporting-trends", reporting_trends_page),
   route("energy-data-trends", energy_data_trends),
   route("reporting-timeline", reporting_timeline_page),
+  route("lease-cloud-network", lease_cloud_network_page),
   route("company-analysis", company_analysis_page),
   route("methods", methods_page),
   route("contact-us", contact_page),
