@@ -385,53 +385,44 @@ pane <- function(header, paragraphs) {
 }
 
 methods_page <- makePage(
-    includeHTML("www/accordion.html")
+  div(
+    Grid(
+      GridItem(class = "ms-sm0 ms-xl2"),
+      GridItem(class = "ms-sm12 ms-xl8", style = "text-align: center",
+               MainCard(div(Text('Methodology Overview', variant = "xxLarge", style = "color: #137AD1; margin-right: 15px; text-align: center;"),
+                            FontIcon(iconName = "Settings", style = list(fontSize = 30, color = "#137AD1"))),
+                        br(),
+                        Text("This page provides a detailed review of our process for discovering, importing, and visualizing the publicly reported data made accessible through our dashboard.", variant = "large", style = "text-align: left;"),
+                        br(),
+                        Text("In an effort to align with our goal of increasing transparency and understanding of trends in global data center energy use, we aim to be as transparent and open as possible in describing our methodology and welcome any feedback from our viewers.", variant = "large", style = "text-align: left;")
+               )
+      )
+    ),
+    Stack(style = "text-align: center; padding: 25px", Text('General Approach to Methodology', variant = "xxLarge", style = "text-align: center; color: #137AD1;")),
+    Grid(
+      GridItem(class = "ms-sm0 ms-xl2"),
+      GridItem(class = "ms-sm12 ms-xl8",
+               includeHTML("www/accordion.html")
+      )
+    ),
+  )
 )
 
-# div(
-#   Grid(
-#     GridItem(class = "ms-sm0 ms-xl2"),
-#     GridItem(class = "ms-sm12 ms-xl8", style = "text-align: center",
-#              MainCard(div(Text('Methodology Overview', variant = "xxLarge", style = "color: #137AD1; margin-right: 15px; text-align: center;"),
-#                           FontIcon(iconName = "Settings", style = list(fontSize = 30, color = "#137AD1"))),
-#                       br(),
-#                       Text("This page provides a detailed review of our process for discovering, importing, and visualizing the publicly reported data made accessible through our dashboard.", variant = "large", style = "text-align: left;"),
-#                       br(),
-#                       Text("In an effort to align with our goal of increasing transparency and understanding of trends in global data center energy use, we aim to be as transparent and open as possible in describing our methodology and welcome any feedback from our viewers.", variant = "large", style = "text-align: left;")
-#              )
-#     )
-#   ),
-#   Stack(style = "text-align: center; padding: 25px", Text('General Approach to Methodology', variant = "xxLarge", style = "text-align: center; color: #137AD1;")),
-#   Grid(
-#     GridItem(class = "ms-sm0 ms-xl2"),
-#     GridItem(class = "ms-sm12 ms-xl8", style = "text-align: center",
-#              ScrollablePane(
-#                styles = list(
-#                  root = list(position = "relative", height = "500px", width = "100%")
-#                ),
-#                pane("Step 1: Identifying and Downloading Publicly Available Data Sources", 2),
-#                pane("Step 2: Collecting Data In Our Standardized Template", 2),
-#                pane("Step 3: Calculating Energy Use Values", 2),
-#                pane("Step 4: Step 4: Visualizing Data", 2)
-#              )
-#     )
-#   ),
-#   Stack(style = "text-align: center; padding: 25px", Text('Categories of Methodological Notes', variant = "xxLarge", style = "text-align: center; color: #137AD1;")),
-#   Grid(
-#     GridItem(class = "ms-sm0 ms-xl2"),
-#     GridItem(class = "ms-sm12 ms-xl8", style = "text-align: center",
-#              MainCard(div(Text('Methodological Notes Overview', variant = "xxLarge", style = "color: #137AD1; margin-right: 15px; text-align: center;"),
-#                           FontIcon(iconName = "Settings", style = list(fontSize = 30, color = "#137AD1"))),
-#                       br(),
-#                       Text("In the absence of required standards for publicly reporting energy use data, individual companies report their energy use using a wide range of units and methodologies. To capture as much data as possible for each company, our data processing team sometimes needs to use indirect calculations or estimation to find energy values. When one or more of these methods are used, data values reported on the “Company Analysis” page are accompanied by a methodological note which allows dashboard viewers to trace the listed value back to the original report. Below are our current categories of methods.", variant = "large", style = "text-align: left;")
-#              )
-#     )
-#   ),
-#   Grid(
-#     GridItem(class = "ms-sm0 ms-xl2"),
-#     GridItem(class = "ms-sm12 ms-xl8", style = "text-align: center"
-#              
-#     )
+# Stack(style = "text-align: center; padding: 25px", Text('Categories of Methodological Notes', variant = "xxLarge", style = "text-align: center; color: #137AD1;")),
+# Grid(
+#   GridItem(class = "ms-sm0 ms-xl2"),
+#   GridItem(class = "ms-sm12 ms-xl8", style = "text-align: center",
+#            MainCard(div(Text('Methodological Notes Overview', variant = "xxLarge", style = "color: #137AD1; margin-right: 15px; text-align: center;"),
+#                         FontIcon(iconName = "Settings", style = list(fontSize = 30, color = "#137AD1"))),
+#                     br(),
+#                     Text("In the absence of required standards for publicly reporting energy use data, individual companies report their energy use using a wide range of units and methodologies. To capture as much data as possible for each company, our data processing team sometimes needs to use indirect calculations or estimation to find energy values. When one or more of these methods are used, data values reported on the “Company Analysis” page are accompanied by a methodological note which allows dashboard viewers to trace the listed value back to the original report. Below are our current categories of methods.", variant = "large", style = "text-align: left;")
+#            )
+#   )
+# ),
+# Grid(
+#   GridItem(class = "ms-sm0 ms-xl2"),
+#   GridItem(class = "ms-sm12 ms-xl8",
+#            includeHTML("www/accordion2.html")
 #   )
 # )
 
