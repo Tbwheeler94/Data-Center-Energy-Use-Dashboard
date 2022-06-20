@@ -44,6 +44,9 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
   industry_transparency <- industry_transparency[order(industry_transparency$company),]
   industry_transparency$company <- factor(industry_transparency$company, levels=rev(unique(industry_transparency$company)))
   
+  list_of_companies <- unique(industry_transparency$company)
+  list_of_companies
+  
   industry_transparency$data_year <- paste0("01/01/", industry_transparency$data_year)
   industry_transparency$data_year <- as.Date(industry_transparency$data_year, "%d/%m/%Y")
   
@@ -53,21 +56,21 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
                                                     "\nReporting Scope: ", energy_reporting_scope))) +
     geom_tile(aes(fill=energy_reporting_scope), height=0.75) +
     labs(energy_reporting_scope="Reporting Scope") +
-    theme(legend.position = "top",
-      legend.text=element_text(size=7),
+    theme(
+      legend.text=element_text(size=10),
       axis.line.x=element_blank(),
       axis.text.x=element_blank(),
       axis.title.x=element_blank(),
       axis.ticks.x=element_blank(),
       axis.title.y=element_blank(),
-      axis.text.y = element_text(size = 12),
+      axis.text.y=element_text(size=12),
       axis.line.y=element_line(colour="black", size=1),
-      panel.background = element_blank()
+      panel.background=element_blank()
     )
   
   #ggplotly(p, tooltip = "text")
   
-  return(ggplotly(p, tooltip = "text") %>% config(displayModeBar = F)  %>%
+  return(ggplotly(p, height=800, width=1000, tooltip = "text") %>% config(displayModeBar = T)  %>%
            plotly::layout(legend = list(orientation = "h", x = 0.05, y = 1.1)))
   
 }
