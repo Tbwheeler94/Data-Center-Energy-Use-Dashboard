@@ -1,6 +1,6 @@
 # Data Center Energy Use Dashboard
 
-View website live at: http://movingbits.org/ (launch scheduled for end of June)
+View website live at: http://movingbits.org/ (launch scheduled for end of August)
 
 ## Project Overview
 
