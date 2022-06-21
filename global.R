@@ -84,11 +84,11 @@ source(here("R", "transformEnergyDataRaw.R"))
 #  password = c("isal"))
 
 ######################################################################################################################################################
-### Import Sheet 1 from DataCenterEnergyUse-RawCollection.xlsx which contains energy data and transform data via transformEnergyDataRaw() function ###
+### Import Sheet 1 from data.xlsx which contains energy data and transform data via transformEnergyDataRaw() function ###
 ######################################################################################################################################################
 
 #Import raw energy spreadsheet
-data_sheet_energy_raw <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 1, #the "1" specifies to import sheet 1
+data_sheet_energy_raw <- read.xlsx2(here('source_data',"data.xlsx"), 1, #the "1" specifies to import sheet 1
                                 
                                 #specify column data types to ensure proper recognition
                                 colClasses=c("character","integer","Date","Date","character", #columns 1-5
@@ -125,11 +125,11 @@ colnames(data_sheet_energy_raw) [35] <- 'fuel_5_value'
 colnames(data_sheet_energy_raw) [36] <- 'fuel_5_unit_scale'
   
 ######################################################################################################
-### Import Sheet 2 from DataCenterEnergyUse-RawCollection.xlsx which contains company profile data ###
+### Import Sheet 2 from data.xlsx which contains company profile data ###
 ######################################################################################################
 
 #Import raw company profile sheet
-data_sheet_company_raw <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 2, #the "2" specifies to import sheet 2
+data_sheet_company_raw <- read.xlsx2(here('source_data',"data.xlsx"), 2, #the "2" specifies to import sheet 2
                                      
                                      #specify column data types to ensure proper recognition
                                      colClasses=c("character","character","character","integer","Date", #columns 1-5
@@ -153,11 +153,11 @@ colnames(data_sheet_company_raw) [3] <- 'company_founding_year'
 colnames(data_sheet_company_raw) [4] <- 'date_last_updated'
 
 ###########################################################################################
-### Import Sheet 3 from DataCenterEnergyUse-RawCollection.xlsx which contains pue data ####
+### Import Sheet 3 from data.xlsx which contains pue data ####
 ###########################################################################################
 
 #Import raw PUE sheet
-data_sheet_pue_raw <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 3, #the "3" specifies to import sheet 3
+data_sheet_pue_raw <- read.xlsx2(here('source_data',"data.xlsx"), 3, #the "3" specifies to import sheet 3
                                  
                                  #specify column data types to ensure proper recognition
                                  colClasses=c("character","integer","character","character","character", #columns 1-5
