@@ -33,6 +33,7 @@ buildCompanyProfileTransparencyOverTimePlot <- function(data_sheet_energy_transf
       company_transparency <- company_transparency %>% rbind(company_SDC, company_MDC, company_CW, company_EN)
       if (!(year %in% company_transparency)) {
          company_transparency[nrow(company_transparency)+1, ] <- c(selected_company,year,"","")
+         # testing
        }
     }
   }
