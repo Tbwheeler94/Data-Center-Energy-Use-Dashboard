@@ -145,7 +145,7 @@ data_sheet_company_raw <- read.xlsx2(here('source_data',"data.xlsx"), 2, #the "2
 data_sheet_company_raw <- data_sheet_company_raw %>% 
   row_to_names(2) %>% 
   clean_names() %>%
-  select(!c(who_added_the_company, x, qts, x2019, x_2, x_3, x_4)) %>% 
+  select(!c(who_added_the_company, x)) %>% 
   filter(checked_back_to_founding_year_or_2007 == "Yes")
 
 #change column names that were set to incorrect values when column classes were set

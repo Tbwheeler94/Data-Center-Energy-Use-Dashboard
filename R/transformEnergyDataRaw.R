@@ -222,7 +222,7 @@ transformEnergyDataRaw <- function(data_sheet_energy_raw) {
   #################################################################################################
   
   #import conversions spreadsheet, select columns data types, clean header names, select columns, unite fuel and unit columns
-  conversions_sheet <- read.xlsx2(here('data',"DataCenterEnergyUse-RawCollection.xlsx"), 6,
+  conversions_sheet <- read.xlsx2(here('source_data',"data.xlsx"), 6,
                                   colClasses=c("character", "character", "character", "numeric")) %>% 
     clean_names() %>% 
     select('fuel', 'unit', 'k_wh_1_unit') %>% 
