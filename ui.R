@@ -212,7 +212,7 @@ reporting_timeline_page <- makePage(
     Grid(
       GridItem(class = "ms-sm12 ms-xl12", 
                Stack(class = "ms-depth-8 timeline-graph",
-                 plotlyOutput('reporting_timeline')
+                 plotlyOutput('reporting_timeline', width = "auto")
                )
       )
     )
@@ -508,14 +508,14 @@ navigation <- Nav(
     list(links = list(
       list(name = 'Home', url = '#!/', key = 'home', icon = 'Home'),
       list(name = 'Data Center Energy 101', url = '#!/data-center-energy', key = 'dce', icon = 'D365TalentLearn'),
-      list(name = 'Industry Trends', 
+      list(name = 'Industry Trends',
            expandAriaLabel = 'Expand Industry Trends',
            collapseAriaLabel = 'Collapse Industry Trends',
            links = list(
-             list(name = 'Energy Reporting Trends', url = '#!/reporting-trends', key = 'reporting-trends', icon = 'Trending12'),
+             list(id = 'industry-trends-first-element', name = 'Energy Reporting Trends', url = '#!/reporting-trends', key = 'reporting-trends', icon = 'Trending12'),
              list(name = 'Energy Data Trends', url = '#!/energy-data-trends', key = 'data-trends', icon = 'Trending12'),
              list(name = 'Reporting Timeline', url = '#!/reporting-timeline', key = 'reporting-timeline', icon = 'TimelineProgress'),
-             list(name = 'Industry Relationships', url = '#!/lease-cloud-network', key = "lease-cloud-network", icon = "SplitObject")), 
+             list(id = 'industry-trends-last-element', name = 'Industry Relationships', url = '#!/lease-cloud-network', key = "lease-cloud-network", icon = "SplitObject")), 
            isExpanded = FALSE
            ),
       list(name = 'Company Analysis', url = '#!/company-analysis', key = 'analysis', icon = 'ExploreData'),

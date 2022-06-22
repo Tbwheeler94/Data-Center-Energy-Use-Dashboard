@@ -23,8 +23,7 @@
   background-color: white; 
   border-top: 8px solid #137AD1;
   height: calc(100vh - 290px); /* Height of card containing the timeline graph and transparency reporting graph is 290px shorter than the size of the screen */
-  overflow-y: scroll; 
-  position: relative;
+  overflow-y: scroll;
 }
 
 .header {
@@ -70,10 +69,22 @@
   padding-left: 12px;
 }
 
-/* Adjusts font size of nave bar items */
+/* Adjusts font size and spacing of nave bar items */
 
 .ms-Nav-linkText {
   font-size: 20px;
+}
+
+/* Adds padding to top of list of li's under industry trends */
+
+#industry-trends-first-element {
+  margin-top: 10px;
+}
+
+/* Removes padding from last li element under industry trends dropdown items */
+
+#industry-trends-last-element {
+  margin-bottom: -10px;
 }
 
 /* Adjusts padding below nav bar items */

@@ -70,7 +70,9 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
   
   #ggplotly(p, tooltip = "text")
   
-  return(ggplotly(p, height=800, width=1000, tooltip = "text") %>% config(displayModeBar = T)  %>%
+  timeline_plot_height <- length(unique_companies) * 30
+  
+  return(ggplotly(p, height=timeline_plot_height, tooltip = "text") %>% config(displayModeBar = T)  %>%
            plotly::layout(legend = list(orientation = "h", x = 0.05, y = 1.1)))
   
 }
