@@ -275,17 +275,17 @@ server <- function(input, output, session) {
     if(nrow(input) == 0) {
       350
     } else if (nrow(input) == 1) {
-      125 
+      129 
     } else if (nrow(input) == 2) {
-      200
+      215
     } else if (nrow(input) == 3) {
       300
     } else if (nrow(input) == 4) {
-      400
+      392
     } else if (nrow(input) == 5) {
-      500
+      490
     } else {
-      500 + nrow(input)*10
+      89.9*nrow(input) + 35.5
     }
   }
   ###########################

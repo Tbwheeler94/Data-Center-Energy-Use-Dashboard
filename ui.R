@@ -142,63 +142,65 @@ reporting_trends_page <- makePage(
 energy_data_trends <- makePage(
   
   div(Stack(style = "text-align: center; padding: 25px", Text("Annual Reported Energy Use By Year Across Reporting Companies", variant = "xxLarge", style = "color: #137AD1;")),
-    Grid(id = 'data-center-plots',
-      GridItem(class = "ms-sm12 ms-xl12",
-               GraphCard(horizontal = TRUE,
-                         Stack(tokens = list(childrenGap = 5),
-                               style = "width: 250px; margin-top: 30px; margin-left: 10px;",
-                               br(),
-                               Text("Select Reporting Year", variant = "mediumPlus", style = "font-weight: bold;"),
-                               Dropdown.shinyInput("input_year", 
-                                                   options = unique_years,
-                                                   value = "2020",
-                                                   placeHolder = "2020",
-                                                   dropdownWidth = 150,
-                                                   style = "width: 150px; font-size: 12pt;"),
-                               br(),
-                               Text("Select Reporting Scope", variant = "mediumPlus", style = "font-weight: bold;"),
-                               Dropdown.shinyInput("input_reporting_scope",
-                                                   options = unique_scope_selection,
-                                                   value = "Data Centers",
-                                                   placeHolder = "Data Centers",
-                                                   dropdownWidth = 150,
-                                                   style = "width: 150px; font-size: 12pt;")
-                         ),
-                         div(Text("Data Center Electricity Use At Scale of KWh to 1s of TWh", variant = "large"),
-                             br(), 
-                             br(),
-                             plotOutput('data_centerplot'), style = "width: 100%; text-align: center;")))
-    ),
-    Grid(id = 'company-wide-plot-1',
-      GridItem(class = "ms-sm12 ms-xl12",
-               GraphCard(Text("Company Wide Energy Use At Scale of KWh to 1s of GWh", variant = "large", style = "text-align: center;"),
-                         br(),
-                         plotOutput('company_wide_plot_1')))
-    ),
-    Grid(id = 'company-wide-plot-2',
-      GridItem(class = "ms-sm12 ms-xl12",
-               GraphCard(Text("Company Wide Energy Use At Scale of 10s of GWh", variant = "large", style = "text-align: center;"),
-                         br(),
-                         plotOutput('company_wide_plot_2')))
-    ),
-    Grid(id = 'company-wide-plot-3',
-      GridItem(class = "ms-sm12 ms-xl12",
-               GraphCard(Text("Company Wide Energy Use At Scale of 100s of GWh", variant = "large", style = "text-align: center;"),
-                         br(),
-                         plotOutput('company_wide_plot_3')))
-    ),
-    Grid(id = 'company-wide-plot-4',
-      GridItem(class = "ms-sm12 ms-xl12",
-               GraphCard(Text("Company Wide Energy Use At Scale of 1s of TWh", variant = "large", style = "text-align: center;"),
-                         br(),
-                         plotOutput('company_wide_plot_4')))
-    ),
-    Grid(id = 'company-wide-plot-5',
-      GridItem(class = "ms-sm12 ms-xl12",
-               GraphCard(Text("Company Wide Energy Use At Scale of 10s of TWh and Greater", variant = "large", style = "text-align: center;"),
-                         br(),
-                         plotOutput('company_wide_plot_5')))
-    )
+      Grid(
+        GridItem(class = "ms-xl4"),
+        GridItem(class = "ms-sm12 ms-xl4",
+                 Stack(class = "ms-depth-8",
+                       tokens = list(padding = 20, childrenGap = 5),
+                       style = 'border-radius: 5px; background-color: white; border-top: 8px solid #137AD1;',
+                       Text("Select Year and Energy Reporting Scope", variant = "xLarge", style = "text-align: center;"),
+                       br(),
+                       Dropdown.shinyInput("input_year", 
+                                           options = unique_years,
+                                           value = "2020",
+                                           placeHolder = "2020",
+                                           dropdownWidth = 150,
+                                           style = "width: 150px; margin: auto; font-size: 12pt;"),
+                       Dropdown.shinyInput("input_reporting_scope", 
+                                           options = unique_scope_selection,
+                                           value = "Data Centers",
+                                           placeHolder = "Data Centers",
+                                           dropdownWidth = 150,
+                                           style = "width: 150px; margin: auto; font-size: 12pt;")
+                 )
+        )
+      ),
+      Grid(id = 'data-center-plots',
+           GridItem(class = "ms-sm12 ms-xl12",
+                    GraphCard(Text("Data Center Electricity Use At Scale of KWh to 1s of TWh", variant = "large", style = "text-align: center;"),
+                              br(),
+                              plotOutput('data_centerplot')))
+      ),
+      Grid(id = 'company-wide-plot-1',
+           GridItem(class = "ms-sm12 ms-xl12",
+                    GraphCard(Text("Company Wide Energy Use At Scale of KWh to 1s of GWh", variant = "large", style = "text-align: center;"),
+                              br(),
+                              plotOutput('company_wide_plot_1')))
+      ),
+      Grid(id = 'company-wide-plot-2',
+           GridItem(class = "ms-sm12 ms-xl12",
+                    GraphCard(Text("Company Wide Energy Use At Scale of 10s of GWh", variant = "large", style = "text-align: center;"),
+                              br(),
+                              plotOutput('company_wide_plot_2')))
+      ),
+      Grid(id = 'company-wide-plot-3',
+           GridItem(class = "ms-sm12 ms-xl12",
+                    GraphCard(Text("Company Wide Energy Use At Scale of 100s of GWh", variant = "large", style = "text-align: center;"),
+                              br(),
+                              plotOutput('company_wide_plot_3')))
+      ),
+      Grid(id = 'company-wide-plot-4',
+           GridItem(class = "ms-sm12 ms-xl12",
+                    GraphCard(Text("Company Wide Energy Use At Scale of 1s of TWh", variant = "large", style = "text-align: center;"),
+                              br(),
+                              plotOutput('company_wide_plot_4')))
+      ),
+      Grid(id = 'company-wide-plot-5',
+           GridItem(class = "ms-sm12 ms-xl12",
+                    GraphCard(Text("Company Wide Energy Use At Scale of 10s of TWh and Greater", variant = "large", style = "text-align: center;"),
+                              br(),
+                              plotOutput('company_wide_plot_5')))
+      )
   )
 )
 
@@ -212,6 +214,7 @@ reporting_timeline_page <- makePage(
     Grid(
       GridItem(class = "ms-sm12 ms-xl12", 
                Stack(class = "ms-depth-8 timeline-graph",
+                 br(),
                  plotlyOutput('reporting_timeline', width = "auto")
                )
       )
