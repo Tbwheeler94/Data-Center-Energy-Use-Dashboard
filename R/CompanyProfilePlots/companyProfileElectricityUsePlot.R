@@ -44,7 +44,7 @@ buildCompanyProfileElectricityUsePlot <- function(selected_company, methodology_
              Total_company = ifelse("Total_company" %in% names(.), Total_company, 0)) %>%
       mutate(data_centers = Self_managed + Leased) %>% 
       mutate(data_center_percentage = percent(data_centers/Total_company)) %>%
-      mutate_if(is.numeric, ~round(., 3)) %>%
+      mutate_at(vars(Total_company, Leased, Self_managed, data_centers), ~round(., 3)) %>%
       mutate(Total_company = as.character(Total_company), Self_managed = as.character(Self_managed), 
              Leased = as.character(Leased), data_centers = as.character(data_centers)) %>%
       pivot_longer(!data_year, names_to = "category", values_to = "value") %>%
