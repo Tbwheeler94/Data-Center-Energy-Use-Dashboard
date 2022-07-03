@@ -11,10 +11,6 @@ library(tidyverse)
 library(lubridate)
 library(fastDummies)
 
-#initiating core shiny, multiple web-pages and fluent ui styling, respectively
-library(shiny.router)
-library(shiny.fluent)
-
 #used for importing data spreadsheet
 library(xlsx)
 library(readxl)
@@ -27,6 +23,10 @@ library(data.table)
 library(plotly)
 library(visNetwork) 
 library(scales)
+
+#initiating core shiny, multiple web-pages and fluent ui styling, respectively
+library(shiny.router)
+library(shiny.fluent)
 
 #website interactivity
 library(tidyselect)
