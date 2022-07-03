@@ -1,15 +1,17 @@
 ########################################################
-###### Load dependencies ###############################
+###### Load packages ###################################
 ########################################################
+
+library(shiny)
 
 #basic data wrangling dependencies
 library(here)
 library(janitor)
 library(tidyverse)
 library(lubridate)
+library(fastDummies)
 
 #initiating core shiny, multiple web-pages and fluent ui styling, respectively
-library(shiny)
 library(shiny.router)
 library(shiny.fluent)
 
@@ -21,14 +23,13 @@ library(readxl)
 library(DT)
 library(data.table)
 
-#plotting
+#plotting and visualization
 library(plotly)
 library(visNetwork) 
 library(scales)
 
 #website interactivity
 library(tidyselect)
-library(fastDummies) 
 library(shinyjs) #enables use of javascript functions
 library(shinymanager) #generates a user authentication page
 library(waiter) #package for generating loading animations

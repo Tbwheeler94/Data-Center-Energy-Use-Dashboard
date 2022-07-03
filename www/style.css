@@ -22,7 +22,7 @@
   border-radius: 5px; 
   background-color: white; 
   border-top: 8px solid #137AD1;
-  height: calc(100vh - 290px); /* Height of card containing the timeline graph and transparency reporting graph is 290px shorter than the size of the screen */
+  height: calc(72vh); /* Height of card containing the timeline graph and transparency reporting graph is 290px shorter than the size of the screen */
   overflow-y: scroll;
 }
 

@@ -502,7 +502,7 @@ layout <- function(mainUI){
 }
 
 header <- tagList(
-  img(src = "isalab.svg", class = "logo"),
+  img(src = "isalab-logo.png", class = "logo"),
   div(Text(variant = "xxLarge", "Data Center Energy Use Dashboard", style = "color: white;"), class = "title"))
 
 navigation <- Nav(
