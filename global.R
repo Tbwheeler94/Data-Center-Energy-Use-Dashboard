@@ -2,6 +2,7 @@
 ###### Load dependencies ###############################
 ########################################################
 
+#basic data wrangling dependencies
 library(here)
 library(janitor)
 library(tidyverse)
