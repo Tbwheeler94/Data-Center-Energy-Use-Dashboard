@@ -39,9 +39,7 @@ library(googlesheets4)
 library(googledrive)
 
 #used to developed accordion on methods page
-#library(htmltools)
-#library(shinydashboard)
-#library(shinydashboardPlus)
+#library(rsconnect)
 
 ########################################################
 ###### Suppress warnings ###############################
