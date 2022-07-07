@@ -471,7 +471,8 @@ server <- function(input, output, session) {
     data_sheet_energy_raw %>% 
       filter(company %in% input$selected_company) %>% 
       mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
-      filter(period_covered_start_date == max(period_covered_start_date, na.rm = TRUE)) 
+      slice_max(period_covered_start_date) 
+      #filter(period_covered_start_date == max(period_covered_start_date)) 
   })
   
   #This dataset is used to check for SASB, GRI, CDP reporting
@@ -480,7 +481,8 @@ server <- function(input, output, session) {
     energy_sheet_selected_company_current_year_scg <- data_sheet_energy_raw %>% 
       filter(company %in% input$selected_company) %>% 
       mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
-      filter(period_covered_start_date == max(period_covered_start_date))
+      slice_max(period_covered_start_date)
+      #filter(period_covered_start_date == max(period_covered_start_date))
     
     sasb_reporting_status <- ifelse("Yes" %in% energy_sheet_selected_company_current_year_scg$sasb, "Yes", "No")
     cdp_reporting_status <- ifelse("Yes" %in% energy_sheet_selected_company_current_year_scg$cdp, "Yes", "No")
@@ -496,7 +498,9 @@ server <- function(input, output, session) {
     energy_sheet_selected_company_current_year_pwr <- data_sheet_energy_raw %>% 
       filter(company %in% input$selected_company) %>% 
       mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
-      filter(period_covered_start_date == max(period_covered_start_date))
+      slice_max(period_covered_start_date)
+      
+      #filter(period_covered_start_date == max(period_covered_start_date))
     
     pue_reporting_status <- ifelse("Yes" %in% energy_sheet_selected_company_current_year_pwr$pue, "Yes", "No")
     wue_reporting_status <- ifelse("Yes" %in% energy_sheet_selected_company_current_year_pwr$wue, "Yes", "No")
@@ -511,7 +515,8 @@ server <- function(input, output, session) {
   energy_sheet_selected_company_current_year_dc_electricity <- reactive({
     data_sheet_energy_raw %>% filter(company %in% input$selected_company) %>% 
       mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
-      filter(period_covered_start_date == max(period_covered_start_date)) %>% 
+      slice_max(period_covered_start_date) %>% 
+      #filter(period_covered_start_date == max(period_covered_start_date)) %>% 
       filter(energy_reporting_scope == "Single Data Center" | energy_reporting_scope == "Multiple Data Centers") %>% 
       drop_na(electricity_value)
   })
@@ -520,7 +525,8 @@ server <- function(input, output, session) {
   energy_sheet_selected_company_current_year_dc_fuel <- reactive({
     data_sheet_energy_raw %>% filter(company %in% input$selected_company) %>% 
       mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
-      filter(period_covered_start_date == max(period_covered_start_date)) %>% 
+      slice_max(period_covered_start_date) %>% 
+      #filter(period_covered_start_date == max(period_covered_start_date)) %>% 
       filter(energy_reporting_scope == "Single Data Center" | energy_reporting_scope == "Multiple Data Centers") %>% 
       drop_na(fuel_1_value)
   })
@@ -529,7 +535,8 @@ server <- function(input, output, session) {
   energy_sheet_selected_company_current_year_dc <- reactive({
     data_sheet_energy_raw %>% filter(company %in% input$selected_company) %>% 
       mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
-      filter(period_covered_start_date == max(period_covered_start_date)) %>% 
+      slice_max(period_covered_start_date) %>% 
+      #filter(period_covered_start_date == max(period_covered_start_date)) %>% 
       filter(energy_reporting_scope == "Single Data Center" | energy_reporting_scope == "Multiple Data Centers")
   })
   
@@ -537,7 +544,8 @@ server <- function(input, output, session) {
   energy_sheet_selected_company_current_year_te <- reactive({
     data_sheet_energy_raw %>% filter(company %in% input$selected_company) %>% 
       mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
-      filter(period_covered_start_date == max(period_covered_start_date)) %>% 
+      slice_max(period_covered_start_date) %>% 
+      # filter(period_covered_start_date == max(period_covered_start_date)) %>% 
       filter(energy_reporting_scope == "Total Operations") %>% 
       drop_na(electricity_value)
   })
@@ -640,7 +648,7 @@ server <- function(input, output, session) {
   total_energy_reporting_status <- reactive({ ifelse(sum(energy_sheet_selected_company_current_year_te()$electricity_value > 0), "Yes", "No") })
   
   reported_energy_levels_data <- reactive({
-    data.frame(Level = c("Data center electricity use", "Self-managed", "Leased", "Cloud", "Data center other fuel use", "Company-wide electricty use"),
+    data.frame(Level = c("Data center electricity use", "Self-managed", "Leased", "Cloud", "Data center other fuel use", "Company-wide electricity use"),
                " Reporting Status " = c(data_center_electricity_reporting_status(), 
                                         data_center_self_managed_reporting_status(), 
                                         data_center_leased_reporting_status(), 
@@ -855,6 +863,11 @@ server <- function(input, output, session) {
       if(nrow(buildCompanyProfilePUEPlot(input$selected_company, methodology_table_lookup()) != 0)) {
         write.table(data.frame(x = c("", "PUE")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
         write.table(buildCompanyProfilePUEPlot(input$selected_company, methodology_table_lookup()), fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
+      
+      if(nrow(buildCompanyProfileMethodologyTable(input$selected_company)) != 0) {
+        write.table(data.frame(x = c("", "Methodological Notes")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+        write.table(buildCompanyProfileMethodologyTable(input$selected_company), fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
+      
     }
   )
   
