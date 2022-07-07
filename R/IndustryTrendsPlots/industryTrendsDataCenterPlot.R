@@ -15,7 +15,7 @@ buildIndustryTrendsDataCenterPlot <- function(energy_use_final) {
                          label = c("0", "200 GWh", "400 GWh", "600 GWh", "800 GWh", "1 TWh", 
                                    "1.2 TWh", "1.4 TWh", "1.6 TWh", "1.8 TWh", "2 TWh"), 
                          position = 'top',
-                         expand = expansion(mult=c(0,0.1))) + 
+                         expand = expansion(mult=c(0.01,0))) + 
                          #breaks = energy_use_final$electricity_converted, 
                          #expand = expansion(mult = c(0, 0.05)), 
                          #labels = humanReadable(energy_use_final$electricity_converted, standard = "Unix", sep = "")) +

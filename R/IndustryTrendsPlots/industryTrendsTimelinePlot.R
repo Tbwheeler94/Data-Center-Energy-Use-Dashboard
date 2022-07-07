@@ -56,6 +56,7 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
                                                     "\nReporting Scope: ", energy_reporting_scope))) +
     geom_tile(aes(fill=energy_reporting_scope), height=0.75) +
     labs(energy_reporting_scope="Reporting Scope") +
+    scale_x_continuous(expand = expansion(mult = c(0.01,0))) +
     theme(
       legend.text=element_text(size=10),
       axis.line.x=element_blank(),

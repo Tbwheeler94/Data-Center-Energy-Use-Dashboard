@@ -142,7 +142,7 @@ buildIndustryTrendsTransparencyPlot <- function(data_sheet_energy_raw) {
       legend.title = element_text(size=14),
       legend.text = element_text(size=12)
     ) +
-    scale_y_continuous(expand = expansion(mult = c(0,0))) +
+    scale_y_continuous(expand = expansion(mult = c(0.01,0))) +
     xlab("Year") +
     ylab("Number of Companies") +
     labs(fill = "Energy Reporting Scope")
