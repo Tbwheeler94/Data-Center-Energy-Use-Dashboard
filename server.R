@@ -568,12 +568,12 @@ server <- function(input, output, session) {
                                           str_remove_all("NA")
   })
   
-  #removed reactive table from "Select a Company To View" header box
+  selected_company_stats <- reactive({ data.frame(A = c("Does company report any energy use?", "Year of most recent data", "Lease/cloud providers"),
+                                       B = c(energy_reporting_status(), year_of_most_recent_data(), ifelse(external_service_provider_list() == "", "No External Providers Reported",
+                                                                                                           external_service_provider_list())), check.names = FALSE)
+  })
   
-  #selected_company_stats <- reactive({ data.frame(A = c("Does company report any energy use?", "Year of most recent data", "Lease/cloud providers"),
-  #                                     B = c(energy_reporting_status(), year_of_most_recent_data(), ifelse(external_service_provider_list() == "", "No External Providers Reported",
-  #                                                                                                         external_service_provider_list())), check.names = FALSE)
-  #})
+  #removed reactive table from "Select a Company To View" header box
   
   #output$selected_company_stats <- renderDataTable({
   #
@@ -688,12 +688,13 @@ server <- function(input, output, session) {
   
   methodology_table_lookup <- reactive({buildCompanyProfileMethodologyTable(input$selected_company)})
   
-  #Show all 4 tables to start
+  #Show all 5 tables to start
   observeEvent(input$selected_company, {
     shinyjs::show(selector = "div#electricity-use-table")
     shinyjs::show(selector = "div#other-fuel-use-table")
     shinyjs::show(selector = "div#ns-energy-use-table")
     shinyjs::show(selector = "div#pue-table")
+    shinyjs::show(selector = "div#methodology-table")
   })
   
   #######################################
@@ -794,8 +795,17 @@ server <- function(input, output, session) {
   
   output$methodology_table <- renderDataTable({
     
-    #add "pageLength" = 100 to ensure datatable is showing up to 100 lines of methodological notes (default is 10 and any comments beyond that are hidden from the user)
-    datatable(buildCompanyProfileMethodologyTable(input$selected_company), rownames = FALSE, options = list(dom = 't', scrollY=200, scrollCollapse=TRUE, "pageLength" = 100))
+    selected_company_methodology_filter <- buildCompanyProfileMethodologyTable(input$selected_company)
+    
+    if(nrow(selected_company_methodology_filter) != 0) {
+      
+      #add "pageLength" = 100 to ensure datatable is showing up to 100 lines of methodological notes (default is 10 and any comments beyond that are hidden from the user)
+      datatable(selected_company_methodology_filter, rownames = FALSE, options = list(dom = 't', autoWidth = TRUE, columnDefs = list(list(className = 'dt-center', targets = c(0, 1, 3))), scrollY=200, scrollCollapse=TRUE))
+      
+    } else {
+      shinyjs::hide(selector = "div#methodology-table")
+    }
+
   })
   
   #######################################
@@ -828,18 +838,23 @@ server <- function(input, output, session) {
       write.table(data.frame(x = c("Section 4: Other Metrics Reported","Note: These values apply only to the company's most recent year of data reporting"))[1:3,] %>% replace(is.na(.), ""), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
       write.table(pue_wue_renewables_status()[1:4,] %>% replace(is.na(.), ""), fname, sep = ',', append = TRUE, row.names = F)
       write.table(data.frame(x = c("Section 5: Historical Energy Use Trend & Data")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
-      if(nrow(buildCompanyProfileElectricityUsePlot(input$selected_company) != 0)) {
+      
+      #conditionally add energy data to csv download
+      if(nrow(buildCompanyProfileElectricityUsePlot(input$selected_company, methodology_table_lookup()) != 0)) {
         write.table(data.frame(x = c("", "Electricity Use (TWh/yr)")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
-        write.table(buildCompanyProfileElectricityUsePlot(input$selected_company)[-1], fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
-      if(nrow(buildCompanyProfileFuelUsePlot(input$selected_company) != 0)) {
+        write.table(buildCompanyProfileElectricityUsePlot(input$selected_company, methodology_table_lookup())[-1], fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
+      
+      if(nrow(buildCompanyProfileFuelUsePlot(input$selected_company, methodology_table_lookup()) != 0)) {
         write.table(data.frame(x = c("", "Other fuel use (TWh/yr)")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
-        write.table(buildCompanyProfileFuelUsePlot(input$selected_company)[-1], fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
-      if(nrow(buildCompanyProfileNonSpecifiedEnergyUsePlot(input$selected_company) != 0)) {
+        write.table(buildCompanyProfileFuelUsePlot(input$selected_company, methodology_table_lookup())[-1], fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
+      
+      if(nrow(buildCompanyProfileNonSpecifiedEnergyUsePlot(input$selected_company, methodology_table_lookup()) != 0)) {
         write.table(data.frame(x = c("", "Non-specified energy use (TWh/yr)")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
-        write.table(buildCompanyProfileNonSpecifiedEnergyUsePlot(input$selected_company)[-1], fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
-      if(nrow(buildCompanyProfilePUEPlot(input$selected_company) != 0)) {
+        write.table(buildCompanyProfileNonSpecifiedEnergyUsePlot(input$selected_company, methodology_table_lookup())[-1], fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
+      
+      if(nrow(buildCompanyProfilePUEPlot(input$selected_company, methodology_table_lookup()) != 0)) {
         write.table(data.frame(x = c("", "PUE")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
-        write.table(buildCompanyProfilePUEPlot(input$selected_company), fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
+        write.table(buildCompanyProfilePUEPlot(input$selected_company, methodology_table_lookup()), fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
     }
   )
   
@@ -902,7 +917,8 @@ server <- function(input, output, session) {
            last_name = input$last_name_input,
            email = input$user_email_input,
            how_did_you_hear = input$referral_input,
-           message = input$user_message_input)
+           message = input$user_message_input,
+           date_time_added = lubridate::now(tzone = "Canada/Pacific"))
   })
 
   #Step 3: Generate function to execute when user clicks submission form
