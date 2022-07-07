@@ -230,8 +230,8 @@ lease_cloud_network_page <- makePage(
   div(
     Stack(style = "text-align: center; padding: 25px", Text("Network of Data Center Lease/Cloud Providers", variant = "xxLarge", style = "color: #137AD1;")),
     br(),
-    Stack(style = "text-align: center;", Text("Click to see relationship + scroll to zoom", variant = "medium", style = "color: gray;")),
-    visNetworkOutput('lease_cloud_network', height = "75vh")
+    Stack(style = "text-align: center;", Text("hover to see relationship | click and drag to interact | scroll to zoom", variant = "medium", style = "color: gray;")),
+    visNetworkOutput('lease_cloud_network', height = "72vh")
   )
 )
 
