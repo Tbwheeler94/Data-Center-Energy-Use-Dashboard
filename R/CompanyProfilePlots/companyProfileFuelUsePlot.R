@@ -60,7 +60,7 @@ buildCompanyProfileFuelUsePlot <- function(selected_company, methodology_table_l
       arrange(category) %>% 
       add_column(format = c(1,0,0), .before = 'category')
     
-    possible_years_fuel <- c(2007:as.integer(tail(colnames(selected_company_fuel_use_filter), n=1)))
+    possible_years_fuel <- c(2007:as.integer(max(na.omit(data_sheet_energy_transformed$data_year))))
     extra_years_fuel <- list()
     
     j <- 1
