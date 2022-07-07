@@ -1,6 +1,6 @@
 buildIndustryTrendsTransparencyPlot <- function(data_sheet_energy_raw) {
   
-  for (year_count in 2007:as.integer(max(na.omit(data_sheet_energy_raw$report_year)))) {
+  for (year_count in 2007:as.integer(max(na.omit(data_sheet_energy_transformed$data_year)))) {
     # create a sub data frame that is filtered by data year and single data center scope
     data_of_transparency_SDC <- data_sheet_energy_transformed %>%
       filter(data_year == year_count, energy_reporting_scope == "Single Data Center") %>%
