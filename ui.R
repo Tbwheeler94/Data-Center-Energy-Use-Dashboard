@@ -242,8 +242,8 @@ lease_cloud_network_page <- makePage(
 company_analysis_page <- makePage(
   div(
     Grid(
-      GridItem(class = "ms-md0 ms-xl3"),
-      GridItem(class = "ms-md12 ms-xl6",
+      GridItem(class = "ms-md0 ms-lg2 ms-xl3"),
+      GridItem(class = "ms-md12 ms-lg8 ms-xl6",
                Stack(
                  class = "ms-depth-8",
                  style = 'border-radius: 5px; background-color: white; border-top: 8px solid #137AD1;',
@@ -345,7 +345,7 @@ company_analysis_page <- makePage(
       GridItem(class = "ms-sm0 ms-xl1"),
       GridItem(class = "ms-sm0 ms-xl10", plotOutput('transparency_over_time_plot'))
     ),
-    Grid(
+    Grid(id = "methodology-table",
       GridItem(class = "ms-sm0 ms-xl1"),
       GridItem(class = "ms-sm12 ms-xl10",
                Stack(style = "text-align: center; padding: 25px;",Text(uiOutput("company_profiles_title_3"), variant = "xxLarge", style = "color: #137AD1;")),
