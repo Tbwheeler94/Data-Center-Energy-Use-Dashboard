@@ -572,10 +572,18 @@ shiny::addResourcePath("shiny.router", system.file("www", package = "shiny.route
 shiny_router_js_src <- file.path("shiny.router", "shiny.router.js")
 shiny_router_script_tag <- shiny::tags$script(type = "text/javascript", src = shiny_router_js_src)
 
+preloader_html <- makePage(div(img(src='https://static.wixstatic.com/media/1ab7d5_947e63da0487445b8ef205972c867761~mv2.png/v1/fill/w_239,h_80,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/industrial%20sustainability%20analysis%20lab_l.png', align = "center"),
+                               h3("Welcome to the Data Center Energy Use Dashboard"), 
+                               spin_pixel()))
+
 ui <- #secure_app(head_auth = tags$script(inactivity), #authentication
                  fluentPage(
                  tags$title("Data Center Energy Dashboard"),
-                 autoWaiter(id = c(#add loading animations to industry trend graphs
+                 useWaiter(), 
+                 waiterPreloader(html = preloader_html, color = "#c6e1f7", fadeout = 50),
+                 autoWaiter(id = c(#add loading animations for home page
+                                   "years_reported", "companies reporting", "energy_reported",
+                                    #add loading animations to industry trend graphs
                                    "transparency_graph", "data_centerplot", "company_wide_plot_1",
                                    "company_wide_plot_2", "company_wide_plot_3", "company_wide_plot_4",
                                    "company_wide_plot_5", "reporting_timeline",

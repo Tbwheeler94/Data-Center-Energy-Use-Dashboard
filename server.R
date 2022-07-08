@@ -56,29 +56,31 @@ server <- function(input, output, session) {
   #####################################################################
   
   #calculate number of years reported by finding the length of a vector of unique report year values
-  number_of_reporting_years <- length(unique(data_sheet_energy_transformed$data_year))
+  #number_of_reporting_years <- length(unique(data_sheet_energy_transformed$data_year))
   
   #assign function to start value for report year
-  number_of_reporting_years_start_val <- reactiveVal(0)
+  #number_of_reporting_years_start_val <- reactiveVal(0)
   
   #this section creates a number incrementing animation on the home page it works by
   #1. observing if the start value above is less than the number_of_reporting_years values
   #2. if it is, then one is added to the number_of_reporting_years_start_val, this new value is assigned to number_of_reporting_years_new_val
   #3. number_of_reporting_years_new_val replaces the start value
   #4. this repeats itself, but is delayed by 100 milliseconds each time using invalidateLater
-  observe({
-    invalidateLater(100, session)
-    isolate({
-      if(number_of_reporting_years_start_val() < number_of_reporting_years) {
-        number_of_reporting_years_new_val <- number_of_reporting_years_start_val()+1
-        number_of_reporting_years_start_val(number_of_reporting_years_new_val)
-      }
-    })
-  })
+  #observe({
+  #  invalidateLater(100, session)
+  #  isolate({
+  #    if(number_of_reporting_years_start_val() < number_of_reporting_years) {
+  #      number_of_reporting_years_new_val <- number_of_reporting_years_start_val()+1
+  #      number_of_reporting_years_start_val(number_of_reporting_years_new_val)
+  #    }
+  #  })
+  #})
   
   output$years_reported <- renderText({
     #output length of vector of unique values from report_year column
-    paste(number_of_reporting_years_start_val())
+    #paste(number_of_reporting_years_start_val())
+    
+    paste(length(unique(data_sheet_energy_transformed$data_year)))
     })
   
   ##########################################################################
@@ -86,23 +88,26 @@ server <- function(input, output, session) {
   ##########################################################################
   
   #calculate the number of companies reporting by getting the length of the companies vector from global
-  number_of_companies_reporting <- length(unique_companies)
+  #number_of_companies_reporting <- length(unique_companies)
   
   #assign function for counter
-  number_of_companies_reporting_start_val <- reactiveVal(0)
+  #number_of_companies_reporting_start_val <- reactiveVal(0)
   
-  observe({
-    invalidateLater(100, session)
-    isolate({
-      if(number_of_companies_reporting_start_val() < number_of_companies_reporting) {
-        number_of_companies_reporting_new_val <- number_of_companies_reporting_start_val()+1
-        number_of_companies_reporting_start_val(number_of_companies_reporting_new_val)
-      }
-    })
-  })
+  #observe({
+  #  invalidateLater(100, session)
+  #  isolate({
+  #    if(number_of_companies_reporting_start_val() < number_of_companies_reporting) {
+  #      number_of_companies_reporting_new_val <- number_of_companies_reporting_start_val()+1
+  #      number_of_companies_reporting_start_val(number_of_companies_reporting_new_val)
+  #    }
+  #  })
+  #})
   
   output$companies_reporting <- renderText({
-    paste(number_of_companies_reporting_start_val())
+    #paste(number_of_companies_reporting_start_val())
+    
+    #remove below and uncomment above to readd counter
+    paste(length(unique_companies))
     })
   
   ########################################################################################
@@ -115,24 +120,26 @@ server <- function(input, output, session) {
     filter(energy_reporting_scope == "Multiple Data Centers" | energy_reporting_scope == "Single Data Center" ) %>% 
     filter(data_year == (max(data_year)-1))
   
-  total_data_center_electricity_use_reported <- round(sum(total_data_center_electricity_use_reported$electricity_converted)/1000000000, 1)
+  #total_data_center_electricity_use_reported <- round(sum(total_data_center_electricity_use_reported$electricity_converted)/1000000000, 1)
   
   #assign function for counter
-  total_data_center_electricity_use_reported_start_val <- reactiveVal(0)
+  #total_data_center_electricity_use_reported_start_val <- reactiveVal(0)
   
-  observe({
-    invalidateLater(25, session)
-    isolate({
-      if(total_data_center_electricity_use_reported_start_val() < total_data_center_electricity_use_reported) {
-        total_data_center_electricity_use_reported_new_val <- total_data_center_electricity_use_reported_start_val()+1
-        total_data_center_electricity_use_reported_start_val(total_data_center_electricity_use_reported_new_val)
-      }
-    })
-  })
+  #observe({
+  #  invalidateLater(25, session)
+  #  isolate({
+  #    if(total_data_center_electricity_use_reported_start_val() < total_data_center_electricity_use_reported) {
+  #      total_data_center_electricity_use_reported_new_val <- total_data_center_electricity_use_reported_start_val()+1
+  #      total_data_center_electricity_use_reported_start_val(total_data_center_electricity_use_reported_new_val)
+  #    }
+  #  })
+  #})
   
   #Render total data center energy use reported in second most recent year in UI"
   output$energy_reported <- renderText({
-    paste(total_data_center_electricity_use_reported_start_val(), "TWh")
+    #paste(total_data_center_electricity_use_reported_start_val(), "TWh")
+    
+    paste(round(sum(total_data_center_electricity_use_reported$electricity_converted)/1000000000, 1), "TWh")
   })
   
   #Render "Data Center Electricity Use Reported In <1 year minus the latest year in reporting> in UI"
