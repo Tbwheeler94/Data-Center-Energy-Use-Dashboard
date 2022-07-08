@@ -137,7 +137,7 @@ server <- function(input, output, session) {
   
   #Render "Data Center Electricity Use Reported In <1 year minus the latest year in reporting> in UI"
   output$energy_reported_text <- renderText({
-    paste("Data Center Electricty Use Reported In", (max(data_sheet_energy_transformed$data_year)-1))
+    paste("Data Center Electricity Use Reported In", (max(data_sheet_energy_transformed$data_year)-1))
   })
   
 ###########################################################################################################################################################
