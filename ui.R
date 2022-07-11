@@ -235,6 +235,23 @@ lease_cloud_network_page <- makePage(
   )
 )
 
+########################################################
+############## PUE TRENDS PAGE #########################
+########################################################
+
+pue_trends_page <- makePage(
+  div(
+    Stack(style = "text-align: center; padding: 25px", Text("Industry PUE Trends", variant = "xxLarge", style = "color: #137AD1;")),
+    br(),
+    Grid(
+      GridItem(class = "ms-md12 ms-lg2 ms-xl3",
+               HighlightsCard()), #add dropdowns inside HighlightsCard when ready
+      GridItem(class = "ms-md12 ms-lg10 ms-xl9",
+               HighlightsCard()) #add graph inside HighlightsCard when ready, specify height in css styling
+    )
+  )
+)
+
 ##############################################
 ######### COMPANY ANALYSIS PAGE ##############
 ##############################################
@@ -518,7 +535,8 @@ navigation <- Nav(
              list(id = 'industry-trends-first-element', name = 'Energy Reporting Trends', url = '#!/reporting-trends', key = 'reporting-trends', icon = 'Trending12'),
              list(name = 'Energy Data Trends', url = '#!/energy-data-trends', key = 'data-trends', icon = 'Trending12'),
              list(name = 'Reporting Timeline', url = '#!/reporting-timeline', key = 'reporting-timeline', icon = 'TimelineProgress'),
-             list(id = 'industry-trends-last-element', name = 'Industry Relationships', url = '#!/lease-cloud-network', key = "lease-cloud-network", icon = "SplitObject")), 
+             list(name = 'Industry Relationships', url = '#!/lease-cloud-network', key = "lease-cloud-network", icon = "SplitObject"),
+             list(id = 'industry-trends-last-element', name = 'PUE Trends', url = '#!/pue-trends', key = 'pue-trends', icon = 'BIDashboard')), 
            isExpanded = FALSE
            ),
       list(name = 'Company Analysis', url = '#!/company-analysis', key = 'analysis', icon = 'ExploreData'),
@@ -561,6 +579,7 @@ router <- make_router(
   route("energy-data-trends", energy_data_trends),
   route("reporting-timeline", reporting_timeline_page),
   route("lease-cloud-network", lease_cloud_network_page),
+  route("pue-trends", pue_trends_page),
   route("company-analysis", company_analysis_page),
   route("methods", methods_page),
   route("contact-us", contact_page),
@@ -582,7 +601,7 @@ ui <- #secure_app(head_auth = tags$script(inactivity), #authentication
                  useWaiter(), 
                  waiterPreloader(html = preloader_html, color = "#c6e1f7", fadeout = 50),
                  autoWaiter(id = c(#add loading animations for home page
-                                   "years_reported", "companies reporting", "energy_reported",
+                                   "years_reported", "companies_reporting", "energy_reported",
                                     #add loading animations to industry trend graphs
                                    "transparency_graph", "data_centerplot", "company_wide_plot_1",
                                    "company_wide_plot_2", "company_wide_plot_3", "company_wide_plot_4",
