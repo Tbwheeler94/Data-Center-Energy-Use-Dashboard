@@ -14,6 +14,7 @@ source(here("R", "IndustryTrendsPlots", "industryTrendsCompanyWide5Plot.R"))
 source(here("R", "IndustryTrendsPlots", "industryTrendsTransparencyPlot.R"))
 source(here("R", "IndustryTrendsPlots", "industryTrendsTimelinePlot.R"))
 source(here("R", "IndustryTrendsPlots", "industryTrendsLeaseCloudNetworkPlot.R"))
+source(here("R", "IndustryTrendsPlots", "industryTrendsPUETrendsPlot.R"))
 source(here("R", "CompanyProfilePlots", "companyProfileTransparencyOverTimePlot.R"))
 
 #Server code
@@ -436,6 +437,29 @@ server <- function(input, output, session) {
   output$lease_cloud_network <- renderVisNetwork({
     buildIndustryTrendsLeaseCloudNetworkPlot()
   })
+  
+  #######################
+  ### PUE Trends Plot ###
+  #######################
+  
+  #Generate list of unique companies from PUE sheet
+  unique_companies_pue <- list()
+  list_of_pue_companies <- str_subset(sort(unique(data_sheet_pue_raw$company), decreasing = FALSE),"")
+  
+  for (i in 1:length(list_of_pue_companies)) {
+    
+    unique_companies_pue[[i]]<- list(key = {list_of_pue_companies[i]}, 
+                             text = {list_of_pue_companies[i]})
+  }
+  
+  data_sheet_pue_filtered <- reactive({
+    data_sheet_raw_pue %>% filter(company == input$selected_company_pue)
+  })
+  
+  output$pue_trends_plot <- renderPlotly({
+    buildIndustryTrendsPUETrends(data_sheet_pue_filtered())
+  })
+  
   
 ###########################################################################################################################################################
 ###########################################################################################################################################################

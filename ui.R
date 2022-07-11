@@ -245,7 +245,14 @@ pue_trends_page <- makePage(
     br(),
     Grid(
       GridItem(class = "ms-md12 ms-lg2 ms-xl3",
-               HighlightsCard()), #add dropdowns inside HighlightsCard when ready
+               HighlightsCard(
+                 Dropdown.shinyInput("selected_company_pue", 
+                                     options = unique_companies_pue,
+                                     value = "Google",
+                                     placeHolder = "Google",
+                                     dropdownWidth = 150,
+                                     style = "width: 150px; margin: auto; font-size: 12pt;")
+               )), #add dropdowns inside HighlightsCard when ready
       GridItem(class = "ms-md12 ms-lg10 ms-xl9",
                HighlightsCard()) #add graph inside HighlightsCard when ready, specify height in css styling
     )
