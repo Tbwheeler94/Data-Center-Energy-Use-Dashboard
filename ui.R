@@ -539,14 +539,14 @@ navigation <- Nav(
            expandAriaLabel = 'Expand Industry Trends',
            collapseAriaLabel = 'Collapse Industry Trends',
            links = list(
-             list(id = 'industry-trends-first-element', name = 'Energy Reporting Trends', url = '#!/reporting-trends', key = 'reporting-trends', icon = 'Trending12'),
+             list(id = 'industry-trends-first-element', name = 'Energy Reporting Trends', url = '#!/reporting-trends', key = 'reporting-trends', icon = 'ReportDocument'),
              list(name = 'Energy Data Trends', url = '#!/energy-data-trends', key = 'data-trends', icon = 'Trending12'),
              list(name = 'Reporting Timeline', url = '#!/reporting-timeline', key = 'reporting-timeline', icon = 'TimelineProgress'),
              list(name = 'Industry Relationships', url = '#!/lease-cloud-network', key = "lease-cloud-network", icon = "SplitObject"),
              list(id = 'industry-trends-last-element', name = 'PUE Trends', url = '#!/pue-trends', key = 'pue-trends', icon = 'BIDashboard')), 
            isExpanded = FALSE
            ),
-      list(name = 'Company Analysis', url = '#!/company-analysis', key = 'analysis', icon = 'ExploreData'),
+      list(name = 'Single Company Analysis', url = '#!/company-analysis', key = 'analysis', icon = 'ExploreData'),
       list(name = 'Methods', url = '#!/methods', key = 'methods', icon = 'Settings'),
       list(name = 'Contact Us', url = '#!/contact-us', key = 'contact', icon = 'Send'),
       list(name = 'About This Project', url = '#!/about-us', key = 'about', icon = 'TestBeakerSolid'),

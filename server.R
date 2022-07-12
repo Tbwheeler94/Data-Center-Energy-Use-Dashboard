@@ -442,16 +442,6 @@ server <- function(input, output, session) {
   ### PUE Trends Plot ###
   #######################
   
-  #Generate list of unique companies from PUE sheet
-  unique_companies_pue <- list()
-  list_of_pue_companies <- str_subset(sort(unique(data_sheet_pue_raw$company), decreasing = FALSE),"")
-  
-  for (i in 1:length(list_of_pue_companies)) {
-    
-    unique_companies_pue[[i]]<- list(key = {list_of_pue_companies[i]}, 
-                             text = {list_of_pue_companies[i]})
-  }
-  
   data_sheet_pue_filtered <- reactive({
     data_sheet_raw_pue %>% filter(company == input$selected_company_pue)
   })
@@ -822,7 +812,12 @@ server <- function(input, output, session) {
   
   #change to methods page when the learn more button is clicked
   #onclick('learn-more', selected_nav <- 'method')
-  onclick('learn-more', change_page('/methods', session = shiny::getDefaultReactiveDomain(), mode = "push"))
+  
+  change_to_methods <- function() {
+    change_page('/methods', session = shiny::getDefaultReactiveDomain(), mode = "push")
+    updateNavbarPage(session = shiny::getDefaultReactiveDomain(), inputId = "sidenav", selected = "methods")
+    }
+  onclick('learn-more', change_to_methods())
   
   #output$selected_nav <- renderText({ selected_nav })
   

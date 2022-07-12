@@ -223,6 +223,16 @@ for (i in 1:length(industry_trends_years)) {
                                text = {industry_trends_years[i]})
 }
 
+#Generate list of unique companies from PUE sheet
+unique_companies_pue <- list()
+list_of_pue_companies <- str_subset(sort(unique(data_sheet_pue_raw$company), decreasing = FALSE),"")
+
+for (i in 1:length(list_of_pue_companies)) {
+  
+  unique_companies_pue[[i]]<- list(key = {list_of_pue_companies[i]}, 
+                                   text = {list_of_pue_companies[i]})
+}
+
 ##################################################
 ########### Tab 4 - Company Profiles #############
 ##################################################
