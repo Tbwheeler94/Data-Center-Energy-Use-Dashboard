@@ -39,7 +39,7 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
   industry_transparency$energy_reporting_scope[industry_transparency$energy_reporting_scope == "Total Operations"] <- "Reported Company Wide Electricity"
   industry_transparency$energy_reporting_scope[industry_transparency$fuel_1_type == "Total Energy Use"] <- "Reported Company Wide Energy"
   industry_transparency$energy_reporting_scope[industry_transparency$energy_reporting_scope == ""] <- "No Reporting of Data"
-  industry_transparency$energy_reporting_scope[industry_transparency$energy_reporting_scope == "No Reporting of Data" & industry_transparency$data_year == max(na.omit(data_sheet_energy_raw$report_year))] <- "Pending Data Submission"
+  industry_transparency$energy_reporting_scope[industry_transparency$energy_reporting_scope == "No Reporting of Data" & industry_transparency$data_year == max(na.omit(data_sheet_energy_transformed$data_year))] <- "Pending Data Submission"
   industry_transparency <- industry_transparency %>% select(-c(fuel_1_type)) %>% filter(company %in% company_profile$company_name)
   industry_transparency <- industry_transparency[order(industry_transparency$company),]
   industry_transparency$company <- factor(industry_transparency$company, levels=rev(unique(industry_transparency$company)))
@@ -50,6 +50,17 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
   industry_transparency$data_year <- paste0("01/01/", industry_transparency$data_year)
   industry_transparency$data_year <- as.Date(industry_transparency$data_year, "%d/%m/%Y")
   
+  industry_transparency$energy_reporting_scope <- factor(industry_transparency$energy_reporting_scope, 
+                                                        levels=c("Reported Data Center Electricity",
+                                                                 "Reported Company Wide Electricity",
+                                                                 "Reported Company Wide Energy",
+                                                                 "No Reporting of Data",
+                                                                 "Pending Data Submission"))
+  
+  status_levels <- c("Reported Data Center Electricity", "Reported Company Wide Electricity",
+                     "Reported Company Wide Energy", "No Reporting of Data", "Pending Data Submission")
+  status_colors <- c("#3BCA6D", "#77945C", "#FF6865", "#ED2938", "#B88C8C")
+  
   p <- ggplot(industry_transparency, aes(x=data_year, y=company, 
                                          text=paste("Company: ", company, "\nData Year: ", 
                                                     format(data_year, format="%Y"), 
@@ -57,6 +68,7 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
     geom_tile(aes(fill=energy_reporting_scope), height=0.75) +
     labs(energy_reporting_scope="Reporting Scope") +
     scale_x_continuous(expand = expansion(mult = c(0.01,0))) +
+    scale_fill_manual(values=status_colors, labels=status_levels, drop=FALSE) +
     theme(
       legend.text=element_text(size=10),
       axis.line.x=element_blank(),
