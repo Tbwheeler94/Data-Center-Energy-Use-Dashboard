@@ -235,7 +235,7 @@ for (i in 1:length(list_of_pue_companies)) {
 
 #Generate list of unique scopes from PUE sheet
 unique_scopes_pue <- list()
-list_of_pue_scopes <- c("Global", "Individual Locations")
+list_of_pue_scopes <- c("Fleet Wide", "Individual Locations")
 
 for (i in 1:length(list_of_pue_scopes)) {
   

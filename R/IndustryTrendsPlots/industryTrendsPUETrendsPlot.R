@@ -4,7 +4,7 @@ buildIndustryTrendsPUETrends <- function(data_sheet_pue_filtered, selected_compa
     mutate(geographical_scope_clean = case_when(
       geographical_scope %in% c("Global", "Global ", "United States", "U.S", "Europe", 
                                 "Americas", "Asia Pacific", "Europe, Middle East, Africa",
-                                "Global - internal data centers", "Global - external data centers") ~ "Global",
+                                "Global - internal data centers", "Global - external data centers") ~ "Fleet Wide",
       !(geographical_scope %in% c("Global", "Global ", "United States", "U.S", "Europe", 
                                   "Americas", "Asia Pacific", "Europe, Middle East, Africa",
                                   "Global - internal data centers", "Global - external data centers")) ~ "Individual Locations"
@@ -17,7 +17,7 @@ buildIndustryTrendsPUETrends <- function(data_sheet_pue_filtered, selected_compa
     mutate(geographical_scope_clean = case_when(
       geographical_scope %in% c("Global", "Global ", "United States", "U.S", "Europe", 
                                 "Americas", "Asia Pacific", "Europe, Middle East, Africa",
-                                "Global - internal data centers", "Global - external data centers") ~ "Global",
+                                "Global - internal data centers", "Global - external data centers") ~ "Fleet Wide",
       !(geographical_scope %in% c("Global", "Global ", "United States", "U.S", "Europe", 
                                   "Americas", "Asia Pacific", "Europe, Middle East, Africa",
                                   "Global - internal data centers", "Global - external data centers")) ~ "Individual Locations"

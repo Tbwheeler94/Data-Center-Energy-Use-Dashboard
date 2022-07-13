@@ -253,8 +253,8 @@ pue_trends_page <- makePage(
                                      style = "width: 150px; margin: auto; font-size: 12pt;"),
                  Dropdown.shinyInput("selected_scope_pue",
                                      options = unique_scopes_pue,
-                                     value = "Global",
-                                     placeHolder = "Global",
+                                     value = "Fleet Wide",
+                                     placeHolder = "Fleet Wide",
                                      style = "width: 150px; margin: auto; font-size: 12pt;")
                  # Checkbox.shinyInput("selected_company_pue",
                  #                     options = unique_companies_pue,
