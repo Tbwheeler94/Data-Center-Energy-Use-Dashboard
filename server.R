@@ -737,7 +737,7 @@ server <- function(input, output, session) {
     
     #If the dataframe output from the reactive electricity dataset is not empty then insert the dataset into a datatable, else show the no_data datatable
     if(nrow(selected_company_electricity_use_filter) != 0) {
-      datatable(selected_company_electricity_use_filter, rownames = FALSE, options = list(dom = 't', columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
+      datatable(selected_company_electricity_use_filter, escape = FALSE, rownames = FALSE, options = list(dom = 't', columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
         formatStyle('category', 'format', textAlign = styleEqual(c(0, 1), c('right', 'left')), fontStyle = styleEqual(c(0, 1), c('italic', 'normal')))
     } else {
       shinyjs::hide(selector = "div#electricity-use-table")
@@ -754,7 +754,7 @@ server <- function(input, output, session) {
     selected_company_fuel_use_filter <- buildCompanyProfileFuelUsePlot(input$selected_company, methodology_table_lookup())
     
     if(nrow(selected_company_fuel_use_filter) != 0) {
-      datatable(selected_company_fuel_use_filter, rownames = FALSE, options = list(dom = 't', columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
+      datatable(selected_company_fuel_use_filter, escape = FALSE, rownames = FALSE, options = list(dom = 't', columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
         formatStyle('category', 'format', textAlign = styleEqual(c(0, 1), c('right', 'left')), fontStyle = styleEqual(c(0, 1), c('italic', 'normal')))
     } else {
       shinyjs::hide(selector = "div#other-fuel-use-table")
@@ -771,7 +771,7 @@ server <- function(input, output, session) {
     selected_company_ns_energy_use_filter <- buildCompanyProfileNonSpecifiedEnergyUsePlot(input$selected_company, methodology_table_lookup())
     
     if(nrow(selected_company_ns_energy_use_filter) != 0) {
-      datatable(selected_company_ns_energy_use_filter, rownames = FALSE, options = list(dom = 't', columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
+      datatable(selected_company_ns_energy_use_filter, escape = FALSE, rownames = FALSE, options = list(dom = 't', columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
         formatStyle('category', 'format', textAlign = styleEqual(c(0, 1), c('right', 'left')), fontStyle = styleEqual(c(0, 1), c('italic', 'normal')))
     } else {
       shinyjs::hide(selector = "div#ns-energy-use-table")
@@ -788,7 +788,7 @@ server <- function(input, output, session) {
     selected_company_pue_filter <- buildCompanyProfilePUEPlot(input$selected_company, methodology_table_lookup())
     
     if(nrow(selected_company_pue_filter) != 0) {
-      datatable(selected_company_pue_filter, rownames = FALSE, options = list(dom = 't', autoWidth = TRUE, columnDefs = list(list(width = '300px',targets = c(0))), scrollY=200, scrollCollapse=TRUE))
+      datatable(selected_company_pue_filter, escape = FALSE, rownames = FALSE, options = list(dom = 't', autoWidth = TRUE, columnDefs = list(list(width = '300px',targets = c(0))), scrollY=200, scrollCollapse=TRUE))
     } else {
       shinyjs::hide(selector = "div#pue-table")
     }

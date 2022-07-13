@@ -80,7 +80,8 @@ buildCompanyProfileNonSpecifiedEnergyUsePlot <- function(selected_company, metho
       relocate(c(format, category), .before = '2007') %>% 
       mutate_if(is.numeric, ~ifelse(. == 0, "", .)) %>% 
       mutate_if(is.character, ~ifelse(. == "0" | . == "0*", "", .)) %>% 
-      mutate_if(is.character, ~ifelse(. == "0%" | . == "Inf", "NA", .)) %>% 
+      mutate_if(is.character, ~ifelse(. == "0%" | . == "Inf", "NA", .)) %>%
+      mutate_if(is.character, ~ifelse(grepl("*", ., fixed = TRUE), paste0("<p class=\"data-title help\" data-title=\"data was inferred, see methodology table below for details\"\">",.,"</p>"), .)) %>% 
       mutate(format = c(1,0,0,1,1))
   }
   

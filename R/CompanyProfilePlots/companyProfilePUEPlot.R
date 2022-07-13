@@ -37,7 +37,8 @@ buildCompanyProfilePUEPlot <- function(selected_company, methodology_table_looku
       add_column(!!!set_names(as.list(rep(0, length(extra_years_pue))),nm=extra_years_pue)) %>% 
       select(sort(tidyselect::peek_vars())) %>% 
       relocate(c("Facility Scope and Location"), .before = '2007') %>% 
-      mutate_if(is.numeric, ~ifelse(. == 0 | . == "0*", "", .))
+      mutate_if(is.numeric, ~ifelse(. == 0 | . == "0*", "", .)) %>% 
+      mutate_if(is.character, ~ifelse(grepl("*", ., fixed = TRUE), paste0("<p class=\"data-title help\" data-title=\"data was inferred, see methodology table below for details\"\">",.,"</p>"), .))
   }
   
   selected_company_pue_filter

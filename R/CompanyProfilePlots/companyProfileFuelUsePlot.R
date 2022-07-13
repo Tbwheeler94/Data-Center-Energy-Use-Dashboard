@@ -77,6 +77,7 @@ buildCompanyProfileFuelUsePlot <- function(selected_company, methodology_table_l
       select(sort(tidyselect::peek_vars())) %>% 
       relocate(c(format, category), .before = '2007') %>% 
       mutate_if(is.numeric, ~ifelse(. == 0 | . == "0*", "", .)) %>% 
+      mutate_if(is.character, ~ifelse(grepl("*", ., fixed = TRUE), paste0("<p class=\"data-title help\" data-title=\"data was inferred, see methodology table below for details\"\">",.,"</p>"), .)) %>% 
       mutate(format = c(1,0,0))
   }
   selected_company_fuel_use_filter
