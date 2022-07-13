@@ -443,13 +443,12 @@ server <- function(input, output, session) {
   #######################
   
   data_sheet_pue_filtered <- reactive({
-    data_sheet_raw_pue %>% filter(company == input$selected_company_pue)
+    data_sheet_pue_raw %>% filter(company == input$selected_company_pue)
   })
   
   output$pue_trends_plot <- renderPlotly({
-    buildIndustryTrendsPUETrends(data_sheet_pue_filtered())
+    buildIndustryTrendsPUETrends(data_sheet_pue_raw, input$selected_company_pue, input$selected_scope_pue)
   })
-  
   
 ###########################################################################################################################################################
 ###########################################################################################################################################################

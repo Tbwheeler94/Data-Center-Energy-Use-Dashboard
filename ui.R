@@ -246,15 +246,26 @@ pue_trends_page <- makePage(
     Grid(
       GridItem(class = "ms-md12 ms-lg2 ms-xl3",
                HighlightsCard(
-                 Dropdown.shinyInput("selected_company_pue", 
+                 Dropdown.shinyInput("selected_company_pue",
                                      options = unique_companies_pue,
                                      value = "Google",
                                      placeHolder = "Google",
-                                     dropdownWidth = 150,
+                                     style = "width: 150px; margin: auto; font-size: 12pt;"),
+                 Dropdown.shinyInput("selected_scope_pue",
+                                     options = unique_scopes_pue,
+                                     value = "Global",
+                                     placeHolder = "Global",
                                      style = "width: 150px; margin: auto; font-size: 12pt;")
+                 # Checkbox.shinyInput("selected_company_pue",
+                 #                     options = unique_companies_pue,
+                 #                     value = FALSE,
+                 #                     style = "width: 150px; margin: auto; font-size: 12pt;")
                )), #add dropdowns inside HighlightsCard when ready
       GridItem(class = "ms-md12 ms-lg10 ms-xl9",
-               HighlightsCard()) #add graph inside HighlightsCard when ready, specify height in css styling
+               HighlightsCard(
+                 br(),
+                 plotlyOutput('pue_trends_plot', width = "auto")
+               )) #add graph inside HighlightsCard when ready, specify height in css styling
     )
   )
 )

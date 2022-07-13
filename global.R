@@ -233,6 +233,16 @@ for (i in 1:length(list_of_pue_companies)) {
                                    text = {list_of_pue_companies[i]})
 }
 
+#Generate list of unique scopes from PUE sheet
+unique_scopes_pue <- list()
+list_of_pue_scopes <- c("Global", "Individual Locations")
+
+for (i in 1:length(list_of_pue_scopes)) {
+  
+  unique_scopes_pue[[i]]<- list(key = {list_of_pue_scopes[i]}, 
+                                   text = {list_of_pue_scopes[i]})
+}
+
 ##################################################
 ########### Tab 4 - Company Profiles #############
 ##################################################
