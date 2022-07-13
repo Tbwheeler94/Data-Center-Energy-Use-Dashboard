@@ -83,10 +83,11 @@ buildCompanyProfileSourcesAssessedTable <- function(data_sheet_energy_transforme
     rename_with(toupper)
   
   # reorder sources_assessed columns based on this order
-  col_order <- c("data_year", "ESG Report", "CSR Report", "Annual Report", "Web Page", "Data Sheet", "SEC Filing", "Other")
-  col_order_upper <- toupper(col_order)
+  col_order <- c("data_year", "Sustainability Report", "Annual Report", "Web Page", "Data Sheet", "SEC Filing", "Other")
   dummy_report_type <- which(!(col_order %in% colnames(sources_assessed)))
   report_not_found <- paste(col_order[dummy_report_type], collapse=", ")
+  report_found <- col_order[which(col_order %in% colnames(sources_assessed))]
+  report_found_upper <- toupper(report_found)
   message <- paste0("List of Report Types Not Found for ", selected_company, ": ", report_not_found)
   # for (i in 1:length(dummy_report_type)) {
   #   if (col_order[dummy_report_type[i]] != "Other") {
@@ -96,8 +97,8 @@ buildCompanyProfileSourcesAssessedTable <- function(data_sheet_energy_transforme
   #   }
   #   yes_no_table[col_order_upper[dummy_report_type[i]]] <- ""
   # }
-  # sources_assessed <- sources_assessed[,col_order]
-  # yes_no_table <- yes_no_table[,col_order_upper]
+  sources_assessed <- sources_assessed[,report_found]
+  yes_no_table <- yes_no_table[,report_found_upper]
   
   # combine two data frames but keep track of no. of columns before and after cbind
   initial_column_count <- ncol(sources_assessed)
