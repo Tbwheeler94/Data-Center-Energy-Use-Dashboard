@@ -5,7 +5,8 @@ source(here("R", "CompanyProfilePlots", "companyProfileNonSpecifiedEnergyUsePlot
 source(here("R", "CompanyProfilePlots", "companyProfilePUEPlot.R"))
 source(here("R", "CompanyProfilePlots", "companyProfileMethodologyTable.R"))
 source(here("R", "CompanyProfilePlots", "companyProfileSourcesAssessedTable.R"))
-source(here("R", "IndustryTrendsPlots", "industryTrendsDataCenterPlot.R"))
+source(here("R", "IndustryTrendsPlots", "industryTrendsDataCenter1Plot.R"))
+source(here("R", "IndustryTrendsPlots", "industryTrendsDataCenter2Plot.R"))
 source(here("R", "IndustryTrendsPlots", "industryTrendsCompanyWide1Plot.R"))
 source(here("R", "IndustryTrendsPlots", "industryTrendsCompanyWide2Plot.R"))
 source(here("R", "IndustryTrendsPlots", "industryTrendsCompanyWide3Plot.R"))
@@ -223,6 +224,33 @@ server <- function(input, output, session) {
   energy_use_final <- energy_use_final %>%
     group_by(company,data_year,energy_reporting_scope,level_of_ownership)
   
+  energy_use_final_by_year <- energy_use_final %>%
+    group_by(company,data_year) %>%
+    dplyr::summarise(electricity_converted = sum(electricity_converted)) %>%
+    as.data.frame()
+  energy_use_final_by_year <- energy_use_final_by_year %>%
+    group_by(company,data_year)
+  
+  energy_use_final$TWH_level <- ""
+  
+  for (i in 1:nrow(energy_use_final)) {
+    if (i != nrow(energy_use_final) 
+        && energy_use_final[i,"company"] == energy_use_final[i+1,"company"]
+        && energy_use_final[i,"data_year"] == energy_use_final[i+1,"data_year"]) {
+      if (energy_use_final[i,"electricity_converted"] + energy_use_final[i+1,"electricity_converted"] < 1000000000) {
+        energy_use_final[i,"TWH_level"] <- "Below"
+        energy_use_final[i+1,"TWH_level"] <- "Below"
+      } else {
+        energy_use_final[i,"TWH_level"] <- "At or Above"
+        energy_use_final[i+1,"TWH_level"] <- "At or Above"
+      }
+    } else if (energy_use_final[i,"TWH_level"] == "" && energy_use_final[i,"electricity_converted"] < 1000000000) {
+        energy_use_final[i,"TWH_level"] <- "Below"
+    } else if (energy_use_final[i,"TWH_level"] == "" && energy_use_final[i,"electricity_converted"] >= 1000000000) {
+      energy_use_final[i,"TWH_level"] <- "At or Above"
+    }
+  }
+  
   energy_use_final <- energy_use_final %>%
     filter(data_year %in% input$input_year, energy_reporting_scope %in% input$input_reporting_scope)
   
@@ -237,14 +265,16 @@ server <- function(input, output, session) {
   observeEvent(input$input_reporting_scope, {
     
     if(input$input_reporting_scope == "Company Wide") { 
-      shinyjs::hide(selector = "div#data-center-plots")
+      shinyjs::hide(selector = "div#data-center-plot-1")
+      shinyjs::hide(selector = "div#data-center-plot-2")
       shinyjs::show(selector = "div#company-wide-plot-1")
       shinyjs::show(selector = "div#company-wide-plot-2")
       shinyjs::show(selector = "div#company-wide-plot-3")
       shinyjs::show(selector = "div#company-wide-plot-4")
       shinyjs::show(selector = "div#company-wide-plot-5")
     } else if (input$input_reporting_scope == "Data Centers") {
-      shinyjs::show(selector = "div#data-center-plots")
+      shinyjs::show(selector = "div#data-center-plot-1")
+      shinyjs::show(selector = "div#data-center-plot-2")
       shinyjs::hide(selector = "div#company-wide-plot-1")
       shinyjs::hide(selector = "div#company-wide-plot-2")
       shinyjs::hide(selector = "div#company-wide-plot-3")
@@ -257,24 +287,25 @@ server <- function(input, output, session) {
   observeEvent(input$input_year, {
     
     if(input$input_reporting_scope == "Company Wide") { 
-    shinyjs::show(selector = "div#company-wide-plot-1")
-    shinyjs::show(selector = "div#company-wide-plot-2")
-    shinyjs::show(selector = "div#company-wide-plot-3")
-    shinyjs::show(selector = "div#company-wide-plot-4")
-    shinyjs::show(selector = "div#company-wide-plot-5")
-    shinyjs::hide(selector = "div#data-center-plots")
+      shinyjs::show(selector = "div#company-wide-plot-1")
+      shinyjs::show(selector = "div#company-wide-plot-2")
+      shinyjs::show(selector = "div#company-wide-plot-3")
+      shinyjs::show(selector = "div#company-wide-plot-4")
+      shinyjs::show(selector = "div#company-wide-plot-5")
+      shinyjs::hide(selector = "div#data-center-plot-1")
+      shinyjs::hide(selector = "div#data-center-plot-2")
+    } else if(input$input_reporting_scope == "Data Centers") { 
+      shinyjs::hide(selector = "div#company-wide-plot-1")
+      shinyjs::hide(selector = "div#company-wide-plot-2")
+      shinyjs::hide(selector = "div#company-wide-plot-3")
+      shinyjs::hide(selector = "div#company-wide-plot-4")
+      shinyjs::hide(selector = "div#company-wide-plot-5")
+      shinyjs::show(selector = "div#data-center-plot-1")
+      shinyjs::show(selector = "div#data-center-plot-2")
     }
     
   })
   
-  ##################################
-  ### Generate Data Center Plot ####
-  ##################################
-  
-  output$data_centerplot <- renderPlot({
-      buildIndustryTrendsDataCenterPlot(energy_use_final())
-  })
-    
   ##################################################
   ### Generate Company Wide Subdataset and Plots ###
   ##################################################
@@ -296,6 +327,45 @@ server <- function(input, output, session) {
       89.9*nrow(input) + 35.5
     }
   }
+  
+  ##################################
+  ### Generate Data Center Plot ####
+  ##################################
+  
+  energy_use_L1_1 <- reactive({ 
+    energy_use_final() %>% 
+      filter(TWH_level == "Below")
+  })
+  
+  data_center_plot_1_height <- reactive({
+    company_wide_graph_height(energy_use_L1_1())
+  })
+  
+  output$data_centerplot_1 <- renderPlot({
+      if (nrow(energy_use_L1_1()) != 0) {
+        buildIndustryTrendsDataCenter1Plot(energy_use_L1_1())
+      } else {
+        shinyjs::hide(selector = "div#data-center-plot-1")
+      }
+    }, height = reactive({data_center_plot_1_height()}))
+  
+  energy_use_L1_2 <- reactive({ 
+    energy_use_final() %>% 
+      filter(TWH_level == "At or Above")
+  })
+  
+  data_center_plot_2_height <- reactive({
+    company_wide_graph_height(energy_use_L1_2())
+  })
+  
+  output$data_centerplot_2 <- renderPlot({
+    if (nrow(energy_use_L1_2()) != 0) {
+      buildIndustryTrendsDataCenter2Plot(energy_use_L1_2())
+    } else {
+      shinyjs::hide(selector = "div#data-center-plot-2")
+    }
+  }, height = reactive({data_center_plot_2_height()}))
+    
   ###########################
   ### Company Wide Plot 1 ###
   ###########################

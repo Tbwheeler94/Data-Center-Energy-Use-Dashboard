@@ -1,4 +1,4 @@
-buildIndustryTrendsDataCenterPlot <- function(energy_use_final) {
+buildIndustryTrendsDataCenter2Plot <- function(energy_use_final) {
   # install.packages('gdata')
   # library(gdata)
   
@@ -10,16 +10,15 @@ buildIndustryTrendsDataCenterPlot <- function(energy_use_final) {
       theme_classic() +
       scale_fill_brewer(palette = "Greens") +
       scale_y_discrete(position = "left") +
-      scale_x_continuous(breaks = c(0, 200000000, 400000000,600000000, 800000000, 1000000000, 
-                                    1200000000, 1400000000, 1600000000, 1800000000, 2000000000), 
-                         label = c("0", "200 GWh", "400 GWh", "600 GWh", "800 GWh", "1 TWh", 
-                                   "1.2 TWh", "1.4 TWh", "1.6 TWh", "1.8 TWh", "2 TWh"), 
+      scale_x_continuous(breaks = c(1000000000, 2000000000, 3000000000, 4000000000, 5000000000, 6000000000,
+                                    7000000000, 8000000000), 
+                         label = c("1 TWh", "2 TWh", "3 TWh", "4 TWh", "5 TWh", "6 TWh", "7 TWh", "8 TWh"), 
                          position = 'top',
                          expand = expansion(mult=c(0.01,0))) + 
-                         #breaks = energy_use_final$electricity_converted, 
-                         #expand = expansion(mult = c(0, 0.05)), 
-                         #labels = humanReadable(energy_use_final$electricity_converted, standard = "Unix", sep = "")) +
-                         #labels = scales::label_number_si()) +
+      #breaks = energy_use_final$electricity_converted, 
+      #expand = expansion(mult = c(0, 0.05)), 
+      #labels = humanReadable(energy_use_final$electricity_converted, standard = "Unix", sep = "")) +
+      #labels = scales::label_number_si()) +
       theme(legend.position = "right",
             legend.title=element_text(size = 18),
             legend.text=element_text(size = 16),

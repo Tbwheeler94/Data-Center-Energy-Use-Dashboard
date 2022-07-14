@@ -165,11 +165,17 @@ energy_data_trends <- makePage(
                  )
         )
       ),
-      Grid(id = 'data-center-plots',
+      Grid(id = 'data-center-plot-1',
            GridItem(class = "ms-sm12 ms-xl12",
-                    GraphCard(Text("Data Center Electricity Use At Scale of KWh to 1s of TWh", variant = "large", style = "text-align: center;"),
+                    GraphCard(Text("Data Center Electricity Use At Scale of KWh to 100s of GWh", variant = "large", style = "text-align: center;"),
                               br(),
-                              plotOutput('data_centerplot')))
+                              plotOutput('data_centerplot_1')))
+      ),
+      Grid(id = 'data-center-plot-2',
+           GridItem(class = "ms-sm12 ms-xl12",
+                    GraphCard(Text("Data Center Electricity Use At Scale of 1s of TWh", variant = "large", style = "text-align: center;"),
+                              br(),
+                              plotOutput('data_centerplot_2')))
       ),
       Grid(id = 'company-wide-plot-1',
            GridItem(class = "ms-sm12 ms-xl12",
