@@ -6,9 +6,8 @@ buildIndustryTrendsDataCenter2Plot <- function(energy_use_final) {
     # create plot for data center electricity usage
     ggplot(energy_use_final, aes(x=electricity_converted)) + 
       geom_bar(aes(y=company, fill=level_of_ownership), 
-               position=position_stack(reverse = TRUE), stat="identity") +
+               position=position_stack(reverse = TRUE), stat="identity", fill="lightblue") +
       theme_classic() +
-      scale_fill_brewer(palette = "Greens") +
       scale_y_discrete(position = "left") +
       scale_x_continuous(breaks = c(1000000000, 2000000000, 3000000000, 4000000000, 5000000000, 6000000000,
                                     7000000000, 8000000000), 
