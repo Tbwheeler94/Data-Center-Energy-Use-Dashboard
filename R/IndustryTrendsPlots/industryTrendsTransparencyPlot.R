@@ -112,8 +112,8 @@ buildIndustryTrendsTransparencyPlot <- function(data_sheet_energy_raw) {
   data_of_transparency$energy_reporting_scope[data_of_transparency$energy_reporting_scope == "Multiple Data Centers" ] <- "Reported Data Center Electricity"
   data_of_transparency$energy_reporting_scope[data_of_transparency$energy_reporting_scope == "Total Operations"] <- "Reported Company Wide Electricity"
   data_of_transparency$energy_reporting_scope[data_of_transparency$fuel_1_type == "Total Energy Use"] <- "Reported Company Wide Total Energy"
-  data_of_transparency$energy_reporting_scope[data_of_transparency$energy_reporting_scope == "0"] <- "No Reporting of Data"
-  data_of_transparency$energy_reporting_scope[data_of_transparency$energy_reporting_scope == "No Reporting of Data" & data_of_transparency$data_year == max(na.omit(data_sheet_energy_transformed$data_year))] <- "Pending Data Submission"
+  data_of_transparency$energy_reporting_scope[data_of_transparency$energy_reporting_scope == "0"] <- "No Reporting of Publicly Available Data"
+  data_of_transparency$energy_reporting_scope[data_of_transparency$energy_reporting_scope == "No Reporting of Publicly Available Data" & data_of_transparency$data_year == max(na.omit(data_sheet_energy_transformed$data_year))] <- "Pending Data Submission"
   
   # stack single data center/multiple data center data frames on top of each other
   data_of_transparency_final <- data_of_transparency %>%
@@ -129,11 +129,11 @@ buildIndustryTrendsTransparencyPlot <- function(data_sheet_energy_raw) {
                                                         levels=c("Reported Data Center Electricity",
                                                                  "Reported Company Wide Electricity",
                                                                  "Reported Company Wide Total Energy",
-                                                                 "No Reporting of Data",
+                                                                 "No Reporting of Publicly Available Data",
                                                                  "Pending Data Submission"))
   
   status_levels <- c("Reported Data Center Electricity", "Reported Company Wide Electricity",
-                     "Reported Company Wide Total Energy", "No Reporting of Data", "Pending Data Submission")
+                     "Reported Company Wide Total Energy", "No Reporting of Publicly Available Data", "Pending Data Submission")
   status_colors <- c("#3BCA6D", "#77945C", "#FF6865", "#ED2938", "#B88C8C")
   
   p <- ggplot(data_of_transparency, aes(x=data_year, 
