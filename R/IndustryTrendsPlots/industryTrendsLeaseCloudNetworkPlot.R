@@ -23,9 +23,9 @@ buildIndustryTrendsLeaseCloudNetworkPlot <- function() {
     distinct() %>% 
     mutate(leaser.type = ifelse(id %in% full_network_links$from, 1, 2)) %>% 
     mutate(leaser.type = ifelse(id %in% leasers_and_leasees, 3, leaser.type)) %>% 
-    mutate(leaser.type.name = case_when(leaser.type == 1 ~ "Leasor Only",
-                                        leaser.type == 2 ~ "Leasee Only",
-                                        leaser.type == 3 ~ "Leasor and Leasee")) %>% 
+    mutate(leaser.type.name = case_when(leaser.type == 1 ~ "Lessor Only",
+                                        leaser.type == 2 ~ "Lessee Only",
+                                        leaser.type == 3 ~ "Lessor and Lessee")) %>% 
     left_join(node_size, by = c("id" = "to")) %>% 
     replace(is.na(.), 1) %>% 
     rename(size = n) %>% 

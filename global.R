@@ -104,13 +104,14 @@ data_sheet_energy_raw <- read.xlsx2(here('source_data',"data.xlsx"), 1, #the "1"
                                 
                                 #specify column data types to ensure proper recognition
                                 colClasses=c("character","integer","Date","Date","character", #columns 1-5
-                                             "character", "character","character", "character", "numeric","integer", #columns 6-11
-                                             "character", "character","character","character", "character", "numeric", #columns 12-16 (Fuel 1)
-                                             "integer", "character","character","character","numeric", #columns 15-20 (Fuel 2)
-                                             "integer", "character","character","character","numeric", #columns 21-25 (Fuel 3)
-                                             "integer", "character","character","character","numeric", #columns 26-30 (Fuel 4)
-                                             "integer", "character","character","character","numeric", #columns 31-35 (Fuel 5)
-                                             "integer", "character", "character")) #column 36, 37 (Notes)
+                                             "character", "character","character", "character", "character", #columns 6-10
+                                             "numeric","integer", "character", "character", "character", #columns 11-15
+                                             "character","character", "character", "numeric", "integer", #columns 16-20
+                                             "character","character","character","numeric", "integer", #columns 21-25
+                                             "character","character","character","numeric", "integer", #columns 26-30
+                                             "character","character","character","numeric", "integer", #columns 31-35
+                                             "character","character","character","numeric","integer", #columns 36-40
+                                             "character", "character", "character")) #column 41,42,43
 
 #move second row values to column headers, put header names in tidy format
 data_sheet_energy_raw <- data_sheet_energy_raw %>% 
@@ -123,18 +124,18 @@ colnames(data_sheet_energy_raw) [3] <- 'period_covered_start_date'
 colnames(data_sheet_energy_raw) [4] <- 'period_covered_end_date'
 colnames(data_sheet_energy_raw) [5] <- 'energy_reporting_scope'
 colnames(data_sheet_energy_raw) [6] <- 'level_of_ownership'
-colnames(data_sheet_energy_raw) [10] <- 'electricity_value'
-colnames(data_sheet_energy_raw) [11] <- 'unit_scale'
-colnames(data_sheet_energy_raw) [17] <- 'fuel_1_value'
-colnames(data_sheet_energy_raw) [18] <- 'fuel_1_unit_scale'
-colnames(data_sheet_energy_raw) [22] <- 'fuel_2_value'
-colnames(data_sheet_energy_raw) [23] <- 'fuel_2_unit_scale'
-colnames(data_sheet_energy_raw) [27] <- 'fuel_3_value'
-colnames(data_sheet_energy_raw) [28] <- 'fuel_3_unit_scale'
-colnames(data_sheet_energy_raw) [32] <- 'fuel_4_value'
-colnames(data_sheet_energy_raw) [33] <- 'fuel_4_unit_scale'
-colnames(data_sheet_energy_raw) [37] <- 'fuel_5_value'
-colnames(data_sheet_energy_raw) [38] <- 'fuel_5_unit_scale'
+colnames(data_sheet_energy_raw) [11] <- 'electricity_value'
+colnames(data_sheet_energy_raw) [12] <- 'unit_scale'
+colnames(data_sheet_energy_raw) [19] <- 'fuel_1_value'
+colnames(data_sheet_energy_raw) [20] <- 'fuel_1_unit_scale'
+colnames(data_sheet_energy_raw) [24] <- 'fuel_2_value'
+colnames(data_sheet_energy_raw) [25] <- 'fuel_2_unit_scale'
+colnames(data_sheet_energy_raw) [29] <- 'fuel_3_value'
+colnames(data_sheet_energy_raw) [30] <- 'fuel_3_unit_scale'
+colnames(data_sheet_energy_raw) [34] <- 'fuel_4_value'
+colnames(data_sheet_energy_raw) [35] <- 'fuel_4_unit_scale'
+colnames(data_sheet_energy_raw) [39] <- 'fuel_5_value'
+colnames(data_sheet_energy_raw) [40] <- 'fuel_5_unit_scale'
   
 ######################################################################################################
 ### Import Sheet 2 from data.xlsx which contains company profile data ###

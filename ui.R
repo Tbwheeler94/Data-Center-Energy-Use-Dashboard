@@ -128,7 +128,10 @@ reporting_trends_page <- makePage(
     Grid(
       GridItem(class = "ms-sm12 ms-xl12", 
                CompanyCard(
-                 plotlyOutput('transparency_graph')
+                 plotlyOutput('transparency_graph'),
+                 Stack(horizontal = TRUE, style = "justify-content: end; color: #137AD1;", 
+                       TooltipHost(content = "This graph displays the change in the number of companies reporting at different levels of transparency through time. The total height of the stacked bars changes through time because some companies were not founded until after 2007.",
+                                   ActionButton(iconProps = list("iconName" = "Info"), text = "About This Table", style = "color: #137AD1;")))
                )
       )
     )
@@ -627,13 +630,13 @@ ui <- #secure_app(head_auth = tags$script(inactivity), #authentication
                  autoWaiter(id = c(#add loading animations for home page
                                    "years_reported", "companies_reporting", "energy_reported",
                                     #add loading animations to industry trend graphs
-                                   "transparency_graph", "data_centerplot", "company_wide_plot_1",
+                                   "transparency_graph", "data_centerplot_1", "data_centerplot_2", "company_wide_plot_1",
                                    "company_wide_plot_2", "company_wide_plot_3", "company_wide_plot_4",
                                    "company_wide_plot_5", "reporting_timeline",
                                    #add loading animations to company analysis page
-                                   "company_profiles_title_1", "company_profiles_title_2", "company_profiles_title_3", "company_profiles_title_4",
-                                   "selected_company_stats", "reported_energy_levels", "data_standards", "other_metrics",
-                                   "electricity_use_table", "other_fuel_use_table",
+                                   "company_profiles_title_1", "company_profiles_title_2", "company_profiles_title_3", 
+                                   "company_profiles_title_4", "selected_company_stats", "reported_energy_levels", 
+                                   "data_standards", "other_metrics", "electricity_use_table", "other_fuel_use_table",
                                    "ns_energy_use_table", "pue_table", "transparency_over_time_plot", "sources_table"), 
                             html = spin_2(), color = transparent(1), fadeout = TRUE),
                  useShinyjs(),
