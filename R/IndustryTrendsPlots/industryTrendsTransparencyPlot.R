@@ -134,7 +134,7 @@ buildIndustryTrendsTransparencyPlot <- function(data_sheet_energy_raw) {
   
   status_levels <- c("Reported Data Center Electricity", "Reported Company Wide Electricity",
                      "Reported Company Wide Total Energy", "No Reporting of Publicly Available Data", "Pending Data Submission")
-  status_colors <- c("#3BCA6D", "#77945C", "#FF6865", "#ED2938", "#B88C8C")
+  status_colors <- c("#3BCA6D", "#77945C", "#FF6865", "#ED2938", "#999999")
   
   p <- ggplot(data_of_transparency, aes(x=data_year, 
         text=paste("Data Year: ", data_year, "\nNumber of Companies: ", value))) + 
