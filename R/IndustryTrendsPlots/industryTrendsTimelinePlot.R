@@ -67,14 +67,13 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
                                                     "\nReporting Scope: ", energy_reporting_scope))) +
     geom_tile(aes(fill=energy_reporting_scope), height=0.75) +
     labs(energy_reporting_scope="Reporting Scope") +
-    scale_x_continuous(expand = expansion(mult = c(0.01,0))) +
+    #scale_x_continuous(expand = expansion(mult = c(0.01,0))) +
+    scale_x_date(date_breaks = "1 year", date_labels =  "%Y") +
     scale_fill_manual(values=status_colors, labels=status_levels, drop=FALSE) +
     theme(
       legend.text=element_text(size=10),
-      axis.line.x=element_blank(),
-      axis.text.x=element_blank(),
       axis.title.x=element_blank(),
-      axis.ticks.x=element_blank(),
+      axis.text.x=element_text(size=12),
       axis.title.y=element_blank(),
       axis.text.y=element_text(size=12),
       axis.line.y=element_line(colour="black", size=1),
