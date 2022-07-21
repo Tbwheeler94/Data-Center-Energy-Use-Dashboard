@@ -27,15 +27,20 @@ server <- function(input, output, session) {
   ########################################################
   ########################################################
   
+  
+  
   ########################################################
   ###### Initialize waiter loading bar on full page ######
   ########################################################
   
-  #add full screen 3 second waiter
-  #w = Waiter$new()
-  #w$show()
-  #Sys.sleep(3)
-  #w$hide() 
+  # Create a Progress object
+  progress <- shiny::Progress$new()
+  
+  on.exit(progress$close())
+  
+  progress$set(message = "Initializing application", value = 0)
+  
+  # Close the progress when this reactive exits (even if there's an error)
   
   ########################################################
   ###### Check login credentials (authetication) #########
@@ -441,6 +446,8 @@ server <- function(input, output, session) {
     }
   
   }, height = reactive({company_wide_plot_3_height()}))
+  
+  progress$inc(.25, detail = "Updating graphs")
   
   ###########################
   ### Company Wide Plot 4 ###
@@ -883,8 +890,10 @@ server <- function(input, output, session) {
   #onclick('learn-more', selected_nav <- 'method')
   
   change_to_methods <- function() {
+    #change page to methods
     change_page('/methods', session = shiny::getDefaultReactiveDomain(), mode = "push")
-    updateNavbarPage(session = shiny::getDefaultReactiveDomain(), inputId = "sidenav", selected = "methods")
+    #update selected nav
+    runjs(glue("$('.ms-Nav-link[title={'Methods'}]')[0].click()"))
     }
   onclick('learn-more', change_to_methods())
   
@@ -1070,6 +1079,8 @@ server <- function(input, output, session) {
   
   #when Submit button is click, run function above
   onclick('contact-form-submit', contactFormSubmission())
+  
+  progress$inc(.25, detail = "Final touches")
   
   router$server(input, output, session)
 }
