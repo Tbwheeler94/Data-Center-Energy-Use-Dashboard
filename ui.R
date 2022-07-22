@@ -255,20 +255,16 @@ pue_trends_page <- makePage(
     Grid(
       GridItem(class = "ms-md12 ms-lg2 ms-xl3",
                HighlightsCard(
-                 Dropdown.shinyInput("selected_company_pue",
-                                     options = unique_companies_pue,
-                                     value = "Google",
-                                     placeHolder = "Google",
-                                     style = "width: 150px; margin: auto; font-size: 12pt;"),
+                 Text("Select Company", variant = "xLarge", style = "text-align: center;"),
+                 NormalPeoplePicker.shinyInput("selected_company_pue",
+                                     options = unique_companies_pue),
+                 br(),
+                 Text("Select Company", variant = "xLarge", style = "text-align: center;"),
                  Dropdown.shinyInput("selected_scope_pue",
                                      options = unique_scopes_pue,
                                      value = "Fleet Wide",
                                      placeHolder = "Fleet Wide",
                                      style = "width: 150px; margin: auto; font-size: 12pt;")
-                 # Checkbox.shinyInput("selected_company_pue",
-                 #                     options = unique_companies_pue,
-                 #                     value = FALSE,
-                 #                     style = "width: 150px; margin: auto; font-size: 12pt;")
                )), #add dropdowns inside HighlightsCard when ready
       GridItem(class = "ms-md12 ms-lg10 ms-xl9",
                HighlightsCard(
