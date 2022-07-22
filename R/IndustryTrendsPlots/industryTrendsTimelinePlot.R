@@ -44,11 +44,8 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
   industry_transparency <- industry_transparency[order(industry_transparency$company),]
   industry_transparency$company <- factor(industry_transparency$company, levels=rev(unique(industry_transparency$company)))
   
-  list_of_companies <- unique(industry_transparency$company)
-  list_of_companies
-  
-  industry_transparency$data_year <- paste0("01/01/", industry_transparency$data_year)
-  industry_transparency$data_year <- as.Date(industry_transparency$data_year, "%d/%m/%Y")
+  #industry_transparency$data_year <- paste0("01/01/", industry_transparency$data_year)
+  #industry_transparency$data_year <- as.Date(industry_transparency$data_year, "%d/%m/%Y")
   
   industry_transparency$energy_reporting_scope <- factor(industry_transparency$energy_reporting_scope, 
                                                         levels=c("Reported Data Center Electricity",
@@ -63,17 +60,19 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
   
   p <- ggplot(industry_transparency, aes(x=data_year, y=company, 
                                          text=paste("Company: ", company, "\nData Year: ", 
-                                                    format(data_year, format="%Y"), 
+                                                    #format(data_year, format="%Y"), 
+                                                    data_year,
                                                     "\nReporting Scope: ", energy_reporting_scope))) +
     geom_tile(aes(fill=energy_reporting_scope), height=0.75) +
     labs(energy_reporting_scope="Reporting Scope") +
-    #scale_x_continuous(expand = expansion(mult = c(0.01,0))) +
-    scale_x_date(date_breaks = "1 year", date_labels =  "%Y") +
+    scale_x_continuous(breaks = pretty_breaks(n=length(unique_years)), expand = expansion(mult = c(0.01,0))) +
+    #scale_x_date(date_breaks = "1 year", date_labels =  "%Y") +
     scale_fill_manual(values=status_colors, labels=status_levels, drop=FALSE) +
     theme(
       legend.text=element_text(size=10),
       axis.title.x=element_blank(),
-      axis.text.x=element_text(size=12),
+      axis.text.x=element_text(size=10),
+      axis.line.x=element_line(colour="black", size=1),
       axis.title.y=element_blank(),
       axis.text.y=element_text(size=12),
       axis.line.y=element_line(colour="black", size=1),
@@ -82,9 +81,9 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
   
   #ggplotly(p, tooltip = "text")
   
-  timeline_plot_height <- length(unique_companies) * 30
+  timeline_plot_height <- length(unique_companies) * 35
   
   return(ggplotly(p, height=timeline_plot_height, tooltip = "text") %>% config(displayModeBar = T)  %>%
-           plotly::layout(legend = list(orientation = "h", x = 0.05, y = 1.1)))
+           plotly::layout(legend = list(orientation = "h", x = 0.05, y = 1.1), xaxis = list(side ="top")))
   
 }
