@@ -259,7 +259,7 @@ pue_trends_page <- makePage(
                  NormalPeoplePicker.shinyInput("selected_company_pue",
                                      options = unique_companies_pue),
                  br(),
-                 Text("Select Company", variant = "xLarge", style = "text-align: center;"),
+                 Text("Select PUE Scope", variant = "xLarge", style = "text-align: center;"),
                  Dropdown.shinyInput("selected_scope_pue",
                                      options = unique_scopes_pue,
                                      value = "Fleet Wide",
