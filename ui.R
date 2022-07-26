@@ -128,7 +128,7 @@ reporting_trends_page <- makePage(
     Grid(
       GridItem(class = "ms-sm12 ms-xl12", 
                CompanyCard(
-                 plotlyOutput('transparency_graph'),
+                 girafeOutput('transparency_graph'),
                  Stack(horizontal = TRUE, style = "justify-content: end; color: #137AD1;", 
                        TooltipHost(content = "This graph displays the change in the number of companies reporting at different levels of transparency through time. The total height of the stacked bars changes through time because some companies were not founded until after 2007.",
                                    ActionButton(iconProps = list("iconName" = "Info"), text = "About This Table", style = "color: #137AD1;")))

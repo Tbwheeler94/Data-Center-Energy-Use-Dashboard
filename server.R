@@ -164,7 +164,7 @@ server <- function(input, output, session) {
   ###### Generate transparency graph #####################
   ########################################################
   
-  output$transparency_graph <- renderPlotly({
+  output$transparency_graph <- renderGirafe({
     buildIndustryTrendsTransparencyPlot(data_sheet_energy_raw)
   })
   

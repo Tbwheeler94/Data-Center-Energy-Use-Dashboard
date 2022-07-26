@@ -30,6 +30,7 @@ library(data.table)
 library(plotly)
 library(visNetwork) 
 library(scales)
+library(ggiraph)
 
 #initiating core shiny, multiple web-pages and fluent ui styling, respectively
 library(shiny.router)
