@@ -152,19 +152,28 @@ buildIndustryTrendsTransparencyPlot <- function(data_sheet_energy_raw) {
   #   ylab("Number of Companies") +
   #   labs(fill = "Energy Reporting Scope")
   
-  list_of_descriptions <- c("companies report electricity for single or multiple data centers", 
-                            "companies report electricity for the entire company", 
-                            "companies report an accumulation of energy (electricity, gas, etc) for the entire company", 
-                            "companies do not have a report consiting of quantitative energy data", 
-                            "companies may not have released a report for the previous year yet")
+  list_of_descriptions <- c("companies report electricity\nfor single or multiple data centers", 
+                            "companies report electricity\nfor the entire company", 
+                            "companies report an accumulation\nof energy (electricity, gas, etc) for the entire company", 
+                            "companies do not have a report\nconsiting of quantitative energy data", 
+                            "companies may not have released\na report for the previous year yet")
+  
+  change_to_methods <- function() {
+    #change page to methods
+    change_page('/methods', session = shiny::getDefaultReactiveDomain(), mode = "push")
+    #update selected nav
+    runjs(glue("$('.ms-Nav-link[title={'Methods'}]')[0].click()"))
+  }
   
   p <- ggplot(data_of_transparency, aes(x=data_year, y=value, data_id=row_num)) +
     geom_bar_interactive(aes(fill=energy_reporting_scope, tooltip=paste0("Data Year: ", data_year, "\nNumber of Companies: ", value)), 
                          position="stack", stat="identity") +
     theme_classic() +
     theme(
-          legend.title = element_text(size=14),
-          legend.text = element_text(size=12)
+      axis.title = element_text(size=14),
+      axis.text = element_text(size=11),
+      legend.title = element_text(size=14),
+      legend.text = element_text(size=12)
     ) +
     scale_y_continuous(expand = expansion(mult = c(0.01,0))) +
     xlab("Year") +
@@ -214,10 +223,9 @@ buildIndustryTrendsTransparencyPlot <- function(data_sheet_energy_raw) {
       }
     )
   
-  x <- girafe(ggobj = p)
+  x <- girafe(ggobj = p, width_svg = 13)
   x <- girafe_options(x,
-                      opts_sizing(rescale = TRUE, width = 1),
-                      opts_hover_inv(css = "opacity:0.1;"),
+                      #opts_hover_inv(css = "opacity:0.1;"),
                       #opts_hover(css = "fill:black;stroke:black;r:5pt;"),
                       opts_hover(css = "stroke-width:2;"),
                       opts_hover_key(girafe_css("stroke:blue", text="stroke:none;fill:blue")))
