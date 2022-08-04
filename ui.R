@@ -564,8 +564,8 @@ navigation <- Nav(
            ),
       list(name = 'Single Company Analysis', url = '#!/company-analysis', key = 'analysis', icon = 'ExploreData'),
       list(name = 'Methods', url = '#!/methods', key = 'methods', icon = 'Settings'),
-      list(name = 'Contact Us', url = '#!/contact-us', key = 'contact', icon = 'Send'),
-      list(name = 'About This Project', url = '#!/about-us', key = 'about', icon = 'TestBeakerSolid'),
+      list(name = 'Contact', url = '#!/contact-us', key = 'contact', icon = 'Send'),
+      list(name = 'About', url = '#!/about-us', key = 'about', icon = 'TestBeakerSolid'),
       list(name = 'ISA Lab Website', url = 'https://carlobroderick.wixsite.com/isalab', key = 'isal', icon = 'MiniLink')
     ))
   ),
@@ -621,7 +621,7 @@ preloader_html <- makePage(div(img(src='https://static.wixstatic.com/media/1ab7d
 ui <- #secure_app(head_auth = tags$script(inactivity), #authentication
                  fluentPage(
                  tags$title("Data Center Energy Dashboard"),
-                 useWaiter(), 
+                 useWaiter(),
                  waiterPreloader(html = preloader_html, color = "#c6e1f7", fadeout = 50),
                  autoWaiter(id = c(#add loading animations for home page
                                    "years_reported", "companies_reporting", "energy_reported",

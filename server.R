@@ -27,7 +27,22 @@ server <- function(input, output, session) {
   ########################################################
   ########################################################
   
+  ###################################################################################
+  ###### Dynamically update nav bar selection when user clicks back or forward ######
+  ###################################################################################
   
+  links_lookup <- data.frame(
+    route = c("/", "data-center-energy", "reporting-trends", "energy-data-trends", "reporting-timeline", "lease-cloud-network", "pue-trends", "company-analysis", "methods", "contact-us", "about-us", "isal"),
+    name = c('Home', 'Data Center Energy 101', 'Energy Reporting Trends', 'Energy Data Trends', 'Reporting Timeline', 'Industry Relationships', 'PUE Trends', 'Single Company Analysis', 'Methods', 'Contact', 'About', 'ISA Lab Website')
+  )
+  
+  shiny::observeEvent(shiny.router::get_page(), {
+    page_title <- shiny.router::get_page()
+    page_title <- links_lookup %>%
+      filter(route == page_title) %>%
+      pull(name)
+    runjs(glue("$('.ms-Nav-link[title=\"{page_title}\"]')[0].click()"))
+  })
   
   ########################################################
   ###### Initialize waiter loading bar on full page ######
@@ -447,7 +462,7 @@ server <- function(input, output, session) {
   
   }, height = reactive({company_wide_plot_3_height()}))
   
-  progress$inc(.25, detail = "Updating graphs")
+  progress$inc(.5, detail = "Updating graphs")
   
   ###########################
   ### Company Wide Plot 4 ###
@@ -883,27 +898,6 @@ server <- function(input, output, session) {
   #Table 12##############################
   # Methodology #########################
   #######################################
-
-  #selected_nav <- 'home'
-  
-  #change to methods page when the learn more button is clicked
-  #onclick('learn-more', selected_nav <- 'method')
-  
-  change_to_methods <- function() {
-    #change page to methods
-    change_page('/methods', session = shiny::getDefaultReactiveDomain(), mode = "push")
-    #update selected nav
-    runjs(glue("$('.ms-Nav-link[title={'Methods'}]')[0].click()"))
-    }
-  onclick('learn-more', change_to_methods())
-  
-  #output$selected_nav <- renderText({ selected_nav })
-  
-  #environment(navigation[["children"]][[2]])[["data"]][["props"]][["value"]][["selectedKey"]] <- "method"
-  
-  #change to contact us page when the report issue button is clicked
-  onclick('report-issue', change_page('/contact-us', session = shiny::getDefaultReactiveDomain(), mode = "push"))
-  #onclick('learnmore', Nav(selectedKey = 'methods'))
   
   output$methodology_table <- renderDataTable({
     
@@ -919,6 +913,26 @@ server <- function(input, output, session) {
     }
 
   })
+  
+  #add interactivity (change page and update nav bar selection) to learn more and contact us buttons when clicked
+  
+  change_to_methods <- function() {
+    #change page to methods
+    change_page('/methods', session = shiny::getDefaultReactiveDomain(), mode = "push")
+    #update selected nav
+    runjs(glue("$('.ms-Nav-link[title={'Methods'}]')[0].click()"))
+  }
+  onclick('learn-more', change_to_methods())
+  
+  #change to contact us page when the report issue button is clicked
+  change_to_contact_us <- function() {
+    #change page to contact-us
+    change_page('/contact-us', session = shiny::getDefaultReactiveDomain(), mode = "push")
+    #update selected nav
+    runjs(glue("$('.ms-Nav-link[title={'Contact'}]')[0].click()"))
+  }
+  
+  onclick('report-issue', change_to_contact_us())
   
   #######################################
   #Table 13##############################
@@ -1080,7 +1094,7 @@ server <- function(input, output, session) {
   #when Submit button is click, run function above
   onclick('contact-form-submit', contactFormSubmission())
   
-  progress$inc(.25, detail = "Final touches")
+  progress$inc(.5, detail = "Final touches")
   
   router$server(input, output, session)
 }
