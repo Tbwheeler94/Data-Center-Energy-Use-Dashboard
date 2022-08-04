@@ -189,9 +189,10 @@ colnames(data_sheet_pue_raw) [6] <- 'pue_value'
 
 
 #Transform raw energy data spreadsheet, filter to include only data newer than 2006 and include only companies that have been checked back to 2007
-data_sheet_energy_transformed <- transformEnergyDataRaw(data_sheet_energy_raw) %>%  #read.csv(here('data', 'data_sheet_energy_transformed.csv'))
+data_sheet_energy_transformed <- transformEnergyDataRaw(data_sheet_energy_raw) %>%
                                     #only include data years after 2006
                                     filter(data_year > 2006) %>% 
+                                    #filter by the list of companies left after data_sheet_company_raw is filtered to include ony companies checked back to 2007
                                     filter(company %in% data_sheet_company_raw$company_name)
 
 ##################################################

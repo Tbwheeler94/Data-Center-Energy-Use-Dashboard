@@ -70,10 +70,6 @@ makePage <- function (contents) {
 home_page <- makePage(
   div(
     Grid(
-      GridItem(class = "ms-sm12 ms-xl12",
-        MainCard(Text('About the data', variant = "xxLarge", style = "text-align: left;"),
-                 Text("We are a team of University of California, Santa Barbara based researchers aiming to increase transparency and understanding of trends in global data center energy use. This website is a dashboard for modelers, policy-makers, and the general public to gain insight into data currently being reported by many of the world largest technology companies. Our visualization uses aggregated energy data primarily collected from publicly disclosed corporate sustainability reports.", variant = "large", style = "text-align: left;"))
-        ),
         GridItem(class = "ms-sm12 ms-xl4",
           HighlightsCard(
             FontIcon(iconName = "Calendar", style = list(fontSize = 60)),
@@ -515,9 +511,8 @@ about_page <- makePage(
   div(
     Grid(
       GridItem(class = "ms-sm12 ms-xl12", style = "text-align: center",
-               MainCard(Text('Section Under Construction', variant = "xxLarge"),
-                        FontIcon(iconName = "ConstructionCone", style = list(fontSize = 80))
-               )
+               MainCard(Text('About the data', variant = "xxLarge", style = "text-align: left;"),
+                        Text("We are a team of University of California, Santa Barbara based researchers aiming to increase transparency and understanding of trends in global data center energy use. This website is a dashboard for modelers, policy-makers, and the general public to gain insight into data currently being reported by many of the world largest technology companies. Our visualization uses aggregated energy data primarily collected from publicly disclosed corporate sustainability reports.", variant = "large", style = "text-align: left;"))
       )
     )
   )

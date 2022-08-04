@@ -228,7 +228,7 @@ buildIndustryTrendsTransparencyPlot <- function(data_sheet_energy_raw) {
                       #opts_hover_inv(css = "opacity:0.1;"),
                       #opts_hover(css = "fill:black;stroke:black;r:5pt;"),
                       opts_hover(css = "stroke-width:2;"),
-                      opts_hover_key(girafe_css("stroke:blue", text="stroke:none;fill:blue")))
+                      opts_hover_key(girafe_css("stroke:blue; cursor: help;", text="stroke:none;fill:blue")))
   x
   
   #ggplotly(p, tooltip = "text")

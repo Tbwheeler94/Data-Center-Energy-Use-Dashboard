@@ -49,12 +49,25 @@ buildIndustryTrendsLeaseCloudNetworkPlot <- function() {
   
   vis.links$arrows <- "from"
   
+  #set up legend
+  
+  lnodes <- data.frame(label = c("Lessor Only", "Lessee Only", "Lessor and  \n Lessee"),
+                       shape = c("circle"), color = c("slategrey", "tomato", "gold"),
+                       title = c("Informations", "Informations", "Informations") , id = 1:3)
+  
+  ledges <- data.frame(color = c("black", "black"),
+                       label = c("leased to", "leased \n from"), arrows =c("to", "from"))
+  
   #plot
   
   visNetwork(vis.nodes, vis.links) %>% 
     visInteraction(navigationButtons = TRUE) %>% 
     visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE) %>%
     visPhysics(solver = "forceAtlas2Based",
-               forceAtlas2Based = list(gravitationalConstant = -100))
+               forceAtlas2Based = list(gravitationalConstant = -100)) %>%
+    visGroups(groupname = "Lessor Only", color = "slategrey") %>%
+    visGroups(groupname = "Lessee Only", color = "tomato") %>%
+    visGroups(groupname = "Lessor and Lessee", color = "gold") %>%
+    visLegend(addEdges = ledges, addNodes = lnodes, useGroups = FALSE, width = .1) 
   
 }
