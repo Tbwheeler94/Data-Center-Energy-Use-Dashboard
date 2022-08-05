@@ -232,14 +232,29 @@ reporting_timeline_page <- makePage(
 ########################################################
 
 lease_cloud_network_page <- makePage(
-  div(
-    Stack(style = "text-align: center; padding: 25px", Text("Network of Data Center Lease/Cloud Providers", variant = "xxLarge", style = "color: #137AD1;")),
-    br(),
-    Stack(style = "text-align: center;", Text("hover to see relationship | click and drag to interact | scroll to zoom", variant = "medium", style = "color: gray;")),
-    visNetworkOutput('lease_cloud_network', height = "71vh")
+  div(style = "text-align: center;",
+      Text("Network of Data Center Lease/Cloud Providers", variant = "xxLarge", style = "color: #137AD1; padding-bottom: 15px;"),
+      br(),
+      reactOutput("network_graph_explainer"),
+      HTML("<button type='button' id='show_network_graph_explainer' class='shiny-bound-input action-button ms-Button ms-Button--action ms-Button--command root-128' data-is-focusable='true' style='background-color: rgb(19, 122, 209); color: white; float: right;'><span class='ms-Button-flexContainer flexContainer-77' data-automationid='splitbuttonprimary'><i data-icon-name='Info' aria-hidden='true' class='ms-Icon root-32 css-87 ms-Button-icon icon-79' style='font-family: FabricMDL2Icons; color: white;'></i><span class='ms-Button-textContainer textContainer-102'><span class='ms-Button-label label-103' id='id__42'>Help</span></span></span></button>"),
+      br(),
+      div(style = "text-align: left;", visNetworkOutput('lease_cloud_network', height = "76vh")),
   )
 )
 
+# <button id='show_network_graph_explainer' class='shiny-bound-input action-button ms-Button ms-Button--primary root-129' data-is-focusable='true' style='float: right;'>
+#   <span class='ms-Button-flexContainer flexContainer-130' data-automationid='splitbuttonprimary'>
+#   <i data-icon-name='Info' aria-hidden='true' class='ms-Icon root-32 css-87 ms-Button-icon icon-79' style='font-family: FabricMDL2Icons; color: white;'></i>
+#   <span class='ms-Button-textContainer textContainer-131'>
+#   <span class='ms-Button-label label-133' style = 'font-weight: normal;'>
+#   Help
+# </span>
+#   </span>
+#   </span>
+#   </button>
+
+# ActionButton(iconProps = list("iconName" = "Info", "styles" = list(root = list("color" = "white;"))), text = "About This Table",
+# style = "color: white; background-color: #137AD1; width: 175px; float: right;"))
 ########################################################
 ############## PUE TRENDS PAGE #########################
 ########################################################
@@ -296,7 +311,7 @@ company_analysis_page <- makePage(
                  PrimaryButton.shinyInput("show_company_energy_reporting_assessment_overview", text = "Read Energy Overview"), style = "margin: auto; margin-top: 10px; margin-bottom: -10px"),
                  #dataTableOutput("selected_company_stats"),
                  div(reactOutput("company_data_center_overview"),
-                     reactOutput("company_energy_reporting_assessment_overview"), style = "width: 200px;")
+                     reactOutput("company_energy_reporting_assessment_overview"))
                )
       )
     ),

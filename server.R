@@ -526,6 +526,37 @@ server <- function(input, output, session) {
   ### Cloud/Lease Providers Network Plot ###
   ##########################################
   
+  network_graph_modal_visible <- reactiveVal(FALSE)
+  observeEvent(input$show_network_graph_explainer, network_graph_modal_visible(TRUE))
+  observeEvent(input$hide_network_graph_explainer, network_graph_modal_visible(FALSE))
+  
+  output$network_graph_explainer <- renderReact({
+    
+    Modal(isOpen = network_graph_modal_visible(),
+          Stack(tokens = list(padding = "25px", childrenGap = "10px"),
+                style = "width: 800px;",
+                div(style = list(display = "flex"),
+                    Text("About the Network Graph", variant = "xLarge"),
+                    div(style = list(flexGrow = 1)),
+                    IconButton.shinyInput("hide_network_graph_explainer", iconProps = list(iconName = "Cancel")),
+                ),
+                Text("Capturing an accurate estimate of global data center energy use is difficult because there is high potential for double counting or hidden energy use.", variant = "large"),
+                Text("These adverse situations occur because many companies using data centers to fulfill their operational goals lease their data center resources to other companies and rely on leasing data center resources from other companies.", variant = "large"),
+                Text("This network graph aims to capture the constellation of industry relationships, the directionality of the relationships, and the variance in the number of relationship across companies.", variant = "large"),
+                br(),
+                Text("Methodology for categorizing companies", variant = "xLarge"),
+                Text(FontIcon(iconName = "SliderHandleSize", style = "margin-right: 10px; vertical-align: middle;"),"The size of a company's circle indicates the number of relationships they have (as a lessor or lessee)", variant = "large"),
+                Text(FontIcon(iconName = "CircleFill", style = "color: slategrey; margin-right: 3px; vertical-align: middle;"),FontIcon(iconName = "CircleFill", style = "color: tomato; margin-right: 3px; vertical-align: middle;"),FontIcon(iconName = "CircleFill", style = "color: gold; margin-right: 10px; vertical-align: middle;"),"The color of a company's circle indicates what type of relationships it has with other companies.", variant = "large"),
+                Text(FontIcon(iconName = "LocationCircle", style = "vertical-align: middle;"),FontIcon(iconName = "DecreaseIndentArrow", style = "vertical-align: middle;"),"An arrow pointing toward a company indicates its leasing data center resources from another company (a lessee)", variant = "large"),
+                Text(FontIcon(iconName = "LocationCircle", style = "vertical-align: middle;"),FontIcon(iconName = "IncreaseIndentArrow", style = "vertical-align: middle;"),"An arrow pointing away from a company indicates its leasing data center resources to another company (a lessor)", variant = "large"),
+                br(),
+                Text("Instructions for navigating", variant = "xLarge"),
+                Text(FontIcon(iconName = "ScrollUpDown", style = "margin-right: 5px; vertical-align: middle;"), "To see a company's relationship more closely, hover cursor over the graph and scroll to zoom.", variant = "large"),
+                Text(FontIcon(iconName = "Touch", style = "margin-right: 5px; vertical-align: middle;"), "Click on a company's circle to see what companies it's connected to.", variant = "large")
+          )
+     )
+  })
+  
   output$lease_cloud_network <- renderVisNetwork({
     buildIndustryTrendsLeaseCloudNetworkPlot()
   })
@@ -722,7 +753,7 @@ server <- function(input, output, session) {
                     IconButton.shinyInput("hide_company_data_center_overview", iconProps = list(iconName = "Cancel")),
                 ),
                 div(Text(company_sheet_selected_company()[1, "company_data_center_overview"], variant = "large")
-                )))
+                ), style = "width: 800px;"))
   })
   
   ##############################
@@ -744,7 +775,7 @@ server <- function(input, output, session) {
                     IconButton.shinyInput("hide_company_energy_reporting_assessment_overview", iconProps = list(iconName = "Cancel")),
                 ),
                 div(Text(company_sheet_selected_company()[1, "energy_reporting_assessment"], variant = "large")
-                )))
+                ), style = "width: 800px;"))
   })
   
   #######################################
