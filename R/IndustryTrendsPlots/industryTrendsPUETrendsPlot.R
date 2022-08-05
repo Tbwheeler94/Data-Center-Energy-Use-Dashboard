@@ -17,13 +17,12 @@ buildIndustryTrendsPUETrends <- function(data_sheet_pue_filtered, selected_compa
     filter(company %in% selected_company & facility_scope_clean %in% selected_scope) %>%
     na.omit()
   
-  
-  p <- ggplot(data=data_sheet_pue_all, aes(x=applicable_year, y=pue_value,
-                                  text=paste("Company: ", company, "\nGeographical Scope: ", geographical_scope,
-                                             "\nPUE Value: ", pue_value, "\n", pue_measurement_level))) +
+  p <- ggplot(data=data_sheet_pue_all, aes(x=applicable_year, y=pue_value, text=paste("Company: ", company, "\nGeographical Scope: ", geographical_scope,
+                                                                                      "\nPUE Value: ", pue_value, "\n", pue_measurement_level))) +
     geom_point(data=data_sheet_pue_all, colour="black", size=1) +
-    geom_point(data=data_sheet_pue_filtered, aes(color=company), size=3) +
-    theme_classic() +
+    geom_point(data=data_sheet_pue_filtered, aes(color=company), size=4) +
+    scale_x_continuous(breaks = pretty_breaks(n=length(unique_years))) +
+    theme_light() +
     xlab("Year") +
     ylab("PUE Value") +
     labs(color = "Companies")
