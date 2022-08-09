@@ -158,25 +158,19 @@ buildIndustryTrendsTransparencyPlot <- function(data_sheet_energy_raw) {
                             "companies do not have a report\nconsiting of quantitative energy data", 
                             "companies may not have released\na report for the previous year yet")
   
-  change_to_methods <- function() {
-    #change page to methods
-    change_page('/methods', session = shiny::getDefaultReactiveDomain(), mode = "push")
-    #update selected nav
-    runjs(glue("$('.ms-Nav-link[title={'Methods'}]')[0].click()"))
-  }
-  
   p <- ggplot(data_of_transparency, aes(x=data_year, y=value, data_id=row_num)) +
     geom_bar_interactive(aes(fill=energy_reporting_scope, tooltip=paste0("Data Year: ", data_year, "\nNumber of Companies: ", value)), 
                          position="stack", stat="identity") +
     theme_classic() +
     theme(
-      axis.title = element_text(size=14),
+      axis.title.x = element_blank(),
+      axis.title.y = element_text(size=14),
       axis.text = element_text(size=11),
       legend.title = element_text(size=14),
-      legend.text = element_text(size=12)
+      legend.text = element_text(size=12),
+      legend.text.align = 0
     ) +
     scale_y_continuous(expand = expansion(mult = c(0.01,0))) +
-    xlab("Year") +
     ylab("Number of Companies") +
     scale_fill_manual_interactive(
       name = label_interactive("Energy Reporting Scope", data_id="legend.title"),
@@ -188,16 +182,6 @@ buildIndustryTrendsTransparencyPlot <- function(data_sheet_energy_raw) {
       data_id = function(breaks) { as.character(breaks)},
       tooltip = function(breaks) { as.character(breaks)},
       drop = FALSE,
-      # data_id = c(`Reported Data Center Electricity` = "Reported Data Center Electricity",
-      #             `Reported Company Wide Electricity` = "Reported Company Wide Electricity",
-      #             `Reported Company Wide Total Energy` = "Reported Company Wide Total Energy",
-      #             `No Reporting of Publicly Available Data` = "No Reporting of Publicly Available Data",
-      #             `Pending Data Submission` = "Pending Data Submission"),
-      # tooltip = c(`Reported Data Center Electricity` = "Reported Data Center Electricity",
-      #             `Reported Company Wide Electricity` = "Reported Company Wide Electricity",
-      #             `Reported Company Wide Total Energy` = "Reported Company Wide Total Energy",
-      #             `No Reporting of Publicly Available Data` = "No Reporting of Publicly Available Data",
-      #             `Pending Data Submission` = "Pending Data Submission")
       onclick = function(breaks) { paste0("alert(\"", as.character(breaks), "\")") },
       labels = function(breaks) {
         lapply(breaks, function(br) {
