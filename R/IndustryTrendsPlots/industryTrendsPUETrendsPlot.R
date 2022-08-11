@@ -22,7 +22,13 @@ buildIndustryTrendsPUETrends <- function(data_sheet_pue_filtered, selected_compa
     geom_point(data=data_sheet_pue_all, colour="black", size=1) +
     geom_point(data=data_sheet_pue_filtered, aes(color=company), size=4) +
     scale_x_continuous(breaks = pretty_breaks(n=length(unique_years))) +
+    scale_y_continuous(breaks = c(0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0)) +
     theme_light() +
+    theme(
+      panel.border = element_blank(),
+      panel.grid.major.y = element_blank(),
+      panel.grid.minor.y = element_blank()
+    ) +
     xlab("Year") +
     ylab("PUE Value") +
     labs(color = "Companies")

@@ -248,15 +248,16 @@ lease_cloud_network_page <- makePage(
 pue_trends_page <- makePage(
   div(
     Stack(style = "text-align: center; padding: 25px", Text("Industry PUE Trends", variant = "xxLarge", style = "color: #137AD1;")),
-    br(),
     Grid(
       reactOutput("pue_graph_explainer"),
-      HTML("<button type='button' id='show_pue_graph_explainer' class='shiny-bound-input action-button ms-Button ms-Button--action ms-Button--command root-128' data-is-focusable='true' style='background-color: rgb(19, 122, 209); color: white; float: right;'><span class='ms-Button-flexContainer flexContainer-77' data-automationid='splitbuttonprimary'><i data-icon-name='Info' aria-hidden='true' class='ms-Icon root-32 css-87 ms-Button-icon icon-79' style='font-family: FabricMDL2Icons; color: white;'></i><span class='ms-Button-textContainer textContainer-102'><span class='ms-Button-label label-103' id='id__42'>Help</span></span></span></button>"),
-      br(),
+      HTML("<button type='button' id='show_pue_graph_explainer' class='shiny-bound-input action-button ms-Button ms-Button--action ms-Button--command root-128' data-is-focusable='true' style='background-color: rgb(19, 122, 209); color: white; float: right;'><span class='ms-Button-flexContainer flexContainer-77' data-automationid='splitbuttonprimary'><i data-icon-name='Info' aria-hidden='true' class='ms-Icon root-32 css-87 ms-Button-icon icon-79' style='font-family: FabricMDL2Icons; color: white;'></i><span class='ms-Button-textContainer textContainer-102'><span class='ms-Button-label label-103' id='id__42'>Help</span></span></span></button>")
+    ),
+    Grid(
       GridItem(class = "ms-md12 ms-lg2 ms-xl3",
                HighlightsCard(
                  Text("Select Company", variant = "xLarge", style = "text-align: center;"),
-                 NormalPeoplePicker.shinyInput("selected_company_pue",
+                 Dropdown.shinyInput("selected_company_pue",
+                                     multiSelect = TRUE,
                                      options = unique_companies_pue),
                  br(),
                  Text("Select PUE Scope", variant = "xLarge", style = "text-align: center;"),
