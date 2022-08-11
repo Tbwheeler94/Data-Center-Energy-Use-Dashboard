@@ -122,6 +122,9 @@ reporting_trends_page <- makePage(
   div(
     Stack(style = "text-align: center; padding: 25px", Text("Trends in Data Center Energy Reporting Transparency", variant = "xxLarge", style = "color: #137AD1;")),
     Grid(
+      reactOutput("transparency_graph_explainer"),
+      HTML("<button type='button' id='show_transparency_graph_explainer' class='shiny-bound-input action-button ms-Button ms-Button--action ms-Button--command root-128' data-is-focusable='true' style='background-color: rgb(19, 122, 209); color: white; float: right;'><span class='ms-Button-flexContainer flexContainer-77' data-automationid='splitbuttonprimary'><i data-icon-name='Info' aria-hidden='true' class='ms-Icon root-32 css-87 ms-Button-icon icon-79' style='font-family: FabricMDL2Icons; color: white;'></i><span class='ms-Button-textContainer textContainer-102'><span class='ms-Button-label label-103' id='id__42'>Help</span></span></span></button>"),
+      br(),
       GridItem(class = "ms-sm12 ms-xl12", 
                CompanyCard(
                  girafeOutput('transparency_graph'),
@@ -175,6 +178,9 @@ energy_data_trends <- makePage(
                                           selected = "Up to 1 TWh")
                  )
         ),
+        reactOutput("energy_data_graph_explainer"),
+        HTML("<button type='button' id='show_energy_data_graph_explainer' class='shiny-bound-input action-button ms-Button ms-Button--action ms-Button--command root-128' data-is-focusable='true' style='background-color: rgb(19, 122, 209); color: white; float: right;'><span class='ms-Button-flexContainer flexContainer-77' data-automationid='splitbuttonprimary'><i data-icon-name='Info' aria-hidden='true' class='ms-Icon root-32 css-87 ms-Button-icon icon-79' style='font-family: FabricMDL2Icons; color: white;'></i><span class='ms-Button-textContainer textContainer-102'><span class='ms-Button-label label-103' id='id__42'>Help</span></span></span></button>"),
+        br(),
         GridItem(class = "ms-sm12 ms-xl9",
                  plotOutput('energy_data_trendsplot'))
       )
@@ -194,6 +200,9 @@ reporting_timeline_page <- makePage(
   div(
     Stack(style = "text-align: center; padding: 25px", Text("Data Center Energy Reporting Transparency Timeline", variant = "xxLarge", style = "color: #137AD1;")),
     Grid(
+      reactOutput("reporting_timeline_explainer"),
+      HTML("<button type='button' id='show_reporting_timeline_explainer' class='shiny-bound-input action-button ms-Button ms-Button--action ms-Button--command root-128' data-is-focusable='true' style='background-color: rgb(19, 122, 209); color: white; float: right;'><span class='ms-Button-flexContainer flexContainer-77' data-automationid='splitbuttonprimary'><i data-icon-name='Info' aria-hidden='true' class='ms-Icon root-32 css-87 ms-Button-icon icon-79' style='font-family: FabricMDL2Icons; color: white;'></i><span class='ms-Button-textContainer textContainer-102'><span class='ms-Button-label label-103' id='id__42'>Help</span></span></span></button>"),
+      br(),
       GridItem(class = "ms-sm12 ms-xl12", 
                Stack(class = "ms-depth-8 timeline-graph",
                  br(),
@@ -241,6 +250,9 @@ pue_trends_page <- makePage(
     Stack(style = "text-align: center; padding: 25px", Text("Industry PUE Trends", variant = "xxLarge", style = "color: #137AD1;")),
     br(),
     Grid(
+      reactOutput("pue_graph_explainer"),
+      HTML("<button type='button' id='show_pue_graph_explainer' class='shiny-bound-input action-button ms-Button ms-Button--action ms-Button--command root-128' data-is-focusable='true' style='background-color: rgb(19, 122, 209); color: white; float: right;'><span class='ms-Button-flexContainer flexContainer-77' data-automationid='splitbuttonprimary'><i data-icon-name='Info' aria-hidden='true' class='ms-Icon root-32 css-87 ms-Button-icon icon-79' style='font-family: FabricMDL2Icons; color: white;'></i><span class='ms-Button-textContainer textContainer-102'><span class='ms-Button-label label-103' id='id__42'>Help</span></span></span></button>"),
+      br(),
       GridItem(class = "ms-md12 ms-lg2 ms-xl3",
                HighlightsCard(
                  Text("Select Company", variant = "xLarge", style = "text-align: center;"),

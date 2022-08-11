@@ -155,7 +155,7 @@ buildIndustryTrendsTransparencyPlot <- function(data_sheet_energy_raw) {
   list_of_descriptions <- c("companies report electricity\nfor single or multiple data centers", 
                             "companies report electricity\nfor the entire company", 
                             "companies report an accumulation\nof energy (electricity, gas, etc) for the entire company", 
-                            "companies do not have a report\nconsiting of quantitative energy data", 
+                            "companies do not have a report\nconsisting of quantitative energy data", 
                             "companies may not have released\na report for the previous year yet")
   
   p <- ggplot(data_of_transparency, aes(x=data_year, y=value, data_id=row_num)) +

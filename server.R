@@ -173,6 +173,25 @@ server <- function(input, output, session) {
   ###### Generate transparency graph #####################
   ########################################################
   
+  transparency_graph_modal_visible <- reactiveVal(FALSE)
+  observeEvent(input$show_transparency_graph_explainer, transparency_graph_modal_visible(TRUE))
+  observeEvent(input$hide_transparency_graph_explainer, transparency_graph_modal_visible(FALSE))
+  
+  output$transparency_graph_explainer <- renderReact({
+    
+    Modal(isOpen = transparency_graph_modal_visible(),
+          Stack(tokens = list(padding = "25px", childrenGap = "10px"),
+                style = "width: 800px;",
+                div(style = list(display = "flex"),
+                    Text("About the Energy Reporting Trends Graph", variant = "xLarge"),
+                    div(style = list(flexGrow = 1)),
+                    IconButton.shinyInput("hide_transparency_graph_explainer", iconProps = list(iconName = "Cancel")),
+                ),
+                Text("This graph displays the change in the number of companies reporting at different levels of transparency through time. The total height of the stacked bars changes through time because some companies were not founded until after 2007.", variant= "large")
+          )
+    )
+  })
+  
   output$transparency_graph <- renderGirafe({
     buildIndustryTrendsTransparencyPlot(data_sheet_energy_raw)
   })
@@ -188,8 +207,26 @@ server <- function(input, output, session) {
   # })
   
   ########################################
-  # Generate reactive energy use graph ############
+  # Generate reactive energy data trends page ############
   ########################################
+  
+  energy_data_graph_modal_visible <- reactiveVal(FALSE)
+  observeEvent(input$show_energy_data_graph_explainer, energy_data_graph_modal_visible(TRUE))
+  observeEvent(input$hide_energy_data_graph_explainer, energy_data_graph_modal_visible(FALSE))
+  
+  output$energy_data_graph_explainer <- renderReact({
+    
+    Modal(isOpen = energy_data_graph_modal_visible(),
+          Stack(tokens = list(padding = "25px", childrenGap = "10px"),
+                style = "width: 800px;",
+                div(style = list(display = "flex"),
+                    Text("About the Energy Data Trends Graph", variant = "xLarge"),
+                    div(style = list(flexGrow = 1)),
+                    IconButton.shinyInput("hide_energy_data_graph_explainer", iconProps = list(iconName = "Cancel")),
+                )
+          )
+    )
+  })
   
   output$energy_data_trendsplot <- renderPlot({
     buildIndustryTrendsEnergyDataPlot(data_sheet_energy_transformed, input$input_year, 
@@ -199,6 +236,24 @@ server <- function(input, output, session) {
   ###############################
   ### Reporting Timeline Plot ###
   ###############################
+  
+  reporting_timeline_modal_visible <- reactiveVal(FALSE)
+  observeEvent(input$show_reporting_timeline_explainer, reporting_timeline_modal_visible(TRUE))
+  observeEvent(input$hide_reporting_timeline_explainer, reporting_timeline_modal_visible(FALSE))
+  
+  output$reporting_timeline_explainer <- renderReact({
+    
+    Modal(isOpen = reporting_timeline_modal_visible(),
+          Stack(tokens = list(padding = "25px", childrenGap = "10px"),
+                style = "width: 800px;",
+                div(style = list(display = "flex"),
+                    Text("About the Reporting Timeline Graph", variant = "xLarge"),
+                    div(style = list(flexGrow = 1)),
+                    IconButton.shinyInput("hide_reporting_timeline_explainer", iconProps = list(iconName = "Cancel")),
+                )
+          )
+    )
+  })
   
   output$reporting_timeline <- renderPlotly({
     buildIndustryTrendsTimelinePlot(data_sheet_energy_transformed)
@@ -246,6 +301,24 @@ server <- function(input, output, session) {
   #######################
   ### PUE Trends Plot ###
   #######################
+  
+  pue_graph_modal_visible <- reactiveVal(FALSE)
+  observeEvent(input$show_pue_graph_explainer, pue_graph_modal_visible(TRUE))
+  observeEvent(input$hide_pue_graph_explainer, pue_graph_modal_visible(FALSE))
+  
+  output$pue_graph_explainer <- renderReact({
+    
+    Modal(isOpen = pue_graph_modal_visible(),
+          Stack(tokens = list(padding = "25px", childrenGap = "10px"),
+                style = "width: 800px;",
+                div(style = list(display = "flex"),
+                    Text("About the PUE Trends Graph", variant = "xLarge"),
+                    div(style = list(flexGrow = 1)),
+                    IconButton.shinyInput("hide_pue_graph_explainer", iconProps = list(iconName = "Cancel")),
+                )
+          )
+    )
+  })
   
   data_sheet_pue_filtered <- reactive({
     data_sheet_pue_raw %>% filter(company == input$selected_company_pue)
