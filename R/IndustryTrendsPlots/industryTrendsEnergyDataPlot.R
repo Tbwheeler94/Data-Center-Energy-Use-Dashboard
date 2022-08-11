@@ -111,6 +111,22 @@ buildIndustryTrendsEnergyDataPlot <- function(data_sheet_energy_transformed, sel
     energy_use_final <- filter(energy_use_final, TWH_level == plot_TWH)
   }
   
+  energy_use_final$energy_reporting_scope <- factor(energy_use_final$energy_reporting_scope, 
+                                                        levels=c("Data Centers",
+                                                                 "Company Wide"))
+  
+  dc_color <- c("#3BCA6D")
+  cw_color <- c("#77945C")
+  dc_and_cw <- c("#3BCA6D", "#77945C")
+  color_labels <- ""
+  if ("Data Centers" %in% selected_scope && "Company Wide" %in% selected_scope) {
+    color_labels <- dc_and_cw
+  } else if ("Data Centers" %in% selected_scope) {
+    color_labels <- dc_color
+  } else if ("Company Wide" %in% selected_scope) {
+    color_labels <- cw_color
+  }
+  
   ggplot(energy_use_final, aes(x=electricity_converted)) + 
     geom_bar(aes(y=company, fill=energy_reporting_scope), 
              position=position_stack(reverse = TRUE), stat="identity") +
@@ -118,7 +134,7 @@ buildIndustryTrendsEnergyDataPlot <- function(data_sheet_energy_transformed, sel
                        label = plot_labels,
                        position='top', 
                        expand = expansion(mult=c(0.01,0))) + 
-    scale_fill_manual(values=c("#3BCA6D", "#77945C")) +
+    scale_fill_manual(values=color_labels) +
     theme_classic() +
     theme(legend.position = "bottom",
           legend.title=element_blank(),
