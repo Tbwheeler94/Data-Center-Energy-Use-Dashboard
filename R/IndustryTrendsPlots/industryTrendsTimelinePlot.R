@@ -26,7 +26,7 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
     }
   }
   
-  company_profile <- data_sheet_company_raw %>% select(company_name, checked_back_to_founding_year_or_2007) %>%
+  company_profile <- data_sheet_company_raw %>% select(company_name, checked_back_to_founding_year_or_2007, company_founding_year) %>%
     filter(checked_back_to_founding_year_or_2007 == "Yes")
   
   industry_transparency <- industry_transparency %>% distinct(company, data_year, .keep_all = TRUE)
@@ -41,6 +41,12 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
   industry_transparency$energy_reporting_scope[industry_transparency$energy_reporting_scope == ""] <- "No Reporting of Publicly Available Data"
   industry_transparency$energy_reporting_scope[industry_transparency$energy_reporting_scope == "No Reporting of Publicly Available Data" & industry_transparency$data_year == max(na.omit(data_sheet_energy_transformed$data_year))] <- "Pending Data Submission"
   industry_transparency <- industry_transparency %>% select(-c(fuel_1_type)) %>% filter(company %in% company_profile$company_name)
+  # filter companies by founding year after 2007 and existence in industry_transparency dataset, then label as nonexistent years for company
+  company_profile <- company_profile %>% filter(company_founding_year > 2007, company_name %in% industry_transparency$company)
+  for (i in 1:nrow(company_profile)) { 
+    industry_transparency$energy_reporting_scope[industry_transparency$energy_reporting_scope == "No Reporting of Publicly Available Data" & industry_transparency$company == company_profile[i,1] & industry_transparency$data_year < company_profile$company_founding_year] <- "Company Does Not Exist Yet"
+  }
+  
   industry_transparency <- industry_transparency[order(industry_transparency$company),]
   industry_transparency$company <- factor(industry_transparency$company, levels=rev(unique(industry_transparency$company)))
   
@@ -52,11 +58,13 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
                                                                  "Reported Company Wide Electricity",
                                                                  "Reported Company Wide Energy",
                                                                  "No Reporting of Publicly Available Data",
+                                                                 "Company Does Not Exist Yet",
                                                                  "Pending Data Submission"))
   
   status_levels <- c("Reported Data Center Electricity", "Reported Company Wide Electricity",
-                     "Reported Company Wide Energy", "No Reporting of Publicly Available Data", "Pending Data Submission")
-  status_colors <- c("#3BCA6D", "#77945C", "#FF6865", "#ED2938", "#999999")
+                     "Reported Company Wide Energy", "No Reporting of Publicly Available Data", 
+                     "Company Does Not Exist Yet", "Pending Data Submission")
+  status_colors <- c("#3BCA6D", "#77945C", "#FF6865", "#ED2938", "#000000", "#999999")
   
   p <- ggplot(industry_transparency, aes(x=data_year, y=company, 
                                          text=paste("Company: ", company, "\nData Year: ", 
