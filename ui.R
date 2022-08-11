@@ -141,71 +141,48 @@ reporting_trends_page <- makePage(
 energy_data_trends <- makePage(
   
   div(Stack(style = "text-align: center; padding: 25px", Text("Annual Reported Energy Use By Year Across Reporting Companies", variant = "xxLarge", style = "color: #137AD1;")),
-      Grid(
-        GridItem(class = "ms-xl4"),
-        GridItem(class = "ms-sm12 ms-xl4",
+      Grid(id = 'energy-data-trends-plot',
+        GridItem(class = "ms-sm12  ms-xl3",
                  Stack(class = "ms-depth-8",
                        tokens = list(padding = 20, childrenGap = 5),
                        style = 'border-radius: 5px; background-color: white; border-top: 8px solid #137AD1;',
-                       Text("Select Year and Energy Reporting Scope", variant = "xLarge", style = "text-align: center;"),
-                       br(),
+                       Text("Select Year", variant = "xLarge", style = "text-align: center;"),
                        Dropdown.shinyInput("input_year", 
                                            options = unique_years,
                                            value = "2020",
                                            placeHolder = "2020",
                                            dropdownWidth = 150,
                                            style = "width: 150px; margin: auto; font-size: 12pt;"),
-                       Dropdown.shinyInput("input_reporting_scope", 
-                                           options = unique_scope_selection,
-                                           value = "Data Centers",
-                                           placeHolder = "Data Centers",
-                                           dropdownWidth = 150,
-                                           style = "width: 150px; margin: auto; font-size: 12pt;")
+                       br(),
+                       Text("Select Scope(s)", variant = "xLarge", style = "text-align: center;"),
+                       checkboxGroupInput("input_reporting_scope",
+                                          label = h3("Reporting Scopes"),
+                                           choices = list(
+                                             "Data Centers" = "Data Centers",
+                                             "Company Wide" = "Company Wide"
+                                           ),
+                                          selected = "Data Centers"),
+                       br(),
+                       Text("Select Scale(s)", variant = "xLarge", style = "text-align: center;"),
+                       checkboxGroupInput("input_scale",
+                                          label = h3("Scales"),
+                                           choices = list(
+                                             "Up to 1 GWh" = "Up to 1 GWh",
+                                             "Up to 1 TWh" = "Up to 1 TWh",
+                                             "Up to 10 TWh" = "Up to 10 TWh",
+                                             "10+ TWh" = "10+ TWh"
+                                           ),
+                                          selected = "Up to 1 TWh")
                  )
-        )
-      ),
-      Grid(id = 'data-center-plot-1',
-           GridItem(class = "ms-sm12 ms-xl12",
-                    GraphCard(Text("Data Center Electricity Use At Scale of KWh to 100s of GWh", variant = "large", style = "text-align: center;"),
-                              br(),
-                              plotOutput('data_centerplot_1')))
-      ),
-      Grid(id = 'data-center-plot-2',
-           GridItem(class = "ms-sm12 ms-xl12",
-                    GraphCard(Text("Data Center Electricity Use At Scale of 1s of TWh", variant = "large", style = "text-align: center;"),
-                              br(),
-                              plotOutput('data_centerplot_2')))
-      ),
-      Grid(id = 'company-wide-plot-1',
-           GridItem(class = "ms-sm12 ms-xl12",
-                    GraphCard(Text("Company Wide Energy Use At Scale of KWh to 1s of GWh", variant = "large", style = "text-align: center;"),
-                              br(),
-                              plotOutput('company_wide_plot_1')))
-      ),
-      Grid(id = 'company-wide-plot-2',
-           GridItem(class = "ms-sm12 ms-xl12",
-                    GraphCard(Text("Company Wide Energy Use At Scale of 10s of GWh", variant = "large", style = "text-align: center;"),
-                              br(),
-                              plotOutput('company_wide_plot_2')))
-      ),
-      Grid(id = 'company-wide-plot-3',
-           GridItem(class = "ms-sm12 ms-xl12",
-                    GraphCard(Text("Company Wide Energy Use At Scale of 100s of GWh", variant = "large", style = "text-align: center;"),
-                              br(),
-                              plotOutput('company_wide_plot_3')))
-      ),
-      Grid(id = 'company-wide-plot-4',
-           GridItem(class = "ms-sm12 ms-xl12",
-                    GraphCard(Text("Company Wide Energy Use At Scale of 1s of TWh", variant = "large", style = "text-align: center;"),
-                              br(),
-                              plotOutput('company_wide_plot_4')))
-      ),
-      Grid(id = 'company-wide-plot-5',
-           GridItem(class = "ms-sm12 ms-xl12",
-                    GraphCard(Text("Company Wide Energy Use At Scale of 10s of TWh and Greater", variant = "large", style = "text-align: center;"),
-                              br(),
-                              plotOutput('company_wide_plot_5')))
+        ),
+        GridItem(class = "ms-sm12 ms-xl9",
+                 plotOutput('energy_data_trendsplot'))
       )
+      # Grid(id = 'energy-data-trends-plot',
+      #      GridItem(class = "ms-sm12 ms-xl12",
+      #               GraphCard(Text("Energy Data Trends Plot", variant = "large", style = "text-align: center;"),
+      #                         br(),
+      #                         plotOutput('energy_data_trendsplot'))))
   )
 )
 
@@ -636,9 +613,7 @@ ui <- #secure_app(head_auth = tags$script(inactivity), #authentication
                  autoWaiter(id = c(#add loading animations for home page
                                    "years_reported", "companies_reporting", "energy_reported",
                                     #add loading animations to industry trend graphs
-                                   "transparency_graph", "data_centerplot_1", "data_centerplot_2", "company_wide_plot_1",
-                                   "company_wide_plot_2", "company_wide_plot_3", "company_wide_plot_4",
-                                   "company_wide_plot_5", "reporting_timeline",
+                                   "transparency_graph","energy_data_trendsplot", "reporting_timeline",
                                    #add loading animations to company analysis page
                                    "company_profiles_title_1", "company_profiles_title_2", "company_profiles_title_3", 
                                    "company_profiles_title_4", "selected_company_stats", "reported_energy_levels", 

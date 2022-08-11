@@ -247,6 +247,16 @@ for (i in 1:length(list_of_pue_scopes)) {
                                    text = {list_of_pue_scopes[i]})
 }
 
+#Generate list of unique scales for energy data trends plot
+unique_scales <- list()
+list_of_scales <- c("1 KWh - 100 MWh", "1 GWh - 10 GWh", "10 GWh - 100 GWh", "1 TWh - 10 TWh", "10+ TWh")
+
+for (i in 1:length(list_of_scales)) {
+  
+  unique_scales[[i]]<- list(key = {list_of_scales[i]}, 
+                                text = {list_of_scales[i]})
+}
+
 ##################################################
 ########### Tab 4 - Company Profiles #############
 ##################################################
