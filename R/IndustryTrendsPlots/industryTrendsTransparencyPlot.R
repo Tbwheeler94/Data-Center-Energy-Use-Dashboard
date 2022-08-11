@@ -207,7 +207,7 @@ buildIndustryTrendsTransparencyPlot <- function(data_sheet_energy_raw) {
       }
     )
   
-  x <- girafe(ggobj = p, width_svg = 13)
+  x <- girafe(ggobj = p, width_svg = 13, height_svg = 7)
   x <- girafe_options(x,
                       #opts_hover_inv(css = "opacity:0.1;"),
                       #opts_hover(css = "fill:black;stroke:black;r:5pt;"),
