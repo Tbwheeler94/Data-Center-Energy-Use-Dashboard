@@ -260,7 +260,7 @@ for (i in 1:length(list_of_pue_scopes)) {
 
 #Generate list of unique scales for energy data trends plot
 unique_scales <- list()
-list_of_scales <- c("1 KWh - 100 MWh", "1 GWh - 10 GWh", "10 GWh - 100 GWh", "1 TWh - 10 TWh", "10+ TWh")
+list_of_scales <- c("Up to 500 GWh", "Up to 1 TWh", "Up to 10 TWh", "10+ TWh")
 
 for (i in 1:length(list_of_scales)) {
   

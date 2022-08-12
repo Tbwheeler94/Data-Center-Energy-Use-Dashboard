@@ -201,16 +201,13 @@ energy_data_trends <- makePage(
                                            ),
                                           selected = "Data Centers"),
                        br(),
-                       Text("Select Scale(s)", variant = "xLarge", style = "text-align: center;"),
-                       checkboxGroupInput("input_scale",
-                                          label = h3("Scales"),
-                                           choices = list(
-                                             "Up to 1 GWh" = "Up to 1 GWh",
-                                             "Up to 1 TWh" = "Up to 1 TWh",
-                                             "Up to 10 TWh" = "Up to 10 TWh",
-                                             "10+ TWh" = "10+ TWh"
-                                           ),
-                                          selected = "Up to 1 TWh")
+                       Text("Select Scale", variant = "xLarge", style = "text-align: center;"),
+                       ChoiceGroup.shinyInput("input_scale", 
+                                           options = unique_scales,
+                                           value = "Up to 1 TWh",
+                                           placeHolder = "Up to 1 TWh",
+                                           dropdownWidth = 150,
+                                           style = "width: 150px; margin: auto; font-size: 12pt;")
                  )
         ),
         reactOutput("energy_data_graph_explainer"),
@@ -296,7 +293,7 @@ pue_trends_page <- makePage(
                                      options = unique_companies_pue),
                  br(),
                  Text("Select PUE Scope", variant = "xLarge", style = "text-align: center;"),
-                 Dropdown.shinyInput("selected_scope_pue",
+                 ChoiceGroup.shinyInput("selected_scope_pue",
                                      options = unique_scopes_pue,
                                      value = "Fleet Wide",
                                      placeHolder = "Fleet Wide",

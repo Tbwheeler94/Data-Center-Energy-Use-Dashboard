@@ -3,11 +3,11 @@ buildIndustryTrendsEnergyDataPlot <- function(data_sheet_energy_transformed, sel
   plot_TWH <- ""
   plot_breaks <- 0
   plot_labels <- ""
-  if ("Up to 1 GWh" %in% selected_scale) {
-    plot_scale <- 1000000
+  if ("Up to 500 GWh" %in% selected_scale) {
+    plot_scale <- 500000000
     plot_TWH <- "Below"
-    plot_breaks <- c(0, 200000, 400000, 600000, 800000, 1000000)
-    plot_labels <- c("0", "200 MWh", "400 MWh", "600 MWh", "800 MWh", "1 GWh")
+    plot_breaks <- c(0, 100000000, 200000000, 300000000, 400000000, 500000000)
+    plot_labels <- c("0", "100 GWh", "200 GWh", "300 GWh", "400 GWh", "500 GWh")
   }
   if ("Up to 1 TWh" %in% selected_scale) {
     plot_scale <- 1000000000
