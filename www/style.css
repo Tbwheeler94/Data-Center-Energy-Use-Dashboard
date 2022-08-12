@@ -153,6 +153,32 @@ body {
   margin: auto;
 }
 
+/* Adding landing page card styling */
+.landing-page-box { width:100%; height:100%; min-height:23vh; background-color:white;
+                    border: 1px solid #AAAAAA; margin-bottom: 5px; float: left; 
+                    transition: 0.5s ease; position: relative; object-fit: scale-down;}
+                    
+.landing-page-icon {width:100%; height:65%; min-height:12vh; background-color: white;
+                     border: 0 ; position: absolute; object-fit: scale-down; }
+                     
+/* landing-page titles for boxes*/
+.landing-page-box-title {font-size: 16px; text-align:center; color: darkblue;
+                          font-weight: bold; background-color: none; width:100%; 
+                          max-height: 20px; margin-top: 2vh;}
+                          
+/* landing-page description text of boxes*/
+.landing-page-box-description {font-size: 12px; text-align:center; color: darkblue;
+                          background-color: none; width:100%; max-height: 20px; 
+                          margin-top: 2vh; padding-bottom: 3vh;}
+
+.landing-page-box:hover, .landing-page-box-about:hover {-webkit-transform: scale(1.05); 
+                          -ms-transform: scale(1.05); transform: scale(1.05); } /* hover effect on boxes*/ 
+                          
+.landing-page-button { position: absolute; top:0; width: 100%; 
+                        height: 100%; opacity: 0;}
+                        
+.landing-page-column {padding-right:3vh}
+
 /* Accordion styling from bootstrap raw css */
 
 .accordion{--bs-accordion-color:#000;--bs-accordion-bg:#fff;--bs-accordion-transition:color 0.15s ease-in-out,background-color 0.15s ease-in-out,border-color 0.15s ease-in-out,box-shadow 0.15s ease-in-out,border-radius 0.15s ease;--bs-accordion-border-color:var(--bs-border-color);--bs-accordion-border-width:1px;--bs-accordion-border-radius:0.375rem;--bs-accordion-inner-border-radius:calc(0.375rem - 1px);--bs-accordion-btn-padding-x:1.25rem;--bs-accordion-btn-padding-y:1rem;--bs-accordion-btn-color:var(--bs-body-color);--bs-accordion-btn-bg:var(--bs-accordion-bg);--bs-accordion-btn-icon:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='var%28--bs-body-color%29'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");--bs-accordion-btn-icon-width:1.25rem;--bs-accordion-btn-icon-transform:rotate(-180deg);--bs-accordion-btn-icon-transition:transform 0.2s ease-in-out;--bs-accordion-btn-active-icon:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%230c63e4'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");--bs-accordion-btn-focus-border-color:#86b7fe;--bs-accordion-btn-focus-box-shadow:0 0 0 0.25rem rgba(13, 110, 253, 0.25);--bs-accordion-body-padding-x:1.25rem;--bs-accordion-body-padding-y:1rem;--bs-accordion-active-color:#0c63e4;--bs-accordion-active-bg:#e7f1ff}

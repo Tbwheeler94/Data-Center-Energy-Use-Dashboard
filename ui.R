@@ -91,6 +91,41 @@ home_page <- makePage(
             Text(uiOutput("energy_reported_text"), variant = "xxLarge")
           )
         )
+    ),
+    Grid(
+          GridItem(class = "ms-sm12 ms-xl6",
+            column(6, class="landing-page-column",
+            lp_main_box(image_name = "home_button_dc_energy", 
+                        button_name = 'jump_to_dc_energy_101', title_box = "Data Center Energy 101",
+                        description = 'Understand the basics behind data center energy'))
+          ),
+          GridItem(class = "ms-sm12 ms-xl6",
+            column(6, class="landing-page-column",
+                   lp_main_box(image_name = "home_button_company_analysis", 
+                               button_name = 'jump_to_company_analysis', title_box = "Company Analysis",
+                               description = 'Explore an individual company’s performance'))
+          )
+    ),
+    br(),
+    Grid(
+      GridItem(class = "ms-sm12 ms-xl4",
+        column(6, class="landing-page-column",
+               lp_main_box(image_name = "home_button_methods", 
+                           button_name = 'jump_to_methodology', title_box = "Methodology",
+                           description = 'Learn more about our approach'))
+      ),
+      GridItem(class = "ms-sm12 ms-xl4",
+        column(6, class="landing-page-column",
+               lp_main_box(image_name = "home_button_contact", 
+                           button_name = 'jump_to_contact', title_box = "Contact Us",
+                           description = 'Tell us an error in our reported data'))
+      ),
+      GridItem(class = "ms-sm12 ms-xl4",
+        column(6, class="landing-page-column",
+               lp_main_box(image_name = "home_button_about", 
+                           button_name = 'jump_to_about', title_box = "About the Project",
+                           description = 'Read about the developers and creators behind this app'))
+      )
     )
   )
 )

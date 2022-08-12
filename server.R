@@ -163,6 +163,15 @@ server <- function(input, output, session) {
     paste("Data Center Electricity Use Reported In", (max(data_sheet_energy_transformed$data_year)-1))
   })
   
+  ########################################################################################
+  ###### Card 2.1: Add Home Page Guides ######
+  ########################################################################################
+  onclick('jump_to_dc_energy_101', change_page('/data-center-energy', session = shiny::getDefaultReactiveDomain(), mode = "push"))
+  onclick('jump_to_company_analysis', change_page('/company-analysis', session = shiny::getDefaultReactiveDomain(), mode = "push"))
+  onclick('jump_to_methodology', change_page('/methods', session = shiny::getDefaultReactiveDomain(), mode = "push"))
+  onclick('jump_to_contact', change_page('/contact-us', session = shiny::getDefaultReactiveDomain(), mode = "push"))
+  onclick('jump_to_about', change_page('/about-us', session = shiny::getDefaultReactiveDomain(), mode = "push"))
+  
 ###########################################################################################################################################################
 ###########################################################################################################################################################
 ###### Tab 2: Industry Trends  ############################################################################################################################

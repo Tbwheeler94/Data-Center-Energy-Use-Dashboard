@@ -35,6 +35,7 @@ library(ggiraph)
 #initiating core shiny, multiple web-pages and fluent ui styling, respectively
 library(shiny.router)
 library(shiny.fluent)
+library(rintrojs)
 
 #website interactivity
 library(tidyselect)
@@ -198,6 +199,17 @@ data_sheet_energy_transformed <- transformEnergyDataRaw(data_sheet_energy_raw) %
 ##################################################
 ################ Tab 1 - Home ####################
 ##################################################
+
+# Creating big boxes for main tabs in the landing page (see ui for formatting css)
+lp_main_box <- function(title_box, image_name, button_name, description) {
+  div(class="landing-page-box",
+      div(title_box, class = "landing-page-box-title"),
+      div(description, class = "landing-page-box-description"),
+      div(class = "landing-page-icon", style= paste0("background-image: url(", image_name, ".png);
+          background-size: auto 80%; background-position: center; background-repeat: no-repeat; ")),
+      actionButton(button_name, NULL, class="landing-page-button")
+  )
+}
 
 ##################################################
 ######## Tab 2 - Data Center Energy 101 ##########
