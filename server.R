@@ -735,7 +735,15 @@ server <- function(input, output, session) {
   #######################################
   
   output$sources_table <- renderDataTable({
-    buildCompanyProfileSourcesAssessedTable(data_sheet_energy_transformed, input$selected_company)
+    buildCompanyProfileSourcesAssessedTable(data_sheet_energy_transformed, input$selected_company, TRUE)
+  })
+  
+  showBubble <- reactiveVal(FALSE)
+  observeEvent(input$show_sources_assessed_teaching_bubble, showBubble(!showBubble()))
+  output$sources_assessed_teaching_bubble <- renderReact({
+    if (showBubble()) {
+      buildCompanyProfileSourcesAssessedTable(data_sheet_energy_transformed, input$selected_company, FALSE)
+    }
   })
   
   ##############################################################################################################

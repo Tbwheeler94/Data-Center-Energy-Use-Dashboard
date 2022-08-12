@@ -437,7 +437,10 @@ company_analysis_page <- makePage(
                Stack(style = "text-align: center; padding: 25px;", Text(uiOutput("company_profiles_title_4"), variant = "xxLarge", style = "color: #137AD1;")),
                CompanyCard(
                  Text(variant = "large", style = "text-align: center;"),
-                 div(dataTableOutput("sources_table"), style = "width: 100%;")
+                 div(dataTableOutput("sources_table"), style = "width: 100%;"),
+                 Stack(horizontal = TRUE, style = "justify-content: end;",
+                       DefaultButton.shinyInput("show_sources_assessed_teaching_bubble", id = "sources_bubble", text = "About This Table", style = "color: #137AD1; margin-right: 10px;")),
+                 reactOutput('sources_assessed_teaching_bubble'),
                )
       )
     )

@@ -1,4 +1,76 @@
-buildCompanyProfileSourcesAssessedTable <- function(data_sheet_energy_transformed, selected_company) {
+renderSourcesAssessedToggleButton <- function(sources_assessed, selected_company) {
+  # reorder sources_assessed columns based on this order
+  col_order <- c("data_year", "Sustainability Report", "Annual Report", "Web Page", "Data Sheet", "SEC Filing", "Other")
+  dummy_report_type <- which(!(col_order %in% colnames(sources_assessed)))
+  report_not_found <- paste(col_order[dummy_report_type], collapse=", ")
+  report_found <- col_order[which(col_order %in% colnames(sources_assessed))]
+  report_found_upper <- toupper(report_found)
+  message <- paste0("Report types not found for ", selected_company, ": ", report_not_found,
+                    ".\nGreen indicates if report provided electricity or fuel use data; Red 
+                    indicates if report did not provide electricity or fuel use data.")
+  
+  TeachingBubble(
+    target = "#sources_bubble",
+    headline = message,
+    hasCloseButton = TRUE
+  )
+}
+
+renderSourcesAssessedDataTable <- function(sources_assessed, yes_no_table, selected_company) {
+  # reorder sources_assessed columns based on this order
+  col_order <- c("data_year", "Sustainability Report", "Annual Report", "Web Page", "Data Sheet", "SEC Filing", "Other")
+  dummy_report_type <- which(!(col_order %in% colnames(sources_assessed)))
+  report_not_found <- paste(col_order[dummy_report_type], collapse=", ")
+  report_found <- col_order[which(col_order %in% colnames(sources_assessed))]
+  report_found_upper <- toupper(report_found)
+  message <- paste0("List of Report Types Not Found for ", selected_company, ": ", report_not_found)
+  # for (i in 1:length(dummy_report_type)) {
+  #   if (col_order[dummy_report_type[i]] != "Other") {
+  #     sources_assessed[col_order[dummy_report_type[i]]] <- paste0("No ", col_order[dummy_report_type[i]], " Offered for this Year")
+  #   } else {
+  #     sources_assessed[col_order[dummy_report_type[i]]] <- paste0("No ", col_order[dummy_report_type[i]], " Report Offered for this Year")
+  #   }
+  #   yes_no_table[col_order_upper[dummy_report_type[i]]] <- ""
+  # }
+  sources_assessed <- sources_assessed[,report_found]
+  yes_no_table <- yes_no_table[,report_found_upper]
+  
+  # combine two data frames but keep track of no. of columns before and after cbind
+  initial_column_count <- ncol(sources_assessed)
+  sources_assessed <- cbind(sources_assessed, yes_no_table)
+  final_column_count <- ncol(sources_assessed)
+  
+  # earliest_year <- as.integer(sources_assessed[1, 1] - 1)
+  # for (i in earliest_year:2007) {
+  #   sources_assessed[nrow(sources_assessed)+1, ] <- 
+  #     list(i,"No ESG Report Offered for this Year",
+  #          "No CSR Report Offered for this Year",
+  #          "No Annual Report Offered for this Year",
+  #          "No Web Page Offered for this Year",
+  #          "No Data Sheet Offered for this Year",
+  #          "No SEC Filing Offered for this Year",
+  #          "No Other Report Offered for this Year",
+  #          i,"","","","","","","")
+  # }
+  sources_assessed <- sources_assessed[order(sources_assessed$`data_year`, decreasing = TRUE), ]
+  
+  # create column index vectors to be used for formatStyle function
+  columns_displayed <- 2:initial_column_count
+  columns_hidden <- (initial_column_count):(final_column_count-1)
+  columns_value <- (initial_column_count+2):(final_column_count)
+  columns_centered <- 1:initial_column_count
+  
+  colnames(sources_assessed) [1] <- "Data Year"
+  
+  # produce HTML table widget using DT library
+  datatable(sources_assessed, rownames = FALSE, options = list(dom = 't', lengthMenu = list(c(-1), c("All")), columnDefs = list(list(targets=0, className = "dt-left"), list(targets=columns_centered, className = "dt-center"), list(targets=columns_hidden, visible=FALSE)), scrollY=300, scrollCollapse=TRUE), 
+            escape = FALSE) %>%
+    formatStyle(columns = columns_displayed, 
+                valueColumns = columns_value, target = 'cell',
+                backgroundColor = styleEqual(c("Yes", "No"), c("#90ee90", "#ff6c70")))
+}
+
+buildCompanyProfileSourcesAssessedTable <- function(data_sheet_energy_transformed, selected_company, render_table) {
 
   #stack sources columns on top of each other
   source_assessed_1 <- data_sheet_energy_transformed %>% 
@@ -82,55 +154,10 @@ buildCompanyProfileSourcesAssessedTable <- function(data_sheet_energy_transforme
     spread(key, value) %>%
     rename_with(toupper)
   
-  # reorder sources_assessed columns based on this order
-  col_order <- c("data_year", "Sustainability Report", "Annual Report", "Web Page", "Data Sheet", "SEC Filing", "Other")
-  dummy_report_type <- which(!(col_order %in% colnames(sources_assessed)))
-  report_not_found <- paste(col_order[dummy_report_type], collapse=", ")
-  report_found <- col_order[which(col_order %in% colnames(sources_assessed))]
-  report_found_upper <- toupper(report_found)
-  message <- paste0("List of Report Types Not Found for ", selected_company, ": ", report_not_found)
-  # for (i in 1:length(dummy_report_type)) {
-  #   if (col_order[dummy_report_type[i]] != "Other") {
-  #     sources_assessed[col_order[dummy_report_type[i]]] <- paste0("No ", col_order[dummy_report_type[i]], " Offered for this Year")
-  #   } else {
-  #     sources_assessed[col_order[dummy_report_type[i]]] <- paste0("No ", col_order[dummy_report_type[i]], " Report Offered for this Year")
-  #   }
-  #   yes_no_table[col_order_upper[dummy_report_type[i]]] <- ""
-  # }
-  sources_assessed <- sources_assessed[,report_found]
-  yes_no_table <- yes_no_table[,report_found_upper]
-  
-  # combine two data frames but keep track of no. of columns before and after cbind
-  initial_column_count <- ncol(sources_assessed)
-  sources_assessed <- cbind(sources_assessed, yes_no_table)
-  final_column_count <- ncol(sources_assessed)
-  
-  # earliest_year <- as.integer(sources_assessed[1, 1] - 1)
-  # for (i in earliest_year:2007) {
-  #   sources_assessed[nrow(sources_assessed)+1, ] <- 
-  #     list(i,"No ESG Report Offered for this Year",
-  #          "No CSR Report Offered for this Year",
-  #          "No Annual Report Offered for this Year",
-  #          "No Web Page Offered for this Year",
-  #          "No Data Sheet Offered for this Year",
-  #          "No SEC Filing Offered for this Year",
-  #          "No Other Report Offered for this Year",
-  #          i,"","","","","","","")
-  # }
-  sources_assessed <- sources_assessed[order(sources_assessed$`data_year`, decreasing = TRUE), ]
-  
-  # create column index vectors to be used for formatStyle function
-  columns_displayed <- 2:initial_column_count
-  columns_hidden <- (initial_column_count):(final_column_count-1)
-  columns_value <- (initial_column_count+2):(final_column_count)
-  columns_centered <- 1:initial_column_count
-  
-  colnames(sources_assessed) [1] <- "Data Year"
-  
-  # produce HTML table widget using DT library
-  datatable(sources_assessed, rownames = FALSE, options = list(dom = 't', lengthMenu = list(c(-1), c("All")), columnDefs = list(list(targets=0, className = "dt-left"), list(targets=columns_centered, className = "dt-center"), list(targets=columns_hidden, visible=FALSE)), scrollY=300, scrollCollapse=TRUE), 
-            caption = paste("Green indicates if report provided electricity or fuel use data; Red indicates if report did not provide electricity or fuel use data. ", message), escape = FALSE) %>%
-    formatStyle(columns = columns_displayed, 
-                valueColumns = columns_value, target = 'cell',
-                backgroundColor = styleEqual(c("Yes", "No"), c("#90ee90", "#ff6c70")))
+  # add conditions
+  if (render_table == TRUE) {
+    renderSourcesAssessedDataTable(sources_assessed, yes_no_table, selected_company)
+  } else {
+    renderSourcesAssessedToggleButton(sources_assessed, selected_company)
+  }
 }
