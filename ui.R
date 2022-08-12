@@ -69,6 +69,8 @@ makePage <- function (contents) {
 
 home_page <- makePage(
   div(
+    Stack(style = "text-align: center; padding: 25px", Text("Welcome to the Data Center Energy Use Dashboard!", variant = "xxLarge", style = "color: #137AD1;")),
+    Stack(style = "text-align: left; padding: 25px", Text("We are a team of UCSB researchers aiming to increase transparency in data center energy trends and reporting.", variant = "large", style = "color: #000000;")),
     Grid(
         GridItem(class = "ms-sm12 ms-xl4",
           HighlightsCard(
