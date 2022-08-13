@@ -95,13 +95,19 @@ home_page <- makePage(
         )
     ),
     Grid(
-          GridItem(class = "ms-sm12 ms-xl6",
+          GridItem(class = "ms-sm12 ms-xl4",
             column(6, class="landing-page-column",
             lp_main_box(image_name = "home_button_dc_energy", 
                         button_name = 'jump_to_dc_energy_101', title_box = "Data Center Energy 101",
                         description = 'Understand the basics behind data center energy'))
           ),
-          GridItem(class = "ms-sm12 ms-xl6",
+          GridItem(class = "ms-sm12 ms-xl4",
+                   column(6, class="landing-page-column",
+                          lp_main_box(image_name = "home_button_dc_energy", 
+                                      button_name = 'jump_to_home_to_industry_trends', title_box = "Industry Trends",
+                                      description = 'Scrutinize reporting and energy data trends on an industry level'))
+          ),
+          GridItem(class = "ms-sm12 ms-xl4",
             column(6, class="landing-page-column",
                    lp_main_box(image_name = "home_button_company_analysis", 
                                button_name = 'jump_to_company_analysis', title_box = "Company Analysis",
@@ -127,6 +133,51 @@ home_page <- makePage(
                lp_main_box(image_name = "home_button_about", 
                            button_name = 'jump_to_about', title_box = "About the Project",
                            description = 'Read about the developers and creators behind this app'))
+      )
+    )
+  )
+)
+
+###########################################
+###### Home to Industry Trends Page #######
+###########################################
+
+home_to_industry_trends_page <- makePage(
+  div(
+    Stack(style = "text-align: left; padding: 25px", Text("Click an industry trend box to access the plot!", variant = "xxLarge", style = "color: #137AD1;")),
+    Grid(
+      GridItem(class = "ms-sm12 ms-xl4",
+               column(6, class="landing-page-column",
+                      lp_main_box(image_name = "home_to_industry_button_reporting_trends", 
+                                  button_name = 'jump_to_reporting_trends', title_box = "Energy Reporting Trends",
+                                  description = 'Discover how many companies are reporting at certain energy scopes'))
+      ),
+      GridItem(class = "ms-sm12 ms-xl4",
+               column(6, class="landing-page-column",
+                      lp_main_box(image_name = "home_to_industry_button_energy_data_trends", 
+                                  button_name = 'jump_to_energy_data_trends', title_box = "Energy Data Trends",
+                                  description = 'Compare companies on levels of electricity reported, both on a data center and company wide scope'))
+      ),
+      GridItem(class = "ms-sm12 ms-xl4",
+               column(6, class="landing-page-column",
+                      lp_main_box(image_name = "home_to_industry_button_timeline", 
+                                  button_name = 'jump_to_timeline', title_box = "Energy Reporting Timeline",
+                                  description = 'Visualize the timeline of dat center energy reporting'))
+      )
+    ),
+    br(),
+    Grid(
+      GridItem(class = "ms-sm12 ms-xl6",
+               column(6, class="landing-page-column",
+                      lp_main_box(image_name = "home_to_industry_button_industry_relationships", 
+                                  button_name = 'jump_to_industry_relationships', title_box = "Industry Relationships",
+                                  description = 'Analyze the connections between companies based on data center hosting'))
+      ),
+      GridItem(class = "ms-sm12 ms-xl6",
+               column(6, class="landing-page-column",
+                      lp_main_box(image_name = "home_to_industry_button_PUE_trends", 
+                                  button_name = 'jump_to_PUE_trends', title_box = "PUE Trends",
+                                  description = 'Uncover company PUE data in relation to industry PUE trends'))
       )
     )
   )
@@ -634,6 +685,7 @@ layout <- function(mainUI){
 
 router <- make_router(
   route("/", home_page),
+  route("home-to-industry-trends", home_to_industry_trends_page),
   route("data-center-energy", dc_energy_101_page),
   route("reporting-trends", reporting_trends_page),
   route("energy-data-trends", energy_data_trends),

@@ -167,10 +167,20 @@ server <- function(input, output, session) {
   ###### Card 2.1: Add Home Page Guides ######
   ########################################################################################
   onclick('jump_to_dc_energy_101', change_page('/data-center-energy', session = shiny::getDefaultReactiveDomain(), mode = "push"))
+  onclick('jump_to_home_to_industry_trends', change_page('/home-to-industry-trends', session = shiny::getDefaultReactiveDomain(), mode = "push"))
   onclick('jump_to_company_analysis', change_page('/company-analysis', session = shiny::getDefaultReactiveDomain(), mode = "push"))
   onclick('jump_to_methodology', change_page('/methods', session = shiny::getDefaultReactiveDomain(), mode = "push"))
   onclick('jump_to_contact', change_page('/contact-us', session = shiny::getDefaultReactiveDomain(), mode = "push"))
   onclick('jump_to_about', change_page('/about-us', session = shiny::getDefaultReactiveDomain(), mode = "push"))
+  
+  ########################################################################################
+  ###### Card 2.1: Add Home to Industry Trends Page Guides ######
+  ########################################################################################
+  onclick('jump_to_reporting_trends', change_page('/reporting-trends', session = shiny::getDefaultReactiveDomain(), mode = "push"))
+  onclick('jump_to_energy_data_trends', change_page('/energy-data-trends', session = shiny::getDefaultReactiveDomain(), mode = "push"))
+  onclick('jump_to_timeline', change_page('/reporting-timeline', session = shiny::getDefaultReactiveDomain(), mode = "push"))
+  onclick('jump_to_industry_relationships', change_page('/lease-cloud-network', session = shiny::getDefaultReactiveDomain(), mode = "push"))
+  onclick('jump_to_PUE_trends', change_page('/pue-trends', session = shiny::getDefaultReactiveDomain(), mode = "push"))
   
 ###########################################################################################################################################################
 ###########################################################################################################################################################
