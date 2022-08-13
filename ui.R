@@ -162,7 +162,7 @@ home_to_industry_trends_page <- makePage(
                column(6, class="landing-page-column",
                       lp_main_box(image_name = "home_to_industry_button_timeline", 
                                   button_name = 'jump_to_timeline', title_box = "Energy Reporting Timeline",
-                                  description = 'Visualize the timeline of dat center energy reporting'))
+                                  description = 'Visualize the timeline of data center energy reporting'))
       )
     ),
     br(),
