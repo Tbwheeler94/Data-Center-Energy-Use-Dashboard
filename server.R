@@ -166,8 +166,16 @@ server <- function(input, output, session) {
   ########################################################################################
   ###### Card 2.1: Add Home Page Guides ######
   ########################################################################################
+  
+  change_to_home_to_industry_trends <- function() {
+    #change page to contact-us
+    change_page('/home-to-industry-trends', session = shiny::getDefaultReactiveDomain(), mode = "push")
+    #update selected nav
+    runjs(glue("$('.ms-Nav-link[title=\"Industry Trends\"]')[0].click()"))
+  }
+  
   onclick('jump_to_dc_energy_101', change_page('/data-center-energy', session = shiny::getDefaultReactiveDomain(), mode = "push"))
-  onclick('jump_to_home_to_industry_trends', change_page('/home-to-industry-trends', session = shiny::getDefaultReactiveDomain(), mode = "push"))
+  onclick('jump_to_home_to_industry_trends', change_to_home_to_industry_trends())
   onclick('jump_to_company_analysis', change_page('/company-analysis', session = shiny::getDefaultReactiveDomain(), mode = "push"))
   onclick('jump_to_methodology', change_page('/methods', session = shiny::getDefaultReactiveDomain(), mode = "push"))
   onclick('jump_to_contact', change_page('/contact-us', session = shiny::getDefaultReactiveDomain(), mode = "push"))
