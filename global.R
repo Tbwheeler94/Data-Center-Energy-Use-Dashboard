@@ -205,8 +205,8 @@ lp_main_box <- function(title_box, image_name, button_name, description) {
       div(title_box, class = "landing-page-box-title"),
       div(description, class = "landing-page-box-description"),
       div(class = "landing-page-icon", style= paste0("background-image: url(", image_name, ".png);
-          background-size: auto 80%; background-position: center; background-repeat: no-repeat; ")),
-      actionButton(button_name, NULL, class="landing-page-button")
+          background-size: auto 80%; background-position: center; background-repeat: no-repeat;")),
+      actionButton(button_name, NULL, class="landing-page-button", style="cursor: pointer;")
   )
 }
 

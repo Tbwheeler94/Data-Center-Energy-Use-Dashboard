@@ -703,9 +703,16 @@ shiny::addResourcePath("shiny.router", system.file("www", package = "shiny.route
 shiny_router_js_src <- file.path("shiny.router", "shiny.router.js")
 shiny_router_script_tag <- shiny::tags$script(type = "text/javascript", src = shiny_router_js_src)
 
-preloader_html <- makePage(div(img(src='https://static.wixstatic.com/media/1ab7d5_947e63da0487445b8ef205972c867761~mv2.png/v1/fill/w_239,h_80,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/industrial%20sustainability%20analysis%20lab_l.png', align = "center"),
-                               h3("Welcome to the Data Center Energy Use Dashboard"), 
-                               spin_pixel()))
+preloader_html <- makePage(div(
+                           h1("Welcome to the Data Center Energy Use Dashboard", style = "margin-bottom: 20vh;"),
+                           div(style="display: inline-flex; margin-bottom: 25vh",
+                                 img(src='energy_icon.svg', style="height: 100px; width: 100px"),
+                                 div(style="margin-top: -50px; margin-left: 10px; margin-right: 10px", spin_three_bounce()),
+                                 img(src='server.png', style="height: 100px; width: 100px")),
+                           div(style="display: inline-flex; position: absolute; right:0px; bottom:0px;",
+                             h5("Built by the", style= "margin-right: 10px;"),
+                             img(src='https://static.wixstatic.com/media/1ab7d5_947e63da0487445b8ef205972c867761~mv2.png/v1/fill/w_239,h_80,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/industrial%20sustainability%20analysis%20lab_l.png', style = "width: 179.25px; height: 60px; margin-right: 10px; margin-bottom: 10px;")
+                           )))
 
 ui <- #secure_app(head_auth = tags$script(inactivity), #authentication
                  fluentPage(
