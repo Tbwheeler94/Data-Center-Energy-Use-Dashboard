@@ -154,12 +154,21 @@ body {
 }
 
 /* Adding landing page card styling */
+/*
 .landing-page-box { width:100%; height:100%; min-height:23vh; background-color:white;
                     border: 1px solid #AAAAAA; margin-bottom: 5px; float: left; 
                     transition: 0.5s ease; position: relative; object-fit: scale-down;}
+*/
+.landing-page-box { width:100%; height:100%; min-height:23vh; border-radius: 5px; 
+                    transition: 0.5s ease; position: relative; object-fit: scale-down;
+                    background-color: white; border-top: 8px solid #137AD1;
+                    margin-bottom: 5px; float: left;}
                     
-.landing-page-icon {width:100%; height:65%; min-height:12vh; background-color: white;
-                     border: 0 ; position: absolute; object-fit: scale-down; }
+.landing-page-icon {width:100%; height:65%; min-height:8vh; background-color: white;
+                     border: 0; object-fit: scale-down; text-align: center; }
+                     
+.buffer-page-icon {width:100%; height:65%; min-height:15vh; background-color: white;
+                     border: 0; object-fit: scale-down; text-align: center; }
                      
 /* landing-page titles for boxes*/
 .landing-page-box-title {font-size: 16px; text-align:center; color: darkblue;
@@ -171,11 +180,11 @@ body {
                           background-color: none; width:100%; max-height: 20px; 
                           margin-top: 2vh; padding-bottom: 3vh;}
 
-.landing-page-box:hover, .landing-page-box-about:hover {-webkit-transform: scale(1.05); 
+.landing-page-box:hover {-webkit-transform: scale(1.05); 
                           -ms-transform: scale(1.05); transform: scale(1.05); } /* hover effect on boxes*/ 
                           
 .landing-page-button { position: absolute; top:0; width: 100%; 
-                        height: 100%; opacity: 0;}
+                        height: 100%; opacity: 0; cursor: pointer;}
                         
 .landing-page-column {padding-right:3vh}
 
