@@ -209,10 +209,10 @@ buildIndustryTrendsTransparencyPlot <- function(data_sheet_energy_raw) {
   
   x <- girafe(ggobj = p, width_svg = 13, height_svg = 7)
   x <- girafe_options(x,
-                      #opts_hover_inv(css = "opacity:0.1;"),
+                      opts_hover_inv(css = "opacity:0.6;"),
                       #opts_hover(css = "fill:black;stroke:black;r:5pt;"),
-                      opts_hover(css = "stroke-width:2;"),
-                      opts_hover_key(girafe_css("stroke:blue; cursor: help;", text="stroke:none;fill:blue")))
+                      opts_hover(css = "stroke-width:2; cursor: crosshair;"),
+                      opts_hover_key(girafe_css("stroke:blue; cursor: help;", text="stroke:none;fill:red")))
   x
   
   #ggplotly(p, tooltip = "text")
