@@ -214,7 +214,21 @@ server <- function(input, output, session) {
                     div(style = list(flexGrow = 1)),
                     IconButton.shinyInput("hide_transparency_graph_explainer", iconProps = list(iconName = "Cancel")),
                 ),
-                Text("This graph displays the change in the number of companies reporting at different levels of transparency through time. The total height of the stacked bars changes through time because some companies were not founded until after 2007.", variant= "large")
+                Text("As energy reporting assessments vary in scale from company wide to individual data centers, there are no essential standards in proper energy reporting trends.", variant="large"),
+                Text("Consequently, companies lack transparency when they do not offer energy data regarding their individual data centers.", variant="large"),
+                Text("This graph highlights the change in the number of companies reporting at different levels of transparency through time.", variant= "large"),
+                Text("Methodology for each bar labels", variant = "xLarge"),
+                Text(FontIcon(iconName = "Brush", style = "margin-right: 10px; color: #3BCA6D; vertical-align: middle;"),
+                     "Greener bars indicate that companies report at the better levels of transparency (e.g. electricity-specific data).", variant="large"),
+                Text(FontIcon(iconName = "BarChartVertical", style = "margin-right: 10px; vertical-align: middle;"),
+                     "The total height of the stacked bars changes through time because some companies were not founded until after 2007.", variant="large"),
+                Text(FontIcon(iconName = "ProgressRingDots", style = "margin-right: 10px; vertical-align: middle;"),
+                     "Since energy data for a given year is usually not released until the year after, we wait until the end of the current year (2022) for reports to be released until we classify their respective scope.", variant="large"),
+                Text("Instructions for navigating", variant = "xLarge"),
+                Text(FontIcon(iconName = "CalculatorAddition", style = "margin-right: 10px;vertical-align: middle;"),
+                     "Hover over a colored bar to see the number of companies reporting energy data at that specific scope.", variant="large"),
+                Text(FontIcon(iconName = "Help", style = "margin-right: 10px; vertical-align: middle;"),
+                     "Hover over the legend labels to read explanations of each reporting scope.", variant="large")
           )
     )
   })
@@ -250,7 +264,15 @@ server <- function(input, output, session) {
                     Text("About the Energy Data Trends Graph", variant = "xLarge"),
                     div(style = list(flexGrow = 1)),
                     IconButton.shinyInput("hide_energy_data_graph_explainer", iconProps = list(iconName = "Cancel")),
-                )
+                ),
+                Text("Throughout company energy reporting, it is rare for a reader to discover aggregate electricity data amongst all data centers or throughout the company.", variant = "large"),
+                Text("Even worse, the lack of standardized units across energy reporting makes it difficult for modelers to produce clean visualizations of energy data on an industry scale.", variant = "large"),
+                Text("This energy data plot serves to mitigate these issues by cross-analyzing companies' electricity data on the data center and company wide scopes.", variant = "large"),
+                Text("Methodology for the plot", variant = "xLarge"),
+                Text(FontIcon(iconName = "BarChartHorizontal", style = "margin-right: 10px; vertical-align: middle;"),
+                     "Companies appear depending on energy scale selected, so choose larger scales to see more companies.", variant="large"),
+                Text(FontIcon(iconName = "LightningBolt", style = "margin-right: 10px; vertical-align: middle;"),
+                     "All electricity data is converted from their respective units to KWh. See our methods page to learn more about our fuel conversion approach.", variant="large")
           )
     )
   })
@@ -277,7 +299,16 @@ server <- function(input, output, session) {
                     Text("About the Reporting Timeline Graph", variant = "xLarge"),
                     div(style = list(flexGrow = 1)),
                     IconButton.shinyInput("hide_reporting_timeline_explainer", iconProps = list(iconName = "Cancel")),
-                )
+                ),
+                Text("Timelines of energy reporting do not appear often in the public eye, especially when companies have not reported any data until recently.", variant = "large"),
+                Text("Similar to the 'Energy Reporting Trends', this plot compares companies over time on energy reporting trends.", variant = "large"),
+                Text("Instructions for navigating", variant = "xLarge"),
+                Text(FontIcon(iconName = "ScrollUpDown", style = "margin-right: 10px; vertical-align: middle;"),
+                     "Scroll up and down to examine additional companies on the timeline.", variant="large"),
+                Text(FontIcon(iconName = "CalculatorAddition", style = "margin-right: 10px; vertical-align: middle;"),
+                     "Hover over a tile that lists the company name, data year, and reporting scope.", variant="large"),
+                Text(FontIcon(iconName = "TimelineProgress", style = "margin-right: 10px; vertical-align: middle;"),
+                     "Hover over the command bar to use additional plotly tools.", variant="large")
           )
     )
   })
@@ -342,7 +373,15 @@ server <- function(input, output, session) {
                     Text("About the PUE Trends Graph", variant = "xLarge"),
                     div(style = list(flexGrow = 1)),
                     IconButton.shinyInput("hide_pue_graph_explainer", iconProps = list(iconName = "Cancel")),
-                )
+                ),
+                Text("The PUE plot highlights one or more companies' PUE performance among their fleet-wide or individual locations on an industry scale.", variant = "large"),
+                Text("Instructions for navigating", variant = "xLarge"),
+                Text(FontIcon(iconName = "TabletMode", style = "margin-right: 10px; vertical-align: middle;"),
+                     "Select one or more companies in the dropdown bar to spotlight their PUE data.", variant="large"),
+                Text(FontIcon(iconName = "CalculatorAddition", style = "margin-right: 10px; vertical-align: middle;"),
+                     "Hover over a plot point that lists the company name, geographical scope, PUE value, and measurement level.", variant="large"),
+                Text(FontIcon(iconName = "TriggerAuto", style = "margin-right: 10px; vertical-align: middle;"),
+                     "Hover over the command bar to use additional plotly tools.", variant="large")
           )
     )
   })

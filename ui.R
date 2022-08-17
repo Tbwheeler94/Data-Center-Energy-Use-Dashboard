@@ -343,6 +343,8 @@ pue_trends_page <- makePage(
                  Text("Select Company", variant = "xLarge", style = "text-align: center;"),
                  Dropdown.shinyInput("selected_company_pue",
                                      multiSelect = TRUE,
+                                     placeholder = "Google",
+                                     value = "Google",
                                      options = unique_companies_pue),
                  br(),
                  Text("Select PUE Scope", variant = "xLarge", style = "text-align: center;"),
