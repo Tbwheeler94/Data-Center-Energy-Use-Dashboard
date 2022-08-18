@@ -82,11 +82,17 @@ home_page <- makePage(
                )
              ),
              screen(
-               HighlightsCard(
-                 FontIcon(iconName = "Calendar", style = list(fontSize = 60)),
-                 Text(uiOutput("years_reported"), variant = "mega", style = "color: #137AD1;"),
-                 Text("Years Reporting", variant = "xxLarge")
+               # tags$img(src="https://www.fillmurray.com/1920/1080")
+               div(class="container",
+                 tags$img(src="bg1.jpeg", class="ms-sm12 ms-xl12", height="250px"),
+                 div(class="centered", Text(uiOutput("years_reported"), variant = "mega", style = "color: #FFFFFF;")),
+                 div(class="centered-bottom", Text("Years Reporting", variant = "xxLarge", style = "color: #FFFFFF"))
                )
+               # HighlightsCard(
+                 # FontIcon(iconName = "Calendar", style = list(fontSize = 60)),
+                 # Text(uiOutput("years_reported"), variant = "mega", style = "color: #137AD1;"),
+                 # Text("Years Reporting", variant = "xxLarge")
+               # )
              ),
              screen(
                HighlightsCard(
