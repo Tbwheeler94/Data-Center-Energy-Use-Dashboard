@@ -44,7 +44,7 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
   # filter companies by founding year after 2007 and existence in industry_transparency dataset, then label as nonexistent years for company
   company_profile <- company_profile %>% filter(company_founding_year > 2007, company_name %in% industry_transparency$company)
   for (i in 1:nrow(company_profile)) { 
-    industry_transparency$energy_reporting_scope[industry_transparency$energy_reporting_scope == "No Reporting of Publicly Available Data" & industry_transparency$company == company_profile[i,1] & industry_transparency$data_year < company_profile$company_founding_year] <- "Company Does Not Exist Yet"
+    industry_transparency$energy_reporting_scope[industry_transparency$energy_reporting_scope == "No Reporting of Publicly Available Data" & industry_transparency$company == company_profile[i,1] & industry_transparency$data_year < company_profile[i,3]] <- "Company Does Not Exist Yet"
   }
   
   industry_transparency <- industry_transparency[order(industry_transparency$company),]
