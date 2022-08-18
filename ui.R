@@ -69,31 +69,65 @@ makePage <- function (contents) {
 
 home_page <- makePage(
   div(
-    Stack(style = "text-align: center; padding: 25px", Text("Welcome to the Data Center Energy Use Dashboard!", variant = "xxLarge", style = "color: #137AD1;")),
-    Stack(style = "text-align: left; padding: 25px", Text("We are a team of UCSB researchers aiming to increase transparency in data center energy trends and reporting.", variant = "large", style = "color: #000000;")),
     Grid(
-        GridItem(class = "ms-sm12 ms-xl4",
-          HighlightsCard(
-            FontIcon(iconName = "Calendar", style = list(fontSize = 60)),
-            Text(uiOutput("years_reported"), variant = "mega", style = "color: #137AD1;"),
-            Text("Years Reporting", variant = "xxLarge")
-          )
-        ),
-        GridItem(class = "ms-sm12 ms-xl4",
-          HighlightsCard(
-            FontIcon(iconName = "ClipboardList", style = list(fontSize = 60)),
-            Text(uiOutput("companies_reporting"), variant = "mega", style = "color: #137AD1;"),
-            Text("Companies Reporting", variant = "xxLarge")
-          )
-        ),
-        GridItem(class = "ms-sm12 ms-xl4",
-          HighlightsCard(
-            FontIcon(iconName = "TableComputed", style = list(fontSize = 60)),
-            Text(uiOutput("energy_reported"), variant = "mega", style = "color: #137AD1;"),
-            Text(uiOutput("energy_reported_text"), variant = "xxLarge")
-          )
+      GridItem(class = "ms-sm12 ms-xl12", 
+        glide(
+             height = "250px",
+             next_label = ActionButton.shinyInput("button5", iconProps = list("iconName" = "ChromeBackMirrored"), text = "Next"),
+             previous_label = ActionButton.shinyInput("button4", iconProps = list("iconName" = "ChromeBack"), text = "Back"),
+             screen(
+               HighlightsCard(
+                 Stack(style = "text-align: center; padding: 25px", Text("Welcome to the Data Center Energy Use Dashboard!", variant = "xxLarge", style = "color: #137AD1;")),
+                 Stack(style = "text-align: left; padding: 25px", Text("We are a team of UCSB researchers aiming to increase transparency in data center energy trends and reporting. Click on one of our cards to get started.", variant = "large", style = "color: #000000;"))
+               )
+             ),
+             screen(
+               HighlightsCard(
+                 FontIcon(iconName = "Calendar", style = list(fontSize = 60)),
+                 Text(uiOutput("years_reported"), variant = "mega", style = "color: #137AD1;"),
+                 Text("Years Reporting", variant = "xxLarge")
+               )
+             ),
+             screen(
+               HighlightsCard(
+                 FontIcon(iconName = "ClipboardList", style = list(fontSize = 60)),
+                 Text(uiOutput("companies_reporting"), variant = "mega", style = "color: #137AD1;"),
+                 Text("Companies Reporting", variant = "xxLarge")
+               )
+             ),
+             screen(
+               HighlightsCard(
+                 FontIcon(iconName = "TableComputed", style = list(fontSize = 60)),
+                 Text(uiOutput("energy_reported"), variant = "mega", style = "color: #137AD1;"),
+                 Text(uiOutput("energy_reported_text"), variant = "xxLarge")
+               )
+             )
         )
+      )
     ),
+    # Grid(
+    #     GridItem(class = "ms-sm12 ms-xl4",
+    #       HighlightsCard(
+    #         FontIcon(iconName = "Calendar", style = list(fontSize = 60)),
+    #         Text(uiOutput("years_reported"), variant = "mega", style = "color: #137AD1;"),
+    #         Text("Years Reporting", variant = "xxLarge")
+    #       )
+    #     ),
+    #     GridItem(class = "ms-sm12 ms-xl4",
+    #       HighlightsCard(
+    #         FontIcon(iconName = "ClipboardList", style = list(fontSize = 60)),
+    #         Text(uiOutput("companies_reporting"), variant = "mega", style = "color: #137AD1;"),
+    #         Text("Companies Reporting", variant = "xxLarge")
+    #       )
+    #     ),
+    #     GridItem(class = "ms-sm12 ms-xl4",
+    #       HighlightsCard(
+    #         FontIcon(iconName = "TableComputed", style = list(fontSize = 60)),
+    #         Text(uiOutput("energy_reported"), variant = "mega", style = "color: #137AD1;"),
+    #         Text(uiOutput("energy_reported_text"), variant = "xxLarge")
+    #       )
+    #     )
+    # ),
     Grid(
           GridItem(class = "ms-sm12 ms-xl4",
             column(6, class="landing-page-column",
@@ -103,13 +137,13 @@ home_page <- makePage(
           ),
           GridItem(class = "ms-sm12 ms-xl4",
                    column(6, class="landing-page-column",
-                          lp_main_box(image_name = "BIDashboard", 
+                          lp_main_box(image_name = "BIDashboard",
                                       button_name = 'jump_to_home_to_industry_trends', title_box = "Industry Trends",
                                       description = 'Scrutinize reporting and energy data trends on an industry level'))
           ),
           GridItem(class = "ms-sm12 ms-xl4",
             column(6, class="landing-page-column",
-                   lp_main_box(image_name = "ExploreData", 
+                   lp_main_box(image_name = "ExploreData",
                                button_name = 'jump_to_company_analysis', title_box = "Company Analysis",
                                description = 'Explore an individual company’s performance'))
           )
@@ -118,19 +152,19 @@ home_page <- makePage(
     Grid(
       GridItem(class = "ms-sm12 ms-xl4",
         column(6, class="landing-page-column",
-               lp_main_box(image_name = "Settings", 
+               lp_main_box(image_name = "Settings",
                            button_name = 'jump_to_methodology', title_box = "Methodology",
                            description = 'Learn more about our approach'))
       ),
       GridItem(class = "ms-sm12 ms-xl4",
         column(6, class="landing-page-column",
-               lp_main_box(image_name = "Send", 
+               lp_main_box(image_name = "Send",
                            button_name = 'jump_to_contact', title_box = "Contact Us",
                            description = 'Tell us an error in our reported data'))
       ),
       GridItem(class = "ms-sm12 ms-xl4",
         column(6, class="landing-page-column",
-               lp_main_box(image_name = "TestBeakerSolid", 
+               lp_main_box(image_name = "TestBeakerSolid",
                            button_name = 'jump_to_about', title_box = "About the Project",
                            description = 'Read about the developers and creators behind this app'))
       )

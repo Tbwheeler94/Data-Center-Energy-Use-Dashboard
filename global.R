@@ -35,6 +35,7 @@ library(ggiraph)
 #initiating core shiny, multiple web-pages and fluent ui styling, respectively
 library(shiny.router)
 library(shiny.fluent)
+library(shinyglide)
 
 #website interactivity
 library(tidyselect)
