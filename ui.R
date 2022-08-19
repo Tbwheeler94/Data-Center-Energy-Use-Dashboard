@@ -73,17 +73,17 @@ home_page <- makePage(
       GridItem(class = "ms-sm12 ms-xl12", 
         glide(
              height = "250px",
+             custom_controls = div(class = "glide-controls", glideControls()),
              next_label = ActionButton.shinyInput("button5", iconProps = list("iconName" = "ChromeBackMirrored"), text = "Next"),
              previous_label = ActionButton.shinyInput("button4", iconProps = list("iconName" = "ChromeBack"), text = "Back"),
              screen(
                HighlightsCard(
                  Stack(style = "text-align: center; padding: 25px", Text("Welcome to the Data Center Energy Use Dashboard!", variant = "xxLarge", style = "color: #137AD1;")),
-                 Stack(style = "text-align: left; padding: 25px", Text("We are a team of UCSB researchers aiming to increase transparency in data center energy trends and reporting. Click on one of our cards to get started.", variant = "large", style = "color: #000000;"))
+                 Stack(style = "text-align: left; padding: 25px", Text("We are a team of UCSB researchers aiming to increase transparency in data center energy trends and reporting.\nClick on one of our cards to get started.", variant = "large", style = "color: #000000;"))
                )
              ),
              screen(
-               # tags$img(src="https://www.fillmurray.com/1920/1080")
-               div(class="container",
+               div(class="container", 
                  tags$img(src="bg1.jpeg", class="ms-sm12 ms-xl12", height="250px"),
                  div(class="centered", Text(uiOutput("years_reported"), variant = "mega", style = "color: #FFFFFF;")),
                  div(class="centered-bottom", Text("Years Reporting", variant = "xxLarge", style = "color: #FFFFFF"))
@@ -95,18 +95,28 @@ home_page <- makePage(
                # )
              ),
              screen(
-               HighlightsCard(
-                 FontIcon(iconName = "ClipboardList", style = list(fontSize = 60)),
-                 Text(uiOutput("companies_reporting"), variant = "mega", style = "color: #137AD1;"),
-                 Text("Companies Reporting", variant = "xxLarge")
+               div(class="container",
+                   tags$img(src="bg2.jpeg", class="ms-sm12 ms-xl12", height="250px"),
+                   div(class="centered", Text(uiOutput("companies_reporting"), variant = "mega", style = "color: #FFFFFF;")),
+                   div(class="centered-bottom", Text("Companies Reporting", variant = "xxLarge", style = "color: #FFFFFF"))
                )
+               # HighlightsCard(
+               #   FontIcon(iconName = "ClipboardList", style = list(fontSize = 60)),
+               #   Text(uiOutput("companies_reporting"), variant = "mega", style = "color: #137AD1;"),
+               #   Text("Companies Reporting", variant = "xxLarge")
+               # )
              ),
              screen(
-               HighlightsCard(
-                 FontIcon(iconName = "TableComputed", style = list(fontSize = 60)),
-                 Text(uiOutput("energy_reported"), variant = "mega", style = "color: #137AD1;"),
-                 Text(uiOutput("energy_reported_text"), variant = "xxLarge")
+               div(class="container",
+                   tags$img(src="bg3.jpeg", class="ms-sm12 ms-xl12", height="250px"),
+                   div(class="centered", Text(uiOutput("energy_reported"), variant = "mega", style = "color: #FFFFFF;")),
+                   div(class="centered-bottom", Text(uiOutput("energy_reported_text"), variant = "xLarge", style = "color: #FFFFFF"))
                )
+               # HighlightsCard(
+               #   FontIcon(iconName = "TableComputed", style = list(fontSize = 60)),
+               #   Text(uiOutput("energy_reported"), variant = "mega", style = "color: #137AD1;"),
+               #   Text(uiOutput("energy_reported_text"), variant = "xxLarge")
+               # )
              )
         )
       )
