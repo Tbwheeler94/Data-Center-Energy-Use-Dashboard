@@ -59,6 +59,14 @@ GridItem <- function (..., class = "ms-sm12") {
   )
 }
 
+GridItemHome <- function (..., class = "ms-sm12") {
+  div(
+    class = paste("ms-Grid-col", class),
+    style = "padding: 0px;",
+    ...
+  )
+}
+
 makePage <- function (contents) {
   tagList(contents)
 }
@@ -70,7 +78,7 @@ makePage <- function (contents) {
 home_page <- makePage(
   div(
     Grid(
-      GridItem(class = "ms-sm12 ms-xl12", 
+      GridItemHome(class = "ms-sm12 ms-xl12", style="margin-top: -15px;", 
         glide(
              height = "250px",
              custom_controls = div(class = "glide-controls", glideControls()),
@@ -146,43 +154,37 @@ home_page <- makePage(
     # ),
     Grid(
           GridItem(class = "ms-sm12 ms-xl4",
-            column(6, class="landing-page-column",
               lp_main_box(image_name = "D365TalentLearn",
                           button_name = 'jump_to_dc_energy_101', title_box = "Data Center Energy 101",
-                          description = 'Understand the basics behind data center energy'))
+                          description = 'Understand the basics behind data center energy')
           ),
           GridItem(class = "ms-sm12 ms-xl4",
-                   column(6, class="landing-page-column",
-                          lp_main_box(image_name = "BIDashboard",
-                                      button_name = 'jump_to_home_to_industry_trends', title_box = "Industry Trends",
-                                      description = 'Scrutinize reporting and energy data trends on an industry level'))
+              lp_main_box(image_name = "BIDashboard",
+                          button_name = 'jump_to_home_to_industry_trends', title_box = "Industry Trends",
+                          description = 'Scrutinize reporting and energy data trends on an industry level')
           ),
           GridItem(class = "ms-sm12 ms-xl4",
-            column(6, class="landing-page-column",
-                   lp_main_box(image_name = "ExploreData",
-                               button_name = 'jump_to_company_analysis', title_box = "Company Analysis",
-                               description = 'Explore an individual company’s performance'))
+               lp_main_box(image_name = "ExploreData",
+                           button_name = 'jump_to_company_analysis', title_box = "Company Analysis",
+                           description = 'Explore an individual company’s performance')
           )
     ),
     br(),
     Grid(
       GridItem(class = "ms-sm12 ms-xl4",
-        column(6, class="landing-page-column",
                lp_main_box(image_name = "Settings",
                            button_name = 'jump_to_methodology', title_box = "Methodology",
-                           description = 'Learn more about our approach'))
+                           description = 'Learn more about our approach')
       ),
       GridItem(class = "ms-sm12 ms-xl4",
-        column(6, class="landing-page-column",
                lp_main_box(image_name = "Send",
                            button_name = 'jump_to_contact', title_box = "Contact Us",
-                           description = 'Tell us an error in our reported data'))
+                           description = 'Tell us an error in our reported data')
       ),
       GridItem(class = "ms-sm12 ms-xl4",
-        column(6, class="landing-page-column",
                lp_main_box(image_name = "TestBeakerSolid",
                            button_name = 'jump_to_about', title_box = "About the Project",
-                           description = 'Read about the developers and creators behind this app'))
+                           description = 'Read about the developers and creators behind this app')
       )
     )
   )
@@ -197,37 +199,32 @@ home_to_industry_trends_page <- makePage(
     Stack(style = "text-align: left; padding: 25px", Text("Click an industry trend box to access the plot!", variant = "xxLarge", style = "color: #137AD1;")),
     Grid(
       GridItem(class = "ms-sm12 ms-xl4",
-               column(6, class="landing-page-column",
                       lp_home_to_industry_box(image_name = "home_to_industry_button_reporting_trends", 
                                   button_name = 'jump_to_reporting_trends', title_box = "Energy Reporting Trends",
-                                  description = 'Discover how many companies are reporting at certain energy scopes'))
+                                  description = 'Discover how many companies are reporting at certain energy scopes')
       ),
       GridItem(class = "ms-sm12 ms-xl4",
-               column(6, class="landing-page-column",
                       lp_home_to_industry_box(image_name = "home_to_industry_button_energy_data_trends", 
                                   button_name = 'jump_to_energy_data_trends', title_box = "Energy Data Trends",
-                                  description = 'Compare companies on levels of electricity reported, both on a data center and company wide scope'))
+                                  description = 'Compare companies on levels of electricity reported, both on a data center and company wide scope')
       ),
       GridItem(class = "ms-sm12 ms-xl4",
-               column(6, class="landing-page-column",
                       lp_home_to_industry_box(image_name = "home_to_industry_button_timeline", 
                                   button_name = 'jump_to_timeline', title_box = "Energy Reporting Timeline",
-                                  description = 'Visualize the timeline of data center energy reporting'))
+                                  description = 'Visualize the timeline of data center energy reporting')
       )
     ),
     br(),
     Grid(
       GridItem(class = "ms-sm12 ms-xl6",
-               column(6, class="landing-page-column",
                       lp_home_to_industry_box(image_name = "home_to_industry_button_industry_relationships", 
                                   button_name = 'jump_to_industry_relationships', title_box = "Industry Relationships",
-                                  description = 'Analyze the connections between companies based on data center hosting'))
+                                  description = 'Analyze the connections between companies based on data center hosting')
       ),
       GridItem(class = "ms-sm12 ms-xl6",
-               column(6, class="landing-page-column",
                       lp_home_to_industry_box(image_name = "home_to_industry_button_PUE_trends", 
                                   button_name = 'jump_to_PUE_trends', title_box = "PUE Trends",
-                                  description = 'Uncover company PUE data in relation to industry PUE trends'))
+                                  description = 'Uncover company PUE data in relation to industry PUE trends')
       )
     )
   )
