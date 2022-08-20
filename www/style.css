@@ -26,7 +26,7 @@
   right: 16px;
 }
 
-.glide-controls { position: absolute; bottom: 30px; left: 10px; width: 1000px; }
+.glide-controls { position: absolute; bottom: 30px; padding-left: 10px; width: 98%; }
 
 [data-title] {
     position: relative;
