@@ -223,7 +223,7 @@ server <- function(input, output, session) {
                 Text(FontIcon(iconName = "BarChartVertical", style = "margin-right: 10px; vertical-align: middle;"),
                      "The total height of the stacked bars changes through time because some companies were not founded until after 2007.", variant="large"),
                 Text(FontIcon(iconName = "ProgressRingDots", style = "margin-right: 10px; vertical-align: middle;"),
-                     "Since energy data for a given year is usually not released until the year after, we wait until the end of the current year (2022) for reports to be released until we classify their respective scope.", variant="large"),
+                     "Since energy data for a given year is usually not released until the year after, we wait until the end of the current year (2022) for reports to be released until we classify their respective scope. This is why we have a 'Pending Data Submission' label.", variant="large"),
                 Text("Instructions for navigating", variant = "xLarge"),
                 Text(FontIcon(iconName = "CalculatorAddition", style = "margin-right: 10px;vertical-align: middle;"),
                      "Hover over a colored bar to see the number of companies reporting energy data at that specific scope.", variant="large"),
@@ -302,6 +302,11 @@ server <- function(input, output, session) {
                 ),
                 Text("Timelines of energy reporting do not appear often in the public eye, especially when companies have not reported any data until recently.", variant = "large"),
                 Text("Similar to the 'Energy Reporting Trends', this plot compares companies over time on energy reporting trends.", variant = "large"),
+                Text("Methodology for each bar labels", variant = "xLarge"),
+                Text(FontIcon(iconName = "Brush", style = "margin-right: 10px; color: #3BCA6D; vertical-align: middle;"),
+                     "Greener bars indicate that companies report at the better levels of transparency (e.g. electricity-specific data).", variant="large"),
+                Text(FontIcon(iconName = "ProgressRingDots", style = "margin-right: 10px; vertical-align: middle;"),
+                     "Since energy data for a given year is usually not released until the year after, we wait until the end of the current year (2022) for reports to be released until we classify their respective scope. This is why we have a 'Pending Data Submission' label.", variant="large"),
                 Text("Instructions for navigating", variant = "xLarge"),
                 Text(FontIcon(iconName = "ScrollUpDown", style = "margin-right: 10px; vertical-align: middle;"),
                      "Scroll up and down to examine additional companies on the timeline.", variant="large"),
@@ -374,14 +379,16 @@ server <- function(input, output, session) {
                     div(style = list(flexGrow = 1)),
                     IconButton.shinyInput("hide_pue_graph_explainer", iconProps = list(iconName = "Cancel")),
                 ),
+                Text("Power Usage Effectiveness (PUE) is the measurement of energy efficiency in a data center. The calculation is determined by dividing the amount of power entering a data center by the power used to run the computer infrastructure within it.", variant = "large"),
                 Text("The PUE plot highlights one or more companies' PUE performance among their fleet-wide or individual locations on an industry scale.", variant = "large"),
+                Text("Lower PUE values are ideal because they indicate that data centers operate mostly on server energy and not so much on infrastructure energy.", variant = "large"),
                 Text("Instructions for navigating", variant = "xLarge"),
                 Text(FontIcon(iconName = "TabletMode", style = "margin-right: 10px; vertical-align: middle;"),
                      "Select one or more companies in the dropdown bar to spotlight their PUE data.", variant="large"),
                 Text(FontIcon(iconName = "CalculatorAddition", style = "margin-right: 10px; vertical-align: middle;"),
-                     "Hover over a plot point that lists the company name, geographical scope, PUE value, and measurement level.", variant="large"),
+                     "Hover over a plot point to examine the company name, geographical scope, PUE value, and measurement level.", variant="large"),
                 Text(FontIcon(iconName = "TriggerAuto", style = "margin-right: 10px; vertical-align: middle;"),
-                     "Hover over the command bar to use additional plotly tools.", variant="large")
+                     "Hover over the command bar in the top right corner to use additional plotly tools.", variant="large")
           )
     )
   })
