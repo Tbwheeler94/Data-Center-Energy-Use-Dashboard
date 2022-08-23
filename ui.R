@@ -82,8 +82,8 @@ home_page <- makePage(
         glide(
              height = "250px",
              custom_controls = div(class = "glide-controls", glideControls()),
-             next_label = ActionButton.shinyInput("fakebuttonid", iconProps = list("iconName" = "ChromeBackMirrored"), style = "color: #137AD1"),
-             previous_label = ActionButton.shinyInput("fakebuttonid2", iconProps = list("iconName" = "ChromeBack"), style = "color: #137AD1"),
+             next_label = FontIcon(iconName = "ChromeBackMirrored"),
+             previous_label = FontIcon(iconName = "ChromeBack"),
              screen(
                HighlightsCard(
                  Stack(style = "text-align: center; padding: 25px", Text("Welcome to the Data Center Energy Use Dashboard!", variant = "xxLarge", style = "color: #137AD1;")),
