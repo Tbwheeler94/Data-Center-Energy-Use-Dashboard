@@ -169,7 +169,6 @@ home_page <- makePage(
                            description = 'Explore an individual company’s performance')
           )
     ),
-    br(),
     Grid(
       GridItem(class = "ms-sm12 ms-xl4",
                lp_main_box(image_name = "Settings",
@@ -214,7 +213,6 @@ home_to_industry_trends_page <- makePage(
                                   description = 'Visualize the timeline of data center energy reporting')
       )
     ),
-    br(),
     Grid(
       GridItem(class = "ms-sm12 ms-xl6",
                       lp_home_to_industry_box(image_name = "home_to_industry_button_industry_relationships", 
