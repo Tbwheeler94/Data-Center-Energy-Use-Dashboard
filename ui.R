@@ -86,7 +86,7 @@ home_page <- makePage(
              previous_label = FontIcon(iconName = "ChromeBack"),
              screen(
                HighlightsCard(
-                 Stack(style = "text-align: center; padding: 25px", Text("Welcome to the Data Center Energy Use Dashboard!", variant = "xxLarge", style = "color: #137AD1;")),
+                 Stack(style = "text-align: center; padding: 25px", Text("Welcome to the Data Center Energy Use Dashboard", variant = "xxLarge", style = "color: #137AD1;")),
                  Stack(style = "text-align: left; padding: 25px", Text("We are a team of UCSB researchers aiming to increase transparency in data center energy trends and reporting.\nClick on one of our cards to get started.", variant = "large", style = "color: #000000;"))
                )
              ),
@@ -195,7 +195,7 @@ home_page <- makePage(
 
 home_to_industry_trends_page <- makePage(
   div(
-    Stack(style = "text-align: left; padding: 25px", Text("Click an industry trend box to access the plot!", variant = "xxLarge", style = "color: #137AD1;")),
+    Stack(style = "text-align: left; padding: 25px", Text("Click an industry trend box to access the plot", variant = "xxLarge", style = "color: #137AD1;")),
     Grid(
       GridItem(class = "ms-sm12 ms-xl4",
                       lp_home_to_industry_box(image_name = "home_to_industry_button_reporting_trends", 
