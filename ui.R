@@ -701,7 +701,7 @@ navigation <- Nav(
       list(name = 'Methods', url = '#!/methods', key = 'methods', icon = 'Settings'),
       list(name = 'Contact', url = '#!/contact-us', key = 'contact', icon = 'Send'),
       list(name = 'About', url = '#!/about-us', key = 'about', icon = 'TestBeakerSolid'),
-      list(name = 'ISA Lab Website', url = 'https://carlobroderick.wixsite.com/isalab', key = 'isal', icon = 'MiniLink')
+      list(name = 'ISA Lab Website', url = 'https://carlobroderick.wixsite.com/isalab', target="_blank", rel="noopener noreferrer", key = 'isal', icon = 'MiniLink')
     ))
   ),
   initialSelectedKey = 'home'

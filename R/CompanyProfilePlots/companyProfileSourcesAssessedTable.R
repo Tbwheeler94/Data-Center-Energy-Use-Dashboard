@@ -78,7 +78,7 @@ buildCompanyProfileSourcesAssessedTable <- function(data_sheet_energy_transforme
     filter(company %in% selected_company) %>%
     select(c("data_year", "report_1_type", "did_report_1_provide_electricity_or_fuel_use_data", "link_to_report_1_on_company_website", "name_of_report_1_on_box")) %>%
     rename(report_type = report_1_type, yes_no = did_report_1_provide_electricity_or_fuel_use_data, link = link_to_report_1_on_company_website, name = name_of_report_1_on_box) %>%
-    mutate(name = paste0("<a href=", link, ">", name, "</a> <br/>")) %>%
+    mutate(name = paste0("<a href=", link, " target=_blank rel=noopener noreferrer>", name, "</a> <br/>")) %>%
     subset(report_type != "")
   
   source_assessed_2 <- data_sheet_energy_transformed %>% 
@@ -86,7 +86,7 @@ buildCompanyProfileSourcesAssessedTable <- function(data_sheet_energy_transforme
     filter(company %in% selected_company) %>%
     select(c("data_year", "report_2_type", "did_report_2_provide_electricity_or_fuel_use_data", "link_to_report_2_on_company_website", "name_of_report_2_on_box")) %>% 
     rename(report_type = report_2_type, yes_no = did_report_2_provide_electricity_or_fuel_use_data, link = link_to_report_2_on_company_website, name = name_of_report_2_on_box) %>%
-    mutate(name = paste0("<a href=", link, ">", name, "</a> <br/>")) %>%
+    mutate(name = paste0("<a href=", link, " target=_blank rel=noopener noreferrer>", name, "</a> <br/>")) %>%
     subset(report_type != "")
   
   source_assessed_3 <- data_sheet_energy_transformed %>% 
@@ -94,7 +94,7 @@ buildCompanyProfileSourcesAssessedTable <- function(data_sheet_energy_transforme
     filter(company %in% selected_company) %>%
     select(c("data_year", "report_3_type", "did_report_3_provide_electricity_or_fuel_use_data", "link_to_report_3_on_company_website", "name_of_report_3_on_box")) %>% 
     rename(report_type = report_3_type, yes_no = did_report_3_provide_electricity_or_fuel_use_data, link = link_to_report_3_on_company_website, name = name_of_report_3_on_box) %>%
-    mutate(name = paste0("<a href=", link, ">", name, "</a> <br/>")) %>%
+    mutate(name = paste0("<a href=", link, " target=_blank rel=noopener noreferrer>", name, "</a> <br/>")) %>%
     subset(report_type != "")
   
   source_assessed_4 <- data_sheet_energy_transformed %>% 
@@ -102,7 +102,7 @@ buildCompanyProfileSourcesAssessedTable <- function(data_sheet_energy_transforme
     filter(company %in% selected_company) %>%
     select(c("data_year", "report_4_type", "did_report_4_provide_electricity_or_fuel_use_data", "link_to_report_4_on_company_website", "name_of_report_4_on_box")) %>% 
     rename(report_type = report_4_type, yes_no = did_report_4_provide_electricity_or_fuel_use_data, link = link_to_report_4_on_company_website, name = name_of_report_4_on_box) %>%
-    mutate(name = paste0("<a href=", link, ">", name, "</a> <br/>")) %>%
+    mutate(name = paste0("<a href=", link, " target=_blank rel=noopener noreferrer>", name, "</a> <br/>")) %>%
     subset(report_type != "")
   
   source_assessed_5 <- data_sheet_energy_transformed %>% 
@@ -110,7 +110,7 @@ buildCompanyProfileSourcesAssessedTable <- function(data_sheet_energy_transforme
     filter(company %in% selected_company) %>%
     select(c("data_year", "report_5_type", "did_report_5_provide_electricity_or_fuel_use_data", "link_to_report_5_on_company_website", "name_of_report_5_on_box")) %>% 
     rename(report_type = report_5_type, yes_no = did_report_5_provide_electricity_or_fuel_use_data, link = link_to_report_5_on_company_website, name = name_of_report_5_on_box) %>%
-    mutate(name = paste0("<a href=", link, ">", name, "</a> <br/>")) %>%
+    mutate(name = paste0("<a href=", link, " target=_blank rel=noopener noreferrer>", name, "</a> <br/>")) %>%
     subset(report_type != "")
   
   # stack sources columns on top of each other and spread the table (using the report types as new column names)
