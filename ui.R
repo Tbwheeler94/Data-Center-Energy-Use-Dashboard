@@ -261,10 +261,16 @@ reporting_trends_page <- makePage(
     Stack(style = "text-align: center; padding: 25px", Text("Trends in Data Center Energy Reporting Transparency", variant = "xxLarge", style = "color: #137AD1;")),
     Grid(
       reactOutput("transparency_graph_explainer"),
-      HTML("<button type='button' id='show_transparency_graph_explainer' class='shiny-bound-input action-button ms-Button ms-Button--action ms-Button--command root-128' data-is-focusable='true' style='cursor: pointer; background-color: rgb(19, 122, 209); color: white; float: right;'><span class='ms-Button-flexContainer flexContainer-77' data-automationid='splitbuttonprimary'><i data-icon-name='Info' aria-hidden='true' class='ms-Icon root-32 css-87 ms-Button-icon icon-79' style='font-family: FabricMDL2Icons; color: white;'></i><span class='ms-Button-textContainer textContainer-102'><span class='ms-Button-label label-103' id='id__42'>Help</span></span></span></button>"),
-      br(),
       GridItem(class = "ms-sm12 ms-xl12", 
                CompanyCard(
+                 Stack(
+                   DefaultButton.shinyInput("show_transparency_graph_explainer", iconProps = list("iconName" = "Help", "color" = "#137AD1"), text = "Help", style = "border: none; color: #137AD1;"),
+                   DefaultButton.shinyInput("download_transparency_data", iconProps = list("iconName" = "Download", "color" = "#137AD1"), text = "Download Data", style = "border: none; color: #137AD1;"),
+                   DefaultButton.shinyInput("save_transparency_graph", iconProps = list("iconName" = "Save", "color" = "#137AD1"), text = "Save Image", style = "border: none; color: #137AD1;"),
+                   horizontal = TRUE,
+                   horizontalAlign = "right",
+                   tokens = list(childrenGap = 20)
+                 ),
                  girafeOutput('transparency_graph')
                  # Stack(horizontal = TRUE, style = "justify-content: end; color: #137AD1;", 
                        # TooltipHost(content = "This graph displays the change in the number of companies reporting at different levels of transparency through time. The total height of the stacked bars changes through time because some companies were not founded until after 2007.",
@@ -314,8 +320,14 @@ energy_data_trends <- makePage(
                  )
         ),
         reactOutput("energy_data_graph_explainer"),
-        HTML("<button type='button' id='show_energy_data_graph_explainer' class='shiny-bound-input action-button ms-Button ms-Button--action ms-Button--command root-128' data-is-focusable='true' style='cursor: pointer; background-color: rgb(19, 122, 209); color: white; float: right;'><span class='ms-Button-flexContainer flexContainer-77' data-automationid='splitbuttonprimary'><i data-icon-name='Info' aria-hidden='true' class='ms-Icon root-32 css-87 ms-Button-icon icon-79' style='font-family: FabricMDL2Icons; color: white;'></i><span class='ms-Button-textContainer textContainer-102'><span class='ms-Button-label label-103' id='id__42'>Help</span></span></span></button>"),
-        br(),
+        Stack(
+          DefaultButton.shinyInput("show_energy_data_graph_explainer", iconProps = list("iconName" = "Help", "color" = "#137AD1"), text = "Help", style = "border: none; color: #137AD1;"),
+          DefaultButton.shinyInput("download_energy_data", iconProps = list("iconName" = "Download", "color" = "#137AD1"), text = "Download Data", style = "border: none; color: #137AD1;"),
+          DefaultButton.shinyInput("save_energy_data_graph", iconProps = list("iconName" = "Save", "color" = "#137AD1"), text = "Save Image", style = "border: none; color: #137AD1;"),
+          horizontal = TRUE,
+          horizontalAlign = "right",
+          tokens = list(childrenGap = 20)
+        ),
         GridItem(class = "ms-sm12 ms-xl9",
                  plotOutput('energy_data_trendsplot'))
       )
@@ -336,11 +348,17 @@ reporting_timeline_page <- makePage(
     Stack(style = "text-align: center; padding: 25px", Text("Data Center Energy Reporting Transparency Timeline", variant = "xxLarge", style = "color: #137AD1;")),
     Grid(
       reactOutput("reporting_timeline_explainer"),
-      HTML("<button type='button' id='show_reporting_timeline_explainer' class='shiny-bound-input action-button ms-Button ms-Button--action ms-Button--command root-128' data-is-focusable='true' style='cursor: pointer; background-color: rgb(19, 122, 209); color: white; float: right;'><span class='ms-Button-flexContainer flexContainer-77' data-automationid='splitbuttonprimary'><i data-icon-name='Info' aria-hidden='true' class='ms-Icon root-32 css-87 ms-Button-icon icon-79' style='font-family: FabricMDL2Icons; color: white;'></i><span class='ms-Button-textContainer textContainer-102'><span class='ms-Button-label label-103' id='id__42'>Help</span></span></span></button>"),
-      br(),
       GridItem(class = "ms-sm12 ms-xl12", 
                Stack(class = "ms-depth-8 timeline-graph",
                  br(),
+                 Stack(
+                   DefaultButton.shinyInput("show_reporting_timeline_explainer", iconProps = list("iconName" = "Help", "color" = "#137AD1"), text = "Help", style = "border: none; color: #137AD1;"),
+                   DefaultButton.shinyInput("download_reporting_timeline_data", iconProps = list("iconName" = "Download", "color" = "#137AD1"), text = "Download Data", style = "border: none; color: #137AD1;"),
+                   DefaultButton.shinyInput("save_reporting_timeline_graph", iconProps = list("iconName" = "Save", "color" = "#137AD1"), text = "Save Image", style = "border: none; color: #137AD1;"),
+                   horizontal = TRUE,
+                   horizontalAlign = "right",
+                   tokens = list(childrenGap = 20)
+                 ),
                  plotlyOutput('reporting_timeline', width = "auto")
                )
       )
@@ -357,8 +375,15 @@ lease_cloud_network_page <- makePage(
       Text("Network of Data Center Lease/Cloud Providers", variant = "xxLarge", style = "color: #137AD1; padding-bottom: 15px;"),
       br(),
       reactOutput("network_graph_explainer"),
-      HTML("<button type='button' id='show_network_graph_explainer' class='shiny-bound-input action-button ms-Button ms-Button--action ms-Button--command root-128' data-is-focusable='true' style='cursor: pointer; background-color: rgb(19, 122, 209); color: white; float: right;'><span class='ms-Button-flexContainer flexContainer-77' data-automationid='splitbuttonprimary'><i data-icon-name='Info' aria-hidden='true' class='ms-Icon root-32 css-87 ms-Button-icon icon-79' style='font-family: FabricMDL2Icons; color: white;'></i><span class='ms-Button-textContainer textContainer-102'><span class='ms-Button-label label-103' id='id__42'>Help</span></span></span></button>"),
-      br(),
+      Stack(
+        DefaultButton.shinyInput("show_network_graph_explainer", iconProps = list("iconName" = "Help", "color" = "#137AD1"), text = "Help", style = "border: none; color: #137AD1;"),
+        DefaultButton.shinyInput("download_network_graph_data", iconProps = list("iconName" = "Download", "color" = "#137AD1"), text = "Download Data", style = "border: none; color: #137AD1;"),
+        DefaultButton.shinyInput("save_network_graph", iconProps = list("iconName" = "Save", "color" = "#137AD1"), text = "Save Image", style = "border: none; color: #137AD1;"),
+        horizontal = TRUE,
+        horizontalAlign = "right",
+        tokens = list(childrenGap = 20)
+      ),
+      # HTML("<button type='button' id='show_network_graph_explainer' class='shiny-bound-input action-button ms-Button ms-Button--action ms-Button--command root-128' data-is-focusable='true' style='cursor: pointer; background-color: rgb(19, 122, 209); color: white; float: right;'><span class='ms-Button-flexContainer flexContainer-77' data-automationid='splitbuttonprimary'><i data-icon-name='Info' aria-hidden='true' class='ms-Icon root-32 css-87 ms-Button-icon icon-79' style='font-family: FabricMDL2Icons; color: white;'></i><span class='ms-Button-textContainer textContainer-102'><span class='ms-Button-label label-103' id='id__42'>Help</span></span></span></button>"),
       div(style = "text-align: left;", visNetworkOutput('lease_cloud_network', height = "76vh")),
   )
 )
@@ -385,7 +410,14 @@ pue_trends_page <- makePage(
     Stack(style = "text-align: center; padding: 25px", Text("Industry PUE Trends", variant = "xxLarge", style = "color: #137AD1;")),
     Grid(
       reactOutput("pue_graph_explainer"),
-      HTML("<button type='button' id='show_pue_graph_explainer' class='shiny-bound-input action-button ms-Button ms-Button--action ms-Button--command root-128' data-is-focusable='true' style='cursor: pointer; background-color: rgb(19, 122, 209); color: white; float: right;'><span class='ms-Button-flexContainer flexContainer-77' data-automationid='splitbuttonprimary'><i data-icon-name='Info' aria-hidden='true' class='ms-Icon root-32 css-87 ms-Button-icon icon-79' style='font-family: FabricMDL2Icons; color: white;'></i><span class='ms-Button-textContainer textContainer-102'><span class='ms-Button-label label-103' id='id__42'>Help</span></span></span></button>")
+      Stack(
+        DefaultButton.shinyInput("show_pue_graph_explainer", iconProps = list("iconName" = "Help", "color" = "#137AD1"), text = "Help", style = "border: none; color: #137AD1;"),
+        DefaultButton.shinyInput("download_pue_data", iconProps = list("iconName" = "Download", "color" = "#137AD1"), text = "Download Data", style = "border: none; color: #137AD1;"),
+        DefaultButton.shinyInput("save_pue_graph", iconProps = list("iconName" = "Save", "color" = "#137AD1"), text = "Save Image", style = "border: none; color: #137AD1;"),
+        horizontal = TRUE,
+        horizontalAlign = "right",
+        tokens = list(childrenGap = 20)
+      )
     ),
     Grid(
       GridItem(class = "ms-md12 ms-lg2 ms-xl3",
