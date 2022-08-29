@@ -85,10 +85,15 @@ home_page <- makePage(
              next_label = FontIcon(iconName = "ChevronRightSmall", style = list(fontSize = 20)),
              previous_label = FontIcon(iconName = "ChevronLeftSmall", style = list(fontSize = 20)),
              screen(
-               HighlightsCard(
-                 Stack(style = "text-align: center; padding: 25px", Text("Welcome to the Data Center Energy Use Dashboard", variant = "xxLarge", style = "color: #137AD1;")),
-                 Stack(style = "text-align: left; padding: 25px", Text("We are a team of UCSB researchers aiming to increase transparency in data center energy trends and reporting.\nClick on one of our cards to get started.", variant = "large", style = "color: #000000;"))
+               div(class="container", 
+                   tags$img(src="bg4.jpeg", class="ms-sm12 ms-xl12", height="250px"),
+                   div(class="centered", Text("Welcome to the Data Center Energy Use Dashboard", variant = "xLarge", style = "color: #FFFFFF;")),
+                   div(class="centered-bottom", Text("Click on one of the cards below to get started", variant = "large", style = "color: #FFFFFF"))
                )
+               # HighlightsCard(
+               #   Stack(style = "text-align: center; padding: 25px", Text("Welcome to the Data Center Energy Use Dashboard", variant = "xxLarge", style = "color: #137AD1;")),
+               #   Stack(style = "text-align: left; padding: 25px", Text("We are a team of UCSB researchers aiming to increase transparency in data center energy trends and reporting.\nClick on one of our cards to get started.", variant = "large", style = "color: #000000;"))
+               # )
              ),
              screen(
                div(class="container", 
