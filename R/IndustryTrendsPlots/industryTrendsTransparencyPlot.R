@@ -170,7 +170,7 @@ buildIndustryTrendsTransparencyPlot <- function(data_sheet_energy_raw) {
       legend.text = element_text(size=12),
       legend.text.align = 0
     ) +
-    scale_x_continuous(breaks = 2007:2021) +
+    scale_x_continuous(breaks = 2007:2021, expand = c(0.01,0)) +
     scale_y_continuous(expand = expansion(mult = c(0.01,0))) +
     ylab("Number of Companies") +
     scale_fill_manual_interactive(
