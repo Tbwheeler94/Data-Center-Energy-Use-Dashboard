@@ -1,5 +1,7 @@
 .help {cursor: help;}
 
+.modebar{ display: none !important; }
+
 .container {
   position: relative;
   text-align: center;

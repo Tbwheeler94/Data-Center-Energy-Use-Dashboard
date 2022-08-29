@@ -77,7 +77,8 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
     #scale_x_date(date_breaks = "1 year", date_labels =  "%Y") +
     scale_fill_manual(values=status_colors, labels=status_levels, drop=FALSE) +
     theme(
-      legend.text=element_text(size=10),
+      #legend.text=element_text(size=10),
+      legend.position="none",
       axis.title.x=element_blank(),
       axis.text.x=element_text(size=10),
       axis.line.x=element_line(colour="black", size=1),
@@ -92,6 +93,8 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
   timeline_plot_height <- length(unique_companies) * 35
   
   ggplotly(p, height=timeline_plot_height, tooltip = "text") %>% config(displayModeBar = T)  %>%
-           plotly::layout(legend = list(orientation = "h", x = 0, y = 1.15), xaxis = list(side ="top"))
+           # plotly::layout(legend = list(orientation = "h", x = 0, y = 1.15), xaxis = list(side ="top"))
+             plotly::layout(xaxis = list(side ="top")) %>%
+             hide_legend()
   
 }
