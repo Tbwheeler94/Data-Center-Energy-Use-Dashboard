@@ -81,9 +81,9 @@ home_page <- makePage(
       GridItemHome(class = "ms-sm12 ms-xl12", style="margin-top: -15px;", 
         glide(
              height = "250px",
-             custom_controls = div(class = "glide-controls", glideControls()),
-             next_label = FontIcon(iconName = "ChromeBackMirrored"),
-             previous_label = FontIcon(iconName = "ChromeBack"),
+             custom_controls = div(class="glide-controls", glideControls(list(tags$button(class = "ms-Button ms-Button--primary root-14 prev-screen", style="opacity: 0.8; cursor: pointer; height: 250px;")), list(tags$button(class = "ms-Button ms-Button--primary root-14 next-screen", style = "opacity: 0.8; cursor: pointer; height: 250px;"), lastButton(class = "ms-Button ms-Button--primary root-14")))),
+             next_label = FontIcon(iconName = "ChevronRightSmall", style = list(fontSize = 20)),
+             previous_label = FontIcon(iconName = "ChevronLeftSmall", style = list(fontSize = 20)),
              screen(
                HighlightsCard(
                  Stack(style = "text-align: center; padding: 25px", Text("Welcome to the Data Center Energy Use Dashboard", variant = "xxLarge", style = "color: #137AD1;")),
