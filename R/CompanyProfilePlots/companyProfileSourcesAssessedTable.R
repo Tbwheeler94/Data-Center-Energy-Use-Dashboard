@@ -5,15 +5,9 @@ renderSourcesAssessedToggleButton <- function(sources_assessed, selected_company
   report_not_found <- paste(col_order[dummy_report_type], collapse=", ")
   report_found <- col_order[which(col_order %in% colnames(sources_assessed))]
   report_found_upper <- toupper(report_found)
-  message <- paste0("Report types not found for ", selected_company, ": ", report_not_found,
-                    ".\nGreen indicates if report provided electricity or fuel use data; Red 
-                    indicates if report did not provide electricity or fuel use data.")
+  message <- paste0(report_not_found, ".")
   
-  TeachingBubble(
-    target = "#sources_bubble",
-    headline = message,
-    hasCloseButton = TRUE
-  )
+  message
 }
 
 renderSourcesAssessedDataTable <- function(sources_assessed, yes_no_table, selected_company) {

@@ -81,14 +81,15 @@ home_page <- makePage(
       GridItemHome(class = "ms-sm12 ms-xl12", style="margin-top: -15px;", 
         glide(
              height = "250px",
-             custom_controls = div(class="glide-controls", glideControls(list(tags$button(class = "ms-Button ms-Button--primary root-14 prev-screen", style="opacity: 0.8; cursor: pointer; height: 250px;")), list(tags$button(class = "ms-Button ms-Button--primary root-14 next-screen", style = "opacity: 0.8; cursor: pointer; height: 250px;"), lastButton(class = "ms-Button ms-Button--primary root-14")))),
+             custom_controls = div(class="glide-controls", glideControls(list(tags$button(class = "ms-Button ms-Button--primary root-14 prev-screen", style="opacity: 0.8; cursor: pointer; height: 250px;")), list(tags$button(class = "ms-Button ms-Button--primary root-14 next-screen", style = "opacity: 0.8; cursor: pointer; height: 250px;"), div(`data-glide-el`="controls",tags$button(class="last-screen", style = "opacity: 0.8; cursor: pointer; height: 250px;", `data-glide-dir` = "<<", FontIcon(iconName = "ChevronRightSmall", style = list(fontSize = 20))))))),
              next_label = FontIcon(iconName = "ChevronRightSmall", style = list(fontSize = 20)),
              previous_label = FontIcon(iconName = "ChevronLeftSmall", style = list(fontSize = 20)),
              screen(
                div(class="container", 
                    tags$img(src="bg4.jpeg", class="ms-sm12 ms-xl12", height="250px"),
                    div(class="centered", Text("Welcome to the Data Center Energy Use Dashboard", variant = "xLarge", style = "color: #FFFFFF;")),
-                   div(class="centered-bottom", Text("Click on one of the cards below to get started", variant = "large", style = "color: #FFFFFF"))
+                   div(class="centered-bottom-text", Text("Click on one of the cards below to get started", variant = "large", style = "color: #FFFFFF")),
+                   div(class="centered-bottom-bubble", Text(FontIcon(iconName = "CircleFill", style = "color: #137AD1; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;")))
                )
                # HighlightsCard(
                #   Stack(style = "text-align: center; padding: 25px", Text("Welcome to the Data Center Energy Use Dashboard", variant = "xxLarge", style = "color: #137AD1;")),
@@ -99,7 +100,8 @@ home_page <- makePage(
                div(class="container", 
                  tags$img(src="bg1.jpeg", class="ms-sm12 ms-xl12", height="250px"),
                  div(class="centered", Text(uiOutput("years_reported"), variant = "mega", style = "color: #FFFFFF;")),
-                 div(class="centered-bottom", Text("Years Reporting", variant = "xxLarge", style = "color: #FFFFFF"))
+                 div(class="centered-bottom-text", Text("Years Reporting", variant = "xxLarge", style = "color: #FFFFFF")),
+                 div(class="centered-bottom-bubble", Text(FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #137AD1; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;")))
                )
                # HighlightsCard(
                  # FontIcon(iconName = "Calendar", style = list(fontSize = 60)),
@@ -111,7 +113,8 @@ home_page <- makePage(
                div(class="container",
                    tags$img(src="bg2.jpeg", class="ms-sm12 ms-xl12", height="250px"),
                    div(class="centered", Text(uiOutput("companies_reporting"), variant = "mega", style = "color: #FFFFFF;")),
-                   div(class="centered-bottom", Text("Companies Reporting", variant = "xxLarge", style = "color: #FFFFFF"))
+                   div(class="centered-bottom-text", Text("Companies Reporting", variant = "xxLarge", style = "color: #FFFFFF")),
+                   div(class="centered-bottom-bubble", Text(FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #137AD1; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;")))
                )
                # HighlightsCard(
                #   FontIcon(iconName = "ClipboardList", style = list(fontSize = 60)),
@@ -123,7 +126,8 @@ home_page <- makePage(
                div(class="container",
                    tags$img(src="bg3.jpeg", class="ms-sm12 ms-xl12", height="250px"),
                    div(class="centered", Text(uiOutput("energy_reported"), variant = "mega", style = "color: #FFFFFF;")),
-                   div(class="centered-bottom", Text(uiOutput("energy_reported_text"), variant = "xLarge", style = "color: #FFFFFF"))
+                   div(class="centered-bottom-text", Text(uiOutput("energy_reported_text"), variant = "xLarge", style = "color: #FFFFFF")),
+                   div(class="centered-bottom-bubble", Text(FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #137AD1; margin: 5px;")))
                )
                # HighlightsCard(
                #   FontIcon(iconName = "TableComputed", style = list(fontSize = 60)),
@@ -264,9 +268,9 @@ reporting_trends_page <- makePage(
       GridItem(class = "ms-sm12 ms-xl12", 
                CompanyCard(
                  Stack(
-                   DefaultButton.shinyInput("show_transparency_graph_explainer", iconProps = list("iconName" = "Help", "color" = "#137AD1"), text = "Help", style = "border: none; color: #137AD1;"),
-                   DefaultButton.shinyInput("download_transparency_data", iconProps = list("iconName" = "Download", "color" = "#137AD1"), text = "Download Data", style = "border: none; color: #137AD1;"),
-                   DefaultButton.shinyInput("save_transparency_graph", iconProps = list("iconName" = "Save", "color" = "#137AD1"), text = "Save Image", style = "border: none; color: #137AD1;"),
+                   PrimaryButton.shinyInput("show_transparency_graph_explainer", iconProps = list("iconName" = "Help"), text = "Help"),
+                   TooltipHost(content = "Copyright 2022, ISA Lab, please contact isaldatacenterdashboard@gmail.com with any questions", PrimaryButton.shinyInput("download_transparency_data", iconProps = list("iconName" = "Download"), text = "Download Data")),
+                   PrimaryButton.shinyInput("save_transparency_graph", iconProps = list("iconName" = "Save"), text = "Save Image"),
                    horizontal = TRUE,
                    horizontalAlign = "right",
                    tokens = list(childrenGap = 20)
@@ -321,9 +325,9 @@ energy_data_trends <- makePage(
         ),
         reactOutput("energy_data_graph_explainer"),
         Stack(
-          DefaultButton.shinyInput("show_energy_data_graph_explainer", iconProps = list("iconName" = "Help", "color" = "#137AD1"), text = "Help", style = "border: none; color: #137AD1;"),
-          DefaultButton.shinyInput("download_energy_data", iconProps = list("iconName" = "Download", "color" = "#137AD1"), text = "Download Data", style = "border: none; color: #137AD1;"),
-          DefaultButton.shinyInput("save_energy_data_graph", iconProps = list("iconName" = "Save", "color" = "#137AD1"), text = "Save Image", style = "border: none; color: #137AD1;"),
+          PrimaryButton.shinyInput("show_energy_data_graph_explainer", iconProps = list("iconName" = "Help", "color" = "#137AD1"), text = "Help"),
+          TooltipHost(content = "Copyright 2022, ISA Lab, please contact isaldatacenterdashboard@gmail.com with any questions", PrimaryButton.shinyInput("download_energy_data", iconProps = list("iconName" = "Download"), text = "Download Data")),
+          PrimaryButton.shinyInput("save_energy_data_graph", iconProps = list("iconName" = "Save", "color" = "#137AD1"), text = "Save Image"),
           horizontal = TRUE,
           horizontalAlign = "right",
           tokens = list(childrenGap = 20)
@@ -352,9 +356,9 @@ reporting_timeline_page <- makePage(
                Stack(class = "ms-depth-8 timeline-graph",
                  br(),
                  Stack(
-                   DefaultButton.shinyInput("show_reporting_timeline_explainer", iconProps = list("iconName" = "Help", "color" = "#137AD1"), text = "Help", style = "border: none; color: #137AD1;"),
-                   DefaultButton.shinyInput("download_reporting_timeline_data", iconProps = list("iconName" = "Download", "color" = "#137AD1"), text = "Download Data", style = "border: none; color: #137AD1;"),
-                   DefaultButton.shinyInput("save_reporting_timeline_graph", iconProps = list("iconName" = "Save", "color" = "#137AD1"), text = "Save Image", style = "border: none; color: #137AD1;"),
+                   PrimaryButton.shinyInput("show_reporting_timeline_explainer", iconProps = list("iconName" = "Help"), text = "Help"),
+                   TooltipHost(content = "Copyright 2022, ISA Lab, please contact isaldatacenterdashboard@gmail.com with any questions", PrimaryButton.shinyInput("download_reporting_timeline_data", iconProps = list("iconName" = "Download"), text = "Download Data")),
+                   PrimaryButton.shinyInput("save_reporting_timeline_graph", iconProps = list("iconName" = "Save"), text = "Save Image"),
                    horizontal = TRUE,
                    horizontalAlign = "right",
                    tokens = list(childrenGap = 20)
@@ -376,9 +380,9 @@ lease_cloud_network_page <- makePage(
       br(),
       reactOutput("network_graph_explainer"),
       Stack(
-        DefaultButton.shinyInput("show_network_graph_explainer", iconProps = list("iconName" = "Help", "color" = "#137AD1"), text = "Help", style = "border: none; color: #137AD1;"),
-        DefaultButton.shinyInput("download_network_graph_data", iconProps = list("iconName" = "Download", "color" = "#137AD1"), text = "Download Data", style = "border: none; color: #137AD1;"),
-        DefaultButton.shinyInput("save_network_graph", iconProps = list("iconName" = "Save", "color" = "#137AD1"), text = "Save Image", style = "border: none; color: #137AD1;"),
+        PrimaryButton.shinyInput("show_network_graph_explainer", iconProps = list("iconName" = "Help"), text = "Help"),
+        TooltipHost(content = "Copyright 2022, ISA Lab, please contact isaldatacenterdashboard@gmail.com with any questions", PrimaryButton.shinyInput("download_network_graph_data", iconProps = list("iconName" = "Download"), text = "Download Data")),
+        PrimaryButton.shinyInput("save_network_graph", iconProps = list("iconName" = "Save"), text = "Save Image"),
         horizontal = TRUE,
         horizontalAlign = "right",
         tokens = list(childrenGap = 20)
@@ -411,9 +415,9 @@ pue_trends_page <- makePage(
     Grid(
       reactOutput("pue_graph_explainer"),
       Stack(
-        DefaultButton.shinyInput("show_pue_graph_explainer", iconProps = list("iconName" = "Help", "color" = "#137AD1"), text = "Help", style = "border: none; color: #137AD1;"),
-        DefaultButton.shinyInput("download_pue_data", iconProps = list("iconName" = "Download", "color" = "#137AD1"), text = "Download Data", style = "border: none; color: #137AD1;"),
-        DefaultButton.shinyInput("save_pue_graph", iconProps = list("iconName" = "Save", "color" = "#137AD1"), text = "Save Image", style = "border: none; color: #137AD1;"),
+        PrimaryButton.shinyInput("show_pue_graph_explainer", iconProps = list("iconName" = "Help"), text = "Help"),
+        TooltipHost(content = "Copyright 2022, ISA Lab, please contact isaldatacenterdashboard@gmail.com with any questions", PrimaryButton.shinyInput("download_pue_data", iconProps = list("iconName" = "Download"), text = "Download Data")),
+        PrimaryButton.shinyInput("save_pue_graph", iconProps = list("iconName" = "Save"), text = "Save Image"),
         horizontal = TRUE,
         horizontalAlign = "right",
         tokens = list(childrenGap = 20)
@@ -574,7 +578,7 @@ company_analysis_page <- makePage(
                  Text(variant = "large", style = "text-align: center;"),
                  div(dataTableOutput("sources_table"), style = "width: 100%;"),
                  Stack(horizontal = TRUE, style = "justify-content: end;",
-                       DefaultButton.shinyInput("show_sources_assessed_teaching_bubble", id = "sources_bubble", text = "About This Table", style = "color: #137AD1; margin-right: 10px;")),
+                       PrimaryButton.shinyInput("show_sources_assessed_teaching_bubble", text = "About This Table", style = "margin-right: 10px;")),
                  reactOutput('sources_assessed_teaching_bubble'),
                )
       )

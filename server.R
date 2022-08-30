@@ -802,12 +802,27 @@ server <- function(input, output, session) {
     buildCompanyProfileSourcesAssessedTable(data_sheet_energy_transformed, input$selected_company, TRUE)
   })
   
-  showBubble <- reactiveVal(FALSE)
-  observeEvent(input$show_sources_assessed_teaching_bubble, showBubble(!showBubble()))
+  sources_assessed_modal_visible <- reactiveVal(FALSE)
+  observeEvent(input$show_sources_assessed_teaching_bubble, sources_assessed_modal_visible(TRUE))
+  observeEvent(input$hide_sources_assessed_teaching_bubble, sources_assessed_modal_visible(FALSE))
+
   output$sources_assessed_teaching_bubble <- renderReact({
-    if (showBubble()) {
-      buildCompanyProfileSourcesAssessedTable(data_sheet_energy_transformed, input$selected_company, FALSE)
-    }
+    message <- buildCompanyProfileSourcesAssessedTable(data_sheet_energy_transformed, input$selected_company, FALSE)
+    Modal(isOpen = sources_assessed_modal_visible(),
+          Stack(tokens = list(padding = "25px", childrenGap = "10px"),
+                style = "width: 800px;",
+                div(style = list(display = "flex"),
+                    Text(paste("Report types not found for ", input$selected_company), variant = "xLarge"),
+                    div(style = list(flexGrow = 1)),
+                    IconButton.shinyInput("hide_sources_assessed_teaching_bubble", iconProps = list(iconName = "Cancel")),
+                ),
+                Text(message, variant = "large"),
+                br(),
+                Text("Methodology for sources assessed table", variant = "xLarge"),
+                Text(FontIcon(iconName = "SquareShapeSolid", style = "color: #90ee90; margin-right: 10px; vertical-align: middle;"), "Green indicates if report provided electricity or fuel use data.", variant = "large"),
+                Text(FontIcon(iconName = "SquareShapeSolid", style = "color: #ff6c70; margin-right: 10px; vertical-align: middle;"), "Red indicates if report did not provide electricity or fuel use data.", variant = "large")
+          )
+    )
   })
   
   ##############################################################################################################

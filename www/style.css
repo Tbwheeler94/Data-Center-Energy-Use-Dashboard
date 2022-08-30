@@ -10,16 +10,24 @@
 
 .centered {
   position: absolute;
-  top: 50%;
+  top: 40%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -40%);
 }
 
-.centered-bottom {
+.centered-bottom-text {
   position: absolute;
-  top: 80%;
+  top: 70%;
   left: 50%;
-  transform: translate(-50%, -80%);
+  transform: translate(-50%, -70%);
+  /*background: rgba(255, 255, 255, .5);*/
+}
+
+.centered-bottom-bubble {
+  position: absolute;
+  top: 95%;
+  left: 50%;
+  transform: translate(-50%, -95%);
   /*background: rgba(255, 255, 255, .5);*/
 }
 
