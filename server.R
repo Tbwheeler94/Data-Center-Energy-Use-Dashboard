@@ -204,6 +204,9 @@ server <- function(input, output, session) {
   observeEvent(input$show_transparency_graph_explainer, transparency_graph_modal_visible(TRUE))
   observeEvent(input$hide_transparency_graph_explainer, transparency_graph_modal_visible(FALSE))
   
+  #make modal disappear onclicking Learn More button
+  observeEvent(input$learn_more_2, transparency_graph_modal_visible(FALSE))
+  
   output$transparency_graph_explainer <- renderReact({
     
     Modal(isOpen = transparency_graph_modal_visible(),
@@ -214,16 +217,18 @@ server <- function(input, output, session) {
                     div(style = list(flexGrow = 1)),
                     IconButton.shinyInput("hide_transparency_graph_explainer", iconProps = list(iconName = "Cancel")),
                 ),
-                Text("As energy reporting assessments vary in scale from company wide to individual data centers, there are no essential standards in proper energy reporting trends.", variant="large"),
-                Text("Consequently, companies lack transparency when they do not offer energy data regarding their individual data centers.", variant="large"),
-                Text("This graph highlights the change in the number of companies reporting at different levels of transparency through time.", variant= "large"),
+                Text("This graph shows the proportional contribution of companies at each level of reporting transparency through time.", variant= "large"),
+                Text("To build this dataset, each company's level of reporting transparency was recorded for every year starting in 2007.", variant="large"), 
+                PrimaryButton.shinyInput("learn_more_2", text = "Learn More", style = "width: 120px; font-style: bold; margin-right: 10px;"),
+                #Text("As energy reporting assessments vary in scale from company wide to individual data centers, there are no essential standards in proper energy reporting trends.", variant="large"),
+                #Text("Consequently, companies lack transparency when they do not offer energy data regarding their individual data centers.", variant="large"),
                 Text("Methodology for each bar labels", variant = "xLarge"),
-                Text(FontIcon(iconName = "Brush", style = "margin-right: 10px; color: #3BCA6D; vertical-align: middle;"),
-                     "Greener bars indicate that companies report at the better levels of transparency (e.g. electricity-specific data).", variant="large"),
+                Text(FontIcon(iconName = "SquareShapeSolid", style = "margin-right: 3px; color: #ED2938; vertical-align: middle;"), FontIcon(iconName = "SquareShapeSolid", style = "margin-right: 3px; color: #FF6865; vertical-align: middle;"), FontIcon(iconName = "SquareShapeSolid", style = "margin-right: 3px; color: #77945C; vertical-align: middle;"), FontIcon(iconName = "SquareShapeSolid", style = "margin-right: 10px; color: #3BCA6D; vertical-align: middle;"),
+                     "Bar colors indicate the level of transparency a group of companies was reporting in each year. Greener bars indicate higher levels of transparency.", variant="large"),
                 Text(FontIcon(iconName = "BarChartVertical", style = "margin-right: 10px; vertical-align: middle;"),
                      "The total height of the stacked bars changes through time because some companies were not founded until after 2007.", variant="large"),
                 Text(FontIcon(iconName = "ProgressRingDots", style = "margin-right: 10px; vertical-align: middle;"),
-                     "Since energy data for a given year is usually not released until the year after, we wait until the end of the current year (2022) for reports to be released until we classify their respective scope. This is why we have a 'Pending Data Submission' label.", variant="large"),
+                     "Because energy data for a given year is usually not released until the year after, we wait until the end of the current year (2022) for reports to be released until we classify their respective scope. This is why we have a 'Pending Data Submission' label.", variant="large"),
                 Text("Instructions for navigating", variant = "xLarge"),
                 Text(FontIcon(iconName = "CalculatorAddition", style = "margin-right: 10px;vertical-align: middle;"),
                      "Hover over a colored bar to see the number of companies reporting energy data at that specific scope.", variant="large"),
@@ -232,6 +237,15 @@ server <- function(input, output, session) {
           )
     )
   })
+  
+  #make modal disappear onclicking Learn More button
+  change_to_methods <- function() {
+    #change page to methods
+    change_page('/methods', session = shiny::getDefaultReactiveDomain(), mode = "push")
+    #update selected nav
+    runjs(glue("$('.ms-Nav-link[title={'Methods'}]')[0].click()"))
+  }
+  onclick('learn_more_2', change_to_methods())
   
   output$transparency_graph <- renderGirafe({
     buildIndustryTrendsTransparencyPlot(data_sheet_energy_raw)
