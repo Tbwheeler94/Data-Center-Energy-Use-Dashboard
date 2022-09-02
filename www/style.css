@@ -1,6 +1,6 @@
 .help {cursor: help;}
 
-.modebar{ display: none !important; }
+.ggiraph-toolbar, .ggiraph-toolbar-topright { display: none; visibility: hidden; }
 
 .container {
   position: relative;

@@ -21,10 +21,10 @@ buildIndustryTrendsPUETrends <- function(data_sheet_pue_filtered, selected_compa
   data_sheet_pue_filtered$row_num <- 2
   
   p <- ggplot(data=data_sheet_pue_filtered, aes(x = applicable_year, y = pue_value, data_id = row_num)) +
-    geom_point_interactive(data = data_sheet_pue_all, aes(tooltip = paste("Company: ", company, "\nGeographical Scope: ", geographical_scope,
-                                                                      "\nPUE Value: ", pue_value, "\n", pue_measurement_level)), colour = "black", size = 4) +
+    geom_point_interactive(data = data_sheet_pue_all, aes(data_id = company, tooltip = paste("Company: ", company, "\nGeographical Scope: ", geographical_scope,
+                                                                      "\nPUE Value: ", pue_value, "\n", pue_measurement_level)), colour = "black", size = 3) +
     geom_point_interactive(data = data_sheet_pue_filtered, aes(data_id = company, color = company, tooltip = paste("Company: ", company, "\nGeographical Scope: ", geographical_scope,
-                                                                              "\nPUE Value: ", pue_value, "\n", pue_measurement_level)), size = 8) +
+                                                                              "\nPUE Value: ", pue_value, "\n", pue_measurement_level)), size = 6) +
     scale_x_continuous(breaks = pretty_breaks(n = length(unique_years))) +
     scale_y_continuous(breaks = c(0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0)) +
     theme_light() +
@@ -60,10 +60,11 @@ buildIndustryTrendsPUETrends <- function(data_sheet_pue_filtered, selected_compa
   #n <- ggplot() + theme_void() + annotate("text", x = 4, y=13000, label = "No Data Found. Change Company or Scope Level.")
   
   if (nrow(data_sheet_pue_filtered) != 0) {
-    x <- girafe(ggobj = p, width_svg = 10, height_svg = 8)
+    x <- girafe(ggobj = p, width_svg = 9, height_svg = 7)
     x <- girafe_options(x,
                         opts_hover_inv(css = "opacity:0.2;"),
                         #opts_hover(css = "fill:black;stroke:black;r:5pt;"),
+                        opts_sizing(rescale = FALSE),
                         opts_hover(css = "stroke-width:2; cursor: crosshair;"),
                         opts_hover_key(girafe_css("stroke:blue; cursor: help;", text="stroke:none;fill:red")))
     x

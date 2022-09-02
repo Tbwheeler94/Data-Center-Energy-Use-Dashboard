@@ -50,6 +50,7 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
   x <- girafe_options(x,
                       opts_hover_inv(css = "opacity:0.6;"),
                       #opts_hover(css = "fill:black;stroke:black;r:5pt;"),
+                      opts_sizing(rescale = FALSE),
                       opts_hover(css = "stroke-width:2; cursor: crosshair;"),
                       opts_hover_key(girafe_css("stroke:blue; cursor: help;", text="stroke:none;fill:red")))
   x
