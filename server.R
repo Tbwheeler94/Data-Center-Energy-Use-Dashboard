@@ -262,7 +262,7 @@ server <- function(input, output, session) {
         )
       })
       
-      output$reporting_timeline <- renderPlotly({
+      output$reporting_timeline <- renderGirafe({
         buildIndustryTrendsTimelinePlot(data_sheet_energy_transformed)
       })
       
@@ -378,7 +378,7 @@ server <- function(input, output, session) {
         data_sheet_pue_raw %>% filter(company == input$selected_company_pue)
       })
       
-      output$pue_trends_plot <- renderPlotly({
+      output$pue_trends_plot <- renderGirafe({
         buildIndustryTrendsPUETrends(data_sheet_pue_raw, input$selected_company_pue, input$selected_scope_pue)
       })
       

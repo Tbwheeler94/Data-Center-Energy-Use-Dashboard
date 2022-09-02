@@ -363,7 +363,7 @@ reporting_timeline_page <- makePage(
                    horizontalAlign = "right",
                    tokens = list(childrenGap = 20)
                  ),
-                 plotlyOutput('reporting_timeline', width = "auto")
+                 girafeOutput('reporting_timeline', width = "auto")
                )
       )
     )
@@ -443,7 +443,7 @@ pue_trends_page <- makePage(
       GridItem(class = "ms-md12 ms-lg10 ms-xl9",
                HighlightsCard(
                  br(),
-                 plotlyOutput('pue_trends_plot', width = "auto")
+                 girafeOutput('pue_trends_plot', width = "auto")
                )) #add graph inside HighlightsCard when ready, specify height in css styling
     )
   )

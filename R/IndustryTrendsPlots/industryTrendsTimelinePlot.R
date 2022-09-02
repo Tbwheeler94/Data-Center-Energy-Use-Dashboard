@@ -1,81 +1,15 @@
 buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
-  for (year in 2007:as.integer(max(na.omit(data_sheet_energy_transformed$data_year)))) {
-    # create a sub data frame that is filtered by data year and single data center scope
-    company_SDC <- data_sheet_energy_transformed %>%
-      filter(data_year == year, energy_reporting_scope == "Single Data Center") %>%
-      select(company, data_year, energy_reporting_scope, fuel_1_type) 
-    
-    # create a sub data frame that is filtered by data year and multiple data centers scope
-    company_MDC <- data_sheet_energy_transformed %>%
-      filter(data_year == year, energy_reporting_scope == "Multiple Data Centers") %>%
-      select(company, data_year, energy_reporting_scope, fuel_1_type)
-    
-    # create a sub data frame that is filtered by data year / company wide electricity scope
-    company_CW <- data_sheet_energy_transformed %>%
-      filter(data_year == year, energy_reporting_scope == "Total Operations") %>%
-      select(company, data_year, energy_reporting_scope, fuel_1_type) 
-    
-    company_EN <- data_sheet_energy_transformed %>%
-      filter(data_year == year, fuel_1_type == "Total Energy Use") %>%
-      select(company, data_year, energy_reporting_scope, fuel_1_type) 
-    
-    if (year == 2007) {
-      industry_transparency <- rbind(company_SDC, company_MDC, company_CW, company_EN)
-    } else {
-      industry_transparency <- industry_transparency %>% rbind(company_SDC, company_MDC, company_CW, company_EN)
-    }
-  }
   
-  company_profile <- data_sheet_company_raw %>% select(company_name, checked_back_to_founding_year_or_2007, company_founding_year) %>%
-    filter(checked_back_to_founding_year_or_2007 == "Yes")
-  
-  industry_transparency <- industry_transparency %>% distinct(company, data_year, .keep_all = TRUE)
-  industry_transparency <- dummy_rows(industry_transparency, 
-                                     select_columns = c("company", "data_year"),
-                                     dummy_value = "")
-  industry_transparency <- industry_transparency[order(industry_transparency$data_year), ]
-  industry_transparency$energy_reporting_scope[industry_transparency$energy_reporting_scope == "Single Data Center"] <- "Reported Data Center Electricity"
-  industry_transparency$energy_reporting_scope[industry_transparency$energy_reporting_scope == "Multiple Data Centers"] <- "Reported Data Center Electricity"
-  industry_transparency$energy_reporting_scope[industry_transparency$energy_reporting_scope == "Total Operations"] <- "Reported Company Wide Electricity"
-  industry_transparency$energy_reporting_scope[industry_transparency$fuel_1_type == "Total Energy Use"] <- "Reported Company Wide Energy"
-  industry_transparency$energy_reporting_scope[industry_transparency$energy_reporting_scope == ""] <- "No Reporting of Publicly Available Data"
-  industry_transparency$energy_reporting_scope[industry_transparency$energy_reporting_scope == "No Reporting of Publicly Available Data" & industry_transparency$data_year == max(na.omit(data_sheet_energy_transformed$data_year))] <- "Pending Data Submission"
-  industry_transparency <- industry_transparency %>% select(-c(fuel_1_type)) %>% filter(company %in% company_profile$company_name)
-  # filter companies by founding year after 2007 and existence in industry_transparency dataset, then label as nonexistent years for company
-  company_profile <- company_profile %>% filter(company_founding_year > 2007, company_name %in% industry_transparency$company)
-  for (i in 1:nrow(company_profile)) { 
-    industry_transparency$energy_reporting_scope[industry_transparency$energy_reporting_scope == "No Reporting of Publicly Available Data" & industry_transparency$company == company_profile[i,1] & industry_transparency$data_year < company_profile[i,3]] <- "Company Does Not Exist Yet"
-  }
-  
-  industry_transparency <- industry_transparency[order(industry_transparency$company),]
-  industry_transparency$company <- factor(industry_transparency$company, levels=rev(unique(industry_transparency$company)))
-  
-  #industry_transparency$data_year <- paste0("01/01/", industry_transparency$data_year)
-  #industry_transparency$data_year <- as.Date(industry_transparency$data_year, "%d/%m/%Y")
-  
-  industry_transparency$energy_reporting_scope <- factor(industry_transparency$energy_reporting_scope, 
-                                                        levels=c("Reported Data Center Electricity",
-                                                                 "Reported Company Wide Electricity",
-                                                                 "Reported Company Wide Energy",
-                                                                 "No Reporting of Publicly Available Data",
-                                                                 "Company Does Not Exist Yet",
-                                                                 "Pending Data Submission"))
-  
-  status_levels <- c("Reported Data Center Electricity", "Reported Company Wide Electricity",
-                     "Reported Company Wide Energy", "No Reporting of Publicly Available Data", 
-                     "Company Does Not Exist Yet", "Pending Data Submission")
-  status_colors <- c("#3BCA6D", "#77945C", "#FF6865", "#ED2938", "#000000", "#999999")
-  
-  p <- ggplot(industry_transparency, aes(x=data_year, y=company, 
-                                         text=paste("Company: ", company, "\nData Year: ", 
-                                                    #format(data_year, format="%Y"), 
-                                                    data_year,
-                                                    "\nReporting Scope: ", energy_reporting_scope))) +
-    geom_tile(aes(fill=energy_reporting_scope), height=0.75) +
+  # status_levels <- c("Reported Data Center Electricity", "Reported Company Wide Electricity",
+  #                    "Reported Company Wide Energy", "No Reporting of Publicly Available Data", 
+  #                    "Company Does Not Exist Yet", "Pending Data Submission")
+  # status_colors <- c("#3BCA6D", "#77945C", "#FF6865", "#ED2938", "#000000", "#999999")
+  # industry_transparency$row_num <- seq.int(nrow(industry_transparency))
+  # 
+  p <- ggplot(industry_transparency, aes(x=data_year, y=company, data_id=row_num)) +
+    geom_tile_interactive(aes(fill=energy_reporting_scope, tooltip=paste("Company: ", company, "\nData Year: ", data_year, "\nReporting Scope: ", energy_reporting_scope)), height=0.75) +
     labs(energy_reporting_scope="Reporting Scope") +
-    scale_x_continuous(breaks = pretty_breaks(n=length(unique_years)), expand = expansion(mult = c(0.01,0))) +
-    #scale_x_date(date_breaks = "1 year", date_labels =  "%Y") +
-    scale_fill_manual(values=status_colors, labels=status_levels, drop=FALSE) +
+    scale_x_continuous(position = "top", breaks = pretty_breaks(n=length(unique_years)), expand = expansion(mult = c(0.01,0))) +
     theme(
       #legend.text=element_text(size=10),
       legend.position="none",
@@ -86,15 +20,45 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
       axis.text.y=element_text(size=12),
       axis.line.y=element_line(colour="black", size=1),
       panel.background=element_blank()
+    ) +
+    scale_fill_manual_interactive(
+      name = label_interactive("Energy Reporting Scope", data_id="legend.title"),
+      values = c(`Reported Data Center Electricity` = "#3BCA6D",
+                 `Reported Company Wide Electricity` = "#77945C",
+                 `Reported Company Wide Total Energy` = "#FF6865",
+                 `No Reporting of Publicly Available Data` = "#ED2938",
+                 `Pending Data Submission` = "#999999",
+                 `Company Does Not Exist Yet` = "#000000"),
+      data_id = function(breaks) { as.character(breaks)},
+      tooltip = function(breaks) { as.character(breaks)},
+      drop = FALSE,
+      onclick = function(breaks) { paste0("alert(\"", as.character(breaks), "\")") },
+      labels = function(breaks) {
+        lapply(breaks, function(br) {
+          label_interactive(
+            as.character(br),
+            data_id = as.character(br),
+            onclick = paste0("alert(\"", as.character(br), "\")"),
+            tooltip = paste0(as.character(br), " means ", printed_message)
+          )
+        })
+      }
     )
+
+
+  x <- girafe(ggobj = p, width_svg = 13, height_svg = 7)
+  x <- girafe_options(x,
+                      opts_hover_inv(css = "opacity:0.6;"),
+                      #opts_hover(css = "fill:black;stroke:black;r:5pt;"),
+                      opts_hover(css = "stroke-width:2; cursor: crosshair;"),
+                      opts_hover_key(girafe_css("stroke:blue; cursor: help;", text="stroke:none;fill:red")))
+  x
   
-  #ggplotly(p, tooltip = "text")
-  
-  timeline_plot_height <- length(unique_companies) * 35
-  
-  ggplotly(p, height=timeline_plot_height, tooltip = "text") %>% config(displayModeBar = T)  %>%
-           # plotly::layout(legend = list(orientation = "h", x = 0, y = 1.15), xaxis = list(side ="top"))
-             plotly::layout(xaxis = list(side ="top")) %>%
-             hide_legend()
+  # timeline_plot_height <- length(unique_companies) * 35
+  # 
+  # ggplotly(p, height=timeline_plot_height, tooltip = "text") %>% config(displayModeBar = T)  %>%
+  #          # plotly::layout(legend = list(orientation = "h", x = 0, y = 1.15), xaxis = list(side ="top"))
+  #            plotly::layout(xaxis = list(side ="top")) %>%
+  #            hide_legend()
   
 }
