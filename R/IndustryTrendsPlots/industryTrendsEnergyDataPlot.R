@@ -32,76 +32,76 @@ buildIndustryTrendsEnergyDataPlot <- function(data_sheet_energy_transformed, sel
                      "7 TWh", "8 TWh", "9 TWh", "10 TWh")
   }
   
-  for (year in 2007:as.integer(max(na.omit(data_sheet_energy_transformed$data_year)))) {
-    # create a sub data frame that is filtered by data year and single data center scope
-    energy_use_SDC <- data_sheet_energy_transformed %>%
-      filter(data_year == year, energy_reporting_scope == "Single Data Center") %>%
-      select(company, data_year, energy_reporting_scope, level_of_ownership, electricity_converted) 
-    
-    # create a sub data frame that is filtered by data year and multiple data centers scope
-    energy_use_MDC <- data_sheet_energy_transformed %>%
-      filter(data_year == year, energy_reporting_scope == "Multiple Data Centers") %>%
-      select(company, data_year, energy_reporting_scope, level_of_ownership, electricity_converted)
-    
-    company_DC <- c(energy_use_SDC$company, energy_use_MDC$company)
-    company_DC <- company_DC %>% unique()
-    
-    # create a sub data frame that is filtered by data year / company wide electricity scope
-    energy_use_TO <- data_sheet_energy_transformed %>%
-      filter(data_year == year, energy_reporting_scope == "Total Operations") %>%
-      select(company, data_year, energy_reporting_scope, level_of_ownership, electricity_converted) 
-    
-    energy_use_TO <- energy_use_TO[!(energy_use_TO$company %in% company_DC),]
-    
-    if (year == 2007) {
-      energy_use_graph <- rbind(energy_use_SDC, energy_use_MDC, energy_use_TO)
-    } else {
-      energy_use_graph <- energy_use_graph %>% rbind(energy_use_SDC, energy_use_MDC, energy_use_TO)
-    }
-  }
-  
-  # create another data frame that is filtered by company founding year
-  data_founding_year <- data_sheet_company_raw %>% select(company_name, 
-                                                          checked_back_to_founding_year_or_2007,
-                                                          company_founding_year)
-  # drop all the excess rows that have NA data
-  data_founding_year <- na.omit(data_founding_year)
-  data_founding_year <- data_founding_year[data_founding_year$checked_back_to_founding_year_or_2007=="Yes", ]
-  energy_use_graph <- subset(energy_use_graph, company %in% data_founding_year$company_name) 
-  
-  energy_use_graph$energy_reporting_scope[energy_use_graph$energy_reporting_scope == "Single Data Center"] <- "Data Centers"
-  energy_use_graph$energy_reporting_scope[energy_use_graph$energy_reporting_scope == "Multiple Data Centers"] <- "Data Centers"
-  energy_use_graph$energy_reporting_scope[energy_use_graph$energy_reporting_scope == "Total Operations"] <- "Company Wide"
-  
-  # stack single data center/multiple data center data frames on top of each other
-  energy_use_graph <- energy_use_graph[!(energy_use_graph$energy_reporting_scope == "Data Centers" && energy_use_graph$level_of_ownership == ""),]
-  energy_use_graph <- na.omit(energy_use_graph)
-  energy_use_final <- energy_use_graph %>%
-    group_by(company,data_year,energy_reporting_scope,level_of_ownership) %>%
-    dplyr::summarise(electricity_converted = sum(electricity_converted)) %>%
-    as.data.frame()
-  energy_use_final <- energy_use_final %>%
-    group_by(company,data_year,energy_reporting_scope,level_of_ownership)
-  
-  energy_use_final$TWH_level <- ""
-  
-  for (i in 1:nrow(energy_use_final)) {
-    if (i != nrow(energy_use_final) 
-        && energy_use_final[i,"company"] == energy_use_final[i+1,"company"]
-        && energy_use_final[i,"data_year"] == energy_use_final[i+1,"data_year"]) {
-      if (energy_use_final[i,"electricity_converted"] + energy_use_final[i+1,"electricity_converted"] < 1000000000) {
-        energy_use_final[i,"TWH_level"] <- "Below"
-        energy_use_final[i+1,"TWH_level"] <- "Below"
-      } else {
-        energy_use_final[i,"TWH_level"] <- "At or Above"
-        energy_use_final[i+1,"TWH_level"] <- "At or Above"
-      }
-    } else if (energy_use_final[i,"TWH_level"] == "" && energy_use_final[i,"electricity_converted"] < 1000000000) {
-      energy_use_final[i,"TWH_level"] <- "Below"
-    } else if (energy_use_final[i,"TWH_level"] == "" && energy_use_final[i,"electricity_converted"] >= 1000000000) {
-      energy_use_final[i,"TWH_level"] <- "At or Above"
-    }
-  }
+  # for (year in 2007:as.integer(max(na.omit(data_sheet_energy_transformed$data_year)))) {
+  #   # create a sub data frame that is filtered by data year and single data center scope
+  #   energy_use_SDC <- data_sheet_energy_transformed %>%
+  #     filter(data_year == year, energy_reporting_scope == "Single Data Center") %>%
+  #     select(company, data_year, energy_reporting_scope, level_of_ownership, electricity_converted) 
+  #   
+  #   # create a sub data frame that is filtered by data year and multiple data centers scope
+  #   energy_use_MDC <- data_sheet_energy_transformed %>%
+  #     filter(data_year == year, energy_reporting_scope == "Multiple Data Centers") %>%
+  #     select(company, data_year, energy_reporting_scope, level_of_ownership, electricity_converted)
+  #   
+  #   company_DC <- c(energy_use_SDC$company, energy_use_MDC$company)
+  #   company_DC <- company_DC %>% unique()
+  #   
+  #   # create a sub data frame that is filtered by data year / company wide electricity scope
+  #   energy_use_TO <- data_sheet_energy_transformed %>%
+  #     filter(data_year == year, energy_reporting_scope == "Total Operations") %>%
+  #     select(company, data_year, energy_reporting_scope, level_of_ownership, electricity_converted) 
+  #   
+  #   energy_use_TO <- energy_use_TO[!(energy_use_TO$company %in% company_DC),]
+  #   
+  #   if (year == 2007) {
+  #     energy_use_graph <- rbind(energy_use_SDC, energy_use_MDC, energy_use_TO)
+  #   } else {
+  #     energy_use_graph <- energy_use_graph %>% rbind(energy_use_SDC, energy_use_MDC, energy_use_TO)
+  #   }
+  # }
+  # 
+  # # create another data frame that is filtered by company founding year
+  # data_founding_year <- data_sheet_company_raw %>% select(company_name, 
+  #                                                         checked_back_to_founding_year_or_2007,
+  #                                                         company_founding_year)
+  # # drop all the excess rows that have NA data
+  # data_founding_year <- na.omit(data_founding_year)
+  # data_founding_year <- data_founding_year[data_founding_year$checked_back_to_founding_year_or_2007=="Yes", ]
+  # energy_use_graph <- subset(energy_use_graph, company %in% data_founding_year$company_name) 
+  # 
+  # energy_use_graph$energy_reporting_scope[energy_use_graph$energy_reporting_scope == "Single Data Center"] <- "Data Centers"
+  # energy_use_graph$energy_reporting_scope[energy_use_graph$energy_reporting_scope == "Multiple Data Centers"] <- "Data Centers"
+  # energy_use_graph$energy_reporting_scope[energy_use_graph$energy_reporting_scope == "Total Operations"] <- "Company Wide"
+  # 
+  # # stack single data center/multiple data center data frames on top of each other
+  # energy_use_graph <- energy_use_graph[!(energy_use_graph$energy_reporting_scope == "Data Centers" && energy_use_graph$level_of_ownership == ""),]
+  # energy_use_graph <- na.omit(energy_use_graph)
+  # energy_use_final <- energy_use_graph %>%
+  #   group_by(company,data_year,energy_reporting_scope,level_of_ownership) %>%
+  #   dplyr::summarise(electricity_converted = sum(electricity_converted)) %>%
+  #   as.data.frame()
+  # energy_use_final <- energy_use_final %>%
+  #   group_by(company,data_year,energy_reporting_scope,level_of_ownership)
+  # 
+  # energy_use_final$TWH_level <- ""
+  # 
+  # for (i in 1:nrow(energy_use_final)) {
+  #   if (i != nrow(energy_use_final) 
+  #       && energy_use_final[i,"company"] == energy_use_final[i+1,"company"]
+  #       && energy_use_final[i,"data_year"] == energy_use_final[i+1,"data_year"]) {
+  #     if (energy_use_final[i,"electricity_converted"] + energy_use_final[i+1,"electricity_converted"] < 1000000000) {
+  #       energy_use_final[i,"TWH_level"] <- "Below"
+  #       energy_use_final[i+1,"TWH_level"] <- "Below"
+  #     } else {
+  #       energy_use_final[i,"TWH_level"] <- "At or Above"
+  #       energy_use_final[i+1,"TWH_level"] <- "At or Above"
+  #     }
+  #   } else if (energy_use_final[i,"TWH_level"] == "" && energy_use_final[i,"electricity_converted"] < 1000000000) {
+  #     energy_use_final[i,"TWH_level"] <- "Below"
+  #   } else if (energy_use_final[i,"TWH_level"] == "" && energy_use_final[i,"electricity_converted"] >= 1000000000) {
+  #     energy_use_final[i,"TWH_level"] <- "At or Above"
+  #   }
+  # }
   
   energy_use_final <- energy_use_final %>%
     filter(data_year %in% selected_year, energy_reporting_scope %in% selected_scope, 

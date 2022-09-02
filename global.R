@@ -118,6 +118,7 @@ data_sheet_company_raw <- read_feather("source_data/transformed_data/data_sheet_
 data_sheet_pue_raw <- read_feather("source_data/transformed_data/data_sheet_pue_raw")
 data_of_transparency <- read_feather("source_data/transformed_data/data_of_transparency")
 industry_transparency <- read_feather("source_data/transformed_data/industry_transparency")
+energy_use_final <- read_feather("source_data/transformed_data/energy_use_final")
 
 ################################################################################################
 ################################################################################################
