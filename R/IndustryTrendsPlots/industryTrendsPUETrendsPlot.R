@@ -21,7 +21,7 @@ buildIndustryTrendsPUETrends <- function(data_sheet_pue_filtered, selected_compa
   data_sheet_pue_filtered$row_num <- 2
   
   p <- ggplot(data=data_sheet_pue_filtered, aes(x = applicable_year, y = pue_value, data_id = row_num)) +
-    geom_point_interactive(data = data_sheet_pue_all, aes(data_id = company, tooltip = paste("Company: ", company, "\nGeographical Scope: ", geographical_scope,
+    geom_point_interactive(data = data_sheet_pue_all, aes(tooltip = paste("Company: ", company, "\nGeographical Scope: ", geographical_scope,
                                                                       "\nPUE Value: ", pue_value, "\n", pue_measurement_level)), colour = "black", size = 3) +
     geom_point_interactive(data = data_sheet_pue_filtered, aes(data_id = company, color = company, tooltip = paste("Company: ", company, "\nGeographical Scope: ", geographical_scope,
                                                                               "\nPUE Value: ", pue_value, "\n", pue_measurement_level)), size = 6) +
