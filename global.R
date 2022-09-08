@@ -22,6 +22,7 @@ library(tidyselect)
 
 # Packages for data importing
 library(feather) # Used for importing feather files from directory "source_data/transformed_data/"
+library(writexl)
 #library(xlsx) - OLD, leftover from when data was imported using read.xlsx() in global
 #library(readxl) - OLD, leftover from when data was imported using read.xlsx() in global
 
@@ -237,8 +238,7 @@ for (i in 1:length(list_of_pue_scopes)) {
 
 #Generate list of unique scales for energy data trends plot
 unique_scales <- list()
-list_of_scales <-
-  c("Up to 500 GWh", "Up to 1 TWh", "Up to 10 TWh", "10+ TWh")
+list_of_scales <- c("Up to 500 GWh", "Up to 1 TWh", "Up to 10 TWh", "10+ TWh")
 
 for (i in 1:length(list_of_scales)) {
   unique_scales[[i]] <- list(key = {
@@ -247,6 +247,24 @@ for (i in 1:length(list_of_scales)) {
   text = {
     list_of_scales[i]
   })
+}
+
+download_function <- function(dataset, name, tag) {
+  if (tag == ".csv") {
+    downloadHandler(
+      filename = function(){paste0(name, tag)},
+      content = function(fname){
+        write.table(dataset, fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)
+      }
+    )
+  } else if (tag == ".xlsx") {
+    downloadHandler(
+      filename = function(){paste0(name, tag)},
+      content = function(fname){
+        write_xlsx(dataset, path = fname)
+      }
+    )
+  }
 }
 
 ##################################################

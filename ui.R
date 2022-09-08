@@ -67,6 +67,14 @@ GridItemHome <- function (..., class = "ms-sm12") {
   )
 }
 
+GridItemDownload <- function (..., class = "ms-sm12") {
+  div(
+    class = paste("ms-Grid-col ms-depth-8", class),
+    style = "padding: 20px; border-radius: 5px; background-color: white; border-top: 8px solid #137AD1;",
+    ...
+  )
+}
+
 makePage <- function (contents) {
   tagList(contents)
 }
@@ -260,25 +268,23 @@ dc_energy_101_page <- makePage(
 ########################################################
 
 reporting_trends_page <- makePage(
-  
   div(
     Stack(style = "text-align: center; padding: 25px", Text("Trends in Data Center Energy Reporting Transparency", variant = "xxLarge", style = "color: #137AD1;")),
     Grid(
       reactOutput("transparency_graph_explainer"),
+      reactOutput("transparency_graph_download"),
       GridItem(class = "ms-sm12 ms-xl12", 
                CompanyCard(
                  Stack(
                    PrimaryButton.shinyInput("show_transparency_graph_explainer", iconProps = list("iconName" = "Help"), text = "Help"),
-                   TooltipHost(content = "Copyright 2022, ISA Lab, please contact isaldatacenterdashboard@gmail.com with any questions", PrimaryButton.shinyInput("download_transparency_data", iconProps = list("iconName" = "Download"), text = "Download Data")),
-                   PrimaryButton.shinyInput("save_transparency_graph", iconProps = list("iconName" = "Save"), text = "Save Image"),
+                   TooltipHost(content = "Copyright 2022, ISA Lab, please contact isaldatacenterdashboard@gmail.com with any questions", PrimaryButton.shinyInput("show_transparency_modal", iconProps = list("iconName" = "Download"), text = "Download Data")),
+                   # PrimaryButton.shinyInput("save_transparency_graph", iconProps = list("iconName" = "Save"), text = "Save Image"),
+                   downloadButton("download_transparency_graph", label = " Save Image", class = "ms-Button ms-Button--primary root-102 ms-Button-label label-106"),
                    horizontal = TRUE,
                    horizontalAlign = "right",
                    tokens = list(childrenGap = 20)
                  ),
                  girafeOutput('transparency_graph')
-                 # Stack(horizontal = TRUE, style = "justify-content: end; color: #137AD1;", 
-                       # TooltipHost(content = "This graph displays the change in the number of companies reporting at different levels of transparency through time. The total height of the stacked bars changes through time because some companies were not founded until after 2007.",
-                       #             ActionButton(iconProps = list("iconName" = "Info"), text = "About This Table", style = "color: #137AD1;")))
                )
       )
     )
@@ -352,12 +358,14 @@ reporting_timeline_page <- makePage(
     Stack(style = "text-align: center; padding: 25px", Text("Data Center Energy Reporting Transparency Timeline", variant = "xxLarge", style = "color: #137AD1;")),
     Grid(
       reactOutput("reporting_timeline_explainer"),
+      reactOutput("reporting_timeline_download"),
+      downloadLink('download_timeline_data', label=""),
       GridItem(class = "ms-sm12 ms-xl12", 
                Stack(class = "ms-depth-8 timeline-graph",
                  br(),
                  Stack(
                    PrimaryButton.shinyInput("show_reporting_timeline_explainer", iconProps = list("iconName" = "Help"), text = "Help"),
-                   TooltipHost(content = "Copyright 2022, ISA Lab, please contact isaldatacenterdashboard@gmail.com with any questions", PrimaryButton.shinyInput("download_reporting_timeline_data", iconProps = list("iconName" = "Download"), text = "Download Data")),
+                   TooltipHost(content = "Copyright 2022, ISA Lab, please contact isaldatacenterdashboard@gmail.com with any questions", PrimaryButton.shinyInput("show_timeline_download_modal", iconProps = list("iconName" = "Download"), text = "Download Data")),
                    PrimaryButton.shinyInput("save_reporting_timeline_graph", iconProps = list("iconName" = "Save"), text = "Save Image"),
                    horizontal = TRUE,
                    horizontalAlign = "right",
@@ -414,9 +422,10 @@ pue_trends_page <- makePage(
     Stack(style = "text-align: center; padding: 25px", Text("Industry PUE Trends", variant = "xxLarge", style = "color: #137AD1;")),
     Grid(
       reactOutput("pue_graph_explainer"),
+      reactOutput("pue_download_modal"),
       Stack(
         PrimaryButton.shinyInput("show_pue_graph_explainer", iconProps = list("iconName" = "Help"), text = "Help"),
-        TooltipHost(content = "Copyright 2022, ISA Lab, please contact isaldatacenterdashboard@gmail.com with any questions", PrimaryButton.shinyInput("download_pue_data", iconProps = list("iconName" = "Download"), text = "Download Data")),
+        TooltipHost(content = "Copyright 2022, ISA Lab, please contact isaldatacenterdashboard@gmail.com with any questions", PrimaryButton.shinyInput("show_pue_download_modal", iconProps = list("iconName" = "Download"), text = "Download Data")),
         PrimaryButton.shinyInput("save_pue_graph", iconProps = list("iconName" = "Save"), text = "Save Image"),
         horizontal = TRUE,
         horizontalAlign = "right",
@@ -424,7 +433,7 @@ pue_trends_page <- makePage(
       )
     ),
     Grid(
-      GridItem(class = "ms-md12 ms-lg2 ms-xl3",
+      GridItem(class = "ms-md12 ms-lg3 ms-xl3",
                HighlightsCard(
                  Text("Select Company", variant = "xLarge", style = "text-align: center;"),
                  Dropdown.shinyInput("selected_company_pue",
@@ -439,12 +448,21 @@ pue_trends_page <- makePage(
                                      value = "Fleet Wide",
                                      placeHolder = "Fleet Wide",
                                      style = "width: 150px; margin: auto; font-size: 12pt;")
-               )), #add dropdowns inside HighlightsCard when ready
-      GridItem(class = "ms-md12 ms-lg10 ms-xl9",
+               ),
+               br(),
+               selectInput("pue_dataset_options", "Select a dataset option:",
+                           choices = c("Download selected dataset (.csv)", 
+                                       "Download selected dataset (.xlsx)", 
+                                       "Download full dataset (.csv)", 
+                                       "Download full dataset (.xlsx)")),
+               downloadButton("download_pue_data", label="Download Data")
+      ),
+      GridItem(class = "ms-md12 ms-lg9 ms-xl9",
                HighlightsCard(
                  br(),
                  girafeOutput('pue_trends_plot', width = "auto")
-               )) #add graph inside HighlightsCard when ready, specify height in css styling
+               ) #add graph inside HighlightsCard when ready, specify height in css styling
+      ),
     )
   )
 )
@@ -820,6 +838,12 @@ ui <- #secure_app(head_auth = tags$script(inactivity), #authentication
                  useShinyjs(),
                  layout(router$ui),
                  tags$head(
+                   tags$script(HTML('
+                           Shiny.addCustomMessageHandler("jsCode",
+                           function(message) {
+                           eval(message.value);
+                           });'
+                   )),
                    tags$link(href = "style.css", rel = "stylesheet", type = "text/css"),
                    shiny_router_script_tag
                  ))

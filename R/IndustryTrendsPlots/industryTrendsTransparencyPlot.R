@@ -1,4 +1,4 @@
-buildIndustryTrendsTransparencyPlot <- function(data_sheet_energy_raw) {
+buildIndustryTrendsTransparencyPlot <- function(render_plot) {
   # status_levels <- c("Reported Data Center Electricity", "Reported Company Wide Electricity",
   #                    "Reported Company Wide Total Energy", "No Reporting of Publicly Available Data", "Pending Data Submission")
   # status_colors <- c("#3BCA6D", "#77945C", "#FF6865", "#ED2938", "#999999")
@@ -74,7 +74,11 @@ buildIndustryTrendsTransparencyPlot <- function(data_sheet_energy_raw) {
       }
     )
   
-  x <- girafe(ggobj = p, width_svg = 13, height_svg = 7)
+  if (render_plot == FALSE) {
+    return(p)
+  }
+  
+  x <- girafe(ggobj = p, width_svg = 12, height_svg = 7)
   x <- girafe_options(x,
                       opts_hover_inv(css = "opacity:0.6;"),
                       opts_sizing(rescale = FALSE),

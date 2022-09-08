@@ -224,8 +224,17 @@ server <- function(input, output, session) {
       onclick('learn_more_2', change_to_methods())
       
       output$transparency_graph <- renderGirafe({
-        buildIndustryTrendsTransparencyPlot(data_sheet_energy_raw)
+        buildIndustryTrendsTransparencyPlot(render_plot = TRUE)
       })
+      
+      plot_test <- reactive({ buildIndustryTrendsTransparencyPlot(render_plot = FALSE) })
+      
+      output$download_transparency_graph <- downloadHandler(
+        filename = function(){paste0("transparency_graph", ".png")},
+        content = function(fname){
+          ggsave(fname, plot = plot_test(), width = 10, height = 5, units = "in")
+        }
+      )
     }
     
     if(page_title == "Reporting Timeline") {
@@ -260,6 +269,47 @@ server <- function(input, output, session) {
                          "Hover over the command bar to use additional plotly tools.", variant="large")
               )
         )
+      })
+      
+      reporting_timeline_download_visible <- reactiveVal(FALSE)
+      observeEvent(input$show_timeline_download_modal, reporting_timeline_download_visible(TRUE))
+      observeEvent(input$hide_timeline_download_modal, reporting_timeline_download_visible(FALSE))
+      
+      output$reporting_timeline_download <- renderReact({
+        
+        Modal(isOpen = reporting_timeline_download_visible(),
+              Stack(tokens = list(padding = "25px", childrenGap = "10px"),
+                    style = "width: 350px;",
+                    div(style = list(display = "flex"),
+                        Text("Select a download option", variant = "xLarge"),
+                        div(style = list(flexGrow = 1)),
+                        IconButton.shinyInput("hide_timeline_download_modal", iconProps = list(iconName = "Cancel")),
+                    ),
+                    PrimaryButton.shinyInput("download_timeline_csv", "Download dataset (.csv)"),
+                    PrimaryButton.shinyInput("download_timeline_xlsx", "Download dataset (.xlsx)"),
+              )
+        )
+      })
+      
+      # retrieve appropiate dataset for each download button
+      timeline_download <- reactiveValues(data = NULL, filename = NULL, tag = NULL)
+      
+      observeEvent(input$download_timeline_csv, {
+        timeline_download$tag <- ".csv"
+        timeline_download$data <- industry_transparency %>% select(-c("row_num"))
+      })
+      
+      observeEvent(input$download_timeline_xlsx, {
+        timeline_download$tag <- ".xlsx"
+        timeline_download$data <- industry_transparency %>% select(-c("row_num"))
+      })
+      
+      # download functionality for csv download (selected dataset)
+      observeEvent(c(input$download_timeline_csv, input$download_timeline_xlsx), {
+        timeline_download$filename <- "reporting_timeline"
+        output$download_timeline_data <- download_function(timeline_download$data, timeline_download$filename, timeline_download$tag)
+        jsinject <- "setTimeout(function(){window.open($('#download_timeline_data').attr('href'))}, 100);"
+        session$sendCustomMessage(type = 'jsCode', list(value = jsinject))
       })
       
       output$reporting_timeline <- renderGirafe({
@@ -375,8 +425,47 @@ server <- function(input, output, session) {
       })
       
       data_sheet_pue_filtered <- reactive({
-        data_sheet_pue_raw %>% filter(company == input$selected_company_pue)
+        data_sheet_pue_raw %>% 
+          mutate(facility_scope_clean = case_when(
+            facility_scope %in% c("Fleet-wide PUE") ~ "Fleet Wide",
+            facility_scope %in% c("Single location PUE") ~ "Individual Locations"
+          )) %>%
+          filter(company %in% input$selected_company_pue, facility_scope_clean %in% input$selected_scope_pue)
       })
+      
+      dataset_input <- reactive({
+        switch(input$pue_dataset_options,
+               "Download selected dataset (.csv)" = data_sheet_pue_filtered(), 
+               "Download selected dataset (.xlsx)" = data_sheet_pue_filtered(), 
+               "Download full dataset (.csv)" = data_sheet_pue_raw, 
+               "Download full dataset (.xlsx)" = data_sheet_pue_raw)
+      })
+      
+      dataset_tag <- reactive({
+        switch(input$pue_dataset_options,
+               "Download selected dataset (.csv)" = ".csv", 
+               "Download selected dataset (.xlsx)" = ".xlsx", 
+               "Download full dataset (.csv)" = ".csv", 
+               "Download full dataset (.xlsx)" = ".xlsx")
+      })
+      
+      output$download_pue_data <- {
+        if (dataset_tag() == ".csv") {
+          downloadHandler(
+            filename = function(){paste0("pue_trends", dataset_tag())},
+            content = function(fname){
+              write.table(dataset_input(), fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)
+            }
+          )
+        } else if (dataset_tag() == ".xlsx") {
+          downloadHandler(
+            filename = function(){paste0("pue_trends", dataset_tag())},
+            content = function(fname){
+              write_xlsx(dataset_input(), path = fname)
+            }
+          )
+        }
+      }
       
       output$pue_trends_plot <- renderGirafe({
         buildIndustryTrendsPUETrends(data_sheet_pue_raw, input$selected_company_pue, input$selected_scope_pue)
