@@ -838,6 +838,7 @@ ui <- #secure_app(head_auth = tags$script(inactivity), #authentication
                  useShinyjs(),
                  layout(router$ui),
                  tags$head(
+                   tags$style("@import url(https://use.fontawesome.com/releases/v6.2.0/css/all.css);"),
                    tags$script(HTML('
                            Shiny.addCustomMessageHandler("jsCode",
                            function(message) {

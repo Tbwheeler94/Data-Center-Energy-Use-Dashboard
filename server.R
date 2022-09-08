@@ -389,6 +389,21 @@ server <- function(input, output, session) {
         )
       })
       
+      change_to_single_company_analysis <- function() {
+        #change page to methods
+        change_page('/company-analysis', session = shiny::getDefaultReactiveDomain(), mode = "push")
+        #update selected nav
+        runjs(glue("$('.ms-Nav-link[title={'Single Company Analysis'}]')[0].click()"))
+        #update input value to inner text of button
+        #print(paste0("You have chosen: ", input$network_to_single_company_analysis))
+        
+        #update dropdown
+        #shiny.fluent::updateDropdown.shinyInput(session = shiny::getDefaultReactiveDomain(), inputId = "selected_company", value = input$network_to_single_company_analysis)
+      }
+      
+      #establish event listener for button inside tooltip
+      onclick('network_to_single_company_analysis', change_to_single_company_analysis())
+      
       output$lease_cloud_network <- renderVisNetwork({
         buildIndustryTrendsLeaseCloudNetworkPlot()
       })

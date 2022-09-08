@@ -2,12 +2,17 @@ buildIndustryTrendsLeaseCloudNetworkPlot <- function() {
   
   #create list of network links
   full_network_links <- data_sheet_company_raw %>% 
-    select('company_name', 'provider_1', 'provider_2', 'provider_3', 'provider_4', 'provider_5', 'provider_6', 'provider_7', 'provider_8', 'provider_9', 'provider_10') %>% 
-    pivot_longer(!company_name, names_to = 'provider', values_to = "name_of_provider") %>% 
-    select('company_name', 'name_of_provider') %>% 
+    select('company_name', starts_with("provider")) %>% 
+    rename_all(~str_replace(.,"_","")) %>% 
+    rename_at(vars(!ends_with("_category")), ~paste0(.,"_name")) %>% 
+    rename("company_name" = "companyname_name") %>% 
+    pivot_longer(!company_name, names_to = c("provider", ".value"), names_pattern = ".(\\d+)_(\\w+)") %>% 
+    select(-c('provider')) %>% 
     na_if("") %>%
     na.omit %>% 
-    rename("from" = company_name, "to" = name_of_provider)
+    rename("from" = company_name, "to" = name) %>% 
+    mutate(category = case_when(category == "Colocation" ~ 1,
+                                category == "Cloud" ~ 2))
   
   #calculate size of nodes, based on the number of relationships they have
   number_of_leasee_relationships <- full_network_links %>% count(to)
@@ -29,6 +34,9 @@ buildIndustryTrendsLeaseCloudNetworkPlot <- function() {
     left_join(node_size, by = c("id" = "to")) %>% 
     replace(is.na(.), 1) %>% 
     rename(size = n) %>% 
+    mutate(leaser.type.name = ifelse(size > 1, 
+                                     paste0(leaser.type.name, "<br>", size, " Relationships", "<br>", "Learn more about ", "<button id='network_to_single_company_analysis' class='shiny-bound-input action-button'>", id, "</button>"), 
+                                     paste0(leaser.type.name, "<br>", size, " Relationship", "<br>", "Learn more about ", "<button id='network_to_single_company_analysis' class='shiny-bound-input action-button'>", id, "</button>"))) %>% 
     mutate(size = size * 10)
   
   #formatting network graph
@@ -48,14 +56,23 @@ buildIndustryTrendsLeaseCloudNetworkPlot <- function() {
   vis.nodes$color.highlight.border <- "darkred"
   
   vis.links$arrows <- "from"
+  vis.links$color <- c("lightskyblue", "darkkhaki")[full_network_links$category]
+  vis.links$width <- 5
   
   #set up legend
   
-  lnodes <- data.frame(label = c("Lessor Only", "Lessee Only", "Lessor and  \n Lessee"),
-                       shape = c("circle"), color = c("slategrey", "tomato", "gold"))
+  lnodes <- list(
+    list(label = "Lessor Only", shape = "icon", 
+         icon = list(code = "f111", size = 45, color = "slategrey")),
+    list(label = "Lessee Only", shape = "icon", 
+         icon = list(code = "f111", size = 45, color = "tomato")),
+    list(label = "Lessor and \n Lessee", shape = "icon", margin = list(bottom = 25),
+         icon = list(code = "f111", size = 45, color = "gold")),
+    list(label = "Size Scaled To \n # of Relationships", shape = "icon", margin = list(bottom = 25),
+         icon = list(code = "f140", size = 45)))
   
-  ledges <- data.frame(color = c("black", "black"),
-                       label = c("leased to", "leased \n from"), arrows =c("to", "from"))
+  ledges <- data.frame(color = c("darkkhaki", "lightskyblue"),
+                       label = c("cloud", "colocation"), arrows =c("to", "to"))
   
   #plot
   
@@ -67,6 +84,7 @@ buildIndustryTrendsLeaseCloudNetworkPlot <- function() {
     visGroups(groupname = "Lessor Only", color = "slategrey") %>%
     visGroups(groupname = "Lessee Only", color = "tomato") %>%
     visGroups(groupname = "Lessor and Lessee", color = "gold") %>%
-    visLegend(addEdges = ledges, addNodes = lnodes, useGroups = FALSE, width = .1) 
+    visLegend(addEdges = ledges, addNodes = lnodes, useGroups = FALSE, width = .1) %>%
+    addFontAwesome()
   
 }
