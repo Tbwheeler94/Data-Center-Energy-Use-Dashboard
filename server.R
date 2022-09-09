@@ -488,8 +488,15 @@ server <- function(input, output, session) {
       }
       
       output$pue_trends_plot <- renderGirafe({
-        buildIndustryTrendsPUETrends(data_sheet_pue_raw, input$selected_company_pue, input$selected_scope_pue)
+        buildIndustryTrendsPUETrends(data_sheet_pue_raw, input$selected_company_pue, input$selected_scope_pue, render_plot = TRUE)
       })
+      
+      output$download_pue_graph <- downloadHandler(
+        filename = function(){paste0("pue_trends_plot", ".png")},
+        content = function(fname){
+          ggsave(fname, plot = buildIndustryTrendsPUETrends(data_sheet_pue_raw, input$selected_company_pue, input$selected_scope_pue, render_plot = FALSE), width = 10, height = 5, units = "in")
+        }
+      )
       
     }
     

@@ -1,4 +1,4 @@
-buildIndustryTrendsPUETrends <- function(data_sheet_pue_filtered, selected_company, selected_scope) {
+buildIndustryTrendsPUETrends <- function(data_sheet_pue_filtered, selected_company, selected_scope, render_plot) {
   data_sheet_pue_all <- data_sheet_pue_raw %>%
     select(c("company", "applicable_year", "facility_scope", "geographical_scope", "pue_value", "pue_measurement_level")) %>%
     mutate(facility_scope_clean = case_when(
@@ -57,7 +57,9 @@ buildIndustryTrendsPUETrends <- function(data_sheet_pue_filtered, selected_compa
       }
     )
   
-  #n <- ggplot() + theme_void() + annotate("text", x = 4, y=13000, label = "No Data Found. Change Company or Scope Level.")
+  if (render_plot == FALSE) {
+    return(p)
+  }
   
   if (nrow(data_sheet_pue_filtered) != 0) {
     x <- girafe(ggobj = p, width_svg = 9, height_svg = 7)

@@ -427,7 +427,8 @@ pue_trends_page <- makePage(
       Stack(
         PrimaryButton.shinyInput("show_pue_graph_explainer", iconProps = list("iconName" = "Help"), text = "Help"),
         TooltipHost(content = "Copyright 2022, ISA Lab, please contact isaldatacenterdashboard@gmail.com with any questions", PrimaryButton.shinyInput("show_pue_download_modal", iconProps = list("iconName" = "Download"), text = "Download Data")),
-        PrimaryButton.shinyInput("save_pue_graph", iconProps = list("iconName" = "Save"), text = "Save Image"),
+        # PrimaryButton.shinyInput("save_pue_graph", iconProps = list("iconName" = "Save"), text = "Save Image"),
+        downloadButton("download_pue_graph", label = " Save Image", class = "ms-Button ms-Button--primary root-102 ms-Button-label label-106"),
         horizontal = TRUE,
         horizontalAlign = "right",
         tokens = list(childrenGap = 20)
