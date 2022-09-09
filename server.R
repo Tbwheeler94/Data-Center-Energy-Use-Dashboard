@@ -352,9 +352,15 @@ server <- function(input, output, session) {
       })
       
       output$energy_data_trendsplot <- renderPlot({
-        buildIndustryTrendsEnergyDataPlot(data_sheet_energy_transformed, input$input_year, 
-                                          input$input_reporting_scope, input$input_scale)
+        buildIndustryTrendsEnergyDataPlot(input$input_year, input$input_reporting_scope, input$input_scale)
       })
+      
+      output$download_energy_data_trends_graph <- downloadHandler(
+        filename = function(){paste0("energy_data_trends_plot", ".png")},
+        content = function(fname){
+          ggsave(fname, plot = buildIndustryTrendsEnergyDataPlot(input$input_year, input$input_reporting_scope, input$input_scale), width = 10, height = 5, units = "in")
+        }
+      )
     }
     
     if(page_title == "Industry Relationships") {

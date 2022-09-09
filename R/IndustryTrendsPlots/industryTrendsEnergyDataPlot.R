@@ -1,4 +1,4 @@
-buildIndustryTrendsEnergyDataPlot <- function(data_sheet_energy_transformed, selected_year, selected_scope, selected_scale) {
+buildIndustryTrendsEnergyDataPlot <- function(selected_year, selected_scope, selected_scale) {
   plot_scale <- 0
   plot_TWH <- ""
   plot_breaks <- 0

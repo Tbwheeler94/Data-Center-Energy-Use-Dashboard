@@ -333,7 +333,8 @@ energy_data_trends <- makePage(
         Stack(
           PrimaryButton.shinyInput("show_energy_data_graph_explainer", iconProps = list("iconName" = "Help", "color" = "#137AD1"), text = "Help"),
           TooltipHost(content = "Copyright 2022, ISA Lab, please contact isaldatacenterdashboard@gmail.com with any questions", PrimaryButton.shinyInput("download_energy_data", iconProps = list("iconName" = "Download"), text = "Download Data")),
-          PrimaryButton.shinyInput("save_energy_data_graph", iconProps = list("iconName" = "Save", "color" = "#137AD1"), text = "Save Image"),
+          # PrimaryButton.shinyInput("save_energy_data_graph", iconProps = list("iconName" = "Save", "color" = "#137AD1"), text = "Save Image"),
+          downloadButton("download_energy_data_trends_graph", label = " Save Image", class = "ms-Button ms-Button--primary root-102 ms-Button-label label-106"),
           horizontal = TRUE,
           horizontalAlign = "right",
           tokens = list(childrenGap = 20)
