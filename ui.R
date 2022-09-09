@@ -366,7 +366,8 @@ reporting_timeline_page <- makePage(
                  Stack(
                    PrimaryButton.shinyInput("show_reporting_timeline_explainer", iconProps = list("iconName" = "Help"), text = "Help"),
                    TooltipHost(content = "Copyright 2022, ISA Lab, please contact isaldatacenterdashboard@gmail.com with any questions", PrimaryButton.shinyInput("show_timeline_download_modal", iconProps = list("iconName" = "Download"), text = "Download Data")),
-                   PrimaryButton.shinyInput("save_reporting_timeline_graph", iconProps = list("iconName" = "Save"), text = "Save Image"),
+                   # PrimaryButton.shinyInput("save_reporting_timeline_graph", iconProps = list("iconName" = "Save"), text = "Save Image"),
+                   downloadButton("download_timeline_graph", label = " Save Image", class = "ms-Button ms-Button--primary root-102 ms-Button-label label-106"),
                    horizontal = TRUE,
                    horizontalAlign = "right",
                    tokens = list(childrenGap = 20)

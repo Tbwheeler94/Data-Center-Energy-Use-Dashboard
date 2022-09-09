@@ -227,12 +227,10 @@ server <- function(input, output, session) {
         buildIndustryTrendsTransparencyPlot(render_plot = TRUE)
       })
       
-      plot_test <- reactive({ buildIndustryTrendsTransparencyPlot(render_plot = FALSE) })
-      
       output$download_transparency_graph <- downloadHandler(
         filename = function(){paste0("transparency_graph", ".png")},
         content = function(fname){
-          ggsave(fname, plot = plot_test(), width = 10, height = 5, units = "in")
+          ggsave(fname, plot = buildIndustryTrendsTransparencyPlot(render_plot = FALSE), width = 10, height = 5, units = "in")
         }
       )
     }
@@ -313,8 +311,15 @@ server <- function(input, output, session) {
       })
       
       output$reporting_timeline <- renderGirafe({
-        buildIndustryTrendsTimelinePlot(data_sheet_energy_transformed)
+        buildIndustryTrendsTimelinePlot(render_plot = TRUE)
       })
+      
+      output$download_timeline_graph <- downloadHandler(
+        filename = function(){paste0("timeline_plot", ".png")},
+        content = function(fname){
+          ggsave(fname, plot = buildIndustryTrendsTimelinePlot(render_plot = FALSE), width = 10, height = 5, units = "in")
+        }
+      )
       
     }
     

@@ -1,4 +1,4 @@
-buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
+buildIndustryTrendsTimelinePlot <- function(render_plot) {
   
   # status_levels <- c("Reported Data Center Electricity", "Reported Company Wide Electricity",
   #                    "Reported Company Wide Energy", "No Reporting of Publicly Available Data", 
@@ -44,6 +44,10 @@ buildIndustryTrendsTimelinePlot <- function(data_sheet_energy_transformed) {
         })
       }
     )
+  
+  if (render_plot == FALSE) {
+    return(p)
+  }
 
 
   x <- girafe(ggobj = p, width_svg = 13, height_svg = 7)
