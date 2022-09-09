@@ -278,8 +278,11 @@ reporting_trends_page <- makePage(
                  Stack(
                    PrimaryButton.shinyInput("show_transparency_graph_explainer", iconProps = list("iconName" = "Help"), text = "Help"),
                    TooltipHost(content = "Copyright 2022, ISA Lab, please contact isaldatacenterdashboard@gmail.com with any questions", PrimaryButton.shinyInput("show_transparency_modal", iconProps = list("iconName" = "Download"), text = "Download Data")),
-                   # PrimaryButton.shinyInput("save_transparency_graph", iconProps = list("iconName" = "Save"), text = "Save Image"),
-                   downloadButton("download_transparency_graph", label = " Save Image", class = "ms-Button ms-Button--primary root-102 ms-Button-label label-106"),
+                   downloadLink("download_transparency_graph", tags$button(class = "ms-Button ms-Button--primary root-102", `data-is-focusable` = "true",
+                                                                                 tags$span(class = "ms-Button-flexContainer flexContainer-103", `data-automationid` = "splitbuttonprimary",
+                                                                                           icon("camera", class = "fa-lg", style = "padding: 5px;"),
+                                                                                           tags$span(class = "ms-Button-textContainer textContainer-104", 
+                                                                                                     tags$span(class = "ms-Button-label label-106", "Save Image"))))),
                    horizontal = TRUE,
                    horizontalAlign = "right",
                    tokens = list(childrenGap = 20)
@@ -333,8 +336,11 @@ energy_data_trends <- makePage(
         Stack(
           PrimaryButton.shinyInput("show_energy_data_graph_explainer", iconProps = list("iconName" = "Help", "color" = "#137AD1"), text = "Help"),
           TooltipHost(content = "Copyright 2022, ISA Lab, please contact isaldatacenterdashboard@gmail.com with any questions", PrimaryButton.shinyInput("download_energy_data", iconProps = list("iconName" = "Download"), text = "Download Data")),
-          # PrimaryButton.shinyInput("save_energy_data_graph", iconProps = list("iconName" = "Save", "color" = "#137AD1"), text = "Save Image"),
-          downloadButton("download_energy_data_trends_graph", label = " Save Image", class = "ms-Button ms-Button--primary root-102 ms-Button-label label-106"),
+          downloadLink("download_energy_data_trends_graph", tags$button(class = "ms-Button ms-Button--primary root-102", `data-is-focusable` = "true",
+                                                              tags$span(class = "ms-Button-flexContainer flexContainer-103", `data-automationid` = "splitbuttonprimary",
+                                                                        icon("camera", class = "fa-lg", style = "padding: 5px;"),
+                                                                        tags$span(class = "ms-Button-textContainer textContainer-104", 
+                                                                                  tags$span(class = "ms-Button-label label-106", "Save Image"))))),
           horizontal = TRUE,
           horizontalAlign = "right",
           tokens = list(childrenGap = 20)
@@ -367,8 +373,11 @@ reporting_timeline_page <- makePage(
                  Stack(
                    PrimaryButton.shinyInput("show_reporting_timeline_explainer", iconProps = list("iconName" = "Help"), text = "Help"),
                    TooltipHost(content = "Copyright 2022, ISA Lab, please contact isaldatacenterdashboard@gmail.com with any questions", PrimaryButton.shinyInput("show_timeline_download_modal", iconProps = list("iconName" = "Download"), text = "Download Data")),
-                   # PrimaryButton.shinyInput("save_reporting_timeline_graph", iconProps = list("iconName" = "Save"), text = "Save Image"),
-                   downloadButton("download_timeline_graph", label = " Save Image", class = "ms-Button ms-Button--primary root-102 ms-Button-label label-106"),
+                   downloadLink("download_timeline_graph", tags$button(class = "ms-Button ms-Button--primary root-102", `data-is-focusable` = "true",
+                                                                  tags$span(class = "ms-Button-flexContainer flexContainer-103", `data-automationid` = "splitbuttonprimary",
+                                                                            icon("camera", class = "fa-lg", style = "padding: 5px;"),
+                                                                            tags$span(class = "ms-Button-textContainer textContainer-104", 
+                                                                                      tags$span(class = "ms-Button-label label-106", "Save Image"))))),
                    horizontal = TRUE,
                    horizontalAlign = "right",
                    tokens = list(childrenGap = 20)
@@ -392,7 +401,11 @@ lease_cloud_network_page <- makePage(
       Stack(
         PrimaryButton.shinyInput("show_network_graph_explainer", iconProps = list("iconName" = "Help"), text = "Help"),
         TooltipHost(content = "Copyright 2022, ISA Lab, please contact isaldatacenterdashboard@gmail.com with any questions", PrimaryButton.shinyInput("download_network_graph_data", iconProps = list("iconName" = "Download"), text = "Download Data")),
-        PrimaryButton.shinyInput("save_network_graph", iconProps = list("iconName" = "Save"), text = "Save Image"),
+        downloadLink("download_network_graph", tags$button(class = "ms-Button ms-Button--primary root-102", `data-is-focusable` = "true",
+                                                                tags$span(class = "ms-Button-flexContainer flexContainer-103", `data-automationid` = "splitbuttonprimary",
+                                                                          icon("camera", class = "fa-lg", style = "padding: 5px;"),
+                                                                          tags$span(class = "ms-Button-textContainer textContainer-104", 
+                                                                                    tags$span(class = "ms-Button-label label-106", "Save Image"))))),
         horizontal = TRUE,
         horizontalAlign = "right",
         tokens = list(childrenGap = 20)
@@ -428,8 +441,11 @@ pue_trends_page <- makePage(
       Stack(
         PrimaryButton.shinyInput("show_pue_graph_explainer", iconProps = list("iconName" = "Help"), text = "Help"),
         TooltipHost(content = "Copyright 2022, ISA Lab, please contact isaldatacenterdashboard@gmail.com with any questions", PrimaryButton.shinyInput("show_pue_download_modal", iconProps = list("iconName" = "Download"), text = "Download Data")),
-        # PrimaryButton.shinyInput("save_pue_graph", iconProps = list("iconName" = "Save"), text = "Save Image"),
-        downloadButton("download_pue_graph", label = " Save Image", class = "ms-Button ms-Button--primary root-102 ms-Button-label label-106"),
+        downloadLink("download_pue_graph", tags$button(class = "ms-Button ms-Button--primary root-102", `data-is-focusable` = "true",
+                                                         tags$span(class = "ms-Button-flexContainer flexContainer-103", `data-automationid` = "splitbuttonprimary",
+                                                                   icon("camera", class = "fa-lg", style = "padding: 5px;"),
+                                                                   tags$span(class = "ms-Button-textContainer textContainer-104", 
+                                                                             tags$span(class = "ms-Button-label label-106", "Save Image"))))),
         horizontal = TRUE,
         horizontalAlign = "right",
         tokens = list(childrenGap = 20)
@@ -831,7 +847,7 @@ ui <- #secure_app(head_auth = tags$script(inactivity), #authentication
                  autoWaiter(id = c(#add loading animations for home page
                                    "years_reported", "companies_reporting", "energy_reported",
                                     #add loading animations to industry trend graphs
-                                   "transparency_graph","energy_data_trendsplot", "reporting_timeline",
+                                   "transparency_graph","energy_data_trendsplot", "reporting_timeline", "pue_trends_plot",
                                    #add loading animations to company analysis page
                                    "company_profiles_title_1", "company_profiles_title_2", "company_profiles_title_3", 
                                    "company_profiles_title_4", "selected_company_stats", "reported_energy_levels", 

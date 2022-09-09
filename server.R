@@ -228,7 +228,7 @@ server <- function(input, output, session) {
       })
       
       output$download_transparency_graph <- downloadHandler(
-        filename = function(){paste0("transparency_graph", ".png")},
+        filename = function(){paste0("reporting_trends_plot", ".png")},
         content = function(fname){
           ggsave(fname, plot = buildIndustryTrendsTransparencyPlot(render_plot = FALSE), width = 10, height = 5, units = "in")
         }
@@ -315,7 +315,7 @@ server <- function(input, output, session) {
       })
       
       output$download_timeline_graph <- downloadHandler(
-        filename = function(){paste0("timeline_plot", ".png")},
+        filename = function(){paste0("reporting_timeline_plot", ".png")},
         content = function(fname){
           ggsave(fname, plot = buildIndustryTrendsTimelinePlot(render_plot = FALSE), width = 10, height = 5, units = "in")
         }
@@ -356,7 +356,7 @@ server <- function(input, output, session) {
       })
       
       output$download_energy_data_trends_graph <- downloadHandler(
-        filename = function(){paste0("energy_data_trends_plot", ".png")},
+        filename = function(){paste0("energy_trends_plot", ".png")},
         content = function(fname){
           ggsave(fname, plot = buildIndustryTrendsEnergyDataPlot(input$input_year, input$input_reporting_scope, input$input_scale), width = 10, height = 5, units = "in")
         }
@@ -418,6 +418,13 @@ server <- function(input, output, session) {
       output$lease_cloud_network <- renderVisNetwork({
         buildIndustryTrendsLeaseCloudNetworkPlot()
       })
+      
+      output$download_network_graph <- downloadHandler(
+        filename = function(){paste0("lease_cloud_network_plot", ".png")},
+        content = function(fname){
+          visSave(buildIndustryTrendsLeaseCloudNetworkPlot(), file = fname)
+        }
+      )
     }
     
     if(page_title == "PUE Trends") {
