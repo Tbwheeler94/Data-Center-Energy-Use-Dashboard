@@ -2,6 +2,7 @@ buildIndustryTrendsLeaseCloudNetworkPlot <- function() {
   
   #create list of network links
   full_network_links <- data_sheet_company_raw %>% 
+    filter(status == "Checked") %>% 
     select('company_name', starts_with("provider")) %>% 
     rename_all(~str_replace(.,"_","")) %>% 
     rename_at(vars(!ends_with("_category")), ~paste0(.,"_name")) %>% 
