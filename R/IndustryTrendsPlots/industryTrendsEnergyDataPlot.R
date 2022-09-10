@@ -46,10 +46,32 @@ buildIndustryTrendsEnergyDataPlot <- function(selected_year, selected_scope, sel
   
   dc_color <- c("#3BCA6D")
   cw_color <- c("#77945C")
-  dc_and_cw <- c("#3BCA6D", "#77945C")
+  dc_and_cw <- c(`Data Centers` = "#3BCA6D", `Company Wide` = "#77945C")
   color_labels <- ""
   if ("Data Centers" %in% selected_scope && "Company Wide" %in% selected_scope) {
     color_labels <- dc_and_cw
+    dc_and_cw_data <- energy_use_final %>% filter(dc_and_cw == "Yes", energy_reporting_scope == "Data Centers")
+    data_centers_data <- energy_use_final %>% filter(dc_and_cw == "", energy_reporting_scope == "Data Centers")
+    company_wide_data <- energy_use_final %>% filter(energy_reporting_scope == "Company Wide")
+    return(ggplot() + 
+      geom_bar(company_wide_data, mapping = aes(x=electricity_converted, y=company, fill=energy_reporting_scope), 
+               position=position_stack(reverse = TRUE), stat="identity") +
+      geom_bar(data_centers_data, mapping = aes(x=electricity_converted, y=company, fill=energy_reporting_scope),
+               position=position_stack(reverse = TRUE), stat="identity") +
+      geom_bar(dc_and_cw_data, mapping = aes(x=electricity_converted, y=company, fill=energy_reporting_scope),
+               position=position_stack(reverse = TRUE), stat="identity", width = 0.4) +
+      scale_x_continuous(breaks = plot_breaks, 
+                         label = plot_labels,
+                         position='top', 
+                         expand = expansion(mult=c(0.01,0))) + 
+      scale_fill_manual(values=color_labels) +
+      theme_classic() +
+      theme(legend.position = "bottom",
+            legend.title=element_blank(),
+            legend.text=element_text(size = 14),
+            axis.title.x=element_blank(),
+            axis.title.y=element_blank(),
+            axis.text.y=element_text(size = 12)))
   } else if ("Data Centers" %in% selected_scope) {
     color_labels <- dc_color
   } else if ("Company Wide" %in% selected_scope) {
@@ -59,6 +81,8 @@ buildIndustryTrendsEnergyDataPlot <- function(selected_year, selected_scope, sel
   ggplot(energy_use_final, aes(x=electricity_converted)) + 
     geom_bar(aes(y=company, fill=energy_reporting_scope), 
              position=position_stack(reverse = TRUE), stat="identity") +
+    # geom_bar(aes(y=company, fill=energy_reporting_scope), 
+    #          position=position_stack(reverse = TRUE), stat="identity", width = 0.4, fill = "black") +
     scale_x_continuous(breaks = plot_breaks, 
                        label = plot_labels,
                        position='top', 
