@@ -417,7 +417,6 @@ pue_trends_page <- makePage(
     Stack(style = "text-align: center; padding: 25px", Text("Industry PUE Trends", variant = "xxLarge", style = "color: #137AD1;")),
     Grid(
       reactOutput("pue_graph_explainer"),
-      reactOutput("pue_download_modal"),
       div(style = "display: flex; flex-direction: row; justify-content: flex-end; flex-wrap: wrap; gap: 15px; padding-right: 10px;",
         PrimaryButton.shinyInput("show_pue_graph_explainer", iconProps = list("iconName" = "Help"), text = "Help"),
         downloadLink("download_pue_graph", PrimaryButton.shinyInput("fdpuei", iconProps = list("iconName" = "Camera"), text = "Save Image")),
