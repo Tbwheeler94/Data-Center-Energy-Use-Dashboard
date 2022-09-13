@@ -223,6 +223,17 @@ server <- function(input, output, session) {
       }
       onclick('learn_more_2', change_to_methods())
       
+      output$download_transparency_data <- downloadHandler(
+        filename = function(){paste0("reporting_trends", input$transparency_dataset_options)},
+        content = function(fname){
+          if (".csv" %in% input$transparency_dataset_options) {
+            write.table(data_of_transparency %>% select(-c("row_num")), fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)
+          } else if (".xlsx" %in% input$transparency_dataset_options) {
+            write_xlsx(data_of_transparency %>% select(-c("row_num")), path = fname)
+          }
+        }
+      )
+      
       output$transparency_graph <- renderGirafe({
         buildIndustryTrendsTransparencyPlot(render_plot = TRUE)
       })

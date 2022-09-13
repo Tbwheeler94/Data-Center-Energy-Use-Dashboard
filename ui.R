@@ -273,20 +273,17 @@ reporting_trends_page <- makePage(
     Grid(
       reactOutput("transparency_graph_explainer"),
       reactOutput("transparency_graph_download"),
+      div(style = "display: flex; flex-direction: row; justify-content: flex-end; flex-wrap: wrap; gap: 15px; padding-right: 10px;",
+          PrimaryButton.shinyInput("show_transparency_graph_explainer", iconProps = list("iconName" = "Info"), text = "Help"),
+          downloadLink("download_transparency_graph", PrimaryButton.shinyInput("fdtri", iconProps = list("iconName" = "Camera"), text = "Save Image")),
+          TooltipHost(content = "Select a download option in the dropdown to the right", downloadLink("download_transparency_data", PrimaryButton.shinyInput("fdtrd", iconProps = list("iconName" = "Download"), text = "Download Data"))),
+          Dropdown.shinyInput("transparency_dataset_options",
+                              placeholder = ".csv",
+                              value = ".csv",
+                              options = unique_tag_options)
+      ),
       GridItem(class = "ms-sm12 ms-xl12", 
                CompanyCard(
-                 Stack(
-                   PrimaryButton.shinyInput("show_transparency_graph_explainer", iconProps = list("iconName" = "Help"), text = "Help"),
-                   TooltipHost(content = "Copyright 2022, ISA Lab, please contact isaldatacenterdashboard@gmail.com with any questions", PrimaryButton.shinyInput("show_transparency_modal", iconProps = list("iconName" = "Download"), text = "Download Data")),
-                   downloadLink("download_transparency_graph", tags$button(class = "ms-Button ms-Button--primary root-102", `data-is-focusable` = "true",
-                                                                                 tags$span(class = "ms-Button-flexContainer flexContainer-103", `data-automationid` = "splitbuttonprimary",
-                                                                                           icon("camera", class = "fa-lg", style = "padding: 5px;"),
-                                                                                           tags$span(class = "ms-Button-textContainer textContainer-104", 
-                                                                                                     tags$span(class = "ms-Button-label label-106", "Save Image"))))),
-                   horizontal = TRUE,
-                   horizontalAlign = "right",
-                   tokens = list(childrenGap = 20)
-                 ),
                  girafeOutput('transparency_graph')
                )
       )

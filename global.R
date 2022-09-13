@@ -249,7 +249,7 @@ for (i in 1:length(list_of_scales)) {
   })
 }
 
-#Generate list of unique scales for energy data trends plot
+#Generate list of unique download options
 unique_download_options <- list()
 list_of_download_options <- c("Selected dataset (.csv)", "Selected dataset (.xlsx)", "Full dataset (.csv)", "Full dataset (.xlsx)")
 
@@ -259,6 +259,19 @@ for (i in 1:length(list_of_download_options)) {
   },
   text = {
     list_of_download_options[i]
+  })
+}
+
+#Generate list of unique tag options
+unique_tag_options <- list()
+list_of_tag_options <- c(".csv", ".xlsx")
+
+for (i in 1:length(list_of_tag_options)) {
+  unique_tag_options[[i]] <- list(key = {
+    list_of_tag_options[i]
+  },
+  text = {
+    list_of_tag_options[i]
   })
 }
 
