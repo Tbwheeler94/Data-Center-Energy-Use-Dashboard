@@ -299,6 +299,12 @@ energy_data_trends <- makePage(
   
   div(Stack(style = "text-align: center; padding: 25px", Text("Annual Reported Energy Use By Year Across Reporting Companies", variant = "xxLarge", style = "color: #137AD1;")),
       Grid(id = 'energy-data-trends-plot',
+        reactOutput("energy_data_graph_explainer"),
+        div(style = "display: flex; flex-direction: row; justify-content: flex-end; flex-wrap: wrap; gap: 15px; padding-right: 10px;",
+          PrimaryButton.shinyInput("show_energy_data_graph_explainer", iconProps = list("iconName" = "Help", "color" = "#137AD1"), text = "Help"),
+          TooltipHost(content = "Copyright 2022, ISA Lab, please contact isaldatacenterdashboard@gmail.com with any questions", PrimaryButton.shinyInput("download_energy_data", iconProps = list("iconName" = "Download"), text = "Download Data")),
+          downloadLink("download_energy_data_trends_graph", PrimaryButton.shinyInput("fdedtd", iconProps = list("iconName" = "Camera"), text = "Save Image")),
+        ),
         GridItem(class = "ms-sm12  ms-xl3",
                  Stack(class = "ms-depth-8",
                        tokens = list(padding = 20, childrenGap = 5),
@@ -329,27 +335,9 @@ energy_data_trends <- makePage(
                                            style = "width: 150px; margin: auto; font-size: 12pt;")
                  )
         ),
-        reactOutput("energy_data_graph_explainer"),
-        Stack(
-          PrimaryButton.shinyInput("show_energy_data_graph_explainer", iconProps = list("iconName" = "Help", "color" = "#137AD1"), text = "Help"),
-          TooltipHost(content = "Copyright 2022, ISA Lab, please contact isaldatacenterdashboard@gmail.com with any questions", PrimaryButton.shinyInput("download_energy_data", iconProps = list("iconName" = "Download"), text = "Download Data")),
-          downloadLink("download_energy_data_trends_graph", tags$button(class = "ms-Button ms-Button--primary root-102", `data-is-focusable` = "true",
-                                                              tags$span(class = "ms-Button-flexContainer flexContainer-103", `data-automationid` = "splitbuttonprimary",
-                                                                        icon("camera", class = "fa-lg", style = "padding: 5px;"),
-                                                                        tags$span(class = "ms-Button-textContainer textContainer-104", 
-                                                                                  tags$span(class = "ms-Button-label label-106", "Save Image"))))),
-          horizontal = TRUE,
-          horizontalAlign = "right",
-          tokens = list(childrenGap = 20)
-        ),
         GridItem(class = "ms-sm12 ms-xl9",
                  plotOutput('energy_data_trendsplot'))
       )
-      # Grid(id = 'energy-data-trends-plot',
-      #      GridItem(class = "ms-sm12 ms-xl12",
-      #               GraphCard(Text("Energy Data Trends Plot", variant = "large", style = "text-align: center;"),
-      #                         br(),
-      #                         plotOutput('energy_data_trendsplot'))))
   )
 )
 
