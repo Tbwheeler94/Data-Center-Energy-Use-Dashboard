@@ -382,19 +382,15 @@ lease_cloud_network_page <- makePage(
       Text("Network of Data Center Lease/Cloud Providers", variant = "xxLarge", style = "color: #137AD1; padding-bottom: 15px;"),
       br(),
       reactOutput("network_graph_explainer"),
-      Stack(
-        PrimaryButton.shinyInput("show_network_graph_explainer", iconProps = list("iconName" = "Help"), text = "Help"),
-        TooltipHost(content = "Copyright 2022, ISA Lab, please contact isaldatacenterdashboard@gmail.com with any questions", PrimaryButton.shinyInput("download_network_graph_data", iconProps = list("iconName" = "Download"), text = "Download Data")),
-        downloadLink("download_network_graph", tags$button(class = "ms-Button ms-Button--primary root-102", `data-is-focusable` = "true",
-                                                                tags$span(class = "ms-Button-flexContainer flexContainer-103", `data-automationid` = "splitbuttonprimary",
-                                                                          icon("camera", class = "fa-lg", style = "padding: 5px;"),
-                                                                          tags$span(class = "ms-Button-textContainer textContainer-104", 
-                                                                                    tags$span(class = "ms-Button-label label-106", "Save Image"))))),
-        horizontal = TRUE,
-        horizontalAlign = "right",
-        tokens = list(childrenGap = 20)
+      div(style = "display: flex; flex-direction: row; justify-content: flex-end; flex-wrap: wrap; gap: 15px; padding-right: 10px;",
+          PrimaryButton.shinyInput("show_network_graph_explainer", iconProps = list("iconName" = "Help"), text = "Help"),
+          downloadLink("download_network_graph", PrimaryButton.shinyInput("fdiri", iconProps = list("iconName" = "Camera"), text = "Save Image")),
+          TooltipHost(content = "Select a download option in the dropdown to the right", downloadLink("download_network_data", PrimaryButton.shinyInput("fdird", iconProps = list("iconName" = "Download"), text = "Download Data"))),
+          Dropdown.shinyInput("network_dataset_options",
+                              placeholder = ".csv",
+                              value = ".csv",
+                              options = unique_tag_options)
       ),
-      # HTML("<button type='button' id='show_network_graph_explainer' class='shiny-bound-input action-button ms-Button ms-Button--action ms-Button--command root-128' data-is-focusable='true' style='cursor: pointer; background-color: rgb(19, 122, 209); color: white; float: right;'><span class='ms-Button-flexContainer flexContainer-77' data-automationid='splitbuttonprimary'><i data-icon-name='Info' aria-hidden='true' class='ms-Icon root-32 css-87 ms-Button-icon icon-79' style='font-family: FabricMDL2Icons; color: white;'></i><span class='ms-Button-textContainer textContainer-102'><span class='ms-Button-label label-103' id='id__42'>Help</span></span></span></button>"),
       div(style = "text-align: left;", visNetworkOutput('lease_cloud_network', height = "76vh")),
   )
 )

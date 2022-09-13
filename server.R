@@ -427,12 +427,40 @@ server <- function(input, output, session) {
       #establish event listener for button inside tooltip
       onclick('network_to_single_company_analysis', change_to_single_company_analysis())
       
+      # For Tom: make a boolean render_plot argument in buildIndustryTrendsLeaseCloudNetwork.R 
+      # and when FALSE, return the dataset and pass to downloadHandler() function
+      # [see timeline server code for example]
+      full_network_links_data <- data_sheet_company_raw %>% 
+        filter(status == "Checked") %>% 
+        select('company_name', starts_with("provider")) %>% 
+        rename_all(~str_replace(.,"_","")) %>% 
+        rename_at(vars(!ends_with("_category")), ~paste0(.,"_name")) %>% 
+        rename("company_name" = "companyname_name") %>% 
+        pivot_longer(!company_name, names_to = c("provider", ".value"), names_pattern = ".(\\d+)_(\\w+)") %>% 
+        select(-c('provider')) %>% 
+        na_if("") %>%
+        na.omit %>% 
+        rename("from" = company_name, "to" = name) %>% 
+        mutate(category = case_when(category == "Colocation" ~ 1,
+                                    category == "Cloud" ~ 2))
+      
+      output$download_network_data <- downloadHandler(
+        filename = function(){paste0("lease_cloud_network", input$network_dataset_options)},
+        content = function(fname){
+          if (".csv" %in% input$network_dataset_options) {
+            write.table(full_network_links_data, fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)
+          } else if (".xlsx" %in% input$network_dataset_options) {
+            write_xlsx(full_network_links_data, path = fname)
+          }
+        }
+      )
+      
       output$lease_cloud_network <- renderVisNetwork({
         buildIndustryTrendsLeaseCloudNetworkPlot()
       })
       
       output$download_network_graph <- downloadHandler(
-        filename = function(){paste0("lease_cloud_network_plot", ".png")},
+        filename = function(){paste0("lease_cloud_network_plot", ".html")},
         content = function(fname){
           visSave(buildIndustryTrendsLeaseCloudNetworkPlot(), file = fname)
         }
