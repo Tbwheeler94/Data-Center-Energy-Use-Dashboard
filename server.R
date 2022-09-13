@@ -275,7 +275,7 @@ server <- function(input, output, session) {
       })
       
       energy_use_final_filtered <- reactive({
-        buildIndustryTrendsEnergyDataPlot(input$input_year, input$input_reporting_scope, input$input_scale, render_plot = FALSE)
+        buildIndustryTrendsEnergyDataPlot(input$input_year, input$reporting_scope_dc, input$reporting_scope_cw, input$input_scale, render_plot = FALSE)
       })
       
       edt_input <- reactive({
@@ -306,13 +306,13 @@ server <- function(input, output, session) {
       )
       
       output$energy_data_trendsplot <- renderPlot({
-        buildIndustryTrendsEnergyDataPlot(input$input_year, input$input_reporting_scope, input$input_scale, render_plot = TRUE)
+        buildIndustryTrendsEnergyDataPlot(input$input_year, input$reporting_scope_dc, input$reporting_scope_cw, input$input_scale, render_plot = TRUE)
       })
       
       output$download_energy_data_trends_graph <- downloadHandler(
         filename = function(){paste0("energy_trends_plot", ".png")},
         content = function(fname){
-          ggsave(fname, plot = buildIndustryTrendsEnergyDataPlot(input$input_year, input$input_reporting_scope, input$input_scale, render_plot = TRUE), width = 10, height = 5, units = "in")
+          ggsave(fname, plot = buildIndustryTrendsEnergyDataPlot(input$input_year, input$reporting_scope_dc, input$reporting_scope_cw, input$input_scale, render_plot = TRUE), width = 10, height = 5, units = "in")
         }
       )
     }

@@ -1,4 +1,15 @@
-buildIndustryTrendsEnergyDataPlot <- function(selected_year, selected_scope, selected_scale, render_plot) {
+buildIndustryTrendsEnergyDataPlot <- function(selected_year, selected_dc, selected_cw, selected_scale, render_plot) {
+  # assess which checkboxes are selected
+  if (selected_dc == TRUE && selected_cw == TRUE) {
+    selected_scope <- c("Data Centers", "Company Wide")
+  } else if (selected_dc == TRUE && selected_cw == FALSE) {
+    selected_scope <- "Data Centers"
+  } else if (selected_dc == FALSE && selected_cw == TRUE) {
+    selected_scope <- "Company Wide"
+  } else {
+    selected_scope <- ""
+  }
+  
   # prep plot details from selected scale
   plot_scale <- 0
   plot_breaks <- 0

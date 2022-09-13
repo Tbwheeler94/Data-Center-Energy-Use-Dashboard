@@ -310,9 +310,7 @@ energy_data_trends <- makePage(
                               options = unique_download_options)
         ),
         GridItem(class = "ms-sm12  ms-xl3",
-                 Stack(class = "ms-depth-8",
-                       tokens = list(padding = 20, childrenGap = 5),
-                       style = 'border-radius: 5px; background-color: white; border-top: 8px solid #137AD1;',
+                 CompanyCard(
                        Text("Select Year", variant = "xLarge", style = "text-align: center;"),
                        Dropdown.shinyInput("input_year", 
                                            options = unique_years,
@@ -322,14 +320,11 @@ energy_data_trends <- makePage(
                                            style = "width: 150px; margin: auto; font-size: 12pt;"),
                        br(),
                        Text("Select Scope(s)", variant = "xLarge", style = "text-align: center;"),
-                       checkboxGroupInput("input_reporting_scope",
-                                          label = h3("Reporting Scopes"),
-                                           choices = list(
-                                             "Data Centers" = "Data Centers",
-                                             "Company Wide" = "Company Wide"
-                                           ),
-                                          selected = "Data Centers"),
-                       br(),
+                       Stack(style = "margin-top: 0px;",
+                         Checkbox.shinyInput("reporting_scope_dc", label = "Data Centers", value  = TRUE),
+                         Checkbox.shinyInput("reporting_scope_cw", label = "Company Wide", value  = FALSE),
+                         tokens = list(padding = 10, childrenGap = 10)
+                       ),
                        Text("Select Scale", variant = "xLarge", style = "text-align: center;"),
                        ChoiceGroup.shinyInput("input_scale", 
                                            options = unique_scales,
