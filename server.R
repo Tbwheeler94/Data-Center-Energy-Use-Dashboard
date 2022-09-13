@@ -246,94 +246,6 @@ server <- function(input, output, session) {
       )
     }
     
-    if(page_title == "Reporting Timeline") {
-      
-      reporting_timeline_modal_visible <- reactiveVal(FALSE)
-      observeEvent(input$show_reporting_timeline_explainer, reporting_timeline_modal_visible(TRUE))
-      observeEvent(input$hide_reporting_timeline_explainer, reporting_timeline_modal_visible(FALSE))
-      
-      output$reporting_timeline_explainer <- renderReact({
-        
-        Modal(isOpen = reporting_timeline_modal_visible(),
-              Stack(tokens = list(padding = "25px", childrenGap = "10px"),
-                    style = "width: 800px;",
-                    div(style = list(display = "flex"),
-                        Text("About the Reporting Timeline Graph", variant = "xLarge"),
-                        div(style = list(flexGrow = 1)),
-                        IconButton.shinyInput("hide_reporting_timeline_explainer", iconProps = list(iconName = "Cancel")),
-                    ),
-                    Text("Timelines of energy reporting do not appear often in the public eye, especially when companies have not reported any data until recently.", variant = "large"),
-                    Text("Similar to the 'Energy Reporting Trends', this plot compares companies over time on energy reporting trends.", variant = "large"),
-                    Text("Methodology for each bar labels", variant = "xLarge"),
-                    Text(FontIcon(iconName = "Brush", style = "margin-right: 10px; color: #3BCA6D; vertical-align: middle;"),
-                         "Greener bars indicate that companies report at the better levels of transparency (e.g. electricity-specific data).", variant="large"),
-                    Text(FontIcon(iconName = "ProgressRingDots", style = "margin-right: 10px; vertical-align: middle;"),
-                         "Since energy data for a given year is usually not released until the year after, we wait until the end of the current year (2022) for reports to be released until we classify their respective scope. This is why we have a 'Pending Data Submission' label.", variant="large"),
-                    Text("Instructions for navigating", variant = "xLarge"),
-                    Text(FontIcon(iconName = "ScrollUpDown", style = "margin-right: 10px; vertical-align: middle;"),
-                         "Scroll up and down to examine additional companies on the timeline.", variant="large"),
-                    Text(FontIcon(iconName = "CalculatorAddition", style = "margin-right: 10px; vertical-align: middle;"),
-                         "Hover over a tile that lists the company name, data year, and reporting scope.", variant="large"),
-                    Text(FontIcon(iconName = "TimelineProgress", style = "margin-right: 10px; vertical-align: middle;"),
-                         "Hover over the command bar to use additional plotly tools.", variant="large")
-              )
-        )
-      })
-      
-      reporting_timeline_download_visible <- reactiveVal(FALSE)
-      observeEvent(input$show_timeline_download_modal, reporting_timeline_download_visible(TRUE))
-      observeEvent(input$hide_timeline_download_modal, reporting_timeline_download_visible(FALSE))
-      
-      output$reporting_timeline_download <- renderReact({
-        
-        Modal(isOpen = reporting_timeline_download_visible(),
-              Stack(tokens = list(padding = "25px", childrenGap = "10px"),
-                    style = "width: 350px;",
-                    div(style = list(display = "flex"),
-                        Text("Select a download option", variant = "xLarge"),
-                        div(style = list(flexGrow = 1)),
-                        IconButton.shinyInput("hide_timeline_download_modal", iconProps = list(iconName = "Cancel")),
-                    ),
-                    PrimaryButton.shinyInput("download_timeline_csv", "Download dataset (.csv)"),
-                    PrimaryButton.shinyInput("download_timeline_xlsx", "Download dataset (.xlsx)"),
-              )
-        )
-      })
-      
-      # retrieve appropiate dataset for each download button
-      timeline_download <- reactiveValues(data = NULL, filename = NULL, tag = NULL)
-      
-      observeEvent(input$download_timeline_csv, {
-        timeline_download$tag <- ".csv"
-        timeline_download$data <- industry_transparency %>% select(-c("row_num"))
-      })
-      
-      observeEvent(input$download_timeline_xlsx, {
-        timeline_download$tag <- ".xlsx"
-        timeline_download$data <- industry_transparency %>% select(-c("row_num"))
-      })
-      
-      # download functionality for csv download (selected dataset)
-      observeEvent(c(input$download_timeline_csv, input$download_timeline_xlsx), {
-        timeline_download$filename <- "reporting_timeline"
-        output$download_timeline_data <- download_function(timeline_download$data, timeline_download$filename, timeline_download$tag)
-        jsinject <- "setTimeout(function(){window.open($('#download_timeline_data').attr('href'))}, 100);"
-        session$sendCustomMessage(type = 'jsCode', list(value = jsinject))
-      })
-      
-      output$reporting_timeline <- renderGirafe({
-        buildIndustryTrendsTimelinePlot(render_plot = TRUE)
-      })
-      
-      output$download_timeline_graph <- downloadHandler(
-        filename = function(){paste0("reporting_timeline_plot", ".png")},
-        content = function(fname){
-          ggsave(fname, plot = buildIndustryTrendsTimelinePlot(render_plot = FALSE), width = 10, height = 5, units = "in")
-        }
-      )
-      
-    }
-    
     if(page_title == "Energy Data Trends") {
       
       energy_data_graph_modal_visible <- reactiveVal(FALSE)
@@ -403,6 +315,64 @@ server <- function(input, output, session) {
           ggsave(fname, plot = buildIndustryTrendsEnergyDataPlot(input$input_year, input$input_reporting_scope, input$input_scale, render_plot = TRUE), width = 10, height = 5, units = "in")
         }
       )
+    }
+    
+    if(page_title == "Reporting Timeline") {
+      
+      reporting_timeline_modal_visible <- reactiveVal(FALSE)
+      observeEvent(input$show_reporting_timeline_explainer, reporting_timeline_modal_visible(TRUE))
+      observeEvent(input$hide_reporting_timeline_explainer, reporting_timeline_modal_visible(FALSE))
+      
+      output$reporting_timeline_explainer <- renderReact({
+        
+        Modal(isOpen = reporting_timeline_modal_visible(),
+              Stack(tokens = list(padding = "25px", childrenGap = "10px"),
+                    style = "width: 800px;",
+                    div(style = list(display = "flex"),
+                        Text("About the Reporting Timeline Graph", variant = "xLarge"),
+                        div(style = list(flexGrow = 1)),
+                        IconButton.shinyInput("hide_reporting_timeline_explainer", iconProps = list(iconName = "Cancel")),
+                    ),
+                    Text("Timelines of energy reporting do not appear often in the public eye, especially when companies have not reported any data until recently.", variant = "large"),
+                    Text("Similar to the 'Energy Reporting Trends', this plot compares companies over time on energy reporting trends.", variant = "large"),
+                    Text("Methodology for each bar labels", variant = "xLarge"),
+                    Text(FontIcon(iconName = "Brush", style = "margin-right: 10px; color: #3BCA6D; vertical-align: middle;"),
+                         "Greener bars indicate that companies report at the better levels of transparency (e.g. electricity-specific data).", variant="large"),
+                    Text(FontIcon(iconName = "ProgressRingDots", style = "margin-right: 10px; vertical-align: middle;"),
+                         "Since energy data for a given year is usually not released until the year after, we wait until the end of the current year (2022) for reports to be released until we classify their respective scope. This is why we have a 'Pending Data Submission' label.", variant="large"),
+                    Text("Instructions for navigating", variant = "xLarge"),
+                    Text(FontIcon(iconName = "ScrollUpDown", style = "margin-right: 10px; vertical-align: middle;"),
+                         "Scroll up and down to examine additional companies on the timeline.", variant="large"),
+                    Text(FontIcon(iconName = "CalculatorAddition", style = "margin-right: 10px; vertical-align: middle;"),
+                         "Hover over a tile that lists the company name, data year, and reporting scope.", variant="large"),
+                    Text(FontIcon(iconName = "TimelineProgress", style = "margin-right: 10px; vertical-align: middle;"),
+                         "Hover over the command bar to use additional plotly tools.", variant="large")
+              )
+        )
+      })
+      
+      output$download_timeline_data <- downloadHandler(
+        filename = function(){paste0("reporting_timeline", input$timeline_dataset_options)},
+        content = function(fname){
+          if (".csv" %in% input$timeline_dataset_options) {
+            write.table(industry_transparency %>% select(-c("row_num")), fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)
+          } else if (".xlsx" %in% input$timeline_dataset_options) {
+            write_xlsx(industry_transparency %>% select(-c("row_num")), path = fname)
+          }
+        }
+      )
+      
+      output$reporting_timeline <- renderGirafe({
+        buildIndustryTrendsTimelinePlot(render_plot = TRUE)
+      })
+      
+      output$download_timeline_graph <- downloadHandler(
+        filename = function(){paste0("reporting_timeline_plot", ".png")},
+        content = function(fname){
+          ggsave(fname, plot = buildIndustryTrendsTimelinePlot(render_plot = FALSE), width = 10, height = 5, units = "in")
+        }
+      )
+      
     }
     
     if(page_title == "Industry Relationships") {
