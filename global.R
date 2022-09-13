@@ -249,22 +249,17 @@ for (i in 1:length(list_of_scales)) {
   })
 }
 
-download_function <- function(dataset, name, tag) {
-  if (tag == ".csv") {
-    downloadHandler(
-      filename = function(){paste0(name, tag)},
-      content = function(fname){
-        write.table(dataset, fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)
-      }
-    )
-  } else if (tag == ".xlsx") {
-    downloadHandler(
-      filename = function(){paste0(name, tag)},
-      content = function(fname){
-        write_xlsx(dataset, path = fname)
-      }
-    )
-  }
+#Generate list of unique scales for energy data trends plot
+unique_download_options <- list()
+list_of_download_options <- c("Selected dataset (.csv)", "Selected dataset (.xlsx)", "Full dataset (.csv)", "Full dataset (.xlsx)")
+
+for (i in 1:length(list_of_download_options)) {
+  unique_download_options[[i]] <- list(key = {
+    list_of_download_options[i]
+  },
+  text = {
+    list_of_download_options[i]
+  })
 }
 
 ##################################################

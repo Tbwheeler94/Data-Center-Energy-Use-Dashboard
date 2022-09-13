@@ -467,38 +467,31 @@ server <- function(input, output, session) {
       })
       
       dataset_input <- reactive({
-        switch(input$pue_dataset_options,
-               "Download selected dataset (.csv)" = data_sheet_pue_filtered(), 
-               "Download selected dataset (.xlsx)" = data_sheet_pue_filtered(), 
-               "Download full dataset (.csv)" = data_sheet_pue_raw, 
-               "Download full dataset (.xlsx)" = data_sheet_pue_raw)
+        switch(input$pue_dataset_options, 
+               "Selected dataset (.csv)" = data_sheet_pue_filtered() %>% na.omit() %>% select(-c("notes_category", "internal_notes", "name_of_file_on_box", "input_by", "status", "checked_by", "date_checked", "facility_scope_clean")),
+               "Selected dataset (.xlsx)" = data_sheet_pue_filtered() %>% na.omit() %>% select(-c("notes_category", "internal_notes", "name_of_file_on_box", "input_by", "status", "checked_by", "date_checked", "facility_scope_clean")),
+               "Full dataset (.csv)" = data_sheet_pue_raw %>% na.omit() %>% select(-c("notes_category", "internal_notes", "name_of_file_on_box", "input_by", "status", "checked_by", "date_checked")),
+               "Full dataset (.xlsx)" = data_sheet_pue_raw %>% na.omit() %>% select(-c("notes_category", "internal_notes", "name_of_file_on_box", "input_by", "status", "checked_by", "date_checked")))
       })
-      
+
       dataset_tag <- reactive({
         switch(input$pue_dataset_options,
-               "Download selected dataset (.csv)" = ".csv", 
-               "Download selected dataset (.xlsx)" = ".xlsx", 
-               "Download full dataset (.csv)" = ".csv", 
-               "Download full dataset (.xlsx)" = ".xlsx")
+               "Selected dataset (.csv)" = ".csv",
+               "Selected dataset (.xlsx)" = ".xlsx",
+               "Full dataset (.csv)" = ".csv",
+               "Full dataset (.xlsx)" = ".xlsx")
       })
       
-      output$download_pue_data <- {
-        if (dataset_tag() == ".csv") {
-          downloadHandler(
-            filename = function(){paste0("pue_trends", dataset_tag())},
-            content = function(fname){
-              write.table(dataset_input(), fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)
-            }
-          )
-        } else if (dataset_tag() == ".xlsx") {
-          downloadHandler(
-            filename = function(){paste0("pue_trends", dataset_tag())},
-            content = function(fname){
-              write_xlsx(dataset_input(), path = fname)
-            }
-          )
+      output$download_pue_data <- downloadHandler(
+        filename = function(){paste0("pue_trends", dataset_tag())},
+        content = function(fname){
+          if (dataset_tag() == ".csv") {
+            write.table(dataset_input(), fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)
+          } else if (dataset_tag() == ".xlsx") {
+            write_xlsx(dataset_input(), path = fname)
+          }
         }
-      }
+      )
       
       output$pue_trends_plot <- renderGirafe({
         buildIndustryTrendsPUETrends(data_sheet_pue_raw, input$selected_company_pue, input$selected_scope_pue, render_plot = TRUE)

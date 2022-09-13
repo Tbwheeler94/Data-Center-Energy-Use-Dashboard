@@ -438,21 +438,27 @@ pue_trends_page <- makePage(
     Grid(
       reactOutput("pue_graph_explainer"),
       reactOutput("pue_download_modal"),
-      Stack(
+      div(style = "display: flex; flex-direction: row; justify-content: flex-end; flex-wrap: wrap; gap: 15px; padding-right: 10px;",
         PrimaryButton.shinyInput("show_pue_graph_explainer", iconProps = list("iconName" = "Help"), text = "Help"),
-        TooltipHost(content = "Copyright 2022, ISA Lab, please contact isaldatacenterdashboard@gmail.com with any questions", PrimaryButton.shinyInput("show_pue_download_modal", iconProps = list("iconName" = "Download"), text = "Download Data")),
         downloadLink("download_pue_graph", tags$button(class = "ms-Button ms-Button--primary root-102", `data-is-focusable` = "true",
-                                                         tags$span(class = "ms-Button-flexContainer flexContainer-103", `data-automationid` = "splitbuttonprimary",
-                                                                   icon("camera", class = "fa-lg", style = "padding: 5px;"),
-                                                                   tags$span(class = "ms-Button-textContainer textContainer-104", 
-                                                                             tags$span(class = "ms-Button-label label-106", "Save Image"))))),
-        horizontal = TRUE,
-        horizontalAlign = "right",
-        tokens = list(childrenGap = 20)
+                                                       tags$span(class = "ms-Button-flexContainer flexContainer-103", `data-automationid` = "splitbuttonprimary",
+                                                                 icon("camera", class = "fa-lg", style = "padding: 5px;"),
+                                                                 tags$span(class = "ms-Button-textContainer textContainer-104", 
+                                                                           tags$span(class = "ms-Button-label label-106", "Save Image"))))),
+        TooltipHost(content = "Select a download option in the dropdown to the right",
+                    downloadLink("download_pue_data", tags$button(class = "ms-Button ms-Button--primary root-102", `data-is-focusable` = "true",
+                                                                  tags$span(class = "ms-Button-flexContainer flexContainer-103", `data-automationid` = "splitbuttonprimary",
+                                                                            icon("download", class = "fa-lg", style = "padding: 5px;"),
+                                                                            tags$span(class = "ms-Button-textContainer textContainer-104", 
+                                                                                      tags$span(class = "ms-Button-label label-106", "Download Data")))))),
+        Dropdown.shinyInput("pue_dataset_options",
+                            placeholder = "Selected dataset (.csv)",
+                            value = "Selected dataset (.csv)",
+                            options = unique_download_options)
       )
     ),
     Grid(
-      GridItem(class = "ms-md12 ms-lg3 ms-xl3",
+      GridItem(class = "ms-sm 12 ms-md12 ms-lg4 ms-xl3",
                HighlightsCard(
                  Text("Select Company", variant = "xLarge", style = "text-align: center;"),
                  Dropdown.shinyInput("selected_company_pue",
@@ -467,20 +473,13 @@ pue_trends_page <- makePage(
                                      value = "Fleet Wide",
                                      placeHolder = "Fleet Wide",
                                      style = "width: 150px; margin: auto; font-size: 12pt;")
-               ),
-               br(),
-               selectInput("pue_dataset_options", "Select a dataset option:",
-                           choices = c("Download selected dataset (.csv)", 
-                                       "Download selected dataset (.xlsx)", 
-                                       "Download full dataset (.csv)", 
-                                       "Download full dataset (.xlsx)")),
-               downloadButton("download_pue_data", label="Download Data")
+               )
       ),
-      GridItem(class = "ms-md12 ms-lg9 ms-xl9",
+      GridItem(class = "ms-sm12 ms-md12 ms-lg8 ms-xl9",
                HighlightsCard(
                  br(),
                  girafeOutput('pue_trends_plot', width = "auto")
-               ) #add graph inside HighlightsCard when ready, specify height in css styling
+               )
       ),
     )
   )
