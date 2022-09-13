@@ -362,14 +362,45 @@ server <- function(input, output, session) {
         )
       })
       
+      energy_use_final_filtered <- reactive({
+        buildIndustryTrendsEnergyDataPlot(input$input_year, input$input_reporting_scope, input$input_scale, render_plot = FALSE)
+      })
+      
+      edt_input <- reactive({
+        switch(input$energy_trends_dataset_options, 
+               "Selected dataset (.csv)" = energy_use_final_filtered() %>% na.omit() %>% select(-c("dc_and_cw")),
+               "Selected dataset (.xlsx)" = energy_use_final_filtered() %>% na.omit() %>% select(-c("dc_and_cw")),
+               "Full dataset (.csv)" = energy_use_final %>% na.omit() %>% select(-c("dc_and_cw")),
+               "Full dataset (.xlsx)" = energy_use_final %>% na.omit() %>% select(-c("dc_and_cw")))
+      })
+      
+      edt_tag <- reactive({
+        switch(input$energy_trends_dataset_options,
+               "Selected dataset (.csv)" = ".csv",
+               "Selected dataset (.xlsx)" = ".xlsx",
+               "Full dataset (.csv)" = ".csv",
+               "Full dataset (.xlsx)" = ".xlsx")
+      })
+      
+      output$download_energy_data <- downloadHandler(
+        filename = function(){paste0("energy_data_trends", edt_tag())},
+        content = function(fname){
+          if (edt_tag() == ".csv") {
+            write.table(edt_input(), fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)
+          } else if (edt_tag() == ".xlsx") {
+            write_xlsx(edt_input(), path = fname)
+          }
+        }
+      )
+      
       output$energy_data_trendsplot <- renderPlot({
-        buildIndustryTrendsEnergyDataPlot(input$input_year, input$input_reporting_scope, input$input_scale)
+        buildIndustryTrendsEnergyDataPlot(input$input_year, input$input_reporting_scope, input$input_scale, render_plot = TRUE)
       })
       
       output$download_energy_data_trends_graph <- downloadHandler(
         filename = function(){paste0("energy_trends_plot", ".png")},
         content = function(fname){
-          ggsave(fname, plot = buildIndustryTrendsEnergyDataPlot(input$input_year, input$input_reporting_scope, input$input_scale), width = 10, height = 5, units = "in")
+          ggsave(fname, plot = buildIndustryTrendsEnergyDataPlot(input$input_year, input$input_reporting_scope, input$input_scale, render_plot = TRUE), width = 10, height = 5, units = "in")
         }
       )
     }

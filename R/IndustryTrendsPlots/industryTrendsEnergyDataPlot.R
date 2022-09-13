@@ -1,4 +1,4 @@
-buildIndustryTrendsEnergyDataPlot <- function(selected_year, selected_scope, selected_scale) {
+buildIndustryTrendsEnergyDataPlot <- function(selected_year, selected_scope, selected_scale, render_plot) {
   # prep plot details from selected scale
   plot_scale <- 0
   plot_breaks <- 0
@@ -30,6 +30,8 @@ buildIndustryTrendsEnergyDataPlot <- function(selected_year, selected_scope, sel
   energy_use_final <- energy_use_final %>%
     filter(data_year %in% selected_year, energy_reporting_scope %in% selected_scope, 
            electricity_converted <= plot_scale)
+  
+  if (render_plot == FALSE) { return(energy_use_final) }
   
   # change dc_and_cw value if both a company's data center and company wide data fit in the selected scale
   energy_use_final$dc_and_cw[energy_use_final$dc_and_cw == "Yes but CW at different scale" & !(energy_use_final$scale %in% selected_scale)] <- "Yes"
