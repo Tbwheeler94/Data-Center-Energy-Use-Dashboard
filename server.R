@@ -432,9 +432,11 @@ server <- function(input, output, session) {
       # [see timeline server code for example]
       full_network_links <- data_sheet_company_raw %>% 
         filter(status == "Checked") %>% 
-        select('company_name', starts_with("provider")) %>% 
+        select('company_name', starts_with("provider"), starts_with("source")) %>% 
         rename_all(~str_replace(.,"_","")) %>% 
-        rename_at(vars(!ends_with("_category")), ~paste0(.,"_name")) %>% 
+        rename_at(vars(starts_with("source")), ~paste0(.,"_source")) %>% 
+        rename_at(vars(starts_with("source")), ~str_replace(.,"source", "provider")) %>%
+        rename_at(vars(!ends_with(c("_category", "_source"))), ~paste0(.,"_name")) %>% 
         rename("company_name" = "companyname_name") %>% 
         pivot_longer(!company_name, names_to = c("provider", ".value"), names_pattern = ".(\\d+)_(\\w+)") %>% 
         select(-c('provider')) %>% 
@@ -443,6 +445,11 @@ server <- function(input, output, session) {
         rename("from" = company_name, "to" = name) %>% 
         mutate(category = case_when(category == "Colocation" ~ 1,
                                     category == "Cloud" ~ 2))
+      
+      full_network_links_data <- full_network_links %>% 
+        mutate(category = case_when(category == 1 ~ "Colocation",
+                                    category == 2 ~ "Cloud")) %>% 
+        rename("Company Name" = from, "Leasing From" = to, "Type of Relationship" = category, "Source" = source)
       
       output$download_network_data <- downloadHandler(
         filename = function(){paste0("lease_cloud_network", input$network_dataset_options)},
@@ -1098,19 +1105,6 @@ server <- function(input, output, session) {
     }
     
   })
-  
-  ########################################################
-  ###### Initialize waiter loading bar on full page ######
-  ########################################################
-  
-  # Create a Progress object
-  progress <- shiny::Progress$new()
-  
-  on.exit(progress$close())
-  
-  progress$set(message = "Initializing application", value = 0)
-  
-  # Close the progress when this reactive exits (even if there's an error)
   
   ########################################################
   ###### Check login credentials (authetication) #########
