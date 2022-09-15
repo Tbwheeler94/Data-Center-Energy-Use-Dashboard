@@ -21,8 +21,8 @@ buildIndustryTrendsLeaseCloudNetworkPlot <- function(full_network_links) {
     replace(is.na(.), 1) %>% 
     rename(size = n) %>% 
     mutate(leaser.type.name = ifelse(size > 1, 
-                                     paste0(leaser.type.name, "<br>", size, " Relationships", "<br>", "Learn more about ", "<button id='network_to_single_company_analysis' class='shiny-bound-input action-button'>", id, "</button>"), 
-                                     paste0(leaser.type.name, "<br>", size, " Relationship", "<br>", "Learn more about ", "<button id='network_to_single_company_analysis' class='shiny-bound-input action-button'>", id, "</button>"))) %>% 
+                                     paste0(leaser.type.name, "<br>", size, " Relationships", "<br>", "<button id='network_to_single_company_analysis' class='shiny-bound-input action-button'>", "Click Here", "</button>", " To Learn More About ", id), 
+                                     paste0(leaser.type.name, "<br>", size, " Relationship", "<br>", "<button id='network_to_single_company_analysis' class='shiny-bound-input action-button'>", "Click Here", "</button>", " To Learn More About ", id))) %>% 
     mutate(size = size * 10)
   
   #formatting network graph
