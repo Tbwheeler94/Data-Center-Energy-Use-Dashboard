@@ -1,4 +1,4 @@
-buildIndustryTrendsTransparencyPlot <- function(render_plot) {
+buildIndustryTrendsTransparencyPlot <- function(width, height, dpi, render_plot) {
   # status_levels <- c("Reported Data Center Electricity", "Reported Company Wide Electricity",
   #                    "Reported Company Wide Total Energy", "No Reporting of Publicly Available Data", "Pending Data Submission")
   # status_colors <- c("#3BCA6D", "#77945C", "#FF6865", "#ED2938", "#999999")
@@ -78,7 +78,9 @@ buildIndustryTrendsTransparencyPlot <- function(render_plot) {
     return(p)
   }
   
-  x <- girafe(ggobj = p, width_svg = 12, height_svg = 7)
+  x <- girafe(ggobj = p, 
+              width_svg = (0.9*width/dpi), 
+              height_svg = (0.6*height/dpi))
   x <- girafe_options(x,
                       opts_hover_inv(css = "opacity:0.6;"),
                       opts_sizing(rescale = FALSE),

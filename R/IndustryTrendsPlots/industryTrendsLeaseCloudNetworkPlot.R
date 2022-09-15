@@ -1,19 +1,4 @@
-buildIndustryTrendsLeaseCloudNetworkPlot <- function() {
-  
-  #create list of network links
-  full_network_links <- data_sheet_company_raw %>% 
-    filter(status == "Checked") %>% 
-    select('company_name', starts_with("provider")) %>% 
-    rename_all(~str_replace(.,"_","")) %>% 
-    rename_at(vars(!ends_with("_category")), ~paste0(.,"_name")) %>% 
-    rename("company_name" = "companyname_name") %>% 
-    pivot_longer(!company_name, names_to = c("provider", ".value"), names_pattern = ".(\\d+)_(\\w+)") %>% 
-    select(-c('provider')) %>% 
-    na_if("") %>%
-    na.omit %>% 
-    rename("from" = company_name, "to" = name) %>% 
-    mutate(category = case_when(category == "Colocation" ~ 1,
-                                category == "Cloud" ~ 2))
+buildIndustryTrendsLeaseCloudNetworkPlot <- function(full_network_links) {
   
   #calculate size of nodes, based on the number of relationships they have
   number_of_leasee_relationships <- full_network_links %>% count(to)

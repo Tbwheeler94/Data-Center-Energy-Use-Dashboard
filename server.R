@@ -235,13 +235,13 @@ server <- function(input, output, session) {
       )
       
       output$transparency_graph <- renderGirafe({
-        buildIndustryTrendsTransparencyPlot(render_plot = TRUE)
+        buildIndustryTrendsTransparencyPlot(input$pltChange$width, input$pltChange$height, input$pltChange$dpi, render_plot = TRUE)
       })
       
       output$download_transparency_graph <- downloadHandler(
         filename = function(){paste0("reporting_trends_plot", ".png")},
         content = function(fname){
-          ggsave(fname, plot = buildIndustryTrendsTransparencyPlot(render_plot = FALSE), width = 10, height = 5, units = "in")
+          ggsave(fname, plot = buildIndustryTrendsTransparencyPlot(input$pltChange$width, input$pltChange$height, input$pltChange$dpi, render_plot = FALSE), width = 10, height = 5, units = "in")
         }
       )
     }
@@ -430,7 +430,7 @@ server <- function(input, output, session) {
       # For Tom: make a boolean render_plot argument in buildIndustryTrendsLeaseCloudNetwork.R 
       # and when FALSE, return the dataset and pass to downloadHandler() function
       # [see timeline server code for example]
-      full_network_links_data <- data_sheet_company_raw %>% 
+      full_network_links <- data_sheet_company_raw %>% 
         filter(status == "Checked") %>% 
         select('company_name', starts_with("provider")) %>% 
         rename_all(~str_replace(.,"_","")) %>% 
@@ -456,13 +456,13 @@ server <- function(input, output, session) {
       )
       
       output$lease_cloud_network <- renderVisNetwork({
-        buildIndustryTrendsLeaseCloudNetworkPlot()
+        buildIndustryTrendsLeaseCloudNetworkPlot(full_network_links)
       })
       
       output$download_network_graph <- downloadHandler(
         filename = function(){paste0("lease_cloud_network_plot", ".html")},
         content = function(fname){
-          visSave(buildIndustryTrendsLeaseCloudNetworkPlot(), file = fname)
+          visSave(buildIndustryTrendsLeaseCloudNetworkPlot(full_network_links), file = fname)
         }
       )
     }
