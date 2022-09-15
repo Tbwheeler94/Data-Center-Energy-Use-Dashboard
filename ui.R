@@ -744,7 +744,9 @@ layout <- function(mainUI){
 
 header <- tagList(
   img(src = "isalab-logo.png", class = "logo"),
-  div(Text(variant = "xxLarge", "Data Center Energy Use Dashboard", style = "color: white;"), class = "title"))
+  img(src = "moving-bits-logo.svg", style = "height: 40px; padding-top: 11px; padding-left: 6.5px;")
+  #div(Text(variant = "xxLarge", "Data Center Energy Use Dashboard", style = "color: white;"), class = "title")
+  )
 
 navigation <- Nav(
   className = 'sidenav',
@@ -817,8 +819,10 @@ shiny_router_js_src <- file.path("shiny.router", "shiny.router.js")
 shiny_router_script_tag <- shiny::tags$script(type = "text/javascript", src = shiny_router_js_src)
 
 preloader_html <- makePage(div(
-                           p("Welcome to the Data Center Energy Use Dashboard", style = "margin-bottom: 20vh; font-size: 2.5vw; font-weight: bold;"),
-                           div(style="display: inline-flex; margin-bottom: 25vh",
+                           #p("Welcome to the Data Center Energy Use Dashboard", style = "margin-bottom: 20vh; font-size: 2.5vw; font-weight: bold;"),
+                           img(src = "moving-bits-logo-no-line.svg", style = "margin-bottom: 10vh; height: 10vh"),
+                           br(),
+                           div(style="display: inline-flex; margin-bottom: 10vh",
                                  img(src='energy_icon.svg', style="height: auto; width: 10vw;"),
                                  div(style="vertical-align: center; margin-left: 10px; margin-right: 10px", spin_three_bounce()),
                                  img(src='server.png', style="height: auto; width: 13vw;")), #server pic was from this link: https://www.freepik.com/free-photos-vectors/server-illustration
