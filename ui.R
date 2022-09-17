@@ -94,9 +94,9 @@ home_page <- makePage(
              previous_label = FontIcon(iconName = "ChevronLeftSmall", style = list(fontSize = 20)),
              screen(
                div(class="container", 
-                   tags$img(src="bg3.jpeg", class="ms-sm12 ms-xl12 home-images", height="250px"),
-                   div(class="centered", Text("Welcome to the Data Center Energy Use Dashboard", variant = "xLarge", style = "color: #FFFFFF;")),
-                   div(class="centered-bottom-text", Text("Click on one of the cards below to get started", variant = "large", style = "color: #FFFFFF")),
+                   tags$img(src="bg3_1.svg", class="ms-sm12 ms-xl12 home-images", height="250px"),
+                   div(class="centered", style="width: 230px; padding-bottom: 30px;", Text("Welcome to MovingBits", variant = "xxLarge", style = "color: #FFFFFF;")),
+                   div(class="centered-bottom-text", style="width: 230px;", Text("How much energy does the internet use? Come find out!", variant = "large", style = "color: #FFFFFF;")),
                    div(class="centered-bottom-bubble", Text(FontIcon(iconName = "CircleFill", style = "color: #137AD1; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;")))
                )
                # HighlightsCard(
@@ -106,7 +106,7 @@ home_page <- makePage(
              ),
              screen(
                div(class="container", 
-                 tags$img(src="bg3.jpeg", class="ms-sm12 ms-xl12 home-images", height="250px"),
+                 tags$img(src="bg3_1.svg", class="ms-sm12 ms-xl12 home-images", height="250px"),
                  div(class="centered", Text(uiOutput("years_reported"), variant = "mega", style = "color: #FFFFFF;")),
                  div(class="centered-bottom-text", Text("Years Reporting", variant = "xxLarge", style = "color: #FFFFFF")),
                  div(class="centered-bottom-bubble", Text(FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #137AD1; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;")))
@@ -119,7 +119,7 @@ home_page <- makePage(
              ),
              screen(
                div(class="container",
-                   tags$img(src="bg3.jpeg", class="ms-sm12 ms-xl12 home-images", height="250px"),
+                   tags$img(src="bg3_1.svg", class="ms-sm12 ms-xl12 home-images", height="250px"),
                    div(class="centered", Text(uiOutput("companies_reporting"), variant = "mega", style = "color: #FFFFFF;")),
                    div(class="centered-bottom-text", Text("Companies Reporting", variant = "xxLarge", style = "color: #FFFFFF")),
                    div(class="centered-bottom-bubble", Text(FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #137AD1; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;")))
@@ -132,7 +132,7 @@ home_page <- makePage(
              ),
              screen(
                div(class="container",
-                   tags$img(src="bg3.jpeg", class="ms-sm12 ms-xl12 home-images", height="250px"),
+                   tags$img(src="bg3_1.svg", class="ms-sm12 ms-xl12 home-images", height="250px"),
                    div(class="centered", Text(uiOutput("energy_reported"), variant = "mega", style = "color: #FFFFFF;")),
                    div(class="centered-bottom-text", Text(uiOutput("energy_reported_text"), variant = "xLarge", style = "color: #FFFFFF")),
                    div(class="centered-bottom-bubble", Text(FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #137AD1; margin: 5px;")))
@@ -743,7 +743,7 @@ layout <- function(mainUI){
 }
 
 header <- tagList(
-  img(src = "isalab-logo.png", class = "logo"),
+  img(src = "isalab-logo.svg", class = "logo"),
   img(src = "moving-bits-logo.svg", style = "height: 40px; padding-top: 11px; padding-left: 6.5px;")
   #div(Text(variant = "xxLarge", "Data Center Energy Use Dashboard", style = "color: white;"), class = "title")
   )
