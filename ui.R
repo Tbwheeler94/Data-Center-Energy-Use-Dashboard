@@ -94,9 +94,9 @@ home_page <- makePage(
              previous_label = FontIcon(iconName = "ChevronLeftSmall", style = list(fontSize = 20)),
              screen(
                div(class="container", 
-                   tags$img(src="bg3_1.svg", class="ms-sm12 ms-xl12 home-images", height="250px"),
+                   tags$img(src="bg1.svg", class="ms-sm12 ms-xl12 home-images", height="250px"),
                    div(class="centered", style="width: 230px; padding-bottom: 30px;", Text("Welcome to MovingBits", variant = "xxLarge", style = "color: #FFFFFF;")),
-                   div(class="centered-bottom-text", style="width: 230px;", Text("How much energy does the internet use? Come find out!", variant = "large", style = "color: #FFFFFF;")),
+                   div(class="centered-bottom-text", style="width: 230px;", Text("How much energy does the internet use? Click below!", variant = "large", style = "color: #FFFFFF;")),
                    div(class="centered-bottom-bubble", Text(FontIcon(iconName = "CircleFill", style = "color: #137AD1; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;")))
                )
                # HighlightsCard(
@@ -106,10 +106,10 @@ home_page <- makePage(
              ),
              screen(
                div(class="container", 
-                 tags$img(src="bg3_1.svg", class="ms-sm12 ms-xl12 home-images", height="250px"),
-                 div(class="centered", Text(uiOutput("years_reported"), variant = "mega", style = "color: #FFFFFF;")),
+                 div(class="centered", style="padding-bottom: 10px;", Text(uiOutput("years_reported"), variant = "mega", style = "color: #000000;")),
                  div(class="centered-bottom-text", Text("Years Reporting", variant = "xxLarge", style = "color: #FFFFFF")),
-                 div(class="centered-bottom-bubble", Text(FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #137AD1; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;")))
+                 div(class="centered-bottom-bubble", Text(FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #137AD1; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"))),
+                 tags$img(src="bg2.svg", class="ms-sm12 ms-xl12 home-images", height="250px"),
                )
                # HighlightsCard(
                  # FontIcon(iconName = "Calendar", style = list(fontSize = 60)),
@@ -119,7 +119,7 @@ home_page <- makePage(
              ),
              screen(
                div(class="container",
-                   tags$img(src="bg3_1.svg", class="ms-sm12 ms-xl12 home-images", height="250px"),
+                   tags$img(src="bg3.svg", class="ms-sm12 ms-xl12 home-images", height="250px"),
                    div(class="centered", Text(uiOutput("companies_reporting"), variant = "mega", style = "color: #FFFFFF;")),
                    div(class="centered-bottom-text", Text("Companies Reporting", variant = "xxLarge", style = "color: #FFFFFF")),
                    div(class="centered-bottom-bubble", Text(FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #137AD1; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;")))
@@ -132,9 +132,9 @@ home_page <- makePage(
              ),
              screen(
                div(class="container",
-                   tags$img(src="bg3_1.svg", class="ms-sm12 ms-xl12 home-images", height="250px"),
-                   div(class="centered", Text(uiOutput("energy_reported"), variant = "mega", style = "color: #FFFFFF;")),
-                   div(class="centered-bottom-text", Text(uiOutput("energy_reported_text"), variant = "xLarge", style = "color: #FFFFFF")),
+                   tags$img(src="bg4.svg", class="ms-sm12 ms-xl12 home-images", height="250px"),
+                   div(class="centered", style="padding-bottom: 30px;", Text(uiOutput("energy_reported"), variant = "mega", style = "color: #FFFFFF;")),
+                   div(class="centered-bottom-text", style="width: 250px;", Text(uiOutput("energy_reported_text"), variant = "xLarge", style = "color: #FFFFFF")),
                    div(class="centered-bottom-bubble", Text(FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #137AD1; margin: 5px;")))
                )
                # HighlightsCard(

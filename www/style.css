@@ -221,12 +221,12 @@ body {
                      border: 0; object-fit: scale-down; text-align: center; }
                      
 /* landing-page titles for boxes*/
-.landing-page-box-title {font-size: 16px; text-align:center; color: darkblue;
+.landing-page-box-title {font-size: 16px; text-align:center; color: #137AD1;
                           font-weight: bold; background-color: none; width:100%; 
                           max-height: 20px; margin-top: 2vh;}
                           
 /* landing-page description text of boxes*/
-.landing-page-box-description {font-size: 12px; text-align:center; color: darkblue;
+.landing-page-box-description {font-size: 12px; text-align:center; color: black;
                           background-color: none; width:100%; max-height: 20px; 
                           margin-top: 2vh; padding-bottom: 3vh;}
 
