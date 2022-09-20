@@ -45,6 +45,43 @@ server <- function(input, output, session) {
       ###########################################################################################################################################################
       ###########################################################################################################################################################
       
+      #Autoscroll banner images
+      
+      #Start banner counter at 0, this will be used to track how many times the banner has been clicked
+      banner_counter <- 0
+      
+      #On initial load up, show home banner image for 10 seconds (delay 5000 ms then invalidateLater 5000ms)
+      delay(5000, 
+            
+            #this observe will run every time the banner button (banner_button_new_page or banner_button_last) is invalidated
+            observe({
+              #if next button has been clicked on banner 0 or 1 or 2 times, click next button again, delay 5 seconds befor invalidating
+              if (banner_counter == 0 | banner_counter == 1 | banner_counter == 2) {
+                click("banner_button_new_page")
+                print(banner_counter)
+                invalidateLater(5000) 
+                
+              #if next button has been clicked 3 times, click the last button (it has a different id associated with it) to return to first screen
+              } else if (banner_counter == 3) {
+                click("banner_button_last")
+                print(banner_counter)
+                invalidateLater(5000) 
+              }
+            })
+      )
+      
+      #track each time the next banner button has been clicked
+      onclick("banner_button_new_page", {
+        banner_counter <- banner_counter + 1
+      }
+      )
+      
+      #if the last banner button has been clicked, reset the banner counter at 0
+      onclick("banner_button_last", {
+        banner_counter <- 0
+      }
+      )
+      
       #####################################################################
       ###### Card 1.2: Dynamically generate number of years reported ######
       #####################################################################
