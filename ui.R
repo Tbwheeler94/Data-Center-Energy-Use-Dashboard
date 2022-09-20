@@ -89,7 +89,7 @@ home_page <- makePage(
       GridItemHome(class = "ms-sm12 ms-xl12", style="margin-top: -15px;", 
         glide(
              height = "250px",
-             custom_controls = div(class="glide-controls", glideControls(list(tags$button(class = "ms-Button ms-Button--primary root-14 prev-screen", style="opacity: 0.8; cursor: pointer; height: 250px;")), list(tags$button(class = "ms-Button ms-Button--primary root-14 next-screen", style = "opacity: 0.8; cursor: pointer; height: 250px;"), div(`data-glide-el`="controls",tags$button(class="last-screen", style = "opacity: 0.8; cursor: pointer; height: 250px;", `data-glide-dir` = "<<", FontIcon(iconName = "ChevronRightSmall", style = list(fontSize = 20))))))),
+             custom_controls = div(class="glide-controls", glideControls(list(tags$button(class = "ms-Button ms-Button--primary root-14 prev-screen", style="opacity: 0.8; cursor: pointer; height: 250px;")), list(tags$button(class = "ms-Button ms-Button--primary root-14 next-screen", id = "banner_button_new_page", style = "opacity: 0.8; cursor: pointer; height: 250px;"), div(`data-glide-el`="controls",tags$button(class="last-screen", id = "banner_button_last", style = "opacity: 0.8; cursor: pointer; height: 250px;", `data-glide-dir` = "<<", FontIcon(iconName = "ChevronRightSmall", style = list(fontSize = 20))))))),
              next_label = FontIcon(iconName = "ChevronRightSmall", style = list(fontSize = 20)),
              previous_label = FontIcon(iconName = "ChevronLeftSmall", style = list(fontSize = 20)),
              screen(
@@ -106,7 +106,7 @@ home_page <- makePage(
              ),
              screen(
                div(class="container", 
-                 div(class="centered", style="padding-bottom: 10px;", Text(uiOutput("years_reported"), variant = "mega", style = "color: #000000;")),
+                 div(class="centered", style="padding-bottom: 10px;", Text(uiOutput("years_reported"), variant = "mega", style = "color: #FFFFFF;")),
                  div(class="centered-bottom-text", Text("Years Reporting", variant = "xxLarge", style = "color: #FFFFFF")),
                  div(class="centered-bottom-bubble", Text(FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #137AD1; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"))),
                  tags$img(src="bg2.svg", class="ms-sm12 ms-xl12 home-images", height="250px"),
@@ -132,8 +132,8 @@ home_page <- makePage(
              ),
              screen(
                div(class="container",
-                   tags$img(src="bg4.svg", class="ms-sm12 ms-xl12 home-images", height="250px"),
-                   div(class="centered", style="padding-bottom: 30px;", Text(uiOutput("energy_reported"), variant = "mega", style = "color: #FFFFFF;")),
+                   tags$img(src="bg4_1.svg", class="ms-sm12 ms-xl12 home-images", height="250px"),
+                   div(class="centered", style="padding-bottom: 70px;", Text(uiOutput("energy_reported"), variant = "mega", style = "color: #FFFFFF;")),
                    div(class="centered-bottom-text", style="width: 250px;", Text(uiOutput("energy_reported_text"), variant = "xLarge", style = "color: #FFFFFF")),
                    div(class="centered-bottom-bubble", Text(FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #137AD1; margin: 5px;")))
                )
@@ -828,14 +828,14 @@ preloader_html <- makePage(div(
                                  img(src='server.png', style="height: auto; width: 13vw;")), #server pic was from this link: https://www.freepik.com/free-photos-vectors/server-illustration
                            div(style="display: inline-flex; position: absolute; right:0px; bottom:0px;",
                              h4("Built by the", style= "margin-right: 10px;"),
-                             img(src='https://static.wixstatic.com/media/1ab7d5_947e63da0487445b8ef205972c867761~mv2.png/v1/fill/w_239,h_80,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/industrial%20sustainability%20analysis%20lab_l.png', style = "width: 179.25px; height: 60px; margin-right: 10px; margin-bottom: 10px;")
+                             img(src='isalab-logo.svg', style = "width: 179.25px; height: 60px; margin-right: 10px; margin-bottom: 10px;")
                            )))
 
 ui <- #secure_app(head_auth = tags$script(inactivity), #authentication
                  fluentPage(
                  tags$title("Data Center Energy Dashboard"),
                  useWaiter(),
-                 waiterPreloader(html = preloader_html, color = "#c6e1f7", fadeout = 50),
+                 waiterPreloader(html = preloader_html, color = "#137AD1", fadeout = 50),
                  autoWaiter(id = c(#add loading animations for home page
                                    "years_reported", "companies_reporting", "energy_reported",
                                     #add loading animations to industry trend graphs
