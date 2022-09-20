@@ -291,7 +291,7 @@ reporting_trends_page <- makePage(
       reactOutput("transparency_graph_explainer"),
       reactOutput("transparency_graph_download"),
       div(style = "display: flex; flex-direction: row; justify-content: flex-end; flex-wrap: wrap; gap: 15px; padding-right: 10px;",
-          PrimaryButton.shinyInput("show_transparency_graph_explainer", iconProps = list("iconName" = "Info"), text = "Help"),
+          PrimaryButton.shinyInput("show_transparency_graph_explainer", iconProps = list("iconName" = "Help"), text = "Help"),
           downloadLink("download_transparency_graph", PrimaryButton.shinyInput("fdtri", iconProps = list("iconName" = "Camera"), text = "Save Image (.png)")),
           TooltipHost(content = "Select a download option in the dropdown to the right", downloadLink("download_transparency_data", PrimaryButton.shinyInput("fdtrd", iconProps = list("iconName" = "Download"), text = "Download Data"))),
           Dropdown.shinyInput("transparency_dataset_options",
@@ -404,7 +404,7 @@ lease_cloud_network_page <- makePage(
                               value = ".csv",
                               options = unique_tag_options)
       ),
-      div(style = "text-align: left;", visNetworkOutput('lease_cloud_network', height = "76vh")),
+      div(style = "text-align: left;", visNetworkOutput('lease_cloud_network', height = "62vh")),
   )
 )
 
@@ -481,8 +481,8 @@ pue_trends_page <- makePage(
 company_analysis_page <- makePage(
   div(
     Grid(
-      GridItem(class = "ms-md0 ms-lg2 ms-xl3"),
-      GridItem(class = "ms-md12 ms-lg8 ms-xl6",
+      GridItem(class = "ms-md0 ms-lg0 ms-xl2"),
+      GridItem(class = "ms-md12 ms-lg12 ms-xl8",
                Stack(
                  class = "ms-depth-8",
                  style = 'border-radius: 5px; background-color: white; border-top: 8px solid #137AD1;',
@@ -825,7 +825,7 @@ preloader_html <- makePage(div(
                            div(style="display: inline-flex; margin-bottom: 10vh",
                                  img(src='energy_icon.svg', style="height: auto; width: 10vw;"),
                                  div(style="vertical-align: center; margin-left: 10px; margin-right: 10px", spin_three_bounce()),
-                                 img(src='server.png', style="height: auto; width: 13vw;")), #server pic was from this link: https://www.freepik.com/free-photos-vectors/server-illustration
+                                 img(src='server.svg', style="height: auto; width: 13vw;")), #server pic was from this link: https://www.freepik.com/free-photos-vectors/server-illustration
                            div(style="display: inline-flex; position: absolute; right:0px; bottom:0px;",
                              h4("Built by the", style= "margin-right: 10px;"),
                              img(src='isalab-logo.svg', style = "width: 179.25px; height: 60px; margin-right: 10px; margin-bottom: 10px;")
