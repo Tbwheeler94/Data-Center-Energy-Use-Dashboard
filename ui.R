@@ -99,10 +99,6 @@ home_page <- makePage(
                    div(class="centered-bottom-text", style="width: 230px;", Text("How much energy does the internet use? Click below!", variant = "large", style = "color: #FFFFFF;")),
                    div(class="centered-bottom-bubble", Text(FontIcon(iconName = "CircleFill", style = "color: #137AD1; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;")))
                )
-               # HighlightsCard(
-               #   Stack(style = "text-align: center; padding: 25px", Text("Welcome to the Data Center Energy Use Dashboard", variant = "xxLarge", style = "color: #137AD1;")),
-               #   Stack(style = "text-align: left; padding: 25px", Text("We are a team of UCSB researchers aiming to increase transparency in data center energy trends and reporting.\nClick on one of our cards to get started.", variant = "large", style = "color: #000000;"))
-               # )
              ),
              screen(
                div(class="container", 
@@ -111,11 +107,6 @@ home_page <- makePage(
                  div(class="centered-bottom-bubble", Text(FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #137AD1; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"))),
                  tags$img(src="bg2.svg", class="ms-sm12 ms-xl12 home-images", height="250px"),
                )
-               # HighlightsCard(
-                 # FontIcon(iconName = "Calendar", style = list(fontSize = 60)),
-                 # Text(uiOutput("years_reported"), variant = "mega", style = "color: #137AD1;"),
-                 # Text("Years Reporting", variant = "xxLarge")
-               # )
              ),
              screen(
                div(class="container",
@@ -124,11 +115,6 @@ home_page <- makePage(
                    div(class="centered-bottom-text", Text("Companies Reporting", variant = "xxLarge", style = "color: #FFFFFF")),
                    div(class="centered-bottom-bubble", Text(FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #137AD1; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;")))
                )
-               # HighlightsCard(
-               #   FontIcon(iconName = "ClipboardList", style = list(fontSize = 60)),
-               #   Text(uiOutput("companies_reporting"), variant = "mega", style = "color: #137AD1;"),
-               #   Text("Companies Reporting", variant = "xxLarge")
-               # )
              ),
              screen(
                div(class="container",
@@ -137,54 +123,26 @@ home_page <- makePage(
                    div(class="centered-bottom-text", style="width: 250px;", Text(uiOutput("energy_reported_text"), variant = "xLarge", style = "color: #FFFFFF")),
                    div(class="centered-bottom-bubble", Text(FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #FFFFFF; margin: 5px;"), FontIcon(iconName = "CircleFill", style = "color: #137AD1; margin: 5px;")))
                )
-               # HighlightsCard(
-               #   FontIcon(iconName = "TableComputed", style = list(fontSize = 60)),
-               #   Text(uiOutput("energy_reported"), variant = "mega", style = "color: #137AD1;"),
-               #   Text(uiOutput("energy_reported_text"), variant = "xxLarge")
-               # )
              )
         )
       )
     ),
-    # Grid(
-    #     GridItem(class = "ms-sm12 ms-xl4",
-    #       HighlightsCard(
-    #         FontIcon(iconName = "Calendar", style = list(fontSize = 60)),
-    #         Text(uiOutput("years_reported"), variant = "mega", style = "color: #137AD1;"),
-    #         Text("Years Reporting", variant = "xxLarge")
-    #       )
-    #     ),
-    #     GridItem(class = "ms-sm12 ms-xl4",
-    #       HighlightsCard(
-    #         FontIcon(iconName = "ClipboardList", style = list(fontSize = 60)),
-    #         Text(uiOutput("companies_reporting"), variant = "mega", style = "color: #137AD1;"),
-    #         Text("Companies Reporting", variant = "xxLarge")
-    #       )
-    #     ),
-    #     GridItem(class = "ms-sm12 ms-xl4",
-    #       HighlightsCard(
-    #         FontIcon(iconName = "TableComputed", style = list(fontSize = 60)),
-    #         Text(uiOutput("energy_reported"), variant = "mega", style = "color: #137AD1;"),
-    #         Text(uiOutput("energy_reported_text"), variant = "xxLarge")
-    #       )
-    #     )
-    # ),
     Grid(
-          GridItem(class = "ms-sm12 ms-xl4",
-              lp_main_box(image_name = "D365TalentLearn",
-                          button_name = 'jump_to_dc_energy_101', title_box = "Data Center Energy 101",
-                          description = 'Understand the basics behind data center energy')
-          ),
-          GridItem(class = "ms-sm12 ms-xl4",
-              lp_main_box(image_name = "BIDashboard",
-                          button_name = 'jump_to_home_to_industry_trends', title_box = "Industry Trends",
-                          description = 'Scrutinize reporting and energy data trends on an industry level')
-          ),
-          GridItem(class = "ms-sm12 ms-xl4",
+      GridItem(class = "ms-sm12 ms-xl4",
+               lp_main_box(image_name = "D365TalentLearn",
+                           button_name = 'jump_to_dc_energy_101', title_box = "Data Center Energy 101",
+                           description = 'Understand the basics behind data center energy')
+      ),
+      GridItem(class = "ms-sm12 ms-xl4",
+               lp_main_box(image_name = "BIDashboard",
+                           button_name = 'jump_to_home_to_industry_trends', title_box = "Industry Trends",
+                           description = 'Scrutinize reporting and energy data trends on an industry level')
+      ),
+      GridItem(class = "ms-sm12 ms-xl4",
                lp_main_box(image_name = "ExploreData",
                            button_name = 'jump_to_company_analysis', title_box = "Company Analysis",
                            description = 'Explore an individual company’s performance')
-          )
+      )
     ),
     Grid(
       GridItem(class = "ms-sm12 ms-xl4",
@@ -257,7 +215,7 @@ dc_energy_101_page <- makePage(
                         FontIcon(iconName = "ConstructionCone", style = list(fontSize = 80)
                         )
                )
-                        
+               
       )
     )
   )
@@ -833,6 +791,7 @@ preloader_html <- makePage(div(
 
 ui <- #secure_app(head_auth = tags$script(inactivity), #authentication
                  fluentPage(
+                 introjsUI(),
                  tags$title("Data Center Energy Dashboard"),
                  useWaiter(),
                  waiterPreloader(html = preloader_html, color = "#137AD1", fadeout = 50),

@@ -10,6 +10,7 @@
   
 # Base shiny
 library(shiny)
+library(rintrojs)
 
 # Packages for basic data wrangling
 library(here)
