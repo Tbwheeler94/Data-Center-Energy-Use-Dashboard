@@ -21,6 +21,8 @@ server <- function(input, output, session) {
   ########################################################
   ########################################################
   
+  guide$init()$start()
+  
   ###################################################################################
   ###### Dynamically update nav bar selection when user clicks back or forward ######
   ###################################################################################
@@ -780,8 +782,8 @@ server <- function(input, output, session) {
                         div(style = list(flexGrow = 1)),
                         IconButton.shinyInput("hide_company_data_center_overview", iconProps = list(iconName = "Cancel")),
                     ),
-                    div(Text(company_sheet_selected_company()[1, "company_data_center_overview"], variant = "large")
-                    ), style = "width: 800px;"))
+                    Text(as.character(company_sheet_selected_company()[1,"company_data_center_overview"]), variant="large"),
+                    style = "width: 800px;"))
       })
       
       ##############################
@@ -802,7 +804,7 @@ server <- function(input, output, session) {
                         div(style = list(flexGrow = 1)),
                         IconButton.shinyInput("hide_company_energy_reporting_assessment_overview", iconProps = list(iconName = "Cancel")),
                     ),
-                    div(Text(company_sheet_selected_company()[1, "energy_reporting_assessment"], variant = "large")
+                    div(Text(as.character(company_sheet_selected_company()[1, "energy_reporting_assessment"]), variant = "large")
                     ), style = "width: 800px;"))
       })
       

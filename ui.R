@@ -453,11 +453,16 @@ company_analysis_page <- makePage(
                                      dropdownWidth = 150,
                                      style = "width: 150px; margin: auto; font-size: 12pt;"),
                  downloadButton('download_standards'," Download all reported data (.csv)", style = "text-align: center; font-size: 12pt;"),
-                 div(PrimaryButton.shinyInput("show_company_data_center_overview", text = "Read Data Center Overview", style = "margin-right: 10px;"),
-                 PrimaryButton.shinyInput("show_company_energy_reporting_assessment_overview", text = "Read Energy Overview"), style = "margin: auto; margin-top: 10px; margin-bottom: -10px"),
+                 div(
+                   PrimaryButton.shinyInput("show_company_data_center_overview", text = "Read Data Center Overview", style = "margin-right: 10px;"),
+                   PrimaryButton.shinyInput("show_company_energy_reporting_assessment_overview", text = "Read Energy Overview"),
+                   reactOutput("company_data_center_overview"),
+                   reactOutput("company_energy_reporting_assessment_overview"),
+                   style = "margin: auto; margin-top: 10px; margin-bottom: -10px"
+                 ),
                  #dataTableOutput("selected_company_stats"),
-                 div(reactOutput("company_data_center_overview"),
-                     reactOutput("company_energy_reporting_assessment_overview"))
+                 # div(reactOutput("company_data_center_overview"),
+                 #     reactOutput("company_energy_reporting_assessment_overview"))
                )
       )
     ),
@@ -791,7 +796,7 @@ preloader_html <- makePage(div(
 
 ui <- #secure_app(head_auth = tags$script(inactivity), #authentication
                  fluentPage(
-                 introjsUI(),
+                 use_cicerone(),
                  tags$title("Data Center Energy Dashboard"),
                  useWaiter(),
                  waiterPreloader(html = preloader_html, color = "#137AD1", fadeout = 50),

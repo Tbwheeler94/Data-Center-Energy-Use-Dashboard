@@ -10,7 +10,6 @@
   
 # Base shiny
 library(shiny)
-library(rintrojs)
 
 # Packages for basic data wrangling
 library(here)
@@ -51,6 +50,9 @@ library(waiter) # Enables implementation of loading animations
 # Packages used write contact form submissions to Data-Center-Energy-Dashboard-Contact-Submissions spreadsheet
 library(googlesheets4) 
 library(googledrive)
+
+# Packages for creating a tour guide of the site
+library(cicerone)
 
 # Packages used for performance and scalability testing (only uncomment when needed)
 #library(reactlog) # Enables generation of a report detailing steps of code execution
@@ -127,6 +129,19 @@ energy_use_final <- read_feather("source_data/transformed_data/energy_use_final"
 ###### Section 3: Create vectors, dataframes, and functions for use across the app #############
 ################################################################################################
 ################################################################################################
+
+guide <- Cicerone$
+  new()$ 
+  step(
+    el = "text_inputId",
+    title = "Text Input",
+    description = "This is where you enter the text you want to print."
+  )$
+  step(
+    "submit_inputId",
+    "Send the Text",
+    "Send the text to the server for printing"
+  )
 
 ##################################################
 ################ Tab 1 - Home ####################
