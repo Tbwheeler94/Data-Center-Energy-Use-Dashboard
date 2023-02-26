@@ -283,7 +283,7 @@ server <- function(input, output, session) {
       )
       
       output$transparency_graph <- renderGirafe({
-        buildIndustryTrendsTransparencyPlot(input$pltChange$width, input$pltChange$height, input$pltChange$dpi, render_plot = TRUE)
+        buildIndustryTrendsTransparencyPlot(render_plot = TRUE)
       })
       
       output$download_transparency_graph <- downloadHandler(

@@ -63,12 +63,12 @@ buildIndustryTrendsPUETrends <- function(data_sheet_pue_filtered, selected_compa
   }
   
   if (nrow(data_sheet_pue_filtered) != 0) {
-    x <- girafe(ggobj = p, width_svg = 9, height_svg = 5)
+    x <- girafe(ggobj = p, width_svg = 9, height_svg = 7)
     x <- girafe_options(x,
                         opts_hover_inv(css = "opacity:0.2;"),
                         #opts_hover(css = "fill:black;stroke:black;r:5pt;"),
                         opts_zoom(max = 5),
-                        opts_sizing(rescale = FALSE),
+                        opts_sizing(width = 0.5),
                         opts_hover(css = "stroke-width:2; cursor: crosshair;"),
                         opts_hover_key(girafe_css("stroke:blue; cursor: help;", text="stroke:none;fill:red")))
     x

@@ -227,23 +227,6 @@ dc_energy_101_page <- makePage(
 
 reporting_trends_page <- makePage(
   div(
-    tags$body(tags$div(id="ppitest", style="width:1in;visible:hidden;padding:0px")),
-    
-    tags$script('$(document).on("shiny:connected", function(e) {
-                                    var w = window.innerWidth;
-                                    var h = window.innerHeight;
-                                    var d =  document.getElementById("ppitest").offsetWidth;
-                                    var obj = {width: w, height: h, dpi: d};
-                                    Shiny.onInputChange("pltChange", obj);
-                                });
-                                $(window).resize(function(e) {
-                                    var w = $(this).width();
-                                    var h = $(this).height();
-                                    var d =  document.getElementById("ppitest").offsetWidth;
-                                    var obj = {width: w, height: h, dpi: d};
-                                    Shiny.onInputChange("pltChange", obj);
-                                });
-                            '),
     Stack(style = "text-align: center; padding: 25px", Text("Trends in Data Center Energy Reporting Transparency", variant = "xxLarge", style = "color: #137AD1;")),
     Grid(
       reactOutput("transparency_graph_explainer"),
