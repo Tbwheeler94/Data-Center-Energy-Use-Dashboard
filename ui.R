@@ -452,7 +452,7 @@ company_analysis_page <- makePage(
                                      placeHolder = "Google",
                                      dropdownWidth = 150,
                                      style = "width: 150px; margin: auto; font-size: 12pt;"),
-                 downloadButton('download_standards'," Download all reported data (.csv)", style = "text-align: center; font-size: 12pt;"),
+                 # downloadButton('download_standards'," Download all reported data (.csv)", style = "text-align: center; font-size: 12pt;"),
                  div(
                    PrimaryButton.shinyInput("show_company_data_center_overview", text = "Read Data Center Overview", style = "margin-right: 10px;"),
                    PrimaryButton.shinyInput("show_company_energy_reporting_assessment_overview", text = "Read Energy Overview"),
@@ -574,6 +574,160 @@ company_analysis_page <- makePage(
   )
 )
 #list(unique(data_sheet_company$company_name))
+
+###########################################
+######### COMPANY ANALYSIS NEW DESIGN ##############
+###########################################
+
+new_company_analysis_page <- makePage(
+  div(
+    Grid(
+      GridItem(class = "ms-md0 ms-lg0 ms-xl2"),
+      GridItem(class = "ms-md12 ms-lg12 ms-xl8",
+               Stack(
+                 class = "ms-depth-8",
+                 style = 'border-radius: 5px; background-color: white; border-top: 8px solid #137AD1;',
+                 tokens = list(padding = 20, childrenGap = 10),
+                 Text("Select A Company To View", variant = "xxLarge", style = "text-align: center;"),
+                 Dropdown.shinyInput("selected_company_new", 
+                                     options = unique_companies,
+                                     value = "Google",
+                                     placeHolder = "Google",
+                                     dropdownWidth = 150,
+                                     style = "width: 150px; margin: auto; font-size: 12pt;"),
+                 div(
+                   PrimaryButton.shinyInput("show_company_data_center_overview_new", text = "Read Data Center Overview", style = "margin-right: 10px;"),
+                   PrimaryButton.shinyInput("show_company_energy_reporting_assessment_overview_new", text = "Read Energy Overview"),
+                   reactOutput("company_data_center_overview_new"),
+                   reactOutput("company_energy_reporting_assessment_overview_new"),
+                   style = "margin: auto; margin-top: 10px; margin-bottom: -10px"
+                 ),
+                 br(),
+                 downloadButton('download_standards'," Download all reported data (.csv)", style = "text-align: center; font-size: 12pt;"),
+               )
+      )
+    ),
+    Grid(id = "tab-panel",
+         GridItem(class = "ms-sm12 ms-lg12 ms-xl12",
+            CompanyCard(
+              Pivot(
+                PivotItem(headerText = ActionButton.shinyInput("ca_data_tables", text = "Reporting Metrics"),
+                  Grid(
+                    Stack(style = "text-align: center; padding: 25px", Text(uiOutput("company_profiles_title_1_new"), variant = "xxLarge", style = "color: #137AD1;")),
+                    GridItem(class = "ms-sm12 ms-xl4",                                               
+                             CompanyCard(
+                               Text("Reported energy use levels", variant = "large", style = "text-align: center;"),
+                               dataTableOutput("reported_energy_levels_new"),
+                               Stack(horizontal = TRUE, style = "justify-content: end; color: #137AD1;", 
+                                     TooltipHost(content = "This datatable displays a company's reported energy use levels",
+                                                 ActionButton(iconProps = list("iconName" = "Info"), text = "About This Table", style = "color: #137AD1;")))
+                             )
+                    ),
+                    GridItem(class = "ms-sm12 ms-xl4",                                               
+                             CompanyCard(
+                               Text("Data standards", variant = "large", style = "text-align: center;"),
+                               dataTableOutput("data_standards_new")
+                             )
+                    ),
+                    GridItem(class = "ms-sm12 ms-xl4",
+                             CompanyCard(
+                               Text("Other metrics reported", variant = "large", style = "text-align: center;"),
+                               dataTableOutput("other_metrics_new")
+                             )
+                    )
+                  )
+                ),
+                PivotItem(headerText = ActionButton.shinyInput("ca_data_tables", text = "Energy Data Tables"),
+                          Grid(Stack(style = "text-align: center; padding: 25px", Text(uiOutput("company_profiles_title_2_new"), variant = "xxLarge", style = "color: #137AD1;"))),
+                          br(),
+                          Grid(id = "electricity-use-table-new",
+                               GridItem(class = "ms-sm0 ms-xl1"),
+                               GridItem(class = "ms-sm12 ms-xl10",
+                                  CompanyCard(
+                                    Text("Electricity Use (TWh/yr)", variant = "large", style = "text-align: center;"),
+                                    div(dataTableOutput("electricity_use_table_new"), style = "width: 100%"),
+                                    Stack(horizontal = TRUE, style = "justify-content: end; color: #137AD1;", 
+                                          TooltipHost(content = "Values marked with asterisk are inferred, scroll down to Methodology table below to see how the value was calculated",
+                                                      ActionButton(iconProps = list("iconName" = "Info"), text = "About This Table", style = "color: #137AD1;")))
+                                    
+                                  )
+                               )
+                          ),
+                          br(),
+                          Grid(id = "other-fuel-use-table-new",
+                               GridItem(class = "ms-sm0 ms-xl1"),
+                               GridItem(class = "ms-sm12 ms-xl10",
+                                  CompanyCard(
+                                    Text("Other fuel use (TWh/yr)", variant = "large", style = "text-align: center;"),
+                                    div(dataTableOutput("other_fuel_use_table_new"), style = "width: 100%"),
+                                    Stack(horizontal = TRUE, style = "justify-content: end; color: #137AD1;", 
+                                          TooltipHost(content = "Values marked with asterisk are inferred, scroll down to Methodology table below to see how the value was calculated",
+                                                      ActionButton(iconProps = list("iconName" = "Info"), text = "About This Table", style = "color: #137AD1;")))
+                                  )
+                               )
+                          ),
+                          br(),
+                          Grid(id = "ns-energy-use-table-new",
+                               GridItem(class = "ms-sm0 ms-xl1"),
+                               GridItem(class = "ms-sm12 ms-xl10",
+                                  CompanyCard(
+                                    Text("Non-specified energy use (TWh/yr)", variant = "large", style = "text-align: center;"),
+                                    div(dataTableOutput("ns_energy_use_table_new"), style = "width: 100%"),
+                                    Stack(horizontal = TRUE, style = "justify-content: end; color: #137AD1;", 
+                                          TooltipHost(content = "Values marked with asterisk are inferred, scroll down to Methodology table below to see how the value was calculated",
+                                                      ActionButton(iconProps = list("iconName" = "Info"), text = "About This Table", style = "color: #137AD1;")))
+                                  )
+                               )
+                          ),
+                          br(),
+                          Grid(id = "pue-table-new",
+                               GridItem(class = "ms-sm0 ms-xl1"),
+                               GridItem(class = "ms-sm12 ms-xl10",
+                                  CompanyCard(
+                                    Text("PUE", variant = "large", style = "text-align: center;"),
+                                    div(dataTableOutput("pue_table_new"), style = "width: 100%;"),
+                                    Stack(horizontal = TRUE, style = "justify-content: end; color: #137AD1;", 
+                                          TooltipHost(content = "Values marked with asterisk are inferred, scroll down to Methodology table below to see how the value was calculated",
+                                                      ActionButton(iconProps = list("iconName" = "Info"), text = "About This Table", style = "color: #137AD1;")))
+                                  )
+                               )
+                          )),
+                PivotItem(headerText = "Company Reporting Timeline",
+                          Grid(
+                            GridItem(class = "ms-sm0 ms-xl1"),
+                            GridItem(class = "ms-sm0 ms-xl10", plotOutput('transparency_over_time_plot_new'))
+                          )),
+                PivotItem(headerText = ActionButton.shinyInput("ca_references", text = "References"),
+                          Grid(id = "methodology-table-new",
+                               GridItem(class = "ms-sm0 ms-xl1"),
+                               GridItem(class = "ms-sm12 ms-xl10",
+                                        Stack(style = "text-align: center; padding: 25px;",Text(uiOutput("company_profiles_title_3_new"), variant = "xxLarge", style = "color: #137AD1;")),
+                                        CompanyCard(div(dataTableOutput("methodology_table_new"), style = "width: 100%; overflow-x:auto;"),
+                                                    div(PrimaryButton.shinyInput("learn-more-new", text = "Learn More", style = "width: 120px; font-style: bold; margin-right: 10px;"),
+                                                        Text("All data are collected from publicly available sources and reviewed prior to being displayed on the website. Click the button to learn more about our methods.", variant = "large")),
+                                                    div(PrimaryButton.shinyInput("report-issue-new", text = "Contact Us", style = "width: 120px; font-style: bold; margin-right: 10px;"),
+                                                        Text("See an error in the reported data or have access to data you'd like our team to process? Contact us.", variant = "large")))
+                               ),
+                          ),
+                          Grid(id = "sources-assessed-new",
+                               GridItem(class = "ms-sm0 ms-xl1"),
+                               GridItem(class = "ms-sm12 ms-xl10",
+                                        Stack(style = "text-align: center; padding: 25px;", Text(uiOutput("company_profiles_title_4_new"), variant = "xxLarge", style = "color: #137AD1;")),
+                                        CompanyCard(
+                                          Text(variant = "large", style = "text-align: center;"),
+                                          div(dataTableOutput("sources_table_new"), style = "width: 100%;"),
+                                          Stack(horizontal = TRUE, style = "justify-content: end;",
+                                                PrimaryButton.shinyInput("show_sources_assessed_teaching_bubble_new", text = "About This Table", style = "margin-right: 10px;")),
+                                          reactOutput('sources_assessed_teaching_bubble_new'),
+                                        )
+                               ))
+                  )
+              )
+            )
+          )
+    )
+  )
+)
 
 ###########################################
 ######### METHODS PAGE ###################
@@ -729,6 +883,7 @@ navigation <- Nav(
            isExpanded = FALSE
            ),
       list(name = 'Single Company Analysis', url = '#!/company-analysis', key = 'analysis', icon = 'ExploreData'),
+      list(name = 'New Company Analysis', url = '#!/company-analysis-new', key = 'analysis-new', icon = 'ExploreData'),
       list(name = 'Methods', url = '#!/methods', key = 'methods', icon = 'Settings'),
       list(name = 'Contact', url = '#!/contact-us', key = 'contact', icon = 'Send'),
       list(name = 'About', url = '#!/about-us', key = 'about', icon = 'TestBeakerSolid'),
@@ -771,6 +926,7 @@ router <- make_router(
   route("lease-cloud-network", lease_cloud_network_page),
   route("pue-trends", pue_trends_page),
   route("company-analysis", company_analysis_page),
+  route("company-analysis-new", new_company_analysis_page),
   route("methods", methods_page),
   route("contact-us", contact_page),
   route("about-us", about_page)

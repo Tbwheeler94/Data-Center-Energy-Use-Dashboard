@@ -28,8 +28,8 @@ server <- function(input, output, session) {
   ###################################################################################
   
   links_lookup <- data.frame(
-    route = c("/", "data-center-energy", "home-to-industry-trends", "reporting-trends", "energy-data-trends", "reporting-timeline", "lease-cloud-network", "pue-trends", "company-analysis", "methods", "contact-us", "about-us", "isal"),
-    name = c('Home', 'Data Center Energy 101', "Industry Trends", 'Energy Reporting Trends', 'Energy Data Trends', 'Reporting Timeline', 'Industry Relationships', 'PUE Trends', 'Single Company Analysis', 'Methods', 'Contact', 'About', 'ISA Lab Website')
+    route = c("/", "data-center-energy", "home-to-industry-trends", "reporting-trends", "energy-data-trends", "reporting-timeline", "lease-cloud-network", "pue-trends", "company-analysis", "company-analysis-new", "methods", "contact-us", "about-us", "isal"),
+    name = c('Home', 'Data Center Energy 101', "Industry Trends", 'Energy Reporting Trends', 'Energy Data Trends', 'Reporting Timeline', 'Industry Relationships', 'PUE Trends', 'Single Company Analysis', 'New Company Analysis', 'Methods', 'Contact', 'About', 'ISA Lab Website')
   )
   
   shiny::observeEvent(shiny.router::get_page(), {
@@ -629,130 +629,130 @@ server <- function(input, output, session) {
         paste("Sources Assessed For", input$selected_company)
       })
       
-      ########################################################
-      ###### Generate reactive datasets for subsetting #######
-      ########################################################
+      # ########################################################
+      # ###### Generate reactive datasets for subsetting #######
+      # ########################################################
+      # 
+      # #This dataset filters the raw company profiles sheet by the selected company's current year
+      # # company_sheet_selected_company <- reactive({
+      # #   data_sheet_company_raw %>% filter(company_name %in% input$selected_company)
+      # # })
+      # 
+      # #This dataset filters the raw energy sheet by the selected company's most recent year of data reporting
+      # energy_sheet_selected_company_current_year <- reactive({
+      #   
+      #   data_sheet_energy_raw %>% 
+      #     filter(company %in% input$selected_company) %>% 
+      #     mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
+      #     slice_max(period_covered_start_date) 
+      #   #filter(period_covered_start_date == max(period_covered_start_date)) 
+      # })
+      # 
+      # #This dataset is used to check for SASB, GRI, CDP reporting
+      # sasb_cdp_gri_status <- reactive({
+      #   
+      #   energy_sheet_selected_company_current_year_scg <- data_sheet_energy_raw %>% 
+      #     filter(company %in% input$selected_company) %>% 
+      #     mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
+      #     slice_max(period_covered_start_date)
+      #   #filter(period_covered_start_date == max(period_covered_start_date))
+      #   
+      #   sasb_reporting_status <- ifelse("Yes" %in% energy_sheet_selected_company_current_year_scg$sasb, "Yes", "No")
+      #   cdp_reporting_status <- ifelse("Yes" %in% energy_sheet_selected_company_current_year_scg$cdp, "Yes", "No")
+      #   gri_reporting_status <- ifelse("Yes" %in% energy_sheet_selected_company_current_year_scg$gri, "Yes", "No")
+      #   
+      #   data.frame(Organization = c("SASB", "GRI", "CDP"),
+      #              " Reporting Status " = c(sasb_reporting_status, cdp_reporting_status, gri_reporting_status), check.names = FALSE)
+      # })
+      # 
+      # #This dataset is used to check for PUE, WUE, Renewables reporting
+      # pue_wue_renewables_status <- reactive({
+      #   
+      #   energy_sheet_selected_company_current_year_pwr <- data_sheet_energy_raw %>% 
+      #     filter(company %in% input$selected_company) %>% 
+      #     mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
+      #     slice_max(period_covered_start_date)
+      #   
+      #   #filter(period_covered_start_date == max(period_covered_start_date))
+      #   
+      #   pue_reporting_status <- ifelse("Yes" %in% energy_sheet_selected_company_current_year_pwr$pue, "Yes", "No")
+      #   wue_reporting_status <- ifelse("Yes" %in% energy_sheet_selected_company_current_year_pwr$wue, "Yes", "No")
+      #   renewable_reporting_status <- ifelse("Yes" %in% energy_sheet_selected_company_current_year_pwr$renewable_energy, "Yes", "No")
+      #   
+      #   data.frame(Metrics = c("PUE", "WUE", "Renewable Energy"),
+      #              " Reporting Status " = c(pue_reporting_status, wue_reporting_status, renewable_reporting_status), check.names = FALSE)
+      #   
+      # })
       
-      #This dataset filters the raw company profiles sheet by the selected company's current year
-      company_sheet_selected_company <- reactive({
-        data_sheet_company_raw %>% filter(company_name %in% input$selected_company)
-      })
+      # #This dataset is use to check if a company is reporting data center electricity use
+      # energy_sheet_selected_company_current_year_dc_electricity <- reactive({
+      #   data_sheet_energy_raw %>% filter(company %in% input$selected_company) %>% 
+      #     mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
+      #     slice_max(period_covered_start_date) %>% 
+      #     #filter(period_covered_start_date == max(period_covered_start_date)) %>% 
+      #     filter(energy_reporting_scope == "Single Data Center" | energy_reporting_scope == "Multiple Data Centers") %>% 
+      #     drop_na(electricity_value)
+      # })
+      # 
+      # #This dataset is use to check if a company is reporting data center fuel use
+      # energy_sheet_selected_company_current_year_dc_fuel <- reactive({
+      #   data_sheet_energy_raw %>% filter(company %in% input$selected_company) %>% 
+      #     mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
+      #     slice_max(period_covered_start_date) %>% 
+      #     #filter(period_covered_start_date == max(period_covered_start_date)) %>% 
+      #     filter(energy_reporting_scope == "Single Data Center" | energy_reporting_scope == "Multiple Data Centers") %>% 
+      #     drop_na(fuel_1_value)
+      # })
+      # 
+      # #This dataset is used to check what level of data center management the company is reporting (filters out total operations rows as sometimes total operations rows are marked as "self-managed)
+      # energy_sheet_selected_company_current_year_dc <- reactive({
+      #   data_sheet_energy_raw %>% filter(company %in% input$selected_company) %>% 
+      #     mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
+      #     slice_max(period_covered_start_date) %>% 
+      #     #filter(period_covered_start_date == max(period_covered_start_date)) %>% 
+      #     filter(energy_reporting_scope == "Single Data Center" | energy_reporting_scope == "Multiple Data Centers")
+      # })
+      # 
+      # #This dataset is use to check if a company is reporting company-wide electricity use
+      # energy_sheet_selected_company_current_year_te <- reactive({
+      #   data_sheet_energy_raw %>% filter(company %in% input$selected_company) %>% 
+      #     mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
+      #     slice_max(period_covered_start_date) %>% 
+      #     # filter(period_covered_start_date == max(period_covered_start_date)) %>% 
+      #     filter(energy_reporting_scope == "Total Operations") %>% 
+      #     drop_na(electricity_value)
+      # })
       
-      #This dataset filters the raw energy sheet by the selected company's most recent year of data reporting
-      energy_sheet_selected_company_current_year <- reactive({
-        
-        data_sheet_energy_raw %>% 
-          filter(company %in% input$selected_company) %>% 
-          mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
-          slice_max(period_covered_start_date) 
-        #filter(period_covered_start_date == max(period_covered_start_date)) 
-      })
-      
-      #This dataset is used to check for SASB, GRI, CDP reporting
-      sasb_cdp_gri_status <- reactive({
-        
-        energy_sheet_selected_company_current_year_scg <- data_sheet_energy_raw %>% 
-          filter(company %in% input$selected_company) %>% 
-          mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
-          slice_max(period_covered_start_date)
-        #filter(period_covered_start_date == max(period_covered_start_date))
-        
-        sasb_reporting_status <- ifelse("Yes" %in% energy_sheet_selected_company_current_year_scg$sasb, "Yes", "No")
-        cdp_reporting_status <- ifelse("Yes" %in% energy_sheet_selected_company_current_year_scg$cdp, "Yes", "No")
-        gri_reporting_status <- ifelse("Yes" %in% energy_sheet_selected_company_current_year_scg$gri, "Yes", "No")
-        
-        data.frame(Organization = c("SASB", "GRI", "CDP"),
-                   " Reporting Status " = c(sasb_reporting_status, cdp_reporting_status, gri_reporting_status), check.names = FALSE)
-      })
-      
-      #This dataset is used to check for PUE, WUE, Renewables reporting
-      pue_wue_renewables_status <- reactive({
-        
-        energy_sheet_selected_company_current_year_pwr <- data_sheet_energy_raw %>% 
-          filter(company %in% input$selected_company) %>% 
-          mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
-          slice_max(period_covered_start_date)
-        
-        #filter(period_covered_start_date == max(period_covered_start_date))
-        
-        pue_reporting_status <- ifelse("Yes" %in% energy_sheet_selected_company_current_year_pwr$pue, "Yes", "No")
-        wue_reporting_status <- ifelse("Yes" %in% energy_sheet_selected_company_current_year_pwr$wue, "Yes", "No")
-        renewable_reporting_status <- ifelse("Yes" %in% energy_sheet_selected_company_current_year_pwr$renewable_energy, "Yes", "No")
-        
-        data.frame(Metrics = c("PUE", "WUE", "Renewable Energy"),
-                   " Reporting Status " = c(pue_reporting_status, wue_reporting_status, renewable_reporting_status), check.names = FALSE)
-        
-      })
-      
-      #This dataset is use to check if a company is reporting data center electricity use
-      energy_sheet_selected_company_current_year_dc_electricity <- reactive({
-        data_sheet_energy_raw %>% filter(company %in% input$selected_company) %>% 
-          mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
-          slice_max(period_covered_start_date) %>% 
-          #filter(period_covered_start_date == max(period_covered_start_date)) %>% 
-          filter(energy_reporting_scope == "Single Data Center" | energy_reporting_scope == "Multiple Data Centers") %>% 
-          drop_na(electricity_value)
-      })
-      
-      #This dataset is use to check if a company is reporting data center fuel use
-      energy_sheet_selected_company_current_year_dc_fuel <- reactive({
-        data_sheet_energy_raw %>% filter(company %in% input$selected_company) %>% 
-          mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
-          slice_max(period_covered_start_date) %>% 
-          #filter(period_covered_start_date == max(period_covered_start_date)) %>% 
-          filter(energy_reporting_scope == "Single Data Center" | energy_reporting_scope == "Multiple Data Centers") %>% 
-          drop_na(fuel_1_value)
-      })
-      
-      #This dataset is used to check what level of data center management the company is reporting (filters out total operations rows as sometimes total operations rows are marked as "self-managed)
-      energy_sheet_selected_company_current_year_dc <- reactive({
-        data_sheet_energy_raw %>% filter(company %in% input$selected_company) %>% 
-          mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
-          slice_max(period_covered_start_date) %>% 
-          #filter(period_covered_start_date == max(period_covered_start_date)) %>% 
-          filter(energy_reporting_scope == "Single Data Center" | energy_reporting_scope == "Multiple Data Centers")
-      })
-      
-      #This dataset is use to check if a company is reporting company-wide electricity use
-      energy_sheet_selected_company_current_year_te <- reactive({
-        data_sheet_energy_raw %>% filter(company %in% input$selected_company) %>% 
-          mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
-          slice_max(period_covered_start_date) %>% 
-          # filter(period_covered_start_date == max(period_covered_start_date)) %>% 
-          filter(energy_reporting_scope == "Total Operations") %>% 
-          drop_na(electricity_value)
-      })
-      
-      #########################################################
-      ####### Table 1: Select company quick stats #############
-      #########################################################
-      
-      #Does Company X report any energy use?
-      
-      energy_reporting_status <- reactive({
-        ifelse(sum(energy_sheet_selected_company_current_year()$electricity_value > 0, na.rm = TRUE) | 
-                 sum(energy_sheet_selected_company_current_year()$fuel_1_value > 0, na.rm = TRUE), "Yes", "No")
-      })
-      
-      #Year of most recent data
-      year_of_most_recent_data <- reactive({
-        energy_sheet_selected_company_current_year()[1, "period_covered_start_date"]
-      })  
-      
-      #Render list of external service providers  
-      external_service_provider_list <- reactive({ paste(company_sheet_selected_company()[1, "provider_1"], company_sheet_selected_company()[1, "provider_2"],
-                                                         company_sheet_selected_company()[1, "provider_3"], company_sheet_selected_company()[1, "provider_4"],
-                                                         company_sheet_selected_company()[1, "provider_5"], company_sheet_selected_company()[1, "provider_6"],
-                                                         company_sheet_selected_company()[1, "provider_7"], company_sheet_selected_company()[1, "provider_8"],
-                                                         company_sheet_selected_company()[1, "provider_9"], company_sheet_selected_company()[1, "provider_10"],sep = ", ") %>%
-          str_remove_all(", NA") %>% str_remove_all(", ,") %>% str_remove_all(" , ") %>% str_remove_all("[:punct:]*\\s*$") %>% 
-          str_remove_all("NA")
-      })
-      
-      selected_company_stats <- reactive({ data.frame(A = c("Does company report any energy use?", "Year of most recent data", "Lease/cloud providers"),
-                                                      B = c(energy_reporting_status(), year_of_most_recent_data(), ifelse(external_service_provider_list() == "", "No External Providers Reported",
-                                                                                                                          external_service_provider_list())), check.names = FALSE)
-      })
+      # #########################################################
+      # ####### Table 1: Select company quick stats #############
+      # #########################################################
+      # 
+      # #Does Company X report any energy use?
+      # 
+      # energy_reporting_status <- reactive({
+      #   ifelse(sum(energy_sheet_selected_company_current_year()$electricity_value > 0, na.rm = TRUE) | 
+      #            sum(energy_sheet_selected_company_current_year()$fuel_1_value > 0, na.rm = TRUE), "Yes", "No")
+      # })
+      # 
+      # #Year of most recent data
+      # year_of_most_recent_data <- reactive({
+      #   energy_sheet_selected_company_current_year()[1, "period_covered_start_date"]
+      # })  
+      # 
+      # #Render list of external service providers  
+      # external_service_provider_list <- reactive({ paste(company_sheet_selected_company()[1, "provider_1"], company_sheet_selected_company()[1, "provider_2"],
+      #                                                    company_sheet_selected_company()[1, "provider_3"], company_sheet_selected_company()[1, "provider_4"],
+      #                                                    company_sheet_selected_company()[1, "provider_5"], company_sheet_selected_company()[1, "provider_6"],
+      #                                                    company_sheet_selected_company()[1, "provider_7"], company_sheet_selected_company()[1, "provider_8"],
+      #                                                    company_sheet_selected_company()[1, "provider_9"], company_sheet_selected_company()[1, "provider_10"],sep = ", ") %>%
+      #     str_remove_all(", NA") %>% str_remove_all(", ,") %>% str_remove_all(" , ") %>% str_remove_all("[:punct:]*\\s*$") %>% 
+      #     str_remove_all("NA")
+      # })
+      # 
+      # selected_company_stats <- reactive({ data.frame(A = c("Does company report any energy use?", "Year of most recent data", "Lease/cloud providers"),
+      #                                                 B = c(energy_reporting_status(), year_of_most_recent_data(), ifelse(external_service_provider_list() == "", "No External Providers Reported",
+      #                                                                                                                     external_service_provider_list())), check.names = FALSE)
+      # })
       
       #removed reactive table from "Select a Company To View" header box
       
@@ -808,59 +808,59 @@ server <- function(input, output, session) {
                     ), style = "width: 800px;"))
       })
       
-      #######################################
-      #Table 4###############################
-      #Currently reported energy use levels##
-      #######################################
-      
-      data_center_electricity_reporting_status <- reactive({ ifelse(sum(energy_sheet_selected_company_current_year_dc_electricity()$electricity_value > 0), "Yes", "No") })
-      data_center_self_managed_reporting_status <- reactive({ ifelse("Self-managed" %in% energy_sheet_selected_company_current_year_dc()$level_of_ownership, "Yes", "No") })
-      data_center_leased_reporting_status <- reactive({ ifelse("Leased" %in% energy_sheet_selected_company_current_year_dc()$level_of_ownership, "Yes", "No") })
-      data_center_cloud_reporting_status <- reactive({ ifelse("Cloud" %in% energy_sheet_selected_company_current_year_dc()$level_of_ownership, "Yes", "No") })
-      data_center_other_fuel_use_reporting_status <- reactive({ ifelse(sum(energy_sheet_selected_company_current_year_dc_fuel()$fuel_1_value > 0), "Yes", "No") })
-      total_energy_reporting_status <- reactive({ ifelse(sum(energy_sheet_selected_company_current_year_te()$electricity_value > 0), "Yes", "No") })
-      
-      reported_energy_levels_data <- reactive({
-        data.frame(Level = c("Data center electricity use", "Self-managed", "Leased", "Cloud", "Data center other fuel use", "Company-wide electricity use"),
-                   " Reporting Status " = c(data_center_electricity_reporting_status(), 
-                                            data_center_self_managed_reporting_status(), 
-                                            data_center_leased_reporting_status(), 
-                                            data_center_cloud_reporting_status(), 
-                                            data_center_other_fuel_use_reporting_status(), 
-                                            total_energy_reporting_status()), check.names = FALSE) %>% 
-          add_column(format = c(1,0,0,0,1,1), .before = 'Level')
-      })
-      
-      output$reported_energy_levels <- renderDataTable({
-        
-        datatable(reported_energy_levels_data(), rownames = FALSE, options = list(dom = 't', columnDefs = list(list(visible=FALSE, targets=0)))) %>% 
-          formatStyle(
-            'Level', 'format',
-            textAlign = styleEqual(c(0, 1), c('right', 'left')),
-            fontStyle = styleEqual(c(0, 1), c('italic', 'normal'))
-          )
-      })
-      
-      #######################################
-      #Table 5###############################
-      #Data standards reported###############
-      #######################################
-      
-      #UI datatable output
-      output$data_standards <- renderDataTable({
-        datatable(sasb_cdp_gri_status(), rownames = FALSE, options = list(dom = 't'))
-      })
-      
-      #######################################
-      #Table 6###############################
-      #Other metrics reported################
-      #######################################
-      
-      #UI datatable output
-      
-      output$other_metrics <- renderDataTable({
-        datatable(pue_wue_renewables_status(), rownames = FALSE, options = list(dom = 't'))
-      })
+      # #######################################
+      # #Table 4###############################
+      # #Currently reported energy use levels##
+      # #######################################
+      # 
+      # data_center_electricity_reporting_status <- reactive({ ifelse(sum(energy_sheet_selected_company_current_year_dc_electricity()$electricity_value > 0), "Yes", "No") })
+      # data_center_self_managed_reporting_status <- reactive({ ifelse("Self-managed" %in% energy_sheet_selected_company_current_year_dc()$level_of_ownership, "Yes", "No") })
+      # data_center_leased_reporting_status <- reactive({ ifelse("Leased" %in% energy_sheet_selected_company_current_year_dc()$level_of_ownership, "Yes", "No") })
+      # data_center_cloud_reporting_status <- reactive({ ifelse("Cloud" %in% energy_sheet_selected_company_current_year_dc()$level_of_ownership, "Yes", "No") })
+      # data_center_other_fuel_use_reporting_status <- reactive({ ifelse(sum(energy_sheet_selected_company_current_year_dc_fuel()$fuel_1_value > 0), "Yes", "No") })
+      # total_energy_reporting_status <- reactive({ ifelse(sum(energy_sheet_selected_company_current_year_te()$electricity_value > 0), "Yes", "No") })
+      # 
+      # reported_energy_levels_data <- reactive({
+      #   data.frame(Level = c("Data center electricity use", "Self-managed", "Leased", "Cloud", "Data center other fuel use", "Company-wide electricity use"),
+      #              " Reporting Status " = c(data_center_electricity_reporting_status(), 
+      #                                       data_center_self_managed_reporting_status(), 
+      #                                       data_center_leased_reporting_status(), 
+      #                                       data_center_cloud_reporting_status(), 
+      #                                       data_center_other_fuel_use_reporting_status(), 
+      #                                       total_energy_reporting_status()), check.names = FALSE) %>% 
+      #     add_column(format = c(1,0,0,0,1,1), .before = 'Level')
+      # })
+      # 
+      # output$reported_energy_levels <- renderDataTable({
+      #   
+      #   datatable(reported_energy_levels_data(), rownames = FALSE, options = list(dom = 't', columnDefs = list(list(visible=FALSE, targets=0)))) %>% 
+      #     formatStyle(
+      #       'Level', 'format',
+      #       textAlign = styleEqual(c(0, 1), c('right', 'left')),
+      #       fontStyle = styleEqual(c(0, 1), c('italic', 'normal'))
+      #     )
+      # })
+      # 
+      # #######################################
+      # #Table 5###############################
+      # #Data standards reported###############
+      # #######################################
+      # 
+      # #UI datatable output
+      # output$data_standards <- renderDataTable({
+      #   datatable(sasb_cdp_gri_status(), rownames = FALSE, options = list(dom = 't'))
+      # })
+      # 
+      # #######################################
+      # #Table 6###############################
+      # #Other metrics reported################
+      # #######################################
+      # 
+      # #UI datatable output
+      # 
+      # output$other_metrics <- renderDataTable({
+      #   datatable(pue_wue_renewables_status(), rownames = FALSE, options = list(dom = 't'))
+      # })
       
       #######################################
       #Table 7-10 Prep. #####################
@@ -940,7 +940,7 @@ server <- function(input, output, session) {
         selected_company_pue_filter <- buildCompanyProfilePUEPlot(input$selected_company, methodology_table_lookup())
         
         if(nrow(selected_company_pue_filter) != 0) {
-          datatable(selected_company_pue_filter, escape = FALSE, rownames = FALSE, options = list(dom = 't', autoWidth = TRUE, columnDefs = list(list(width = '300px',targets = c(0))), scrollY=200, scrollCollapse=TRUE))
+          datatable(selected_company_pue_filter, escape = FALSE, rownames = FALSE, options = list(dom = 't', columnDefs = list(list(visible=FALSE, targets = 0)), scrollX = TRUE)) 
         } else {
           shinyjs::hide(selector = "div#pue-table")
         }
@@ -977,23 +977,23 @@ server <- function(input, output, session) {
       
       #add interactivity (change page and update nav bar selection) to learn more and contact us buttons when clicked
       
-      change_to_methods <- function() {
-        #change page to methods
-        change_page('/methods', session = shiny::getDefaultReactiveDomain(), mode = "push")
-        #update selected nav
-        runjs(glue("$('.ms-Nav-link[title={'Methods'}]')[0].click()"))
-      }
-      onclick('learn-more', change_to_methods())
-      
-      #change to contact us page when the report issue button is clicked
-      change_to_contact_us <- function() {
-        #change page to contact-us
-        change_page('/contact-us', session = shiny::getDefaultReactiveDomain(), mode = "push")
-        #update selected nav
-        runjs(glue("$('.ms-Nav-link[title={'Contact'}]')[0].click()"))
-      }
-      
-      onclick('report-issue', change_to_contact_us())
+      # change_to_methods <- function() {
+      #   #change page to methods
+      #   change_page('/methods', session = shiny::getDefaultReactiveDomain(), mode = "push")
+      #   #update selected nav
+      #   runjs(glue("$('.ms-Nav-link[title={'Methods'}]')[0].click()"))
+      # }
+      # onclick('learn-more', change_to_methods())
+      # 
+      # #change to contact us page when the report issue button is clicked
+      # change_to_contact_us <- function() {
+      #   #change page to contact-us
+      #   change_page('/contact-us', session = shiny::getDefaultReactiveDomain(), mode = "push")
+      #   #update selected nav
+      #   runjs(glue("$('.ms-Nav-link[title={'Contact'}]')[0].click()"))
+      # }
+      # 
+      # onclick('report-issue', change_to_contact_us())
       
       #######################################
       #Table 13##############################
@@ -1069,6 +1069,482 @@ server <- function(input, output, session) {
           if(nrow(buildCompanyProfileMethodologyTable(input$selected_company)) != 0) {
             write.table(data.frame(x = c("", "Methodological Notes")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
             write.table(buildCompanyProfileMethodologyTable(input$selected_company), fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
+          
+        }
+      )
+      
+    }
+    
+    if (page_title == "New Company Analysis") {
+      ###########################################################################################################################################################
+      ###########################################################################################################################################################
+      ###### Tab 3: Company Analysis  ###########################################################################################################################
+      ###########################################################################################################################################################
+      ###########################################################################################################################################################
+      
+      ###############################################################
+      ###### Generate reactive titles based on user selection #######
+      ###############################################################
+      
+      output$company_profiles_title_1_new <- renderText({
+        paste("Current Year Energy Reporting Snapshot For", input$selected_company_new)
+      })
+      
+      output$company_profiles_title_2_new <- renderText({
+        paste("Historical Energy Use Trend & Data For", input$selected_company_new)
+      })
+      
+      output$company_profiles_title_3_new <- renderText({
+        paste("Methodological Notes For", input$selected_company_new)
+      })
+      
+      output$company_profiles_title_4_new <- renderText({
+        paste("Sources Assessed For", input$selected_company_new)
+      })
+      
+      #This dataset filters the raw company profiles sheet by the selected company's current year
+      company_sheet_selected_company <- reactive({
+        data_sheet_company_raw %>% filter(company_name %in% input$selected_company_new)
+      })
+      
+      ########################################################
+      ###### Generate reactive datasets for subsetting #######
+      ########################################################
+      
+      #This dataset filters the raw company profiles sheet by the selected company's current year
+      # company_sheet_selected_company <- reactive({
+      #   data_sheet_company_raw %>% filter(company_name %in% input$selected_company)
+      # })
+      
+      #This dataset filters the raw energy sheet by the selected company's most recent year of data reporting
+      energy_sheet_selected_company_current_year <- reactive({
+        
+        data_sheet_energy_raw %>% 
+          filter(company %in% input$selected_company) %>% 
+          mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
+          slice_max(period_covered_start_date) 
+        #filter(period_covered_start_date == max(period_covered_start_date)) 
+      })
+      
+      #This dataset is used to check for SASB, GRI, CDP reporting
+      sasb_cdp_gri_status <- reactive({
+        
+        energy_sheet_selected_company_current_year_scg <- data_sheet_energy_raw %>% 
+          filter(company %in% input$selected_company) %>% 
+          mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
+          slice_max(period_covered_start_date)
+        #filter(period_covered_start_date == max(period_covered_start_date))
+        
+        sasb_reporting_status <- ifelse("Yes" %in% energy_sheet_selected_company_current_year_scg$sasb, "Yes", "No")
+        cdp_reporting_status <- ifelse("Yes" %in% energy_sheet_selected_company_current_year_scg$cdp, "Yes", "No")
+        gri_reporting_status <- ifelse("Yes" %in% energy_sheet_selected_company_current_year_scg$gri, "Yes", "No")
+        
+        data.frame(Organization = c("SASB", "GRI", "CDP"),
+                   " Reporting Status " = c(sasb_reporting_status, cdp_reporting_status, gri_reporting_status), check.names = FALSE)
+      })
+      
+      #This dataset is used to check for PUE, WUE, Renewables reporting
+      pue_wue_renewables_status <- reactive({
+        
+        energy_sheet_selected_company_current_year_pwr <- data_sheet_energy_raw %>% 
+          filter(company %in% input$selected_company) %>% 
+          mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
+          slice_max(period_covered_start_date)
+        
+        #filter(period_covered_start_date == max(period_covered_start_date))
+        
+        pue_reporting_status <- ifelse("Yes" %in% energy_sheet_selected_company_current_year_pwr$pue, "Yes", "No")
+        wue_reporting_status <- ifelse("Yes" %in% energy_sheet_selected_company_current_year_pwr$wue, "Yes", "No")
+        renewable_reporting_status <- ifelse("Yes" %in% energy_sheet_selected_company_current_year_pwr$renewable_energy, "Yes", "No")
+        
+        data.frame(Metrics = c("PUE", "WUE", "Renewable Energy"),
+                   " Reporting Status " = c(pue_reporting_status, wue_reporting_status, renewable_reporting_status), check.names = FALSE)
+        
+      })
+      
+      #This dataset is use to check if a company is reporting data center electricity use
+      energy_sheet_selected_company_current_year_dc_electricity <- reactive({
+        data_sheet_energy_raw %>% filter(company %in% input$selected_company_new) %>% 
+          mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
+          slice_max(period_covered_start_date) %>% 
+          #filter(period_covered_start_date == max(period_covered_start_date)) %>% 
+          filter(energy_reporting_scope == "Single Data Center" | energy_reporting_scope == "Multiple Data Centers") %>% 
+          drop_na(electricity_value)
+      })
+      
+      #This dataset is use to check if a company is reporting data center fuel use
+      energy_sheet_selected_company_current_year_dc_fuel <- reactive({
+        data_sheet_energy_raw %>% filter(company %in% input$selected_company_new) %>% 
+          mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
+          slice_max(period_covered_start_date) %>% 
+          #filter(period_covered_start_date == max(period_covered_start_date)) %>% 
+          filter(energy_reporting_scope == "Single Data Center" | energy_reporting_scope == "Multiple Data Centers") %>% 
+          drop_na(fuel_1_value)
+      })
+      
+      #This dataset is used to check what level of data center management the company is reporting (filters out total operations rows as sometimes total operations rows are marked as "self-managed)
+      energy_sheet_selected_company_current_year_dc <- reactive({
+        data_sheet_energy_raw %>% filter(company %in% input$selected_company_new) %>% 
+          mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
+          slice_max(period_covered_start_date) %>% 
+          #filter(period_covered_start_date == max(period_covered_start_date)) %>% 
+          filter(energy_reporting_scope == "Single Data Center" | energy_reporting_scope == "Multiple Data Centers")
+      })
+      
+      #This dataset is use to check if a company is reporting company-wide electricity use
+      energy_sheet_selected_company_current_year_te <- reactive({
+        data_sheet_energy_raw %>% filter(company %in% input$selected_company_new) %>% 
+          mutate(period_covered_start_date = year(period_covered_start_date)) %>% 
+          slice_max(period_covered_start_date) %>% 
+          # filter(period_covered_start_date == max(period_covered_start_date)) %>% 
+          filter(energy_reporting_scope == "Total Operations") %>% 
+          drop_na(electricity_value)
+      })
+      
+      #########################################################
+      ####### Table 1: Select company quick stats #############
+      #########################################################
+      
+      #Does Company X report any energy use?
+      
+      energy_reporting_status <- reactive({
+        ifelse(sum(energy_sheet_selected_company_current_year()$electricity_value > 0, na.rm = TRUE) | 
+                 sum(energy_sheet_selected_company_current_year()$fuel_1_value > 0, na.rm = TRUE), "Yes", "No")
+      })
+      
+      #Year of most recent data
+      year_of_most_recent_data <- reactive({
+        energy_sheet_selected_company_current_year()[1, "period_covered_start_date"]
+      })  
+      
+      #Render list of external service providers  
+      external_service_provider_list <- reactive({ paste(company_sheet_selected_company()[1, "provider_1"], company_sheet_selected_company()[1, "provider_2"],
+                                                         company_sheet_selected_company()[1, "provider_3"], company_sheet_selected_company()[1, "provider_4"],
+                                                         company_sheet_selected_company()[1, "provider_5"], company_sheet_selected_company()[1, "provider_6"],
+                                                         company_sheet_selected_company()[1, "provider_7"], company_sheet_selected_company()[1, "provider_8"],
+                                                         company_sheet_selected_company()[1, "provider_9"], company_sheet_selected_company()[1, "provider_10"],sep = ", ") %>%
+          str_remove_all(", NA") %>% str_remove_all(", ,") %>% str_remove_all(" , ") %>% str_remove_all("[:punct:]*\\s*$") %>% 
+          str_remove_all("NA")
+      })
+      
+      selected_company_stats <- reactive({ data.frame(A = c("Does company report any energy use?", "Year of most recent data", "Lease/cloud providers"),
+                                                      B = c(energy_reporting_status(), year_of_most_recent_data(), ifelse(external_service_provider_list() == "", "No External Providers Reported",
+                                                                                                                          external_service_provider_list())), check.names = FALSE)
+      })
+      
+      ##############################
+      #Box 2########################
+      #Company data center overview#
+      ##############################
+      
+      data_center_modal_visible_new <- reactiveVal(FALSE)
+      observeEvent(input$show_company_data_center_overview_new, data_center_modal_visible_new(TRUE))
+      observeEvent(input$hide_company_data_center_overview_new, data_center_modal_visible_new(FALSE))
+      
+      output$company_data_center_overview_new <- renderReact({
+        
+        Modal(isOpen = data_center_modal_visible_new(),
+              Stack(tokens = list(padding = "25px", childrenGap = "10px"),
+                    div(style = list(display = "flex"),
+                        Text("Data Center Overview", variant = "xLarge"),
+                        div(style = list(flexGrow = 1)),
+                        IconButton.shinyInput("hide_company_data_center_overview_new", iconProps = list(iconName = "Cancel")),
+                    ),
+                    Text(as.character(company_sheet_selected_company()[1,"company_data_center_overview"]), variant="large"),
+                    style = "width: 800px;"))
+      })
+      
+      ##############################
+      #Box 3########################
+      #Energy reporting assessment##
+      ##############################
+      
+      energy_assessement_modal_visible_new <- reactiveVal(FALSE)
+      observeEvent(input$show_company_energy_reporting_assessment_overview_new, energy_assessement_modal_visible_new(TRUE))
+      observeEvent(input$hide_company_energy_reporting_assessment_overview_new, energy_assessement_modal_visible_new(FALSE))
+      
+      output$company_energy_reporting_assessment_overview_new <- renderReact({
+        
+        Modal(isOpen = energy_assessement_modal_visible_new(),
+              Stack(tokens = list(padding = "25px", childrenGap = "10px"),
+                    div(style = list(display = "flex"),
+                        Text("Energy Reporting Assessment", variant = "xLarge"),
+                        div(style = list(flexGrow = 1)),
+                        IconButton.shinyInput("hide_company_energy_reporting_assessment_overview_new", iconProps = list(iconName = "Cancel")),
+                    ),
+                    div(Text(as.character(company_sheet_selected_company()[1, "energy_reporting_assessment"]), variant = "large")
+                    ), style = "width: 800px;"))
+      })
+      
+      #######################################
+      #Table 4###############################
+      #Currently reported energy use levels##
+      #######################################
+      
+      data_center_electricity_reporting_status <- reactive({ ifelse(sum(energy_sheet_selected_company_current_year_dc_electricity()$electricity_value > 0), "Yes", "No") })
+      data_center_self_managed_reporting_status <- reactive({ ifelse("Self-managed" %in% energy_sheet_selected_company_current_year_dc()$level_of_ownership, "Yes", "No") })
+      data_center_leased_reporting_status <- reactive({ ifelse("Leased" %in% energy_sheet_selected_company_current_year_dc()$level_of_ownership, "Yes", "No") })
+      data_center_cloud_reporting_status <- reactive({ ifelse("Cloud" %in% energy_sheet_selected_company_current_year_dc()$level_of_ownership, "Yes", "No") })
+      data_center_other_fuel_use_reporting_status <- reactive({ ifelse(sum(energy_sheet_selected_company_current_year_dc_fuel()$fuel_1_value > 0), "Yes", "No") })
+      total_energy_reporting_status <- reactive({ ifelse(sum(energy_sheet_selected_company_current_year_te()$electricity_value > 0), "Yes", "No") })
+      
+      reported_energy_levels_data <- reactive({
+        data.frame(Level = c("Data center electricity use", "Self-managed", "Leased", "Cloud", "Data center other fuel use", "Company-wide electricity use"),
+                   " Reporting Status " = c(data_center_electricity_reporting_status(), 
+                                            data_center_self_managed_reporting_status(), 
+                                            data_center_leased_reporting_status(), 
+                                            data_center_cloud_reporting_status(), 
+                                            data_center_other_fuel_use_reporting_status(), 
+                                            total_energy_reporting_status()), check.names = FALSE) %>% 
+          add_column(format = c(1,0,0,0,1,1), .before = 'Level')
+      })
+      
+      output$reported_energy_levels_new <- renderDataTable({
+        
+        datatable(reported_energy_levels_data(), rownames = FALSE, options = list(dom = 't', columnDefs = list(list(visible=FALSE, targets=0)))) %>% 
+          formatStyle(
+            'Level', 'format',
+            textAlign = styleEqual(c(0, 1), c('right', 'left')),
+            fontStyle = styleEqual(c(0, 1), c('italic', 'normal'))
+          )
+      })
+      
+      #######################################
+      #Table 5###############################
+      #Data standards reported###############
+      #######################################
+      
+      #UI datatable output
+      output$data_standards_new <- renderDataTable({
+        datatable(sasb_cdp_gri_status(), rownames = FALSE, options = list(dom = 't'))
+      })
+      
+      #######################################
+      #Table 6###############################
+      #Other metrics reported################
+      #######################################
+      
+      #UI datatable output
+      
+      output$other_metrics_new <- renderDataTable({
+        datatable(pue_wue_renewables_status(), rownames = FALSE, options = list(dom = 't'))
+      })
+      
+      #######################################
+      #Table 7-10 Prep. #####################
+      #Interactivity and Method Table Lookup
+      #######################################
+      
+      observeEvent(input$selected_company_new, {
+        shinyjs::show(selector = "div#electricity-use-table-new")
+        shinyjs::show(selector = "div#other-fuel-use-table-new")
+        shinyjs::show(selector = "div#ns-energy-use-table-new")
+        shinyjs::show(selector = "div#pue-table-new")
+        shinyjs::show(selector = "div#methodology-table-new")
+      })
+      
+      methodology_table_lookup_new <- reactive({buildCompanyProfileMethodologyTable(input$selected_company_new)})
+      
+      #Show all 5 tables to start
+      # to_listen <- reactive({
+      #   list(input$elec)
+      # })
+      
+      observeEvent({input$ca_data_tables
+                   input$selected_company_new}, {
+        # #######################################
+        # #Table 8###############################
+        # #Electricity Use Table (TWh/yr)###############
+        # #######################################
+        
+        output$electricity_use_table_new <- renderDataTable({
+          
+          selected_company_electricity_use_filter_new <- buildCompanyProfileElectricityUsePlot(input$selected_company_new, methodology_table_lookup_new())
+          
+          #If the dataframe output from the reactive electricity dataset is not empty then insert the dataset into a datatable, else show the no_data datatable
+          if(nrow(selected_company_electricity_use_filter_new) != 0) {
+            datatable(selected_company_electricity_use_filter_new, escape = FALSE, rownames = FALSE, options = list(dom = 't', columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>% 
+              formatStyle('category', 'format', textAlign = styleEqual(c(0, 1), c('right', 'left')), fontStyle = styleEqual(c(0, 1), c('italic', 'normal')))
+          } else {
+            shinyjs::hide(selector = "div#electricity-use-table-new")
+          }
+        })
+        
+        # #######################################
+        # #Table 9###############################
+        # #Other Fuel Use (TWh/yr)###############
+        # #######################################
+        
+        output$other_fuel_use_table_new <- renderDataTable({
+          
+          selected_company_fuel_use_filter_new <- buildCompanyProfileFuelUsePlot(input$selected_company_new, methodology_table_lookup_new())
+          
+          if(nrow(selected_company_fuel_use_filter_new) != 0) {
+            datatable(selected_company_fuel_use_filter_new, escape = FALSE, rownames = FALSE, options = list(dom = 't', columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>%
+              formatStyle('category', 'format', textAlign = styleEqual(c(0, 1), c('right', 'left')), fontStyle = styleEqual(c(0, 1), c('italic', 'normal')))
+          } else {
+            shinyjs::hide(selector = "div#other-fuel-use-table-new")
+          }
+        })
+        
+        # #######################################
+        # #Table 10##############################
+        # #Non-specified energy use (TWh/yr)#####
+        # #######################################
+        
+        output$ns_energy_use_table_new <- renderDataTable({
+          
+          selected_company_ns_energy_use_filter_new <- buildCompanyProfileNonSpecifiedEnergyUsePlot(input$selected_company_new, methodology_table_lookup_new())
+          
+          if(nrow(selected_company_ns_energy_use_filter_new) != 0) {
+            datatable(selected_company_ns_energy_use_filter_new, escape = FALSE, rownames = FALSE, options = list(dom = 't', columnDefs = list(list(visible=FALSE, targets=0)), scrollX = TRUE)) %>%
+              formatStyle('category', 'format', textAlign = styleEqual(c(0, 1), c('right', 'left')), fontStyle = styleEqual(c(0, 1), c('italic', 'normal')))
+          } else {
+            shinyjs::hide(selector = "div#ns-energy-use-table-new")
+          }
+        })
+        
+        # #######################################
+        # #Table 11##############################
+        # #PUE###################################
+        # #######################################
+        
+        output$pue_table_new <- renderDataTable({
+          
+          selected_company_pue_filter_new <- buildCompanyProfilePUEPlot(input$selected_company_new, methodology_table_lookup_new())
+          
+          if(nrow(selected_company_pue_filter_new) != 0) {
+            datatable(selected_company_pue_filter_new, escape = FALSE, rownames = FALSE, options = list(dom = 't', autoWidth = TRUE, columnDefs = list(list(width = '300px',targets = c(0))), scrollX=TRUE, scrollY=200, scrollCollapse=TRUE))
+            # datatable(selected_company_pue_filter_new, escape = FALSE, rownames = FALSE, options = list(dom = 't', columnDefs = list(list(visible=FALSE, targets = 0)), scrollX = TRUE)) 
+          } else {
+            shinyjs::hide(selector = "div#pue-table-new")
+          }
+          
+        })
+        
+      })
+      
+      # #########################################
+      # ### Company Transparency over Time Plot ###
+      # #########################################
+      # 
+      output$transparency_over_time_plot_new <- renderPlot({
+        buildCompanyProfileTransparencyOverTimePlot(data_sheet_energy_transformed, input$selected_company_new)
+      })
+    
+      observeEvent({
+        input$ca_references
+        input$selected_company_new}, {
+        # #######################################
+        # #Table 12##############################
+        # # Methodology #########################
+        # #######################################
+        
+        output$methodology_table_new <- renderDataTable({
+          
+          selected_company_methodology_filter_new <- buildCompanyProfileMethodologyTable(input$selected_company_new)
+          
+          if(nrow(selected_company_methodology_filter_new) != 0) {
+            #add "pageLength" = 100 to ensure datatable is showing up to 100 lines of methodological notes (default is 10 and any comments beyond that are hidden from the user)
+            datatable(selected_company_methodology_filter_new, rownames = FALSE, options = list(dom = 't', autoWidth = TRUE, columnDefs = list(list(className = 'dt-center', targets = c(0, 1, 3))), scrollY=200, scrollCollapse=TRUE))
+          } else {
+            shinyjs::hide(selector = "div#methodology-table-new")
+          }
+          
+        })
+        
+        # #add interactivity (change page and update nav bar selection) to learn more and contact us buttons when clicked
+
+        change_to_methods <- function() {
+          #change page to methods
+          change_page('/methods', session = shiny::getDefaultReactiveDomain(), mode = "push")
+          #update selected nav
+          runjs(glue("$('.ms-Nav-link[title={'Methods'}]')[0].click()"))
+        }
+        onclick('learn-more-new', change_to_methods())
+
+        #change to contact us page when the report issue button is clicked
+        change_to_contact_us <- function() {
+          #change page to contact-us
+          change_page('/contact-us', session = shiny::getDefaultReactiveDomain(), mode = "push")
+          #update selected nav
+          runjs(glue("$('.ms-Nav-link[title={'Contact'}]')[0].click()"))
+        }
+
+        onclick('report-issue-new', change_to_contact_us())
+        
+        #######################################
+        #Table 13##############################
+        #Sources Assessed######################
+        #######################################
+        
+        output$sources_table_new <- renderDataTable({
+          buildCompanyProfileSourcesAssessedTable(data_sheet_energy_transformed, input$selected_company_new, TRUE)
+        })
+        
+        sources_assessed_modal_visible_new <- reactiveVal(FALSE)
+        observeEvent(input$show_sources_assessed_teaching_bubble_new, sources_assessed_modal_visible_new(TRUE))
+        observeEvent(input$hide_sources_assessed_teaching_bubble_new, sources_assessed_modal_visible_new(FALSE))
+        
+        output$sources_assessed_teaching_bubble_new <- renderReact({
+          message <- buildCompanyProfileSourcesAssessedTable(data_sheet_energy_transformed, input$selected_company_new, FALSE)
+          Modal(isOpen = sources_assessed_modal_visible_new(),
+                Stack(tokens = list(padding = "25px", childrenGap = "10px"),
+                      style = "width: 800px;",
+                      div(style = list(display = "flex"),
+                          Text(paste("Report types not found for ", input$selected_company_new), variant = "xLarge"),
+                          div(style = list(flexGrow = 1)),
+                          IconButton.shinyInput("hide_sources_assessed_teaching_bubble_new", iconProps = list(iconName = "Cancel")),
+                      ),
+                      Text(message, variant = "large"),
+                      br(),
+                      Text("Methodology for sources assessed table", variant = "xLarge"),
+                      Text(FontIcon(iconName = "SquareShapeSolid", style = "color: #90ee90; margin-right: 10px; vertical-align: middle;"), "Green indicates if report provided electricity or fuel use data.", variant = "large"),
+                      Text(FontIcon(iconName = "SquareShapeSolid", style = "color: #ff6c70; margin-right: 10px; vertical-align: middle;"), "Red indicates if report did not provide electricity or fuel use data.", variant = "large")
+                )
+          )
+        })
+        
+      })
+      
+      #UI downloadable CSV
+      output$download_standards <- downloadHandler(
+        filename = function(){sprintf("%s_profile_download.csv", input$selected_company_new)}, 
+        content = function(fname){
+          write.table(data.frame(x = c("Exported company profile page from movingbits.com","License XX"))[1:3,] %>% replace(is.na(.), ""), fname, col.names = FALSE, sep = ',', row.names = F)
+          write.table(data.frame(x = c("Section 1: Company Overview","Note: These values apply only to the company's most recent year of data reporting"))[1:3,] %>% replace(is.na(.), ""), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+          write.table(data.frame(x = "Company name", y = input$selected_company), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+          write.table(selected_company_stats(), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+          write.table(data.frame(x = "Company data center overview", y = company_sheet_selected_company()[1, "company_data_center_overview"]), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+          write.table(data.frame(x = "Energy report assessment", y = company_sheet_selected_company()[1, "energy_reporting_assessment"])[1:2,] %>% replace(is.na(.), ""), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+          write.table(data.frame(x = c("Section 2: Reported Energy Use Levels","Note: These values apply only to the company's most recent year of data reporting"))[1:3,] %>% replace(is.na(.), ""), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+          write.table(reported_energy_levels_data()[1:7,2:3] %>% replace(is.na(.), ""), fname, sep = ',', append = TRUE, row.names = F)
+          write.table(data.frame(x = c("Section 3: Data Standards","Note: These values apply only to the company's most recent year of data reporting"))[1:3,] %>% replace(is.na(.), ""), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+          write.table(sasb_cdp_gri_status()[1:4,] %>% replace(is.na(.), ""), fname, sep = ',', append = TRUE, row.names = F)
+          write.table(data.frame(x = c("Section 4: Other Metrics Reported","Note: These values apply only to the company's most recent year of data reporting"))[1:3,] %>% replace(is.na(.), ""), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+          write.table(pue_wue_renewables_status()[1:4,] %>% replace(is.na(.), ""), fname, sep = ',', append = TRUE, row.names = F)
+          write.table(data.frame(x = c("Section 5: Historical Energy Use Trend & Data")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+          
+          #conditionally add energy data to csv download
+          if(nrow(buildCompanyProfileElectricityUsePlot(input$selected_company_new, methodology_table_lookup_new()) != 0)) {
+            write.table(data.frame(x = c("", "Electricity Use (TWh/yr)")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+            write.table(buildCompanyProfileElectricityUsePlot(input$selected_company_new, methodology_table_lookup_new())[-1], fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
+          
+          if(nrow(buildCompanyProfileFuelUsePlot(input$selected_company_new, methodology_table_lookup_new()) != 0)) {
+            write.table(data.frame(x = c("", "Other fuel use (TWh/yr)")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+            write.table(buildCompanyProfileFuelUsePlot(input$selected_company_new, methodology_table_lookup_new())[-1], fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
+          
+          if(nrow(buildCompanyProfileNonSpecifiedEnergyUsePlot(input$selected_company_new, methodology_table_lookup_new()) != 0)) {
+            write.table(data.frame(x = c("", "Non-specified energy use (TWh/yr)")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+            write.table(buildCompanyProfileNonSpecifiedEnergyUsePlot(input$selected_company_new, methodology_table_lookup_new())[-1], fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
+          
+          if(nrow(buildCompanyProfilePUEPlot(input$selected_company_new, methodology_table_lookup_new()) != 0)) {
+            write.table(data.frame(x = c("", "PUE")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+            write.table(buildCompanyProfilePUEPlot(input$selected_company_new, methodology_table_lookup_new()), fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
+          
+          if(nrow(buildCompanyProfileMethodologyTable(input$selected_company_new)) != 0) {
+            write.table(data.frame(x = c("", "Methodological Notes")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+            write.table(buildCompanyProfileMethodologyTable(input$selected_company_new), fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
           
         }
       )

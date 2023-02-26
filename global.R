@@ -314,6 +314,19 @@ for (i in 1:length(companies)) {
   })
 }
 
+#generate unique list of data entries
+unique_data_entries <- list()
+list_of_data_entries <- c("Show available energy data", "Show sources assessed")
+
+for (i in 1:length(list_of_data_entries)) {
+  unique_data_entries[[i]] <- list(key = {
+    list_of_data_entries[i]
+  },
+  text = {
+    list_of_data_entries[i]
+  })
+}
+
 #########################################
 ########### Tab 5 - Methods #############
 #########################################
