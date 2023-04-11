@@ -1,6 +1,7 @@
 # Data Center Energy Use Dashboard
 
-View website live at: http://movingbits.org/ (launch scheduled for end of August)
+View complete website live at: http://movingbits.org/ (launch scheduled for end of August)
+View prototype website live at https://data-center-energy-use-dashboard.shinyapps.io/data-center-energy-use-dashboard/#!/ (NOTE: this is not the final version)
 
 ## Project Overview
 
