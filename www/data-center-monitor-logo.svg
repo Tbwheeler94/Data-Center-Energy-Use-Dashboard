@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 1500 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <rect x="0" y="0" width="1500" height="100"/>
+    <g transform="matrix(1,0,-0.267949,1,-15.6552,-57.6057)">
+        <text x="77.386px" y="135.806px" style="font-family:'Montserrat-Regular', 'Montserrat';font-size:100px;fill:white;">Data C<tspan x="410.986px " y="135.806px ">e</tspan>nt<tspan x="576.186px " y="135.806px ">e</tspan>r Energy Monit<tspan x="1371.39px " y="135.806px ">o</tspan>r</text>
+    </g>
+    <g transform="matrix(1.01636,0,0,0.812678,0.152538,0.0678934)">
+        <rect x="0.426" y="0.362" width="3.427" height="99.942" style="fill:white;"/>
+    </g>
+</svg>
