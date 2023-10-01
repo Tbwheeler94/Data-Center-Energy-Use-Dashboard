@@ -8,7 +8,6 @@ source(here("R", "CompanyProfilePlots", "companyProfileSourcesAssessedTable.R"))
 source(here("R", "IndustryTrendsPlots", "industryTrendsEnergyDataPlot.R"))
 source(here("R", "IndustryTrendsPlots", "industryTrendsTransparencyPlot.R"))
 source(here("R", "IndustryTrendsPlots", "industryTrendsTimelinePlot.R"))
-source(here("R", "IndustryTrendsPlots", "industryTrendsLeaseCloudNetworkPlot.R"))
 source(here("R", "IndustryTrendsPlots", "industryTrendsPUETrendsPlot.R"))
 source(here("R", "CompanyProfilePlots", "companyProfileTransparencyOverTimePlot.R"))
 
