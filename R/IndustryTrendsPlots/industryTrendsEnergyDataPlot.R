@@ -64,11 +64,11 @@ buildIndustryTrendsEnergyDataPlot <- function(selected_year, selected_dc, select
     company_wide_data <- energy_use_final %>% filter(energy_reporting_scope == "Company Wide")
     return(ggplot() + 
       geom_bar(company_wide_data, mapping = aes(x=electricity_converted, y=company, fill=energy_reporting_scope), 
-               position=position_stack(reverse = TRUE), stat="identity") +
+               position=position_stack(reverse = TRUE), stat="identity", width = 0.8) +
       geom_bar(data_centers_data, mapping = aes(x=electricity_converted, y=company, fill=energy_reporting_scope),
-               position=position_stack(reverse = TRUE), stat="identity") +
+               position=position_stack(reverse = TRUE), stat="identity", width = 0.8) +
       geom_bar(dc_and_cw_diff_scale, mapping = aes(x=electricity_converted, y=company, fill=energy_reporting_scope),
-               position=position_stack(reverse = TRUE), stat="identity") +
+               position=position_stack(reverse = TRUE), stat="identity", width = 0.8) +
       geom_bar(dc_and_cw_same_scale, mapping = aes(x=electricity_converted, y=company, fill=energy_reporting_scope),
                position=position_stack(reverse = TRUE), stat="identity", width = 0.4) +
       scale_x_continuous(breaks = plot_breaks, 

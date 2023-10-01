@@ -211,10 +211,10 @@ for (i in 1:length(industry_trends_scopes)) {
 #Generate list of years for UI dropdown
 unique_years <- list()
 industry_trends_years <-
-  str_subset(sort(
+  sort(
     unique(data_sheet_energy_transformed$data_year),
     decreasing = TRUE
-  ), "")
+  )
 
 for (i in 1:length(industry_trends_years)) {
   unique_years[[i]] <- list(key = {
@@ -228,7 +228,7 @@ for (i in 1:length(industry_trends_years)) {
 #Generate list of unique companies from PUE sheet
 unique_companies_pue <- list()
 list_of_pue_companies <-
-  str_subset(sort(unique(data_sheet_pue_raw$company), decreasing = FALSE), "")
+  sort(unique(data_sheet_pue_raw$company), decreasing = FALSE)
 
 for (i in 1:length(list_of_pue_companies)) {
   unique_companies_pue[[i]] <- list(key = {
@@ -301,9 +301,9 @@ no_data <- data.frame(no_data_reported = "No data reported")
 #generate unique list of companies in alphabetical order and drop blank
 unique_companies <- list()
 companies <-
-  str_subset(sort(unique(
+  sort(unique(
     data_sheet_company_raw %>% pull(company_name)
-  )), "")
+  ))
 
 for (i in 1:length(companies)) {
   unique_companies[[i]] <- list(key = {
