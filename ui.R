@@ -172,50 +172,27 @@ home_to_industry_trends_page <- makePage(
   div(
     Stack(style = "text-align: left; padding: 25px", Text("Click an industry trend box to access the plot", variant = "xxLarge", style = "color: #137AD1;")),
     Grid(
-      GridItem(class = "ms-sm12 ms-xl4",
+      GridItem(class = "ms-sm12 ms-xl6",
                       lp_home_to_industry_box(image_name = "home_to_industry_button_reporting_trends", 
                                   button_name = 'jump_to_reporting_trends', title_box = "Energy Reporting Trends",
                                   description = 'Discover how many companies are reporting at certain energy scopes')
       ),
-      GridItem(class = "ms-sm12 ms-xl4",
+      GridItem(class = "ms-sm12 ms-xl6",
                       lp_home_to_industry_box(image_name = "home_to_industry_button_energy_data_trends", 
                                   button_name = 'jump_to_energy_data_trends', title_box = "Energy Data Trends",
                                   description = 'Compare companies on levels of electricity reported, both on a data center and company wide scope')
-      ),
-      GridItem(class = "ms-sm12 ms-xl4",
-                      lp_home_to_industry_box(image_name = "home_to_industry_button_timeline", 
-                                  button_name = 'jump_to_timeline', title_box = "Energy Reporting Timeline",
-                                  description = 'Visualize the timeline of data center energy reporting')
       )
     ),
     Grid(
       GridItem(class = "ms-sm12 ms-xl6",
-                      lp_home_to_industry_box(image_name = "home_to_industry_button_industry_relationships", 
-                                  button_name = 'jump_to_industry_relationships', title_box = "Industry Relationships",
-                                  description = 'Analyze the connections between companies based on data center hosting')
+               lp_home_to_industry_box(image_name = "home_to_industry_button_timeline", 
+                                       button_name = 'jump_to_timeline', title_box = "Energy Reporting Timeline",
+                                       description = 'Visualize the timeline of data center energy reporting')
       ),
       GridItem(class = "ms-sm12 ms-xl6",
                       lp_home_to_industry_box(image_name = "home_to_industry_button_PUE_trends", 
                                   button_name = 'jump_to_PUE_trends', title_box = "PUE Trends",
                                   description = 'Uncover company PUE data in relation to industry PUE trends')
-      )
-    )
-  )
-)
-
-###########################################
-######### DC ENERGY 101 PAGE ##############
-###########################################
-
-dc_energy_101_page <- makePage(
-  div(
-    Grid(
-      GridItem(class = "ms-sm12 ms-xl12", style = "text-align: center",
-               MainCard(Text('Page Under Construction', variant = "xxLarge"),
-                        FontIcon(iconName = "ConstructionCone", style = list(fontSize = 80)
-                        )
-               )
-               
       )
     )
   )
@@ -327,41 +304,6 @@ reporting_timeline_page <- makePage(
   )
 )
 
-########################################################
-############## LEASE/CLOUD NETWORK PAGE ################
-########################################################
-
-lease_cloud_network_page <- makePage(
-  div(style = "text-align: center;",
-      Text("Network of Data Center Lease/Cloud Providers", variant = "xxLarge", style = "color: #137AD1; padding-bottom: 15px;"),
-      br(),
-      reactOutput("network_graph_explainer"),
-      div(style = "display: flex; flex-direction: row; justify-content: flex-end; flex-wrap: wrap; gap: 15px; padding-right: 10px;",
-          PrimaryButton.shinyInput("show_network_graph_explainer", iconProps = list("iconName" = "Help"), text = "Help"),
-          downloadLink("download_network_graph", PrimaryButton.shinyInput("fdiri", iconProps = list("iconName" = "Camera"), text = "Save Interactive Image (.html)")),
-          TooltipHost(content = "Select a download option in the dropdown to the right", downloadLink("download_network_data", PrimaryButton.shinyInput("fdird", iconProps = list("iconName" = "Download"), text = "Download Data"))),
-          Dropdown.shinyInput("network_dataset_options",
-                              placeholder = ".csv",
-                              value = ".csv",
-                              options = unique_tag_options)
-      ),
-      div(style = "text-align: left;", visNetworkOutput('lease_cloud_network', height = "62vh")),
-  )
-)
-
-# <button id='show_network_graph_explainer' class='shiny-bound-input action-button ms-Button ms-Button--primary root-129' data-is-focusable='true' style='float: right;'>
-#   <span class='ms-Button-flexContainer flexContainer-130' data-automationid='splitbuttonprimary'>
-#   <i data-icon-name='Info' aria-hidden='true' class='ms-Icon root-32 css-87 ms-Button-icon icon-79' style='font-family: FabricMDL2Icons; color: white;'></i>
-#   <span class='ms-Button-textContainer textContainer-131'>
-#   <span class='ms-Button-label label-133' style = 'font-weight: normal;'>
-#   Help
-# </span>
-#   </span>
-#   </span>
-#   </button>
-
-# ActionButton(iconProps = list("iconName" = "Info", "styles" = list(root = list("color" = "white;"))), text = "About This Table",
-# style = "color: white; background-color: #137AD1; width: 175px; float: right;"))
 ########################################################
 ############## PUE TRENDS PAGE #########################
 ########################################################
@@ -712,7 +654,6 @@ navigation <- Nav(
   groups = list(
     list(links = list(
       list(name = 'Home', url = '#!/', key = 'home', icon = 'Home'),
-      list(name = 'Data Center Energy 101', url = '#!/data-center-energy', key = 'dce', icon = 'D365TalentLearn'),
       list(name = 'Industry Trends',
            expandAriaLabel = 'Expand Industry Trends',
            collapseAriaLabel = 'Collapse Industry Trends',
@@ -720,7 +661,6 @@ navigation <- Nav(
              list(id = 'industry-trends-first-element', name = 'Energy Reporting Trends', url = '#!/reporting-trends', key = 'reporting-trends', icon = 'ReportDocument'),
              list(name = 'Energy Data Trends', url = '#!/energy-data-trends', key = 'data-trends', icon = 'Trending12'),
              list(name = 'Reporting Timeline', url = '#!/reporting-timeline', key = 'reporting-timeline', icon = 'TimelineProgress'),
-             list(name = 'Industry Relationships', url = '#!/lease-cloud-network', key = "lease-cloud-network", icon = "SplitObject"),
              list(id = 'industry-trends-last-element', name = 'PUE Trends', url = '#!/pue-trends', key = 'pue-trends', icon = 'BIDashboard')), 
            isExpanded = FALSE
            ),
@@ -760,11 +700,9 @@ layout <- function(mainUI){
 router <- make_router(
   route("/", home_page),
   route("home-to-industry-trends", home_to_industry_trends_page),
-  route("data-center-energy", dc_energy_101_page),
   route("reporting-trends", reporting_trends_page),
   route("energy-data-trends", energy_data_trends),
   route("reporting-timeline", reporting_timeline_page),
-  route("lease-cloud-network", lease_cloud_network_page),
   route("pue-trends", pue_trends_page),
   route("company-analysis", company_analysis_page),
   route("methods", methods_page),
