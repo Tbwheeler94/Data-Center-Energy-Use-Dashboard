@@ -288,7 +288,7 @@ server <- function(input, output, session) {
       output$download_transparency_graph <- downloadHandler(
         filename = function(){paste0("reporting_trends_plot", ".png")},
         content = function(fname){
-          ggsave(fname, plot = buildIndustryTrendsTransparencyPlot(input$pltChange$width, input$pltChange$height, input$pltChange$dpi, render_plot = FALSE), width = 10, height = 5, units = "in")
+          ggsave(fname, plot = buildIndustryTrendsTransparencyPlot(render_plot = FALSE), width = 10, height = 5, units = "in")
         }
       )
     }

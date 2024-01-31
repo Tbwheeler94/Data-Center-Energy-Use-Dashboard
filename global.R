@@ -35,6 +35,7 @@ library(plotly)
 library(visNetwork) # Used to construction the industry trends network graph
 library(scales)
 library(ggiraph)
+library(highcharter)
 
 # Packages for developing general UI aesthetic and functionality
 library(shiny.router) # Enables appearance of multi-page functionality within app

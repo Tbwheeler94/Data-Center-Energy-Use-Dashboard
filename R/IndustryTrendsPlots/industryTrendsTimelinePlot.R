@@ -48,6 +48,42 @@ buildIndustryTrendsTimelinePlot <- function(render_plot) {
   if (render_plot == FALSE) {
     return(p)
   }
+  
+  
+  
+  # weather2 <- weather %>%
+  #   filter(date <  mdy("03-31-2014"))%>% 
+  #   mutate(low = datetime_to_timestamp(date), 
+  #          high = datetime_to_timestamp(date+30), 
+  #          id = row_number()) %>% 
+  #   select(id, low, high)
+  # 
+  # 
+  # hchart(weather2,
+  #        type = "columnrange",
+  #        hcaes(x = id, high=high, low=low)) %>% 
+  #   hc_yAxis(type = "datetime")
+  
+  # hc %>%
+  #   hc_chart(
+  #     type = "columnrange",
+  #     options3d = list(enabled = TRUE, beta = 15, alpha = 15)
+  #   )
+  # 
+  # 
+  # hc %>%
+  #   hc_chart(
+  #     borderColor = "#EBBA95",
+  #     borderRadius = 10,
+  #     borderWidth = 2,
+  #     backgroundColor = list(
+  #       linearGradient = c(0, 0, 500, 500),
+  #       stops = list(
+  #         list(0, "rgb(255, 255, 255)"),
+  #         list(1, "rgb(200, 200, 255)")
+  #       )
+  #     )
+  #   )
 
 
   x <- girafe(ggobj = p, width_svg = 13, height_svg = 7)

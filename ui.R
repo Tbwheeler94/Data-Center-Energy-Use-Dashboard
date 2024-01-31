@@ -217,8 +217,8 @@ reporting_trends_page <- makePage(
                               value = ".csv",
                               options = unique_tag_options)
       ),
-      GridItem(class = "ms-sm12 ms-xl12", 
-               CompanyCard(
+      GridItem(class = "ms-sm12 ms-xl12",
+               div(style = "height: 100%",
                  # plotOutput('transparency_graph')
                  girafeOutput('transparency_graph', width = "100%")
                )
@@ -295,10 +295,11 @@ reporting_timeline_page <- makePage(
                               options = unique_tag_options)
       ),
       GridItem(class = "ms-sm12 ms-xl12", 
-               Stack(class = "ms-depth-8 timeline-graph",
-                 br(),
+               # Stack(class = "ms-depth-8 timeline-graph",
+                 # br(),
                  girafeOutput('reporting_timeline', width = "auto")
-               )
+                 # highchartOutput('reporting_timeline')
+               # )
       )
     )
   )
@@ -644,8 +645,8 @@ layout <- function(mainUI){
 }
 
 header <- tagList(
-  img(src = "isalab-logo.svg", class = "logo"),
-  img(src = "data-center-monitor-logo.svg", style = "height: 40px; padding-top: 11px; padding-left: 6.5px;")
+  tags$img(src = "isalab-logo.svg", class = "logo"),
+  tags$img(src = "data-center-monitor-logo-no-line.svg", style = "height: 40px; padding-top: 11px; padding-left: 6.5px;")
   #div(Text(variant = "xxLarge", "Data Center Energy Use Dashboard", style = "color: white;"), class = "title")
   )
 

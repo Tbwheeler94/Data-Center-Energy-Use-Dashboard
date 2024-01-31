@@ -37,7 +37,7 @@
   right: 16px;
 }
 
-.glide-controls { position: absolute; bottom: 14px; /*padding-left: 10px;*/ width: 100%; }
+.glide-controls { position: absolute; bottom: 0px; /*padding-left: 10px;*/ width: 100%; }
 
 .home-images {
   display: flex;
