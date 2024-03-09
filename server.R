@@ -13,6 +13,7 @@ source(here("R", "CompanyProfilePlots", "companyProfileTransparencyOverTimePlot.
 
 #Server code
 server <- function(input, output, session) {
+  showLog()
   
   ########################################################
   ########################################################
@@ -270,6 +271,12 @@ server <- function(input, output, session) {
       }
       onclick('learn_more_2', change_to_methods())
       
+      # make a reactive dataset
+      transparency_data_test <- reactive({
+        data_of_transparency %>% select(-c("row_num"))
+      })
+      
+      # download transparency data either in a csv or xlsx format
       output$download_transparency_data <- downloadHandler(
         filename = function(){paste0("reporting_trends", input$transparency_dataset_options)},
         content = function(fname){
@@ -933,9 +940,16 @@ server <- function(input, output, session) {
         
       })
       
+      selected_company_options <- reactive({
+        get(input$selected_company)
+      })
+      
       #UI downloadable CSV
       output$download_standards <- downloadHandler(
-        filename = function(){sprintf("%s_profile_download.csv", input$selected_company)}, 
+        filename = function(){
+          logjs("hey")
+          paste0(input$selected_company, "_profile_download.csv")
+        }, 
         content = function(fname){
           write.table(data.frame(x = c("Exported company profile page from movingbits.com","License XX"))[1:3,] %>% replace(is.na(.), ""), fname, col.names = FALSE, sep = ',', row.names = F)
           write.table(data.frame(x = c("Section 1: Company Overview","Note: These values apply only to the company's most recent year of data reporting"))[1:3,] %>% replace(is.na(.), ""), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
@@ -950,27 +964,27 @@ server <- function(input, output, session) {
           write.table(data.frame(x = c("Section 4: Other Metrics Reported","Note: These values apply only to the company's most recent year of data reporting"))[1:3,] %>% replace(is.na(.), ""), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
           write.table(pue_wue_renewables_status()[1:4,] %>% replace(is.na(.), ""), fname, sep = ',', append = TRUE, row.names = F)
           write.table(data.frame(x = c("Section 5: Historical Energy Use Trend & Data")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
-          
+
           #conditionally add energy data to csv download
           if(nrow(buildCompanyProfileElectricityUsePlot(input$selected_company, methodology_table_lookup()) != 0)) {
             write.table(data.frame(x = c("", "Electricity Use (TWh/yr)")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
             write.table(buildCompanyProfileElectricityUsePlot(input$selected_company, methodology_table_lookup())[-1], fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
-          
+
           if(nrow(buildCompanyProfileFuelUsePlot(input$selected_company, methodology_table_lookup()) != 0)) {
             write.table(data.frame(x = c("", "Other fuel use (TWh/yr)")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
             write.table(buildCompanyProfileFuelUsePlot(input$selected_company, methodology_table_lookup())[-1], fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
-          
+
           if(nrow(buildCompanyProfileNonSpecifiedEnergyUsePlot(input$selected_company, methodology_table_lookup()) != 0)) {
             write.table(data.frame(x = c("", "Non-specified energy use (TWh/yr)")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
             write.table(buildCompanyProfileNonSpecifiedEnergyUsePlot(input$selected_company, methodology_table_lookup())[-1], fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
-          
-          if(nrow(buildCompanyProfilePUEPlot(input$selected_company, methodology_table_lookup()) != 0)) {
-            write.table(data.frame(x = c("", "PUE")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
-            write.table(buildCompanyProfilePUEPlot(input$selected_company, methodology_table_lookup()), fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
-          
-          if(nrow(buildCompanyProfileMethodologyTable(input$selected_company)) != 0) {
-            write.table(data.frame(x = c("", "Methodological Notes")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
-            write.table(buildCompanyProfileMethodologyTable(input$selected_company), fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
+
+          # if(nrow(buildCompanyProfilePUEPlot(input$selected_company, methodology_table_lookup()) != 0)) {
+          #   write.table(data.frame(x = c("", "PUE")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+          #   write.table(buildCompanyProfilePUEPlot(input$selected_company, methodology_table_lookup()), fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
+          # 
+          # if(nrow(buildCompanyProfileMethodologyTable(input$selected_company)) != 0) {
+          #   write.table(data.frame(x = c("", "Methodological Notes")), fname, col.names = FALSE, sep = ',', append = TRUE, row.names = F)
+          #   write.table(buildCompanyProfileMethodologyTable(input$selected_company), fname, col.names = TRUE, sep = ',', append = TRUE, row.names = F)}
           
         }
       )
