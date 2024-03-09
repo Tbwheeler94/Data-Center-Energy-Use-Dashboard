@@ -386,7 +386,7 @@ company_analysis_page <- makePage(
                    style = "margin: auto; margin-top: 10px; margin-bottom: -10px"
                  ),
                  br(),
-                 downloadLink('download_standards'," Download all reported data (.csv)", style = "text-align: center; font-size: 12pt;"),
+                 downloadLink('download_standards', style = "text-align: center; font-size: 12pt;", PrimaryButton.shinyInput("fdcad", iconProps = list("iconName" = "Download"), text = "Download Data")),
                )
       )
     ),
